@@ -1,8 +1,47 @@
 \section{Introduction}
-Large and growing data are often succeptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
+Large and growing data are often susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
 These corruptions can negatively affect subsequent analysis in subtle but significant ways.
-While cleaning these corruptions is often highly beneficial and there are numerous established techniques, data cleaning still poses a significant analysis bottleneck \cite{khayyat2015bigdansing,sampleclean, chu2015katara}.
-Cleaning large data can be expensive, both computationally and in human effort, as an analyst has to program repairs for all errors manifest in the data \cite{kandel2012}.
-In some applications, simple data transformations may not be reliable necessitating the use of even costlier machine learning or crowdsourcing \cite{gokhale2014corleone,park2014crowdfill}.
+Increasingly, analytics consists of Machine Learning ``data products", such as recommender systems, spam detectors, and forecasting models, which be very sensitive to data quality.
+Robust statistical methods have been extensively studied over the last 40 years, and essentially trade off statistical efficiency and/or model bias for reduced sensitivity to the corruptions. 
+While utilizing robust estimates can significantly reduce the generalization error of a statistical model, in some settings, it can lead to problematic challenges. 
+Certain populations of frequently corrupted data may be systematically mispredicted.
 
-To cop
+A data cleaning approach, complementing existing robust statistical techniques, can mitigate this concern.
+Instead of avoiding the problem, cleaning works by repairing the corruption.
+Data cleaning is an established line of research and there are numerous recent proposals of systems and techniques \cite{khayyat2015bigdansing,sampleclean, chu2015katara, kandel2012}.
+However, cleaning large data can be expensive, both computationally and in human effort, as an analyst has to program repairs for all errors manifest in the data \cite{kandel2012}.
+In some applications, simple data transformations may not be reliable necessitating the use of even costlier crowdsourcing techniques \cite{gokhale2014corleone,park2014crowdfill}.
+
+An emerging solution to the growing costs of data cleaning is sampling \cite{wang1999sample, trifacta, stonebraker2013data}.
+Analysts can sample a large dataset, prototype changes on the sample, and evaluate whether these changes have the desired affect.
+The case for sampling is analagous to arguments for Approximate Query Processing (AQP) \cite{DBLP:conf/eurosys/AgarwalMPMMS13}, where a timely approximate answer is more desirable than an exact slow answer.
+Our goal is an \emph{anytime} framework for training Machine Learning models on dirty data. 
+An analyst can clean as much of the data as possible within an allocated time-budget, and then the framework 
+returns a best-effort model.
+While studied in aggregate query processing (e.g., BlinkDB \cite{DBLP:conf/eurosys/AgarwalMPMMS13} and Online Aggregation \cite{DBLP:conf/sigmod/HellersteinHW97,DBLP:conf/sigmod/CondieCAHGTES10}), Machine Learning is far more sensitive to sample size (i.e., training data).
+The key problem is returning a result that is accurate enough for the analyst to judge the significance of their cleaning operations.
+
+There are a few important observations that can allow us to address this problem.
+First, we might be able to use knowledge about the application (Machine Learning model) to improve efficiency of data cleaning.
+Increasingly, the consensus in Machine Learning research is that all training data are not created equal and some data are more informative than others \cite{drineas2012fast, settles2010active}.
+This would imply that using the model to guide sampling towards informative data can mitigate the sensitivity to sample size.
+On the surface, this seems like an Active Learning problem \cite{settles2010active}, however, most Active Learning approaches only consider label acquisition for unlabeled data. 
+Our second observation is that errors are often happen in batches are often tightly clustered, that is they affect similar data.
+This motivates an adaptive approach where as an analyst cleans data we learn how data is cleaned to further guide the cleaning.
+
+In this paper, we propose \sysfull (\sys), an anytime framework for training Machine Learning models with data cleaning.
+\sys supports a class of models called regularized-convex loss problems which includes linear regression, logistic regression, generalized linear models, and support vector machines.
+Algorithmically, we treat the analysts actions as part of a Stochastic Gradient Descent (SGD).
+The basic idea of SGD is to draw a data point at random, calculate the gradient at that point, and then update a current best estimate with that gradient.
+In this work, we start with an initialization (the dirty model) and iteratively update this initialization as we get more clean data. 
+SGD and its variants are well-studied and there are lower-bounds on the convergence rates using these techniques. So we will use SGD as the scaffolding to build and analyze an adpative algorithm. 
+
+
+
+
+
+
+
+
+
+
