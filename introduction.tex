@@ -2,12 +2,12 @@
 Large and growing data are often susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
 These corruptions can negatively affect subsequent analysis in subtle but significant ways.
 Increasingly, analytics consists of Machine Learning ``data products", such as recommender systems, spam detectors, and forecasting models, which be very sensitive to data quality.
-Robust statistical methods have been extensively studied over the last 40 years, and essentially trade off statistical efficiency and/or model bias for reduced sensitivity to the corruptions. 
-While utilizing robust estimates can significantly reduce the generalization error of a statistical model, in some settings, it can lead to problematic challenges. 
-Certain populations of frequently corrupted data may be systematically mispredicted.
+Robust statistical methods have been extensively studied over the last 40 years, and trade off statistical efficiency and/or model bias for reduced sensitivity to the corruptions. 
+While utilizing robust estimates can significantly reduce the generalization error of a statistical model, they essentially learn models that avoid the corruptions. 
+As a result, certain populations of frequently corrupted data may be systematically mispredicted.
 
-A data cleaning approach, complementing existing robust statistical techniques, can mitigate this concern.
-Instead of avoiding the problem, cleaning works by repairing the corruption.
+A data cleaning approach, complementing existing robust statistical techniques, can mitigate this concern for some types of error.
+Instead of avoiding the problem, cleaning works by repairing (or approximately repairing) the corruption.
 Data cleaning is an established line of research and there are numerous recent proposals of systems and techniques \cite{khayyat2015bigdansing,sampleclean, chu2015katara, kandel2012}.
 However, cleaning large data can be expensive, both computationally and in human effort, as an analyst has to program repairs for all errors manifest in the data \cite{kandel2012}.
 In some applications, simple data transformations may not be reliable necessitating the use of even costlier crowdsourcing techniques \cite{gokhale2014corleone,park2014crowdfill}.
@@ -35,8 +35,18 @@ Algorithmically, we treat the analysts actions as part of a Stochastic Gradient 
 The basic idea of SGD is to draw a data point at random, calculate the gradient at that point, and then update a current best estimate with that gradient.
 In this work, we start with an initialization (the dirty model) and iteratively update this initialization as we get more clean data. 
 SGD and its variants are well-studied and there are lower-bounds on the convergence rates using these techniques. So we will use SGD as the scaffolding to build and analyze an adpative algorithm. 
+We also apply several techniques from database systems to optimize the model training.
+For example, if we intelligently partition data we believe is clean and dirty data, we 
+can avoid expensive scans of this data.
+Next, when we do have to scan the data, we can amortize these scans using shared cursors to do multiple operations at each datum.
 
-
+In summary, our contributions are
+\begin{itemize}[noitemsep]
+\item We propose \sysfull which given dirty data, a convex loss model, and a time budget, returns a model trained with respect to the clean data.
+\item \sysfull is implemented with an non-uniform importance sampling approach that priortizes points in the clean model that are most imformative, and we provide analysis to identify the key tradeoffs.
+\item \reminder{Systems Contributions}
+\item We evaluate \sysfull on real and synthetic datasets to show that non-uniform sampling achieves improved performance in comparison to uniform sampling, and dirtiness-agnostic prioritization.
+\end{itemize}
 
 
 
