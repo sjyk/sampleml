@@ -1,0 +1,74 @@
+\section{Background}
+\subsection{Machine Learning and Loss Minimization}
+In parametric Machine Learning, the goal is learn a set of model \emph{parameters} $\theta$ from training examples.
+The hope is that the parameters $\theta$ can predict future phenomena. 
+A common theoretical framework in Machine Learning is empirical risk minimization.
+We start with a set of training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$
+on which we minimze an loss function $\phi$ at each point parametrized that is parametrized by $\theta$.
+\[
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
+\]
+For example, in a linear regression $\phi$ is:
+\[
+\phi(x_{i,}y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
+\]
+
+$\phi$ is often designed to be \emph{convex}, essential meaning bowl-shaped, to make the training this model 
+tractable.
+Typically, a \emph{regularization} term $r(\theta)$ is added to this problem.
+The regularization term acts as penalty to avoid overfitting to the training data.
+\[
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
+\]
+For example, a popular variant of linear regression is called LASSO which is:
+\[
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\|\theta^Tx_{i} - y_i \|_2^2 + \lambda \cdot \|\theta\|_1
+\]
+This class of problems includes all generalized linear models and support vector machines.
+
+\subsection{Training on Clean Data}
+The Theoretical Statistics community and Machine Learning community have extensively studied the problem
+of robustness to statistical outliers and random noise.
+Various \emph{robust} methods have been proposed to reduce a loss function's sensitivity to outliers.
+For example, in the case of linear regression, we can change the $L_2$ norm to an $L_1$ norm to mitigate the effect of outliers:
+\[
+\phi(x_{i,}y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_1
+\]
+
+How exactly does a data cleaning approach differ from a robust method?
+We often in the problem setting where we are training on dirty data, but need to test or deploy the model on clean data.
+Consider an image classification task with incorrect labeling.
+If we train a model with respect to the incorrect labels, while we might have achieve a good out-of-sample accuracy on the incorrect labels, the classifications are incorrect in a semantic sense.
+Likewise, consider the case where we are predicting future product demand based on corrupted historical data.
+Training a model with respect to the corrupted data might have a low $R^2$ cross-validation error, but is incorrect
+at predicting the future trends.
+
+In such scenarios, we see data cleaning as complementary to robust statistics.
+Data cleaning gives us information about the ``true" data distribution, which is highly beneficial when errors have systematic biases.
+Without cleaning, certain subpopulations of data might be frequently mispredicted. 
+
+\subsection{Stochastic Gradient Descent}
+Our goal is to design an anytime framework for training models on dirty data.
+Our main idea is to introduce data cleaning into the iterative algorithms that train the models. 
+The problems described in the previous subsections are often trained using a technique called Stochastic Gradient Descent (SGD) or one of its variants.
+The basic idea of SGD is to draw a data point at random, calculate the gradient at that point, and then update a current best estimate with that gradient.
+\[
+\theta^{(t+1)}\leftarrow\theta^{(t)}-\gamma\nabla\phi(x_{i},y_{i},\theta^{(t)})
+\]
+ SGD can also be applied in a ``mini-batch" mode, where we draw a subset of data at random and update with the average gradient.
+ \[
+ \theta^{(t+1)}\leftarrow\theta^{(t)}-\gamma\sum_{i\in S^{(t)}}\nabla\phi(x_{i},y_{i},\theta^{(t)})
+ \]
+ At a high-level, this problem mirrors the problem explored in this work. We start with an initialization (the dirty model) $\theta^{(0)}$ and iteratively update the existing best model as we get more clean data. 
+SGD and its variants are well-studied and there are lower-bounds on the convergence rates using these techniques. 
+
+Recently, a number of works have explored non-uniform sampling distributions for stochastic optimization \cite{zhao2014stochastic, qu2014randomized}.
+The main insight is that non-uniform distributions may on average estimate the gradient accurately.
+The technique that is applied is called importance sampling.
+Importance sampling preserves the exepected value of a parameter while trying to sample from a distribution that results in lower variance.
+
+
+
+
+
+ 
