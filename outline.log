@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  31 MAY 2015 23:38
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  1 JUN 2015 12:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -663,10 +663,6 @@ astes
  []
 
 [4]
-
-LaTeX Warning: Citation `nadeef' on page 5 undefined on input line 125.
-
-
 Overfull \hbox (10.92369pt too wide) in paragraph at lines 156--157
 []\OT1/cmr/m/n/9 Calculate weighted gra-di-ent of the sam-ple points
  []
@@ -677,6 +673,36 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <9> not available
 Overfull \hbox (28.79536pt too wide) in paragraph at lines 217--218
 \OT1/cmr/m/n/9 ap-ply gra-di-ent de-scent us-ing the gra-di-ent $[]$. 
  []
+
+) (./optimizer.tex [5]
+Overfull \hbox (5.75603pt too wide) in paragraph at lines 32--32
+[]\secfnt Choosing Error-Predicate vs. Gen-eral Case 
+ []
+
+) (./experiments.tex) (./relatedwork.tex
+Overfull \hbox (15.7462pt too wide) in paragraph at lines 2--4
+[]\OT1/cmr/m/n/9 Bringing to-gether data clean-ing and ma-chine learn-ing prese
+nts
+ []
+
+
+LaTeX Warning: Citation `rineas2012fast' on page 6 undefined on input line 5.
+
+
+Overfull \hbox (5.15115pt too wide) in paragraph at lines 5--6
+\OT1/cmr/m/n/9 posed us-ing im-por-tance sam-pling in con-junc-tion with stocha
+s-
+ []
+
+[6]) (./conclusion.tex
+Overfull \hbox (21.54498pt too wide) in paragraph at lines 2--7
+\OT1/cmr/m/n/9 form sam-pling, and dirtiness-agnostic pri-or-i-ti-za-tion. []\O
+MS/cmsy/m/n/9 ff\OT1/cmr/bx/n/9 TODO\OMS/cmsy/b/n/9 gg[] 
+ []
+
+
+LaTeX Warning: Citation `jaggi2014communication' on page 7 undefined on input l
+ine 16.
 
 ) (./outline.bbl
 LaTeX Font Info:    Calculating math sizes for size <7.8> on input line 5.
@@ -751,9 +777,7 @@ LaTeX Font Info:    Font shape `U/lasy/b/n' in size <3.9> not available
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <3.9> not available
 (Font)              size <5> substituted on input line 5.
 
-[5]) [6
-
-] (./outline.aux)
+) [7] (./outline.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.1pt have occurred.
@@ -761,15 +785,18 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 8478 strings out of 493315
- 118374 string characters out of 6137904
+ 8499 strings out of 493315
+ 118713 string characters out of 6137904
  291268 words of memory out of 5000000
- 11696 multiletter control sequences out of 15000+600000
+ 11705 multiletter control sequences out of 15000+600000
  31190 words of font info for 90 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 42i,10n,40p,819b,1375s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,10n,40p,1284b,1375s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb></usr/loc
 al/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local
@@ -793,10 +820,10 @@ ts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2013/texmf-dist/fonts
 onts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
 pe1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/ti
 mes/utmri8a.pfb>
-Output written on outline.pdf (6 pages, 514885 bytes).
+Output written on outline.pdf (7 pages, 529198 bytes).
 PDF statistics:
- 164 PDF objects out of 1000 (max. 8388607)
- 114 compressed objects within 2 object streams
+ 169 PDF objects out of 1000 (max. 8388607)
+ 118 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -28,11 +28,21 @@ S.~Agarwal, B.~Mozafari, A.~Panda, H.~Milner, S.~Madden, and I.~Stoica.
   very large data.
 \newblock In {\em EuroSys}, pages 29--42, 2013.
 
+\bibitem{altowim2014progressive}
+Y.~Altowim, D.~V. Kalashnikov, and S.~Mehrotra.
+\newblock Progressive approach to relational entity resolution.
+\newblock {\em Proceedings of the VLDB Endowment}, 7(11), 2014.
+
 \bibitem{armbrust2015spark}
 M.~Armbrust, R.~S. Xin, C.~Lian, Y.~Huai, D.~Liu, J.~K. Bradley, X.~Meng,
   T.~Kaftan, M.~J. Franklin, A.~Ghodsi, et~al.
 \newblock Spark sql: Relational data processing in spark.
 \newblock SIGMOD, 2015.
+
+\bibitem{bergman2015query}
+M.~Bergman, T.~Milo, S.~Novgorodov, and W.-C. Tan.
+\newblock Query-oriented data cleaning with oracles.
+\newblock 2015.
 
 \bibitem{chu2015katara}
 X.~Chu, J.~Morcos, I.~F. Ilyas, M.~Ouzzani, P.~Papotti, N.~Tang, and Y.~Ye.
@@ -52,6 +62,18 @@ P.~Drineas, M.~Magdon-Ismail, M.~W. Mahoney, and D.~P. Woodruff.
 \newblock {\em The Journal of Machine Learning Research}, 13(1):3475--3506,
   2012.
 
+\bibitem{duchi2013local}
+J.~C. Duchi, M.~I. Jordan, and M.~J. Wainwright.
+\newblock Local privacy and statistical minimax rates.
+\newblock In {\em Foundations of Computer Science (FOCS), 2013 IEEE 54th Annual
+  Symposium on}, pages 429--438. IEEE, 2013.
+
+\bibitem{nadeef}
+A.~Ebaid, A.~Elmagarmid, I.~F. Ilyas, M.~Ouzzani, J.-A. Quiane-Ruiz, N.~Tang,
+  and S.~Yin.
+\newblock Nadeef: A generalized data cleaning system.
+\newblock {\em VLDB}, 2013.
+
 \bibitem{gokhale2014corleone}
 C.~Gokhale, S.~Das, A.~Doan, J.~F. Naughton, N.~Rampalli, J.~Shavlik, and
   X.~Zhu.
@@ -62,6 +84,13 @@ C.~Gokhale, S.~Das, A.~Doan, J.~F. Naughton, N.~Rampalli, J.~Shavlik, and
 J.~M. Hellerstein, P.~J. Haas, and H.~J. Wang.
 \newblock Online aggregation.
 \newblock In {\em SIGMOD Conference}, pages 171--182, 1997.
+
+\bibitem{jaggi2014communication}
+M.~Jaggi, V.~Smith, M.~Tak{\'a}c, J.~Terhorst, S.~Krishnan, T.~Hofmann, and
+  M.~I. Jordan.
+\newblock Communication-efficient distributed dual coordinate ascent.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  3068--3076, 2014.
 
 \bibitem{kandel2012}
 S.~Kandel, A.~Paepcke, J.~Hellerstein, and H.~Jeffrey.
@@ -79,6 +108,19 @@ S.~Krishnan, J.~Wang, M.~J. Franklin, K.~Goldberg, and T.~Kraska.
 \newblock Stale view cleaning: Getting fresh answers from stale materialized
   views.
 \newblock \url{http://www.ocf.berkeley.edu/~sanjayk/pubs/svc-2014.pdf}, 2014.
+
+\bibitem{nelson2012query}
+B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
+  J.~Tygar.
+\newblock Query strategies for evading convex-inducing classifiers.
+\newblock {\em The Journal of Machine Learning Research}, 13(1):1293--1332,
+  2012.
+
+\bibitem{pan2010survey}
+S.~J. Pan and Q.~Yang.
+\newblock A survey on transfer learning.
+\newblock {\em Knowledge and Data Engineering, IEEE Transactions on},
+  22(10):1345--1359, 2010.
 
 \bibitem{park2014crowdfill}
 H.~Park and J.~Widom.
@@ -100,6 +142,18 @@ M.~Stonebraker, D.~Bruckner, I.~F. Ilyas, G.~Beskales, M.~Cherniack, S.~B.
   Zdonik, A.~Pagan, and S.~Xu.
 \newblock Data curation at scale: The data tamer system.
 \newblock In {\em CIDR}, 2013.
+
+\bibitem{volkovs2014continuous}
+M.~Volkovs, F.~Chiang, J.~Szlichta, and R.~J. Miller.
+\newblock Continuous data cleaning.
+\newblock In {\em Data Engineering (ICDE), 2014 IEEE 30th International
+  Conference on}, pages 244--255. IEEE, 2014.
+
+\bibitem{wainwright2012privacy}
+M.~J. Wainwright, M.~I. Jordan, and J.~C. Duchi.
+\newblock Privacy aware learning.
+\newblock In {\em Advances in Neural Information Processing Systems}, pages
+  1430--1438, 2012.
 
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.

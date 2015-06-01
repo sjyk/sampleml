@@ -2,7 +2,7 @@ This is BibTeX, Version 0.99d (TeX Live 2013)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: outline.aux
 The style file: abbrv.bst
-Illegal, another \bibstyle command---line 28 of file outline.aux
+Illegal, another \bibstyle command---line 67 of file outline.aux
  : \bibstyle
  :          {abbrv}
 I'm skipping whatever remains of this command
@@ -11,10 +11,15 @@ Repeated entry---line 1734 of file ref.bib
  : @inproceedings{wang1999sample
  :                              ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 1788 of file ref.bib
+ : @inproceedings{volkovs2014continuous
+ :                                     ,
+I'm skipping whatever remains of this entry
 A bad cross reference---entry "wang1999sample"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
 A bad cross reference---entry "AgarwalMPMMS13"
 refers to entry "DBLP:conf/eurosys/2013", which doesn't exist
+Warning--I didn't find a database entry for "rineas2012fast"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2014"
 Warning--I didn't find a database entry for "DBLP:conf/eurosys/2013"
 Warning--to sort, need author or key in sampleclean
@@ -22,47 +27,48 @@ Warning--to sort, need author or key in trifacta
 Warning--to sort, need author or key in mllib
 Warning--to sort, need author or key in graphx
 Warning--empty booktitle in armbrust2015spark
+Warning--empty journal in bergman2015query
 Warning--empty journal in chu2015katara
 Warning--empty journal in khayyat2015bigdansing
-You've used 21 entries,
+You've used 30 entries,
             2118 wiz_defined-function locations,
-            594 strings with 7247 characters,
-and the built_in function-call counts, 7775 in all, are:
-= -- 683
-> -- 514
-< -- 5
-+ -- 206
-- -- 184
-* -- 551
-:= -- 1275
-add.period$ -- 59
-call.type$ -- 21
-change.case$ -- 154
+            638 strings with 8883 characters,
+and the built_in function-call counts, 11797 in all, are:
+= -- 1078
+> -- 741
+< -- 9
++ -- 296
+- -- 264
+* -- 845
+:= -- 1912
+add.period$ -- 88
+call.type$ -- 30
+change.case$ -- 221
 chr.to.int$ -- 0
-cite$ -- 28
-duplicate$ -- 275
-empty$ -- 563
-format.name$ -- 184
-if$ -- 1624
+cite$ -- 38
+duplicate$ -- 423
+empty$ -- 843
+format.name$ -- 264
+if$ -- 2477
 int.to.chr$ -- 0
-int.to.str$ -- 21
-missing$ -- 16
-newline$ -- 104
-num.names$ -- 34
-pop$ -- 210
+int.to.str$ -- 30
+missing$ -- 25
+newline$ -- 149
+num.names$ -- 52
+pop$ -- 285
 preamble$ -- 1
-purify$ -- 133
+purify$ -- 191
 quote$ -- 0
-skip$ -- 213
+skip$ -- 332
 stack$ -- 0
-substring$ -- 275
-swap$ -- 70
-text.length$ -- 5
+substring$ -- 527
+swap$ -- 122
+text.length$ -- 9
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 84
-warning$ -- 7
-while$ -- 47
-width$ -- 23
-write$ -- 206
-(There were 4 error messages)
+type$ -- 120
+warning$ -- 8
+while$ -- 81
+width$ -- 32
+write$ -- 304
+(There were 5 error messages)

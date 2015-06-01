@@ -131,9 +131,9 @@ For a tuple $(x_j,y_j)$, there are basically two cases:
 (C_i(x_j),C_i(y_j)) & \rho_i \text{ is true} 
 \end{cases} 
 \]
-We can calculate the average change over already cleaned data that satisfy the predicate:
+We can calculate the average change over already cleaned data that satisfy the predicate\footnote{For added features, we create dummy feature vectors in the dirty data}:
 \[
-\Delta_i = \sum_{j \in \rho(cleaned)} (C_i(x_j),C_i(y_j))
+\Delta_i = \sum_{j \in \rho(cleaned)} (C_i(x_j),C_i(y_j)) - (x_j,y_j)
 \]
 the resulting estimator is:
 \[

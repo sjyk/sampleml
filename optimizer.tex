@@ -1,0 +1,35 @@
+\section{Progressive Data Cleaning}
+In the previous section, we described our algorithmic insight into this problem.
+The algorithm treats the data cleaning as a black-box that materializes the clean value,
+however, to make such a system work there are numerous data cleaning considerations.
+
+\subsection{Incremental Application of Cleaning}
+There are some cases in which cleaning a row of data may require considering the other data in the sample.
+Consider entity resolution, where we have to resolve inconsistent representations of an attribute.
+When cleaning a sample of data this requires considering all of the inconsistent representations in the sample, and then resolving them to a canonical representation.
+However, such operations will fail in the iterative batch mode proposed by \sys.
+
+To avoid this issue, we define the data cleaning operator semantics in the following way.
+The data cleaning operation is applied to all previously cleaned points.
+At each iteration \sys samples more data, and we have to define our data cleaning operations to incrementally update to the larger sample (including previously cleaned data).
+For the entity resolution operator, we define incremental maintenance procedures and fall-back to recomputation if there are user-defined operations.
+
+\noindent \textbf{Entity Resolution Operator: } The entity resolution operator can be incrementally maintained by joining the new subsample with cleaned sample and taking the transitive closure. This can be implemented efficiently using a UNION-FIND data structure.
+
+\subsection{Incremental Re-train}
+As we increase the sample size, the already cleaned rows might require updating as well. 
+Consider the entity resolution operator, which might find a better canonical representation 
+in the new sample.
+
+\reminder{TODO}
+
+\subsection{Physical Design}
+To make incremental cleaning feasible, there are also indexing/partitioning considerations.
+We need to quickly determine which rows are dirty and which have been previously cleaned.
+
+\reminder{TODO}
+
+\subsection{Choosing Error-Predicate vs. General Case}
+Based on the cleaning operator, we can decide whether the operation is in the Error-Predicate Case or General Case.
+If we are in the error-predicate case, then we can build a predicate index to determine which records are clean and dirty efficiently. 
+\reminder{TODO}

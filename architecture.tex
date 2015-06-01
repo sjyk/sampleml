@@ -53,12 +53,18 @@ restaurant.load()
 .budget(5000)
 \end{lstlisting}
 
+\sys proposes an API for data cleaning pipeline construction. 
+The API provides several data cleaning operations with known semantics.
+Thus, we can use the lineage and operator semantics for optimization.
+Of course, useful pipelines will often have User-Defined Functions and 
+we will discuss the allowed operation types below.
+
 \subsection{Algorithmic Problem Statement}
 To formalize the optimization problem:
 
 \noindent\textbf{Base Data and Featurization: } We are given a base dataset $\mathcal{R}$ which is a relation with $N$ rows. There is a featurization function $F$ which maps every row in $\mathcal{R}$ to a $d$ dimensional feature vector and a $l$ dimensional label tuple: \[F(r \in \mathcal{R}) \mapsto (\mathbb{R}^l, \mathbb{R}^d)\]. 
 
-\noindent\textbf{Data Cleaning: } We define data cleaning as transformations that happens to the base data that result in changes to the feature vector. We do not consider data cleaning operations that change the number of rows in the relation such as row deletion or row deduplication. Allowed operations must result in the following changes to the feature vector: (1) feature transformation, (2) feature deletion, and (3) feature addition. Therefore, there is at most a one-to-one relationship beftween features in the cleaned data and the dirty data.
+\noindent\textbf{Data Cleaning: } We define data cleaning as transformations that happens to the base data that result in changes to the feature vector. We do not consider data cleaning operations that change the number of rows in the relation such as row deletion or row deduplication. Allowed operations must result in the following changes to the feature vector: feature transformation and feature addition. Therefore, there is at most a one-to-one relationship beftween features in the cleaned data and the dirty data.
 
 \reminder{Formalize Better}
 
