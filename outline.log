@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  30 MAY 2015 00:03
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  31 MAY 2015 17:42
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -634,7 +634,24 @@ Underfull \vbox (badness 1803) has occurred while \output is active []
 
 
 ])
-(./background.tex) (./outline.bbl
+(./background.tex) (./architecture.tex
+Underfull \vbox (badness 5878) has occurred while \output is active []
+
+ [2]
+<figs/arch.pdf, id=24, 530.98375pt x 369.38pt>
+File: figs/arch.pdf Graphic file (type pdf)
+ <use figs/arch.pdf>
+Package pdftex.def Info: figs/arch.pdf used on input line 17.
+(pdftex.def)             Requested size: 192.00073pt x 133.5685pt.
+
+Overfull \hbox (31.45302pt too wide) in paragraph at lines 23--23
+[][]\OT1/cmr/m/n/9 http://www.cs.utexas.edu/users/ml/riddle/data/restaurant.tar
+.gz| 
+ []
+
+LaTeX Font Info:    Font shape `U/lasy/b/n' in size <7> not available
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 25.
+) (./outline.bbl
 LaTeX Font Info:    Calculating math sizes for size <7.8> on input line 5.
 
 
@@ -707,20 +724,22 @@ LaTeX Font Info:    Font shape `U/lasy/b/n' in size <3.9> not available
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <3.9> not available
 (Font)              size <5> substituted on input line 5.
 
-) [2] (./outline.aux)
+[3 <./figs/arch.pdf>]) [4
+
+] (./outline.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.1pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 8176 strings out of 493315
- 114956 string characters out of 6137904
- 251268 words of memory out of 5000000
- 11409 multiletter control sequences out of 15000+600000
- 27578 words of font info for 78 fonts, out of 8000000 for 9000
+ 8461 strings out of 493315
+ 118165 string characters out of 6137904
+ 291268 words of memory out of 5000000
+ 11684 multiletter control sequences out of 15000+600000
+ 29753 words of font info for 88 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 42i,10n,40p,819b,340s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,10n,40p,819b,1375s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb></usr/loc
 al/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local
@@ -730,19 +749,22 @@ l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/
 texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/te
 xlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texli
 ve/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/
-2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/201
-3/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2013/texmf
--dist/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2013/texmf-d
-ist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2013/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2013/texmf-dist/
-fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/t
-ype1/urw/times/utmb8a.pfb>
-Output written on outline.pdf (2 pages, 178466 bytes).
+2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/201
+3/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2013/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2013/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2013/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmti8.pfb></usr/local/texlive/2013/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2013/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2013/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2013/texmf-dist/fonts
+/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/texmf-dist/f
+onts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
+pe1/urw/times/utmb8a.pfb>
+Output written on outline.pdf (4 pages, 471864 bytes).
 PDF statistics:
- 80 PDF objects out of 1000 (max. 8388607)
- 58 compressed objects within 1 object stream
+ 150 PDF objects out of 1000 (max. 8388607)
+ 104 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

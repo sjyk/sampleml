@@ -47,6 +47,23 @@ In such scenarios, we see data cleaning as complementary to robust statistics.
 Data cleaning gives us information about the ``true" data distribution, which is highly beneficial when errors have systematic biases.
 Without cleaning, certain subpopulations of data might be frequently mispredicted. 
 
+\subsection{SampleClean Project}
+In our previous work, we studied the relationship between approximate query processing, data cleaning, and sampling \cite{wang1999sample, technicalReport}.
+Traditionally, data cleaning has explored expensive, up-front cleaning of entire datasets for increased query accuracy.
+We proposed the SampleClean problem, in which an analyst cleans a small sample of data, and then estimates the result to an aggregate query e.g., \sumfunc, \countfunc, or \avgfunc.
+The main insight from the SampleClean project is that highly accurate answers for aggregate queries does not require cleaning the full dataset.
+Generalizing this insight, there is a deep relationship between the application (i.e., the query) and how an analyst should budget their effort in data cleaning.
+In fact, \avgfunc and \sumfunc queries are a special case of the convex loss minimization discussed in the previous section:
+\[
+\phi(x_{i,}y_{i},\theta) = (x_{i} - \theta)^2
+\]
+
+In SampleClean, we explored a ``one-size fits all" approach to sampling and query processing.
+We take a random sample of data and then answer any aggregate query on this sample.
+However, in many important Machine Learning applications, there is a single model of interest at the end of the pipeline.
+In this work, we explore how we can exploit the structure of that model to guide data cleaning towards the most important points.
+This new setting is very different from the problem previous studied for the following reasons: (1) the new setting considers multidimensional data and has to account for correlations between attributes, (2) while \avgfunc and \sumfunc queries can be answered with a single pass of the data, general convex loss optimization requires iteration, and (3) guiding the data cleaning requires an estimate of how valuable the cleaning is to the model.
+
 \subsection{Stochastic Gradient Descent}
 Our goal is to design an anytime framework for training models on dirty data.
 Our main idea is to introduce data cleaning into the iterative algorithms that train the models. 
