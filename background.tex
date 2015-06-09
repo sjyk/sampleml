@@ -75,10 +75,7 @@ Finally, in this work, we give a deeper treatment to the problem of sparsity whe
 We address this by using intelligent partitioning that segregates clean and dirty data.
 
 \subsection{Stochastic Gradient Descent}
-Sampling is naturally a part of any Machine Learning workflow 
-
-Our goal is to design an anytime framework for training models on dirty data.
-Our main idea is to introduce data cleaning into the iterative algorithms that train the models. 
+Sampling is a natural part of any Machine Learning workflow, as stochastic optimization is widely used to fit model parameters.
 The problems described in the previous subsections are often trained using a technique called Stochastic Gradient Descent (SGD) or one of its variants.
 The basic idea of SGD is to draw a data point at random, calculate the gradient at that point, and then update a current best estimate with that gradient.
 \[
@@ -88,13 +85,14 @@ The basic idea of SGD is to draw a data point at random, calculate the gradient 
  \[
  \theta^{(t+1)}\leftarrow\theta^{(t)}-\gamma\sum_{i\in S^{(t)}}\nabla\phi(x_{i},y_{i},\theta^{(t)})
  \]
- At a high-level, this problem mirrors the problem explored in this work. We start with an initialization (the dirty model) $\theta^{(0)}$ and iteratively update the existing best model as we get more clean data. 
+We can use this workflow for designing an anytime data cleaning methodology.
+As data is sampled, we can clean the samples.
+The analyst then can stop at anytime and use the best model at that instant.
 SGD and its variants are well-studied and there are lower-bounds on the convergence rates using these techniques. 
-
 Recently, a number of works have explored non-uniform sampling distributions for stochastic optimization \cite{zhao2014stochastic, qu2014randomized}.
 The main insight is that non-uniform distributions may on average estimate the gradient accurately.
-The technique that is applied is called importance sampling.
-Importance sampling preserves the exepected value of a parameter while trying to sample from a distribution that results in lower variance.
+In this work, we explore how to design such a non-uniform distribution for iterative data cleaning.
+
 
 
 

@@ -18,6 +18,7 @@ In Figure \ref{sys-arch}, we illustrate our system archictecture.
  \caption{\sysfull (\sys) is an anytime framework from training models on dirty data. Expensive data transformations prior to model training are budgeted with a non-uniform sampling that priortizes examples that are most likely to change the model. As more data is cleaned the sampling distribution is updated.  \label{sys-arch}}
 \end{figure}
 
+\iffalse
 \subsection{Example Use Case And API}\label{api}
 Consider the following example problem.
 We are given the University of Texas Restaurant \footnote{http://www.cs.utexas.edu/users/ml/riddle/data/restaurant.tar.gz} dataset, which has the following schema:
@@ -58,6 +59,8 @@ The API provides several data cleaning operations with known semantics.
 Thus, we can use the lineage and operator semantics for optimization.
 Of course, useful pipelines will often have User-Defined Functions and 
 we will discuss the allowed operation types below.
+
+\fi
 
 \subsection{Algorithmic Problem Statement}
 To formalize the optimization problem:
