@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  9 JUN 2015 14:25
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  9 JUN 2015 14:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -659,6 +659,9 @@ Overfull \hbox (1.4963pt too wide) in paragraph at lines 112--114
 astes
  []
 
+
+LaTeX Warning: Reference `api' on page 4 undefined on input line 118.
+
 [4]
 Overfull \hbox (10.92369pt too wide) in paragraph at lines 156--157
 []\OT1/cmr/m/n/9 Calculate weighted gra-di-ent of the sam-ple points
@@ -782,89 +785,84 @@ MS/cmsy/m/n/9 ff\OT1/cmr/bx/n/9 TODO\OMS/cmsy/b/n/9 gg[]
  []
 
 ) (./outline.bbl
-LaTeX Font Info:    Calculating math sizes for size <7.8> on input line 5.
+LaTeX Font Info:    Calculating math sizes for size <7.8> on input line 8.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <5.45998> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <3.9> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <5.45998> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <3.9> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <5.45998> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <3.9> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <5.45998> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <3.9> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <5.45998> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <3.9> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <5.45998> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <3.9> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <5.45998> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <3.9> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <7.8> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 5.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 8.
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <5.45998> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 5.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 8.
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <5.45998> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <3.9> not available
-(Font)              Font shape `U/lasy/m/n' tried instead on input line 5.
+(Font)              Font shape `U/lasy/m/n' tried instead on input line 8.
 
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <3.9> not available
-(Font)              size <5> substituted on input line 5.
+(Font)              size <5> substituted on input line 8.
 
 [7 <./exp/exp3a.pdf> <./exp/exp3b.pdf> <./exp/exp3c.pdf> <./exp/exp4a.pdf> <./e
 xp/exp4b.pdf> <./exp/exp4c.pdf> <./exp/exp5a.pdf> <./exp/exp5b.pdf> <./exp/exp5
 c.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [8 <./exp/exp6a.pdf> <./exp/exp6b.pdf> <./exp/exp7a.pdf>]) [9
-
-] (./outline.aux)
+) [8 <./exp/exp6a.pdf> <./exp/exp6b.pdf> <./exp/exp7a.pdf>] (./outline.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.1pt have occurred.
@@ -872,12 +870,15 @@ LaTeX Font Warning: Size substitutions with differences
 
 LaTeX Warning: There were undefined references.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
  ) 
 Here is how much of TeX's memory you used:
- 8310 strings out of 493315
- 116957 string characters out of 6137904
+ 8309 strings out of 493315
+ 116949 string characters out of 6137904
  254268 words of memory out of 5000000
- 11505 multiletter control sequences out of 15000+600000
+ 11504 multiletter control sequences out of 15000+600000
  29518 words of font info for 83 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  42i,10n,40p,1284b,340s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -903,10 +904,10 @@ nts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/texmf-dis
 t/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts
 /type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw
 /times/utmri8a.pfb>
-Output written on outline.pdf (9 pages, 1058853 bytes).
+Output written on outline.pdf (8 pages, 1058260 bytes).
 PDF statistics:
- 626 PDF objects out of 1000 (max. 8388607)
- 429 compressed objects within 5 object streams
+ 623 PDF objects out of 1000 (max. 8388607)
+ 427 compressed objects within 5 object streams
  0 named destinations out of 1000 (max. 500000)
  76 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,5 +1,8 @@
 \begin{thebibliography}{10}
 
+\bibitem{fortunearticle}
+Big data's dirty problem.
+
 \bibitem{graphx}
 Graphx.
 \newblock \url{https://spark.apache.org/graphx/}.
@@ -7,10 +10,6 @@ Graphx.
 \bibitem{mllib}
 Mllib.
 \newblock \url{https://spark.apache.org/mllib/}.
-
-\bibitem{trifacta}
-Trifacta.
-\newblock \url{http://www.trifacta.com}.
 
 \bibitem{sampleclean}
 Sampleclean.
@@ -44,18 +43,6 @@ M.~Bergman, T.~Milo, S.~Novgorodov, and W.-C. Tan.
 \newblock Query-oriented data cleaning with oracles.
 \newblock 2015.
 
-\bibitem{chu2015katara}
-X.~Chu, J.~Morcos, I.~F. Ilyas, M.~Ouzzani, P.~Papotti, N.~Tang, and Y.~Ye.
-\newblock Katara: A data cleaning system powered by knowledge bases and
-  crowdsourcing.
-\newblock 2015.
-
-\bibitem{DBLP:conf/sigmod/CondieCAHGTES10}
-T.~Condie, N.~Conway, P.~Alvaro, J.~M. Hellerstein, J.~Gerth, J.~Talbot,
-  K.~Elmeleegy, and R.~Sears.
-\newblock Online aggregation and continuous query support in mapreduce.
-\newblock In {\em SIGMOD Conference}, pages 1115--1118, 2010.
-
 \bibitem{drineas2012fast}
 P.~Drineas, M.~Magdon-Ismail, M.~W. Mahoney, and D.~P. Woodruff.
 \newblock Fast approximation of matrix coherence and statistical leverage.
@@ -80,11 +67,6 @@ C.~Gokhale, S.~Das, A.~Doan, J.~F. Naughton, N.~Rampalli, J.~Shavlik, and
 \newblock Corleone: Hands-off crowdsourcing for entity matching.
 \newblock In {\em SIGMOD}, 2014.
 
-\bibitem{DBLP:conf/sigmod/HellersteinHW97}
-J.~M. Hellerstein, P.~J. Haas, and H.~J. Wang.
-\newblock Online aggregation.
-\newblock In {\em SIGMOD Conference}, pages 171--182, 1997.
-
 \bibitem{jaggi2014communication}
 M.~Jaggi, V.~Smith, M.~Tak{\'a}c, J.~Terhorst, S.~Krishnan, T.~Hofmann, and
   M.~I. Jordan.
@@ -96,12 +78,6 @@ M.~Jaggi, V.~Smith, M.~Tak{\'a}c, J.~Terhorst, S.~Krishnan, T.~Hofmann, and
 S.~Kandel, A.~Paepcke, J.~Hellerstein, and H.~Jeffrey.
 \newblock Enterprise data analysis and visualization: An interview study.
 \newblock {\em VAST}, 2012.
-
-\bibitem{khayyat2015bigdansing}
-Z.~Khayyat, I.~F. Ilyas, A.~Jindal, S.~Madden, M.~Ouzzani, P.~Papotti, J.-A.
-  Quian{\'e}-Ruiz, N.~Tang, and S.~Yin.
-\newblock Bigdansing: A system for big data cleansing.
-\newblock 2015.
 
 \bibitem{technicalReport}
 S.~Krishnan, J.~Wang, M.~J. Franklin, K.~Goldberg, and T.~Kraska.
@@ -132,16 +108,20 @@ Z.~Qu, P.~Richt{\'a}rik, and T.~Zhang.
 \newblock Randomized dual coordinate ascent with arbitrary sampling.
 \newblock {\em arXiv preprint arXiv:1411.5873}, 2014.
 
+\bibitem{rahm2000data}
+E.~Rahm and H.~H. Do.
+\newblock Data cleaning: Problems and current approaches.
+\newblock {\em IEEE Data Eng. Bull.}, 23(4):3--13, 2000.
+
 \bibitem{settles2010active}
 B.~Settles.
 \newblock Active learning literature survey.
 \newblock {\em University of Wisconsin, Madison}, 52(55-66):11, 2010.
 
-\bibitem{stonebraker2013data}
-M.~Stonebraker, D.~Bruckner, I.~F. Ilyas, G.~Beskales, M.~Cherniack, S.~B.
-  Zdonik, A.~Pagan, and S.~Xu.
-\newblock Data curation at scale: The data tamer system.
-\newblock In {\em CIDR}, 2013.
+\bibitem{Gartner}
+N.~Swartz.
+\newblock Gartner warns firms of 'dirty data'.
+\newblock {\em Information Management Journal}, 41(3), 2007.
 
 \bibitem{volkovs2014continuous}
 M.~Volkovs, F.~Chiang, J.~Szlichta, and R.~J. Miller.

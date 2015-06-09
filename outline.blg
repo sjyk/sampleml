@@ -2,7 +2,7 @@ This is BibTeX, Version 0.99d (TeX Live 2013)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: outline.aux
 The style file: abbrv.bst
-Illegal, another \bibstyle command---line 67 of file outline.aux
+Illegal, another \bibstyle command---line 70 of file outline.aux
  : \bibstyle
  :          {abbrv}
 I'm skipping whatever remains of this command
@@ -15,60 +15,64 @@ Repeated entry---line 1788 of file ref.bib
  : @inproceedings{volkovs2014continuous
  :                                     ,
 I'm skipping whatever remains of this entry
+I was expecting a `,' or a `}'---line 1957 of file ref.bib
+ :   
+ :   url={http://fortune.com/2014/06/30/big-data-dirty-problem/}
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
 A bad cross reference---entry "wang1999sample"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
 A bad cross reference---entry "AgarwalMPMMS13"
 refers to entry "DBLP:conf/eurosys/2013", which doesn't exist
+Warning--I didn't find a database entry for ""
 Warning--I didn't find a database entry for "rineas2012fast"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2014"
 Warning--I didn't find a database entry for "DBLP:conf/eurosys/2013"
+Warning--to sort, need author or key in fortunearticle
 Warning--to sort, need author or key in sampleclean
-Warning--to sort, need author or key in trifacta
 Warning--to sort, need author or key in mllib
 Warning--to sort, need author or key in graphx
 Warning--empty booktitle in armbrust2015spark
 Warning--empty journal in bergman2015query
-Warning--empty journal in chu2015katara
-Warning--empty journal in khayyat2015bigdansing
-You've used 30 entries,
+You've used 27 entries,
             2118 wiz_defined-function locations,
-            638 strings with 8883 characters,
-and the built_in function-call counts, 11797 in all, are:
-= -- 1078
-> -- 741
-< -- 9
-+ -- 296
-- -- 264
-* -- 845
-:= -- 1912
-add.period$ -- 88
-call.type$ -- 30
-change.case$ -- 221
+            630 strings with 8005 characters,
+and the built_in function-call counts, 9850 in all, are:
+= -- 915
+> -- 571
+< -- 7
++ -- 229
+- -- 200
+* -- 689
+:= -- 1594
+add.period$ -- 78
+call.type$ -- 27
+change.case$ -- 180
 chr.to.int$ -- 0
-cite$ -- 38
-duplicate$ -- 423
-empty$ -- 843
-format.name$ -- 264
-if$ -- 2477
+cite$ -- 33
+duplicate$ -- 362
+empty$ -- 738
+format.name$ -- 200
+if$ -- 2079
 int.to.chr$ -- 0
-int.to.str$ -- 30
-missing$ -- 25
-newline$ -- 149
-num.names$ -- 52
-pop$ -- 285
+int.to.str$ -- 27
+missing$ -- 22
+newline$ -- 133
+num.names$ -- 46
+pop$ -- 226
 preamble$ -- 1
-purify$ -- 191
+purify$ -- 153
 quote$ -- 0
-skip$ -- 332
+skip$ -- 286
 stack$ -- 0
-substring$ -- 527
-swap$ -- 122
-text.length$ -- 9
+substring$ -- 460
+swap$ -- 98
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 120
-warning$ -- 8
-while$ -- 81
-width$ -- 32
-write$ -- 304
-(There were 5 error messages)
+type$ -- 108
+warning$ -- 6
+while$ -- 72
+width$ -- 29
+write$ -- 274
+(There were 6 error messages)
