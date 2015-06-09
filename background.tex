@@ -1,7 +1,6 @@
 \section{Background}
 \subsection{Machine Learning and Loss Minimization}
-In parametric Machine Learning, the goal is learn a set of model \emph{parameters} $\theta$ from training examples.
-The hope is that the parameters $\theta$ can predict future phenomena. 
+In parametric Machine Learning, the goal is to learn a set of model \emph{parameters} $\theta$ from training examples.
 A common theoretical framework in Machine Learning is empirical risk minimization.
 We start with a set of training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$
 on which we minimze an loss function $\phi$ at each point parametrized that is parametrized by $\theta$.
@@ -12,11 +11,14 @@ For example, in a linear regression $\phi$ is:
 \[
 \phi(x_{i,}y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
 \]
-
 $\phi$ is often designed to be \emph{convex}, essential meaning bowl-shaped, to make the training this model 
 tractable.
+This class of problems includes all generalized linear models and support vector machines.
+
 Typically, a \emph{regularization} term $r(\theta)$ is added to this problem.
-The regularization term acts as penalty to avoid overfitting to the training data.
+The regularization term $r(\theta)$ is traditionally what is used to increase the robustness of the model.
+$r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid overfitting to noise in the
+training examples.
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
 \]
@@ -24,25 +26,25 @@ For example, a popular variant of linear regression is called LASSO which is:
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\|\theta^Tx_{i} - y_i \|_2^2 + \lambda \cdot \|\theta\|_1
 \]
-This class of problems includes all generalized linear models and support vector machines.
+By applying the L1 regularization term, if one of the features is particularly noisy, and does not add predictive value, it will get excluded.
 
-\subsection{Training on Clean Data}
-The Theoretical Statistics community and Machine Learning community have extensively studied the problem
-of robustness to statistical outliers and random noise.
-Various \emph{robust} methods have been proposed to reduce a loss function's sensitivity to outliers.
+Along these lines, other robust techniques have also been proposed.
 For example, in the case of linear regression, we can change the $L_2$ norm to an $L_1$ norm to mitigate the effect of outliers:
 \[
 \phi(x_{i,}y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_1
 \]
+The quadratic L2 loss implies that examples that deviate far from the typical example are quadratically penalized as opposed to linearly penalized with the L1 loss.
+There is a natural tradeoff between robustness and efficiency.
+The more robust a technique is, the less efficient it will be (i.e. estimate variance for a fixed number of training examples).
 
+\subsection{Training on Clean Data}
 How exactly does a data cleaning approach differ from a robust method?
-We often in the problem setting where we are training on dirty data, but need to test or deploy the model on clean data.
+We often in the problem setting where our data is systematically biased.
 Consider an image classification task with incorrect labeling.
 If we train a model with respect to the incorrect labels, while we might have achieve a good out-of-sample accuracy on the incorrect labels, the classifications are incorrect in a semantic sense.
 Likewise, consider the case where we are predicting future product demand based on corrupted historical data.
 Training a model with respect to the corrupted data might have a low $R^2$ cross-validation error, but is incorrect
 at predicting the future trends.
-
 In such scenarios, we see data cleaning as complementary to robust statistics.
 Data cleaning gives us information about the ``true" data distribution, which is highly beneficial when errors have systematic biases.
 Without cleaning, certain subpopulations of data might be frequently mispredicted. 
@@ -58,13 +60,23 @@ In fact, \avgfunc and \sumfunc queries are a special case of the convex loss min
 \phi(x_{i,}y_{i},\theta) = (x_{i} - \theta)^2
 \]
 
-In SampleClean, we explored a ``one-size fits all" approach to sampling and query processing.
-We take a random sample of data and then answer any aggregate query on this sample.
-However, in many important Machine Learning applications, there is a single model of interest at the end of the pipeline.
-In this work, we explore how we can exploit the structure of that model to guide data cleaning towards the most important points.
-This new setting is very different from the problem previous studied for the following reasons: (1) the new setting considers multidimensional data and has to account for correlations between attributes, (2) while \avgfunc and \sumfunc queries can be answered with a single pass of the data, general convex loss optimization requires iteration, and (3) guiding the data cleaning requires an estimate of how valuable the cleaning is to the model.
+We then extended the SampleClean work to study cleaning Materialized Views \cite{technicalReport}.
+Suppose base data is updated with insertions, deletions, or updates, we explored how we could efficiently propagate
+changes to a sample of the view instead of the full view.
+Subsequent queries on the view could be answered approximate.
+
+We see this line of work as an extension and generalization of the work that we did in the past.
+There are several new contributions in this work.
+First, Machine Learning models give us a richer geometric information (e.g., gradients), which we can use 
+prioritizing sampling.
+In this work, we explore non-uniform sampling as opposed to the uniform sampling methodologies studied before.
+Next, machine learning models are trained iteratively making them more amenable to adaptive processing where cleaned data can be fed back to inform the next set of samples.
+Finally, in this work, we give a deeper treatment to the problem of sparsity where only small clustered subsets of data are corrupted.
+We address this by using intelligent partitioning that segregates clean and dirty data.
 
 \subsection{Stochastic Gradient Descent}
+Sampling is naturally a part of any Machine Learning workflow 
+
 Our goal is to design an anytime framework for training models on dirty data.
 Our main idea is to introduce data cleaning into the iterative algorithms that train the models. 
 The problems described in the previous subsections are often trained using a technique called Stochastic Gradient Descent (SGD) or one of its variants.

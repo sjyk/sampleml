@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  4 JUN 2015 00:55
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  9 JUN 2015 12:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -622,22 +622,26 @@ LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <9> not available
 (Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 137.
 
 (./introduction.tex
-Overfull \hbox (1.19139pt too wide) in paragraph at lines 15--23
-\OT1/cmr/m/n/9 pro-to-type changes on the sam-ple, and eval-u-ate whether these
 
+LaTeX Warning: Citation `Gartner' on page 1 undefined on input line 3.
+
+
+LaTeX Warning: Citation `fortunearticle' on page 1 undefined on input line 3.
+
+
+LaTeX Warning: Citation `rahm2000data' on page 1 undefined on input line 14.
+
+
+Overfull \hbox (8.08995pt too wide) in paragraph at lines 19--23
+\OT1/cmr/m/n/9 data and can es-ti-mate the re-sults of ag-gre-gate queries.Anal
+ysts
  []
 
-
-Underfull \vbox (badness 1803) has occurred while \output is active []
-
- [1{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+[1{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ])
-(./background.tex) (./architecture.tex
-Underfull \vbox (badness 5878) has occurred while \output is active []
-
- [2]
+(./background.tex [2]) (./architecture.tex
 <figs/arch.pdf, id=24, 530.98375pt x 369.38pt>
 File: figs/arch.pdf Graphic file (type pdf)
  <use figs/arch.pdf>
@@ -649,32 +653,38 @@ Overfull \hbox (31.45302pt too wide) in paragraph at lines 23--23
 .gz| 
  []
 
+
+Underfull \vbox (badness 1590) has occurred while \output is active []
+
 LaTeX Font Info:    Font shape `U/lasy/b/n' in size <7> not available
 (Font)              Font shape `U/lasy/m/n' tried instead on input line 25.
-) (./algorithm.tex [3 <./figs/arch.pdf>]
+ [3 <./figs/arch.pdf>]) (./algorithm.tex
+Underfull \vbox (badness 2753) has occurred while \output is active []
+
+
 Overfull \hbox (4.15685pt too wide) in paragraph at lines 77--80
 []\OT1/cmr/m/it/9 The im-por-tance sam-pled al-go-rithm con-verges
  []
 
-
+[4]
 Overfull \hbox (1.4963pt too wide) in paragraph at lines 112--114
 []\OT1/cmr/m/n/9 If er-rors are sparse, then the pre-vi-ous al-go-rithm still w
 astes
  []
 
-[4]
+
 Overfull \hbox (10.92369pt too wide) in paragraph at lines 156--157
 []\OT1/cmr/m/n/9 Calculate weighted gra-di-ent of the sam-ple points
  []
 
 LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <9> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 180.
-
+[5]
 Overfull \hbox (28.79536pt too wide) in paragraph at lines 217--218
 \OT1/cmr/m/n/9 ap-ply gra-di-ent de-scent us-ing the gra-di-ent $[]$. 
  []
 
-) (./optimizer.tex [5]
+) (./optimizer.tex
 Overfull \hbox (5.75603pt too wide) in paragraph at lines 32--32
 []\secfnt Choosing Error-Predicate vs. Gen-eral Case 
  []
@@ -757,14 +767,21 @@ File: exp/exp6b.pdf Graphic file (type pdf)
 <use exp/exp6b.pdf>
 Package pdftex.def Info: exp/exp6b.pdf used on input line 47.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
+ <exp/exp7a.pdf, id=101, 1050.92625pt x 734.745pt>
+File: exp/exp7a.pdf Graphic file (type pdf)
+
+<use exp/exp7a.pdf>
+Package pdftex.def Info: exp/exp7a.pdf used on input line 62.
+(pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
 ) (./relatedwork.tex
 Overfull \hbox (15.7462pt too wide) in paragraph at lines 2--4
 []\OT1/cmr/m/n/9 Bringing to-gether data clean-ing and ma-chine learn-ing prese
 nts
  []
 
+[6 <./exp/exp1.pdf> <./exp/exp2.pdf>]
 
-LaTeX Warning: Citation `rineas2012fast' on page 6 undefined on input line 5.
+LaTeX Warning: Citation `rineas2012fast' on page 7 undefined on input line 5.
 
 
 Overfull \hbox (5.15115pt too wide) in paragraph at lines 5--6
@@ -772,22 +789,26 @@ Overfull \hbox (5.15115pt too wide) in paragraph at lines 5--6
 s-
  []
 
-[6 <./exp/exp1.pdf> <./exp/exp2.pdf>]
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
-)
-(./conclusion.tex
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [7 <./exp/exp3a.pdf> <./exp/exp3b.pdf> <./exp/exp3c.pdf> <./exp/exp4a.pdf> <./
 exp/exp4b.pdf> <./exp/exp4c.pdf> <./exp/exp5a.pdf> <./exp/exp5b.pdf> <./exp/exp
-5c.pdf>]
+5c.pdf>])
+(./conclusion.tex
 Overfull \hbox (21.54498pt too wide) in paragraph at lines 2--7
 \OT1/cmr/m/n/9 form sam-pling, and dirtiness-agnostic pri-or-i-ti-za-tion. []\O
 MS/cmsy/m/n/9 ff\OT1/cmr/bx/n/9 TODO\OMS/cmsy/b/n/9 gg[] 
  []
 
-) (./outline.bbl
+)
+Underfull \vbox (badness 1596) has occurred while \output is active []
+
+
+(./outline.bbl
 LaTeX Font Info:    Calculating math sizes for size <7.8> on input line 5.
 
 
@@ -860,10 +881,7 @@ LaTeX Font Info:    Font shape `U/lasy/b/n' in size <3.9> not available
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <3.9> not available
 (Font)              size <5> substituted on input line 5.
 
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [8 <./exp/exp6a.pdf> <./exp/exp6b.pdf>]) [9
+[8 <./exp/exp6a.pdf> <./exp/exp6b.pdf> <./exp/exp7a.pdf>]) [9
 
 ] (./outline.aux)
 
@@ -875,13 +893,13 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 8565 strings out of 493315
- 119747 string characters out of 6137904
+ 8573 strings out of 493315
+ 119866 string characters out of 6137904
  291268 words of memory out of 5000000
- 11757 multiletter control sequences out of 15000+600000
+ 11764 multiletter control sequences out of 15000+600000
  31190 words of font info for 90 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 42i,10n,40p,1284b,1375s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,10n,40p,1284b,1129s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
 exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmbsy9.pfb></usr/loc
 al/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local
@@ -905,10 +923,10 @@ ts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2013/texmf-dist/fonts
 onts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
 pe1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/ti
 mes/utmri8a.pfb>
-Output written on outline.pdf (9 pages, 1033786 bytes).
+Output written on outline.pdf (9 pages, 1076991 bytes).
 PDF statistics:
- 596 PDF objects out of 1000 (max. 8388607)
- 409 compressed objects within 5 object streams
+ 630 PDF objects out of 1000 (max. 8388607)
+ 432 compressed objects within 5 object streams
  0 named destinations out of 1000 (max. 500000)
- 71 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 76 words of extra memory for PDF output out of 10000 (max. 10000000)
 
