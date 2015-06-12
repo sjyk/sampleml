@@ -1,15 +1,31 @@
 \section{Background}
+\subsection{Motivating Example}
+To motivate our solution, we present a running example scenario inspired by
+one of our experimental datasets.
+In this problem, an analyst is training a classifier to predict the occurance 
+of seizures based on EEG data.
+\begin{example}
+An analyst is given a 15-dimensional feature vector $x \in \mathbb{R}^{15}$ of electrical signals and a label $y\in \{0,1\}$ of whether the patient is having a seizure.
+The analyst trains an L1-Loss SVM on this data.
+After training, the analyst is informed of an inconsistency in the labels $y\in \{0,1\}$ where some patients unafflicted patients were marked as having seizures.
+However, the procedure to determine which patients' data are corrupted requires querying medical records.
+\end{example}
+With existing tools, the analyst has a few options: (1) she can ignore the errors and assume that the inconsistencies do not affect the results, (2) she can discard the data and assume that the errors are not correlated with the other covariates, or (3) she can clean the entire dataset and retrain her model.
+In \sys, we present the analyst with a middle ground where she can initialize the framework with her existing model and iteratively converge towards the clean model.
+To optimize the convergence rate, we feed information of each succesive model iteration back to prioritize which data to sample.
+
 \subsection{Machine Learning and Loss Minimization}
+The SVM model in our example is an instance of parametric Machine Learning.
 In parametric Machine Learning, the goal is to learn a set of model \emph{parameters} $\theta$ from training examples.
-A common theoretical framework in Machine Learning is empirical risk minimization.
+A common theoretical framework in Machine Learning is empirical risk minimization with linear predictors.
 We start with a set of training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$
 on which we minimze an loss function $\phi$ at each point parametrized that is parametrized by $\theta$.
 \[
- \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i}^T\theta,y_{i})
 \]
 For example, in a linear regression $\phi$ is:
 \[
-\phi(x_{i,}y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
+\phi(x_{i}^T\theta,y_{i}) = \|\theta^Tx_{i} - y_i \|_2^2
 \]
 $\phi$ is often designed to be \emph{convex}, essential meaning bowl-shaped, to make the training this model 
 tractable.
@@ -20,7 +36,7 @@ The regularization term $r(\theta)$ is traditionally what is used to increase th
 $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid overfitting to noise in the
 training examples.
 \[
- \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i}^T\theta,y_{i}) + r(\theta)
 \]
 For example, a popular variant of linear regression is called LASSO which is:
 \[
@@ -31,14 +47,13 @@ By applying the L1 regularization term, if one of the features is particularly n
 Along these lines, other robust techniques have also been proposed.
 For example, in the case of linear regression, we can change the $L_2$ norm to an $L_1$ norm to mitigate the effect of outliers:
 \[
-\phi(x_{i,}y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_1
+\phi(x_{i}^T\theta,y_{i}) = \|\theta^Tx_{i} - y_i \|_1
 \]
 The quadratic L2 loss implies that examples that deviate far from the typical example are quadratically penalized as opposed to linearly penalized with the L1 loss.
 There is a natural tradeoff between robustness and efficiency.
 The more robust a technique is, the less efficient it will be (i.e. estimate variance for a fixed number of training examples).
 
-\subsection{Training on Clean Data}
-How exactly does a data cleaning approach differ from a robust method?
+\subsection{Systematic Biases}
 We often in the problem setting where our data is systematically biased.
 Consider an image classification task with incorrect labeling.
 If we train a model with respect to the incorrect labels, while we might have achieve a good out-of-sample accuracy on the incorrect labels, the classifications are incorrect in a semantic sense.
@@ -57,7 +72,7 @@ The main insight from the SampleClean project is that highly accurate answers fo
 Generalizing this insight, there is a deep relationship between the application (i.e., the query) and how an analyst should budget their effort in data cleaning.
 In fact, \avgfunc and \sumfunc queries are a special case of the convex loss minimization discussed in the previous section:
 \[
-\phi(x_{i,}y_{i},\theta) = (x_{i} - \theta)^2
+\phi = (x_{i} - \theta)^2
 \]
 
 We then extended the SampleClean work to study cleaning Materialized Views \cite{technicalReport}.
@@ -65,8 +80,14 @@ Suppose base data is updated with insertions, deletions, or updates, we explored
 changes to a sample of the view instead of the full view.
 Subsequent queries on the view could be answered approximate.
 
-We see this line of work as an extension and generalization of the work that we did in the past.
-There are several new contributions in this work.
+The SampleClean problem inspired an eponymous system that implements sampling, data cleaning, and approximate query processing on the Apache Spark stack \cite{sampleclean}.
+Also included in the Apache Spark stack are Machine Learning libraries including MLlib \cite{mllib} and GraphX \cite{graphx}.
+The in-memory architecture of the Apache Spark stack allows for increasingly interactive analysis \cite{AgarwalMPMMS13, armbrust2015spark}.
+Analysts can prototype data processing workflows on samples to evaluate performance before running expensive batch processing jobs on entire datasets.
+With data cleaning and machine learning libraries in the same software ecosystem, we see a new opportunity for joint optimization for interactive model building.
+
+We see this work as an extension and generalization of the work that we did in the past.
+There are several new contributions.
 First, Machine Learning models give us a richer geometric information (e.g., gradients), which we can use 
 prioritizing sampling.
 In this work, we explore non-uniform sampling as opposed to the uniform sampling methodologies studied before.
@@ -79,12 +100,13 @@ Sampling is a natural part of any Machine Learning workflow, as stochastic optim
 The problems described in the previous subsections are often trained using a technique called Stochastic Gradient Descent (SGD) or one of its variants.
 The basic idea of SGD is to draw a data point at random, calculate the gradient at that point, and then update a current best estimate with that gradient.
 \[
-\theta^{(t+1)}\leftarrow\theta^{(t)}-\gamma\nabla\phi(x_{i},y_{i},\theta^{(t)})
+\theta^{(t+1)}\leftarrow\theta^{(t)}-\gamma\nabla\phi(x_{i}^T\theta,y_{i})
 \]
- SGD can also be applied in a ``mini-batch" mode, where we draw a subset of data at random and update with the average gradient.
+ SGD can also be applied in a ``mini-batch" mode, where we draw a subset of data $S^{(t)}$ at random and update with the average gradient.
  \[
- \theta^{(t+1)}\leftarrow\theta^{(t)}-\gamma\sum_{i\in S^{(t)}}\nabla\phi(x_{i},y_{i},\theta^{(t)})
+ \theta^{(t+1)}\leftarrow\theta^{(t)}-\frac{\gamma}{\|S^{(t)}\|}\sum_{i\in S^{(t)}}\nabla\phi(x_{i}^T\theta,y_{i})
  \]
+
 We can use this workflow for designing an anytime data cleaning methodology.
 As data is sampled, we can clean the samples.
 The analyst then can stop at anytime and use the best model at that instant.
@@ -92,8 +114,6 @@ SGD and its variants are well-studied and there are lower-bounds on the converge
 Recently, a number of works have explored non-uniform sampling distributions for stochastic optimization \cite{zhao2014stochastic, qu2014randomized}.
 The main insight is that non-uniform distributions may on average estimate the gradient accurately.
 In this work, we explore how to design such a non-uniform distribution for iterative data cleaning.
-
-
 
 
 

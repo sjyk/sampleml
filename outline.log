@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  9 JUN 2015 14:26
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  12 JUN 2015 14:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -611,25 +611,9 @@ LaTeX Font Info:    Font shape `U/lasy/b/n' in size <5> not available
 
 LaTeX Warning: No \author given.
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 137.
-
-(/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 137.
-LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <9> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 137.
-
 (./introduction.tex
 
-LaTeX Warning: Citation `Gartner' on page 1 undefined on input line 3.
-
-
-LaTeX Warning: Citation `fortunearticle' on page 1 undefined on input line 3.
-
-
-LaTeX Warning: Citation `rahm2000data' on page 1 undefined on input line 14.
+LaTeX Warning: Citation `xiaofeature' on page 1 undefined on input line 8.
 
 
 Overfull \hbox (8.08995pt too wide) in paragraph at lines 19--23
@@ -637,18 +621,50 @@ Overfull \hbox (8.08995pt too wide) in paragraph at lines 19--23
 ysts
  []
 
-[1{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [1{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
 ])
-(./background.tex [2]) (./architecture.tex
-<figs/arch.pdf, id=22, 530.98375pt x 369.38pt>
+(./background.tex
+Underfull \vbox (badness 3769) has occurred while \output is active []
+
+ [2])
+(./architecture.tex
+Overfull \hbox (6.11345pt too wide) in paragraph at lines 15--15
+[]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 15--15
+
+ []
+
+<figs/arch.pdf, id=22, 622.325pt x 458.71375pt>
 File: figs/arch.pdf Graphic file (type pdf)
  <use figs/arch.pdf>
-Package pdftex.def Info: figs/arch.pdf used on input line 17.
-(pdftex.def)             Requested size: 192.00073pt x 133.5685pt.
+Package pdftex.def Info: figs/arch.pdf used on input line 30.
+(pdftex.def)             Requested size: 240.0pt x 176.90282pt.
+
+<figs/cmldag.pdf, id=23, 834.11626pt x 253.94875pt>
+File: figs/cmldag.pdf Graphic file (type pdf)
+ <use figs/cmldag.pdf>
+Package pdftex.def Info: figs/cmldag.pdf used on input line 44.
+(pdftex.def)             Requested size: 240.0pt x 73.06587pt.
 )
-(./algorithm.tex [3 <./figs/arch.pdf>]
+(./algorithm.tex [3]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 25.
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 25.
+LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <9> not available
+(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 25.
+ [4 <./figs/arch.pdf> <./figs/cmldag.pdf>]
 Overfull \hbox (4.15685pt too wide) in paragraph at lines 77--80
 []\OT1/cmr/m/it/9 The im-por-tance sam-pled al-go-rithm con-verges
  []
@@ -660,104 +676,104 @@ astes
  []
 
 
-LaTeX Warning: Reference `api' on page 4 undefined on input line 118.
+LaTeX Warning: Reference `api' on page 5 undefined on input line 118.
 
-[4]
+
 Overfull \hbox (10.92369pt too wide) in paragraph at lines 156--157
 []\OT1/cmr/m/n/9 Calculate weighted gra-di-ent of the sam-ple points
  []
 
 LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <9> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 180.
-
+[5]
 Overfull \hbox (28.79536pt too wide) in paragraph at lines 217--218
 \OT1/cmr/m/n/9 ap-ply gra-di-ent de-scent us-ing the gra-di-ent $[]$. 
  []
 
-) (./optimizer.tex [5]
+) (./optimizer.tex
 Overfull \hbox (5.75603pt too wide) in paragraph at lines 32--32
 []\secfnt Choosing Error-Predicate vs. Gen-eral Case 
  []
 
-) (./experiments.tex <exp/exp1.pdf, id=87, 1345.025pt x 707.64375pt>
+) (./experiments.tex <exp/exp1.pdf, id=96, 1345.025pt x 707.64375pt>
 File: exp/exp1.pdf Graphic file (type pdf)
 
 <use exp/exp1.pdf>
 Package pdftex.def Info: exp/exp1.pdf used on input line 15.
 (pdftex.def)             Requested size: 192.00073pt x 101.01305pt.
- <exp/exp2.pdf, id=88, 1344.02126pt x 711.65875pt>
+ <exp/exp2.pdf, id=97, 1344.02126pt x 711.65875pt>
 File: exp/exp2.pdf Graphic file (type pdf)
 
 <use exp/exp2.pdf>
 Package pdftex.def Info: exp/exp2.pdf used on input line 16.
 (pdftex.def)             Requested size: 192.00073pt x 101.66217pt.
- <exp/exp3a.pdf, id=89, 1050.92625pt x 734.745pt>
+ <exp/exp3a.pdf, id=98, 1050.92625pt x 734.745pt>
 File: exp/exp3a.pdf Graphic file (type pdf)
 
 <use exp/exp3a.pdf>
 Package pdftex.def Info: exp/exp3a.pdf used on input line 25.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- <exp/exp3b.pdf, id=90, 1050.92625pt x 734.745pt>
+ <exp/exp3b.pdf, id=99, 1050.92625pt x 734.745pt>
 File: exp/exp3b.pdf Graphic file (type pdf)
 
 <use exp/exp3b.pdf>
 Package pdftex.def Info: exp/exp3b.pdf used on input line 26.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- <exp/exp3c.pdf, id=91, 1050.92625pt x 734.745pt>
+ <exp/exp3c.pdf, id=100, 1050.92625pt x 734.745pt>
 File: exp/exp3c.pdf Graphic file (type pdf)
 
 <use exp/exp3c.pdf>
 Package pdftex.def Info: exp/exp3c.pdf used on input line 27.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- <exp/exp4a.pdf, id=92, 1050.92625pt x 734.745pt>
+ <exp/exp4a.pdf, id=101, 1050.92625pt x 734.745pt>
 File: exp/exp4a.pdf Graphic file (type pdf)
 
 <use exp/exp4a.pdf>
 Package pdftex.def Info: exp/exp4a.pdf used on input line 28.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- <exp/exp4b.pdf, id=93, 1050.92625pt x 734.745pt>
+ <exp/exp4b.pdf, id=102, 1050.92625pt x 734.745pt>
 File: exp/exp4b.pdf Graphic file (type pdf)
 
 <use exp/exp4b.pdf>
 Package pdftex.def Info: exp/exp4b.pdf used on input line 29.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- <exp/exp4c.pdf, id=94, 1050.92625pt x 734.745pt>
+ <exp/exp4c.pdf, id=103, 1050.92625pt x 734.745pt>
 File: exp/exp4c.pdf Graphic file (type pdf)
 
 <use exp/exp4c.pdf>
 Package pdftex.def Info: exp/exp4c.pdf used on input line 30.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- <exp/exp5a.pdf, id=95, 864.22874pt x 602.25pt>
+ <exp/exp5a.pdf, id=104, 864.22874pt x 602.25pt>
 File: exp/exp5a.pdf Graphic file (type pdf)
 
 <use exp/exp5a.pdf>
 Package pdftex.def Info: exp/exp5a.pdf used on input line 37.
 (pdftex.def)             Requested size: 146.91693pt x 102.38113pt.
- <exp/exp5b.pdf, id=96, 864.22874pt x 602.25pt>
+ <exp/exp5b.pdf, id=105, 864.22874pt x 602.25pt>
 File: exp/exp5b.pdf Graphic file (type pdf)
 
 <use exp/exp5b.pdf>
 Package pdftex.def Info: exp/exp5b.pdf used on input line 38.
 (pdftex.def)             Requested size: 146.91693pt x 102.38113pt.
- <exp/exp5c.pdf, id=97, 864.22874pt x 602.25pt>
+ <exp/exp5c.pdf, id=106, 864.22874pt x 602.25pt>
 File: exp/exp5c.pdf Graphic file (type pdf)
 
 <use exp/exp5c.pdf>
 Package pdftex.def Info: exp/exp5c.pdf used on input line 39.
 (pdftex.def)             Requested size: 146.91693pt x 102.38113pt.
- <exp/exp6a.pdf, id=98, 1050.92625pt x 734.745pt>
+ <exp/exp6a.pdf, id=107, 1050.92625pt x 734.745pt>
 File: exp/exp6a.pdf Graphic file (type pdf)
 
 <use exp/exp6a.pdf>
 Package pdftex.def Info: exp/exp6a.pdf used on input line 46.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- <exp/exp6b.pdf, id=99, 1050.92625pt x 734.745pt>
+ <exp/exp6b.pdf, id=108, 1050.92625pt x 734.745pt>
 File: exp/exp6b.pdf Graphic file (type pdf)
 
 <use exp/exp6b.pdf>
 Package pdftex.def Info: exp/exp6b.pdf used on input line 47.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- <exp/exp7a.pdf, id=100, 1050.92625pt x 734.745pt>
+ <exp/exp7a.pdf, id=109, 1050.92625pt x 734.745pt>
 File: exp/exp7a.pdf Graphic file (type pdf)
 
 <use exp/exp7a.pdf>
@@ -769,8 +785,9 @@ Overfull \hbox (15.7462pt too wide) in paragraph at lines 2--4
 nts
  []
 
+[6]
 
-LaTeX Warning: Citation `rineas2012fast' on page 6 undefined on input line 5.
+LaTeX Warning: Citation `rineas2012fast' on page 7 undefined on input line 5.
 
 
 Overfull \hbox (5.15115pt too wide) in paragraph at lines 5--6
@@ -778,7 +795,16 @@ Overfull \hbox (5.15115pt too wide) in paragraph at lines 5--6
 s-
  []
 
-[6 <./exp/exp1.pdf> <./exp/exp2.pdf>]) (./conclusion.tex
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [7 <./exp/exp3a.pdf> <./exp/exp3b.pdf> <./exp/exp3c.pdf> <./exp/exp4a.pdf> <./
+exp/exp4b.pdf> <./exp/exp4c.pdf> <./exp/exp5a.pdf> <./exp/exp5b.pdf> <./exp/exp
+5c.pdf>])
+(./conclusion.tex
 Overfull \hbox (21.54498pt too wide) in paragraph at lines 2--7
 \OT1/cmr/m/n/9 form sam-pling, and dirtiness-agnostic pri-or-i-ti-za-tion. []\O
 MS/cmsy/m/n/9 ff\OT1/cmr/bx/n/9 TODO\OMS/cmsy/b/n/9 gg[] 
@@ -857,12 +883,10 @@ LaTeX Font Info:    Font shape `U/lasy/b/n' in size <3.9> not available
 LaTeX Font Warning: Font shape `U/lasy/m/n' in size <3.9> not available
 (Font)              size <5> substituted on input line 8.
 
-[7 <./exp/exp3a.pdf> <./exp/exp3b.pdf> <./exp/exp3c.pdf> <./exp/exp4a.pdf> <./e
-xp/exp4b.pdf> <./exp/exp4c.pdf> <./exp/exp5a.pdf> <./exp/exp5b.pdf> <./exp/exp5
-c.pdf>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+[8 <./exp/exp6a.pdf> <./exp/exp6b.pdf> <./exp/exp7a.pdf> <./exp/exp1.pdf> <./ex
+p/exp2.pdf>]) [9
 
-) [8 <./exp/exp6a.pdf> <./exp/exp6b.pdf> <./exp/exp7a.pdf>] (./outline.aux)
+] (./outline.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.1pt have occurred.
@@ -875,8 +899,8 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 8309 strings out of 493315
- 116949 string characters out of 6137904
+ 8310 strings out of 493315
+ 116926 string characters out of 6137904
  254268 words of memory out of 5000000
  11504 multiletter control sequences out of 15000+600000
  29518 words of font info for 83 fonts, out of 8000000 for 9000
@@ -904,10 +928,10 @@ nts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/texmf-dis
 t/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts
 /type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw
 /times/utmri8a.pfb>
-Output written on outline.pdf (8 pages, 1058260 bytes).
+Output written on outline.pdf (9 pages, 861210 bytes).
 PDF statistics:
- 623 PDF objects out of 1000 (max. 8388607)
- 427 compressed objects within 5 object streams
+ 635 PDF objects out of 1000 (max. 8388607)
+ 440 compressed objects within 5 object streams
  0 named destinations out of 1000 (max. 500000)
- 76 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 

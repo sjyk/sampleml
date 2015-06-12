@@ -1,22 +1,50 @@
 \section{System Architecture}
 
-\subsection{System Architecture}
-The SampleClean problem inspired an eponymous system that implements sampling, data cleaning, and approximate query processing on the Apache Spark stack \cite{sampleclean}.
-Also included in the Apache Spark stack are Machine Learning libraries including MLlib \cite{mllib} and GraphX \cite{graphx}.
-The in-memory architecture of the Apache Spark stack allows for increasingly interactive analysis \cite{AgarwalMPMMS13, armbrust2015spark}.
-Analysts can prototype data processing workflows on samples to evaluate performance before running expensive batch processing jobs on entire datasets.
-With data cleaning and machine learning libraries in the same software ecosystem, we see a new opportunity for joint optimization for interactive model building.
+\subsection{Data Cleaning Model}
+We define data cleaning as transformations that happens to the base data that result in changes to the feature vector. We do not consider data cleaning operations that change the number of rows in the relation such as row deletion or row deduplication. Allowed operations must result in the following changes to the feature vector: feature transformation and feature addition. Therefore, there is at most a one-to-one relationship beftween features in the cleaned data and the dirty data.
 
+\subsection{Problems}
 We believe that interactive model building problem is best addressed by an anytime approach, where an analyst has a time budget and wants a best effort result given this time budget.
 \sys optimizes the convergence of the model by adaptively changing the sampling distribution.
-In Figure \ref{sys-arch}, we illustrate our system archictecture.
 \sys is an optimizer that wraps around the SampleClean data cleaning library and Machine Learning libraries in Spark.
+
+\begin{problem}[Importance Sampling]
+\end{problem}
+
+\begin{problem}[Model Processing with Predicates]
+\end{problem}
+
+\begin{problem}[General Model Processing]
+\end{problem}
+
+\subsection{System Architecture}
+In Figure \ref{sys-arch}, we illustrate our system archictecture in contrast to a traditional data cleaning architecture.
+Traditionally, data cleaning has explored expensive, up-front cleaning of entire datasets for increased accuracy on all possible queries.
+Raw data is cleaned, then featurized, and then a model is trained based on the clean data.
+In contrast, \sys explores a different architecture where data is progressively processed.
+When we know the desired model in advance, we can feed this information back to guide and priortize data cleaning.
+In the process of fitting the model, we can integrate data cleaning rather than divorcing the two parts.
 
 \begin{figure}[t]
 \centering
- \includegraphics[width=0.8\columnwidth]{figs/arch.pdf}
+ \includegraphics[width=\columnwidth]{figs/arch.pdf}
  \caption{\sysfull (\sys) is an anytime framework from training models on dirty data. Expensive data transformations prior to model training are budgeted with a non-uniform sampling that priortizes examples that are most likely to change the model. As more data is cleaned the sampling distribution is updated.  \label{sys-arch}}
 \end{figure}
+
+\subsection{Parameter Updates}
+To achieve this architecture, \sys needs to maintain two states the parameter vector $\theta$ and the sampling distribution $P$.
+We will formally describe the mathematics behind this process in the later sections.
+In Figure \ref{param-arch}, we illustrate the structure of the parameter updates.
+At each iteration, we draw a batch of dirty data using the sampling distribution $P$.
+We calculate the average gradient for this data, and combine this gradient with the average gradient of the cleaned data.
+We then update the parameter $\theta$ which in turn updates the sampling distribution.
+
+\begin{figure}[t]
+\centering
+ \includegraphics[width=\columnwidth]{figs/cmldag.pdf}
+ \caption{The \sysfull operation DAG. At each iteration, we partition the data into clean and unknown quality. We fuse gradient estimates from the two partitions: (1) a sample from the unknown data using importance sampling, (2) a full (non-stochastic) gradient step on the clean data. After this estimate, we update the sampling distribution and the parameter.   \label{param-arch}}
+\end{figure}
+
 
 \iffalse
 \subsection{Example Use Case And API}\label{api}
@@ -60,7 +88,7 @@ Thus, we can use the lineage and operator semantics for optimization.
 Of course, useful pipelines will often have User-Defined Functions and 
 we will discuss the allowed operation types below.
 
-\fi
+
 
 \subsection{Algorithmic Problem Statement}
 To formalize the optimization problem:
@@ -81,3 +109,4 @@ To formalize the optimization problem:
 \]
 
 \noindent\textbf{Output: } The output of \sys is at each cleaning round we draw the sample of $\frac{B}{T}$ rows from a sampling distribution that incorporates information about the value of cleaning that row to model. After the $T$ cleaning rounds, the user is returned an approximately clean model $\theta^{(c)}$.
+\fi

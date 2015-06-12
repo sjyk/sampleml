@@ -1,17 +1,17 @@
 \section{Introduction}
-Data are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
+Databases are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
 Numerous surveys of industry have shown that dirty data are prevelant \cite{Gartner}, and there is now a growing industry around processing dirty data at scale \cite{fortunearticle}.
 Analysts are increasingly deriving data from inherently error-prone processes such as extracting structured data from websites, synthesizing data from multiple networked sensors, and linking entities in disparate data sources.
 As these data grow, new methodologies for scalable and reliable analysis in the presence of errors are required. 
 
 Increasingly, modern data analysis pipelines involve Machine Learning for predictive models.
-The endpoint of these pipelines can be any number of ``data products", such as recommender systems, spam detectors, and forecasting models, all of which can be very sensitive to data quality \cite{}.
-When data error is systematic,i.e., it is correlated with the data, errors can significantly bias predictions by a model.
+The endpoint of these pipelines can be any number of ``data products", such as recommender systems, spam detectors, and forecasting models, all of which can be very sensitive to data quality \cite{xiaofeature}.
+When data error is systematic, or correlated with the data, errors can significantly bias predictions by a model.
 For example, in a recommender system, we may find that all users from one region have a missing age attribute.
 In this setting, discarding corrupted data or ignoring the problem can make predictions for the affected subpopulation untrustworthy.
 A more sophisticated approach is to apply robust statistical methods, but these are designed to mitigate the effect of high-magnitude random outliers, and not compensate for systematic errors.
 
-One solution to the systematic error problem is data cleaning, which is an extensively studied field (see Rahm and Do \cite{rahm2000data} for a survey).
+For some types of systematic error, we can apply data cleaning, which is an extensively studied field (see Rahm and Do \cite{rahm2000data} for a survey).
 Instead of avoiding the problem, cleaning works by repairing (or approximately repairing) the corruption.
 However, cleaning large data can be expensive, both computationally and in human effort, as an analyst has to program repairs for all errors manifest in the data \cite{kandel2012}.
 In some applications, scripted data transformations may not be reliable necessitating the use of even costlier crowdsourcing techniques \cite{gokhale2014corleone,park2014crowdfill}.
@@ -19,9 +19,9 @@ In some applications, scripted data transformations may not be reliable necessit
 An emerging solution to the growing costs of data cleaning is sampling \cite{wang1999sample} where the analyst cleans a small sample of data and can estimate the results of aggregate queries.Analysts can sample a large dataset, prototype changes on the sample, and evaluate whether these changes have the desired affect.
 The case for sampling is analagous to arguments for Approximate Query Processing (AQP) \cite{DBLP:conf/eurosys/AgarwalMPMMS13}, where a timely approximate answer is more desirable than an exact slow answer.
 Sampling provides a flexible tradeoff between cleaning cost and query result accuracy for aggregate queries, but the question we explore in this paper is how this tradeoff extends to Machine Learning. 
-Machine Learning is far more sensitive to sample size (i.e., training data) than aggregate queries and we explore how we can exploit the geometery of the model to prioritize sampling.
+Machine Learning is far more sensitive to sample size (training data) than aggregate queries and we explore how we can exploit the geometery of the model to prioritize sampling.
 
-This insight is not surprising, as the growing consensus in Machine Learning research is that all training data are not created equal and some data are more informative than others \cite{drineas2012fast, settles2010active}.
+This insight is not surprising as the growing consensus in Machine Learning research is that all training data are not created equal and some data are more informative than others \cite{drineas2012fast, settles2010active}.
 In Active Learning, we often sequentially select the most important points to label \cite{settles2010active}.
 However, the key new challenge in data cleaning is that features and examples that may look unimportant in the dirty data may be important in the clean data and vice versa.
 We exploit two properties of this problem, sparsity and history, to build a priortization framework that identifies examples that are valuable to the clean model.

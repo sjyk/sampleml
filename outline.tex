@@ -133,9 +133,14 @@
 \maketitle
 
 \begin{abstract}
-
-\reminder{TODO}
-
+Databases are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
+Increasingly, modern data analysis pipelines involve Machine Learning for predictive models.
+In this paper, we propose \sysfull (\sys), an anytime framework for training Machine Learning models with data cleaning.
+As we draw samples of our training examples as a part of stochastic optimization, we clean the data as required avoiding data that we have already cleaned or we believe is clean.
+The sampling is distribution is non-uniform prioritizing points that will likely affect the model significantly.
+The optimization iteratively converges giving us the desired anytime behavior.
+We index dirty and clean data to achieve to implement the framework efficiently.
+We evaluate \sys on 4 real datasets and find that our methodology can return more accurate models for a smaller cost than alternatives such as uniform sampling and active learning.
 \end{abstract}
 
 \setcounter{page}{1}
