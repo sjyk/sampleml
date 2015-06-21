@@ -1,0 +1,137 @@
+\section{Approximating the Optimal Distribution}
+This section describes our solution to problem of constructing and maintaining an inexpensive estimate of clean value $e(\cdot)$.
+To do this accurately, is a challenging regression problem.
+However, we only use this estimate to construct a sampling distribution, so a coarse-grained estimate suffices.
+We show how we can exploit the structure of the data cleaning operations to find this coarse-grained estimate.
+
+\subsection{Error Decoupling}
+Recall, that when we formalized the error detection problem, we ensured that associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which is a set that identifies a set of corrupted columns.
+Since there is a one-to-many relationship between columns and features, each erroneous column affects a disjoint set of features.
+We will show how we can construct a decoupled estimate, one where we independently estimate for each colum and aggregate them together.
+
+Property represents a linearization of the errors, and can be addressed with a first order approximation of the expected gradient.
+The expected gradient is defined as:
+\[
+\mathbb{E}(\nabla\phi(\theta_{(t)}^Tx_{clean},y_{clean}))
+\]
+We can take the expected value of the Taylor series expansion around the dirty value.
+If $d$ is the dirty value and $c$ is the clean value, the Taylor series approximation for a function $f$ is given as follows:
+\[
+f(c) = f(d) + f'(d)\cdot(d-c) + ...
+\]
+If we ignore the higher order terms, we see that the linear term $f'(d)\cdot(c-d)$ decouples the features.
+We only have know the change in each feature to estimate the change in value.
+
+In our case the function $f$ is actually the gradient $\nabla\phi$.
+So, the resulting linearization is:
+\[
+\nabla\phi(\theta^Tx_{clean},y_{clean}) \approx \nabla\phi(\theta^Tx,y) + \frac{\partial}{\partial X}\nabla\phi(\theta^Tx,y)\cdot (x - x_{clean}) \]
+\[+ \frac{\partial}{\partial Y}\nabla\phi(\theta^Tx,y)\cdot (y - y_{clean}) + ...
+\]
+When we take the expected value:
+\[
+\mathbb{E}(\nabla\phi(\theta^Tx_{clean},y_{clean})) \approx \nabla\phi(\theta^Tx,y) + \frac{\partial}{\partial X}\nabla\phi(\theta^Tx,y)\cdot \mathbb{E}(\Delta x) \]
+\[+ \frac{\partial}{\partial Y}\nabla\phi(\theta^Tx,y)\cdot \mathbb{E}(\Delta y) + ...
+\]
+
+\subsection{Maintaining Decoupled Averages}
+This linearization allows us to maintain per feature (or label) average changes and use these changes to center the optimal sampling distribution around the expected clean value.
+\begin{lemma}[Single Feature]
+For a feature $i$, we average all records cleaned that have an error for that feature, weighted by their sampling probability:
+\[
+\bar{\Delta}_i = \frac{1}{K}\sum_{j=0}^K (x[i]-x_{clean}[i])\times p_j
+\]
+Similarly, for a label $i$:
+\[
+\bar{\Delta}_i = \frac{1}{K}\sum_{j=0}^K (y[i]-y_{clean}[i])\times p_j
+\]
+\end{lemma}
+
+Then, it follows, that we can aggregate the $\bar{\Delta}_i$ into a single vector:
+\begin{theorem}[Delta vector]
+Let $\{1..,i,...,d\}$ index the set of features and labels.
+For a record $r$, the set of corrupted features is $f_r$.
+Then, each record $r$ has a d-dimensional vector $\Delta_r$ which is constructed as follows:
+\[
+ \Delta_r[i] = \begin{cases} 0 & i \notin f_r \\ 
+\bar{\Delta}_i & i \in f_r
+\end{cases} 
+\]
+\end{theorem}
+
+With the above theorem, we address the \textbf{Sampling Distribution and Impact Estimate (Problem \ref{imp-samp} and \ref{imp-est}): }
+\[p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + \frac{\partial}{\partial X}\nabla\phi \cdot \Delta_r +  \frac{\partial}{\partial Y}\nabla\phi \cdot \Delta_r\|\]
+
+\subsection{Algorithm}
+Now that we know how to feedback the error estimates $c(\cdot)$, we describe the entire workflow of \sys:
+\begin{enumerate}[noitemsep]
+\item Initialize with $\theta^{(0)}$ as the dirty model, $T$ iterations, with a batch size $B$
+\item Initialize all $\Delta = 0$
+\item For rounds i=1...T
+\begin{enumerate}
+	\item Sample $B$ candidate dirty data points with probabilites as described.
+	\item Apply data cleaning to the sample of data.
+	\item Apply weighted gradient descent to update the model.
+	\item Update $\Delta$ for each feature.
+\end{enumerate}
+\item Return $\theta^{(T)}$
+\end{enumerate}
+
+\subsection{Physical Design Considerations}
+From a systems perspective, the important step in this algorithm is step 3a.
+We have to query a sample of candidate data points from $R_{dirty}$ which 
+can be expensive.
+For eample, if we have a set of constraints, we would have to re-evaluate 
+the violated constraints at each iterations.
+This is why we make assumptions about the persistence of data repairs in our
+problem formalization.
+If we make this assumption, we can run the query once at initialization and index 
+the dirty records.
+Then, as we clean data, we can maintain the index.
+
+\subsection{Comparative Analysis}
+There is well-studied history of Machine Learning and Data Cleaning with budgets and prioritization. 
+Suppose, we have a budget of cleaning $k\ll N$ records.
+Non-iterative techniques include the traditionally studied robust Machine Learning.
+These techniques handle only a small set of systematic error.
+If we want to handle a larger space of data systematic error, then we need some sort of a data cleaning approach.
+We could apply SampleClean \cite{wang1999sample} in a non-iterative fashion which takes a random sample of data, applies data cleaning, and trains the model to optimum on the sample.
+
+An alternative iterative technique is Active Learning to prioritize which data to clean.
+Prior work in Active Learning is agnostic to data error so the prioritization will be with respect to the dirty data instead of the clean data.
+Active Learning may give us a benefit when the statistics of the dirty data are a good proxy for the clean data.
+In fact, expected gradient length as an Active Learning criterion has been studied before \cite{settles2010active}, but in this work we devise a technique to compensate for data error.
+We also leverage the structure of the data cleaning setting to make more progress at each iteration than a typical Active Learning workflow by averaging the gradients of newly cleaned batches of data with data that we know is clean.
+We summarize the salient features in Table(\ref{estimators}).
+
+\begin{table*}[ht!]\footnotesize
+\centering
+\begin{tabular}{ l l l l l}
+  Technique & Systematic Errors & Preferred Regime & Cost per Iteration & Overall Cleaning Cost \\ \hline
+  Robust Machine Learning & Incomplete & High-Magnitude Random Outliers & - & None \\
+  SampleClean & Yes & Very Biased & - & Sample \\
+  ActiveLearning & Yes & Minimal Error & O(N) & Reduced\\
+  \sys+Uniform & Yes & Sparse, high-variance errors & O(N) & Reduced\\
+  \sys+Importance & Yes & Sparse, localized errors & O(N) & Greatly Reduced\\
+\end{tabular}
+\end{table*}
+
+\reminder{SK will flesh out analysis here next week.}
+
+\reminder{Beats SampleClean in ideal case}
+\begin{lemma}
+In the oracular case, where we know the clean data in advance, importance sampling gives a strictly tighter error bound than uniform sampling.
+\end{lemma}
+
+\reminder{Beats Active Learning in ideal case}
+\begin{lemma}
+In the oracular case, where we know the clean data in advance, the gradient step made by \sys gives a strictly lower error bound than a naive random sample.
+\end{lemma}
+
+\reminder{Gains are preserved in practice}
+\begin{lemma}
+In the real case, where we have to estimate the clean data, importance sampling gives a tighter error bound when the variance of the estimates $e$ is less than the variance of the gradients.
+\end{lemma}
+
+
+
