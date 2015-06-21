@@ -7,56 +7,77 @@
 \citation{gokhale2014corleone,park2014crowdfill}
 \citation{wang1999sample}
 \citation{DBLP:conf/eurosys/AgarwalMPMMS13}
-\citation{drineas2012fast,settles2010active}
-\citation{settles2010active}
-\citation{zhao2014stochastic}
+\citation{bottou2012stochastic}
 \select@language{USenglish}
 \@writefile{toc}{\select@language{USenglish}}
 \@writefile{lof}{\select@language{USenglish}}
 \@writefile{lot}{\select@language{USenglish}}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}}
-\citation{wang1999sample,technicalReport}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces ActiveClean\xspace  (ActiveClean\xspace  ) is an anytime framework from training models on dirty data. Expensive data transformations prior to model training are budgeted with a non-uniform sampling that priortizes examples that are most likely to change the model. }}{1}}
+\newlabel{sys-arch}{{1}{1}}
+\citation{drineas2012fast,settles2010active}
+\citation{settles2010active}
+\citation{fortunearticle}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Background}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Motivating Example}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Machine Learning and Loss Minimization}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Systematic Biases}{2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}SampleClean Project}{2}}
-\citation{technicalReport}
-\citation{sampleclean}
-\citation{mllib}
-\citation{graphx}
-\citation{AgarwalMPMMS13,armbrust2015spark}
-\citation{zhao2014stochastic,qu2014randomized}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Stochastic Gradient Descent}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Two perspectives on error}{3}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}System Architecture}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Data Cleaning Model}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Problems}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}System Architecture}{3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Parameter Updates}{3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Problem Formulation}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Error Detection}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Error Sampling}{3}}
+\newlabel{imp-samp}{{1}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.3}Error Repair}{3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.4}Incremental Model Update}{3}}
+\newlabel{imp-update}{{2}{3}}
+\citation{DBLP:journals/pvldb/YakoutENOI11,DBLP:journals/pvldb/FanLMTY10,khayyat2015bigdansing}
+\citation{DBLP:journals/pvldb/FanLMTY10}
+\citation{DBLP:journals/pvldb/YakoutENOI11}
+\citation{bertossi2013data}
+\citation{DBLP:journals/pvldb/FanLMTY10}
+\citation{khayyat2015bigdansing}
+\citation{DBLP:journals/pvldb/FanLMTY10}
+\citation{DBLP:journals/pvldb/YakoutENOI11}
+\citation{park2014crowdfill}
+\citation{gokhale2014corleone,DBLP:journals/pvldb/KopckeTR10}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.5}Error Impact Estimate}{4}}
+\newlabel{imp-est}{{3}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.6}Summary}{4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Detection and Repair Models}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.1}Constraint-based Errors}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.2}Value Filling}{4}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.2.3}Entity Resolution}{4}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Sampling and Model Update}{4}}
+\citation{bertsekas2011incremental}
+\citation{nikolic2014linview}
 \citation{zhao2014stochastic}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces CleanML\xspace  (CML\xspace  ) is an anytime framework from training models on dirty data. Expensive data transformations prior to model training are budgeted with a non-uniform sampling that priortizes examples that are most likely to change the model. As more data is cleaned the sampling distribution is updated. }}{4}}
-\newlabel{sys-arch}{{1}{4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces The CleanML\xspace  operation DAG. At each iteration, we partition the data into clean and unknown quality. We fuse gradient estimates from the two partitions: (1) a sample from the unknown data using importance sampling, (2) a full (non-stochastic) gradient step on the clean data. After this estimate, we update the sampling distribution and the parameter. }}{4}}
-\newlabel{param-arch}{{2}{4}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Importance Sampling and SGD}{4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Basic Algorithm: Oracular Case}{4}}
-\citation{nadeef}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.1.1}Oracular Case: Analysis}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Error Predicate Case}{5}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Error Predicate Case: Analysis}{5}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}General Case}{5}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Progressive Data Cleaning}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Incremental Application of Cleaning}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Incremental Re-train}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Physical Design}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Choosing Error-Predicate vs. General Case}{6}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Experiments}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Experiment 1. Data Cleaning vs. Alternatives}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Experiment 2. Sampling + Data Cleaning vs. Fixed}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Experiment 3. Sampling + Data Cleaning vs. Error Rate/Selectivity}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Experiment 4. Overhead of Scan}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}Experiment 5. Predicate vs. General Case}{6}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Experiment 6. End-to-end}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Stochastic Gradient Descent}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Sampling Distribution}{5}}
+\newlabel{dist-samp}{{4.2}{5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Summary}{5}}
+\citation{wang1999sample}
+\citation{settles2010active}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Approximating the Optimal Distribution}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Error Decoupling}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Maintaining Decoupled Averages}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Algorithm}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Physical Design Considerations}{6}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Comparative Analysis}{6}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Progressive Data Cleaning}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Incremental Application of Cleaning}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Incremental Re-train}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Physical Design}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Accuracy with different techniques}}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Choosing Error-Predicate vs. General Case}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Experiments}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Experiment 1. Data Cleaning vs. Alternatives}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Experiment 2. Sampling + Data Cleaning vs. Fixed}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Experiment 3. Sampling + Data Cleaning vs. Error Rate/Selectivity}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Experiment 4. Overhead of Scan}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Experiment 5. Predicate vs. General Case}{7}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}Experiment 6. End-to-end}{7}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Related Work}{7}}
 \citation{zhao2014stochastic}
 \citation{qu2014randomized}
 \citation{rineas2012fast}
@@ -68,42 +89,41 @@
 \citation{altowim2014progressive}
 \citation{volkovs2014continuous}
 \citation{bergman2015query}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces TODO}}{7}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces TODO}}{7}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Related Work}{7}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces L2 Bias--ignore units for now will normalize}}{8}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{8}}
 \citation{jaggi2014communication}
 \bibstyle{abbrv}
 \bibstyle{abbrv}
 \bibdata{ref}
 \bibcite{fortunearticle}{1}
-\bibcite{graphx}{2}
-\bibcite{mllib}{3}
-\bibcite{sampleclean}{4}
-\bibcite{DBLP:conf/eurosys/AgarwalMPMMS13}{5}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces TODO}}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces TODO}}{8}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces TODO}}{8}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Conclusion}{8}}
-\@writefile{toc}{\contentsline {section}{\numberline {9}References}{8}}
-\bibcite{AgarwalMPMMS13}{6}
-\bibcite{altowim2014progressive}{7}
-\bibcite{armbrust2015spark}{8}
-\bibcite{bergman2015query}{9}
-\bibcite{drineas2012fast}{10}
-\bibcite{duchi2013local}{11}
-\bibcite{nadeef}{12}
-\bibcite{gokhale2014corleone}{13}
-\bibcite{jaggi2014communication}{14}
-\bibcite{kandel2012}{15}
-\bibcite{technicalReport}{16}
-\bibcite{nelson2012query}{17}
-\bibcite{pan2010survey}{18}
-\bibcite{park2014crowdfill}{19}
-\bibcite{qu2014randomized}{20}
-\bibcite{rahm2000data}{21}
-\bibcite{settles2010active}{22}
-\bibcite{Gartner}{23}
-\bibcite{volkovs2014continuous}{24}
-\bibcite{wainwright2012privacy}{25}
-\bibcite{wang1999sample}{26}
-\bibcite{zhao2014stochastic}{27}
+\bibcite{DBLP:conf/eurosys/AgarwalMPMMS13}{2}
+\bibcite{altowim2014progressive}{3}
+\bibcite{bergman2015query}{4}
+\bibcite{bertossi2013data}{5}
+\bibcite{bertsekas2011incremental}{6}
+\bibcite{drineas2012fast}{7}
+\bibcite{duchi2013local}{8}
+\bibcite{DBLP:journals/pvldb/FanLMTY10}{9}
+\bibcite{gokhale2014corleone}{10}
+\bibcite{jaggi2014communication}{11}
+\bibcite{kandel2012}{12}
+\bibcite{khayyat2015bigdansing}{13}
+\bibcite{DBLP:journals/pvldb/KopckeTR10}{14}
+\bibcite{nelson2012query}{15}
+\bibcite{nikolic2014linview}{16}
+\bibcite{pan2010survey}{17}
+\bibcite{park2014crowdfill}{18}
+\bibcite{qu2014randomized}{19}
+\bibcite{rahm2000data}{20}
+\bibcite{settles2010active}{21}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Tradeoff between Random and Systematic Errors}}{9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Basically plotting an equation}}{9}}
+\@writefile{toc}{\contentsline {section}{\numberline {10}References}{9}}
+\bibcite{Gartner}{22}
+\bibcite{volkovs2014continuous}{23}
+\bibcite{wainwright2012privacy}{24}
+\bibcite{wang1999sample}{25}
+\bibcite{xiaofeature}{26}
+\bibcite{DBLP:journals/pvldb/YakoutENOI11}{27}
+\bibcite{zhao2014stochastic}{28}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces One experiment with MNIST}}{10}}

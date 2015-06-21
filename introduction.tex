@@ -19,25 +19,38 @@ In some applications, scripted data transformations may not be reliable necessit
 An emerging solution to the growing costs of data cleaning is sampling \cite{wang1999sample} where the analyst cleans a small sample of data and can estimate the results of aggregate queries.Analysts can sample a large dataset, prototype changes on the sample, and evaluate whether these changes have the desired affect.
 The case for sampling is analagous to arguments for Approximate Query Processing (AQP) \cite{DBLP:conf/eurosys/AgarwalMPMMS13}, where a timely approximate answer is more desirable than an exact slow answer.
 Sampling provides a flexible tradeoff between cleaning cost and query result accuracy for aggregate queries, but the question we explore in this paper is how this tradeoff extends to Machine Learning. 
-Machine Learning is far more sensitive to sample size (training data) than aggregate queries and we explore how we can exploit the geometery of the model to prioritize sampling.
 
-This insight is not surprising as the growing consensus in Machine Learning research is that all training data are not created equal and some data are more informative than others \cite{drineas2012fast, settles2010active}.
+\begin{figure}[t]
+\centering
+ \includegraphics[width=0.6\columnwidth]{figs/arch.png}
+ \caption{\sysfull (\sys) is an anytime framework from training models on dirty data. Expensive data transformations prior to model training are budgeted with a non-uniform sampling that priortizes examples that are most likely to change the model.  \label{sys-arch}}
+\end{figure}
+
+Machine Learning is far more sensitive to sample size (training data) than aggregate queries.
+However, there are a few observations that make this problem tractable.
+Sampling is naturally part of large-scale Machine Learning, as stochastic optimization methods start at an arbitrary initialization and calculate updates by drawing training examples at random. 
+Even with clean data, in very large datasets, it is well known that substantial progress is made in less than one epoch (i.e., a full pass through the entire dataset) \cite{bottou2012stochastic}.
+In our setting, we do not have to start with an abitrary initialization.
+Errors often happen in batches, often tightly clustered, and affect a small number of features.
+This means that a dirty model may be relatively ``close" to the clean model albeit with bias in a few features.
+Hypothetically, if we had a clean dataset, and were to apply stochastic optimization using the dirty model as an initialization, we can get a highly accurate result with processing far less than an entire epoch.
+This insight inspires the key idea of this paper, namely, that we can clean data as and when required by the optimization allowing us to clean far less than the entire dataset.
+
+This integrated model training and data cleaning architecture leads to new optimization opportunities.
+Since data cleaning adds a very significant cost to each model update, we can run pre-computations at each iteration to select which examples to clean because the additional overhead is offset by reductions in cleaning cost.
+There is a growing consensus in Machine Learning research that all training data are not created equal and some data are more informative than others \cite{drineas2012fast, settles2010active}.
 In Active Learning, we often sequentially select the most important points to label \cite{settles2010active}.
 However, the key new challenge in data cleaning is that features and examples that may look unimportant in the dirty data may be important in the clean data and vice versa.
-We exploit two properties of this problem, sparsity and history, to build a priortization framework that identifies examples that are valuable to the clean model.
-First, errors are often happen in batches are often tightly clustered, that is they affect similar data.
-Second, as we clean more data, we learn how errors affect the data.
-We can use these two insights to partition data that we believe is clean from the dirty data, and estimate the effects of cleaning on the dirty data based on prior examples.
+We partition data that we believe is clean from the dirty data, and estimate the effects of cleaning on the dirty data based on prior examples.
 The resulting algorithm selects examples valuable to the clean model with higher probability and as an analyst cleans data we further guide the cleaning.
 
 In this paper, we propose \sysfull (\sys), an anytime framework for training Machine Learning models with data cleaning.
+In Figure \ref{sys-arch}, we illustrate our system architecture.
 \sys supports a class of models called regularized-convex loss problems which includes linear regression, logistic regression, generalized linear models, and support vector machines.
-These models are typically solved with a stochastic optimization technique such as Stochastic Gradient Descent (SGD).
-The basic idea of SGD is to draw a data point at random, calculate the gradient at that point, and then update a current best estimate with that gradient.
-This stochastic process fits nicely with the idea of sampling and cleaning.
-As we draw samples of our training examples, we clean the data as required by the optimization intelligently avoiding data that we have already cleaned or we believe is clean.
-Our main insight is that these samples can be drawn with importance sampling, which has recently been studied in stochastic optimization \cite{zhao2014stochastic} but never in the context of online data cleaning. 
-The optimization iteratively converges giving us the desired anytime behavior.
+We start with a model trained on the dirty data.
+An \emph{error sampling} module selects a small sample of data from the corrupted dataset to clean.
+We apply the repairs to this small sample with the \emph{error repair} module, and use an incremental optimization method (e.g., Gradient Descent) to update the dirty model.
+Once we clean data, we maintain a running estimate of how cleaning impacts the model and feed that estimate back to adaptively set the sampling distribution.
 
 In summary, our contributions are
 \begin{itemize}[noitemsep]

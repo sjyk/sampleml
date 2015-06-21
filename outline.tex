@@ -27,7 +27,7 @@
 %\usepackage{psfrag}
 \usepackage{colortbl}
 \usepackage{bm}
-%\usepackage{times}
+\usepackage{times}
 \usepackage[nospace]{cite}
 \usepackage{csquotes}
 
@@ -41,10 +41,10 @@
 
 \begin{document}
 
-\setlength{\belowdisplayskip}{0.5pt} \setlength{\belowdisplayshortskip}{1pt}
-\setlength{\abovedisplayskip}{0.5pt} \setlength{\abovedisplayshortskip}{1pt}
-\setlength{\belowcaptionskip}{-10pt}
-\selectfont
+%\setlength{\belowdisplayskip}{0.5pt} \setlength{\belowdisplayshortskip}{1pt}
+%\setlength{\abovedisplayskip}{0.5pt} \setlength{\abovedisplayshortskip}{1pt}
+%\setlength{\belowcaptionskip}{-10pt}
+%\selectfont
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{example}{Example}
@@ -87,9 +87,9 @@
 \newcommand{\update}{\ensuremath{\texttt{UPDATE} }\xspace}
 \newcommand{\delete}{\ensuremath{\texttt{DELETE} }\xspace}
 
-\newcommand{\sysfull}{CleanML\xspace}
-\newcommand{\sys}{CML\xspace}
-\newcommand{\sysnospace}{CML}
+\newcommand{\sysfull}{ActiveClean\xspace}
+\newcommand{\sys}{ActiveClean\xspace}
+\newcommand{\sysnospace}{ActiveClean}
 
 \newcommand{\tbl}[1]{\textsf{#1}\xspace}
 \newcommand{\field}[1]{\textsf{#1}\xspace}
@@ -148,7 +148,9 @@ We evaluate \sys on 4 real datasets and find that our methodology can return mor
 \input{introduction.tex}
 \input{background.tex}
 \input{architecture.tex}
-\input{algorithm.tex}
+\input{optimal.tex}
+\input{impestimate.tex}
+
 \input{optimizer.tex}
 \input{experiments.tex}
 \input{relatedwork.tex}
@@ -160,7 +162,7 @@ We evaluate \sys on 4 real datasets and find that our methodology can return mor
 
 \bibliographystyle{abbrv}
 %\scriptsize
-\fontsize{7.8pt}{8.2pt} \selectfont
+\fontsize{8.5pt}{8.7pt} \selectfont
 \bibliographystyle{abbrv}
 \bibliography{ref} 
 
