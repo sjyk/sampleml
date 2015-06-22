@@ -1,7 +1,7 @@
-\section{System Architecture}
+\section{System Architecture}\label{arch}
 
 \subsection{Problem Formulation}
-We revist the architecture diagram in Figure \ref{sys-arch}, and formalize
+We revisit the architecture diagram in Figure \ref{sys-arch}, and formalize
 the problems addressed in each one of the stages.
 \sys is a data cleaning methodology that inlines data cleaning with model training, and we formalize the conditions on the data cleaning operations that can fit in our framework.
 Formally, given a relation $R$ with a set of attributes $A$.
@@ -21,6 +21,7 @@ F(\mathcal{D}(R))\rightarrow (X_{clean},Y_{clean})
 The first step of \sys is error detection.
 We have to select a set of candidate records to be cleaned from the base data.
 Formally, given a relation $R$, we select a subset of records to be cleaned $R_{dirty}$.
+$R_{dirty}$ must contain at least all of the records that are actually dirty.
 Associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which tells us which columns are corrupted.
 
 \subsubsection{Error Sampling}
@@ -36,7 +37,7 @@ Given the current best model estimate $\theta$, data matrices $(X,Y)$, for each 
 \subsubsection{Error Repair}
 Given a set of sampled records, we apply data cleaning to this sample.
 We define data cleaning as transformations that happens to the base data that result in changes to the feature vector. 
-There is at most a one-to-one relationship beftween features in the cleaned data and the dirty data.
+There is at most a one-to-one relationship between features in the cleaned data and the dirty data.
 We require the following conditions on the data cleaning:
 \begin{enumerate}
 \item Single Operation. A dirty record is completely cleaned after applying the Error Repair module.
@@ -46,7 +47,7 @@ We require the following conditions on the data cleaning:
 The output of this step are cleaned set of features vectors $\{(x_{clean},y_{clean})\}^K_i$.
 
 \subsubsection{Incremental Model Update}
-Given the sample of cleaned examples $\{(x_{clean},y_{clean})\}^K_i$ and the sampling probabilites, the next problem that we address is to update the model.
+Given the sample of cleaned examples $\{(x_{clean},y_{clean})\}^K_i$ and the sampling probabilities, the next problem that we address is to update the model.
 
 \begin{problem}[Incremental Update]\label{imp-update}\sloppy
 Given the current best model estimate $\theta$, a clean sample $\{(x_{clean},y_{clean})\}^K_i$ , and a set of sampling probabilities $\{p\}^K_i$, we update the best model estimate from $\theta \rightarrow \theta'$.
@@ -63,7 +64,7 @@ Let $(X_{dirty},Y_{dirty})$ be the data submatrices of the dirty data, $E_r$ be 
 
 \subsubsection{Summary}
 \sys explores a different data cleaning architecture where data is progressively cleaned while a model is being trained.
-We can feed results back to guide and priortize data cleaning adaptively.
+We can feed results back to guide and prioritize data cleaning adaptively.
 
 \subsection{Detection and Repair Models}
 There are two steps, Error Detection and Error Repair, that are dependent on the data cleaning operation. 
@@ -73,7 +74,7 @@ In particular, we describe how we can select a set of candidate records for clea
 \subsubsection{Constraint-based Errors}
 One model for handling errors in database declaring a set of constraints on a database and 
 iteratively fixing records such that the constraints are satisfied \cite{DBLP:journals/pvldb/YakoutENOI11, DBLP:journals/pvldb/FanLMTY10, khayyat2015bigdansing}.
-In this setting, it is relatively inexpensive to query the set of records that violate some contraint, however, automatically repairing the errors is often NP-Hard \cite{DBLP:journals/pvldb/FanLMTY10}.
+In this setting, it is relatively inexpensive to query the set of records that violate some constraint, however, automatically repairing the errors is often NP-Hard \cite{DBLP:journals/pvldb/FanLMTY10}.
 Due to the hardness of automatic repair, heuristics are typically used so the fixes can be unreliable.
 Therefore, recently proposed systems like Guided Data Repair \cite{DBLP:journals/pvldb/YakoutENOI11}, use human input to validate suggested fixes.
 The challenge with using human input is that it is expensive and is often with a time or a cost budget.
@@ -83,7 +84,7 @@ Formally, constraint-based error detection and repair can be incorporated into \
 
 \noindent\textbf{Error Detection. } Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
 The allowed constraint classes are Matching Dependencies \cite{bertossi2013data}, Conditional Functional Dependencies \cite{DBLP:journals/pvldb/FanLMTY10}, and Denial Constrains \cite{khayyat2015bigdansing}. 
-We additionally require tha $\Sigma$ is transitively closed and the constraints are on disjoint attributes.
+We additionally require that $\Sigma$ is transitively closed and the constraints are on disjoint attributes.
 In the error detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
 The set $e_r$ is a subset of $\Sigma$ for each record that is violated.
 
@@ -93,7 +94,7 @@ The set $e_r$ is a subset of $\Sigma$ for each record that is violated.
 Consider our EEG data running example, for an example of constraint-based cleaning.
 We can add a constraint that one of the electrical signals cannot be greater than 4V.
 For all records whose value is above 4V, we would select them in the error detection step.
-Then, in the error repair step, we could apply a repair that sets the errorneous signal value to its most likely value.
+Then, in the error repair step, we could apply a repair that sets the erroneous signal value to its most likely value.
 \end{example}
 
 \subsubsection{Value Filling}
@@ -170,7 +171,7 @@ Given the current best model estimate $\theta$, data matrices $(X,Y)$, for each 
 \end{problem}
 
 We will show that the optimal importance sampling distribution requires knowing the clean value of all the data, however, to a first-order, we can approximate it with estimates on already cleaned data.
-We analyze the situition in which this estimate will reduce variance from the uniform sampling case where $p_i = p_j$.
+We analyze the situation in which this estimate will reduce variance from the uniform sampling case where $p_i = p_j$.
 
 Our algorithm is iterative where we sample data, update the model, and resample.
 We also study the two model update problems:
@@ -183,11 +184,11 @@ Given an importance sampling distribution $p$ (from Problem \ref{imp-samp}), cla
 \end{problem}
 
 \subsection{System Architecture}
-In Figure \ref{sys-arch}, we illustrate our system archictecture in contrast to a traditional data cleaning architecture to show how the above problems fit together.
+In Figure \ref{sys-arch}, we illustrate our system architecture in contrast to a traditional data cleaning architecture to show how the above problems fit together.
 Traditionally, data cleaning has explored expensive, up-front cleaning of entire datasets for increased accuracy on all possible queries.
 Raw data is cleaned, then featurized, and then a model is trained based on the clean data.
 In contrast, \sys explores a different architecture where data is progressively processed.
-When we know the desired model in advance, we can feed this information back to guide and priortize data cleaning.
+When we know the desired model in advance, we can feed this information back to guide and prioritize data cleaning.
 In the process of fitting the model, we can integrate data cleaning rather than divorcing the two parts.
 
 \subsection{Parameter Updates}

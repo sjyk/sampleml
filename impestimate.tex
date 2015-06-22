@@ -89,7 +89,18 @@ If we make this assumption, we can run the query once at initialization and inde
 the dirty records.
 Then, as we clean data, we can maintain the index.
 
-\subsection{Comparative Analysis}
+\subsection{Comparative Analysis}\label{analysis}
+\begin{table*}[ht!]\footnotesize
+\centering
+\begin{tabular}{ l l l l l}
+  Technique & Systematic Errors & Preferred Regime & Cost per Iteration & Overall Cleaning Cost \\ \hline
+  Robust Machine Learning & Incomplete & High-Magnitude Random Outliers & - & None \\
+  SampleClean & Yes & Very Biased & - & Sample \\
+  ActiveLearning & Yes & Minimal Error & O(N) & Reduced\\
+  \sys+Uniform & Yes & Sparse, high-variance errors & O(N) & Reduced\\
+  \sys+Importance & Yes & Sparse, localized errors & O(N) & Greatly Reduced\\
+\end{tabular}
+\end{table*}
 There is well-studied history of Machine Learning and Data Cleaning with budgets and prioritization. 
 Suppose, we have a budget of cleaning $k\ll N$ records.
 Non-iterative techniques include the traditionally studied robust Machine Learning.
@@ -103,18 +114,6 @@ Active Learning may give us a benefit when the statistics of the dirty data are 
 In fact, expected gradient length as an Active Learning criterion has been studied before \cite{settles2010active}, but in this work we devise a technique to compensate for data error.
 We also leverage the structure of the data cleaning setting to make more progress at each iteration than a typical Active Learning workflow by averaging the gradients of newly cleaned batches of data with data that we know is clean.
 We summarize the salient features in Table(\ref{estimators}).
-
-\begin{table*}[ht!]\footnotesize
-\centering
-\begin{tabular}{ l l l l l}
-  Technique & Systematic Errors & Preferred Regime & Cost per Iteration & Overall Cleaning Cost \\ \hline
-  Robust Machine Learning & Incomplete & High-Magnitude Random Outliers & - & None \\
-  SampleClean & Yes & Very Biased & - & Sample \\
-  ActiveLearning & Yes & Minimal Error & O(N) & Reduced\\
-  \sys+Uniform & Yes & Sparse, high-variance errors & O(N) & Reduced\\
-  \sys+Importance & Yes & Sparse, localized errors & O(N) & Greatly Reduced\\
-\end{tabular}
-\end{table*}
 
 \reminder{SK will flesh out analysis here next week.}
 

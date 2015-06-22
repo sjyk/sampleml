@@ -1,6 +1,6 @@
 \section{Introduction}
 Databases are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
-Numerous surveys of industry have shown that dirty data are prevelant \cite{Gartner}, and there is now a growing industry around processing dirty data at scale \cite{fortunearticle}.
+Numerous surveys of industry have shown that dirty data are prevalent \cite{Gartner}, and there is now a growing industry around processing dirty data at scale \cite{fortunearticle}.
 Analysts are increasingly deriving data from inherently error-prone processes such as extracting structured data from websites, synthesizing data from multiple networked sensors, and linking entities in disparate data sources.
 As these data grow, new methodologies for scalable and reliable analysis in the presence of errors are required. 
 
@@ -17,20 +17,20 @@ However, cleaning large data can be expensive, both computationally and in human
 In some applications, scripted data transformations may not be reliable necessitating the use of even costlier crowdsourcing techniques \cite{gokhale2014corleone,park2014crowdfill}.
 
 An emerging solution to the growing costs of data cleaning is sampling \cite{wang1999sample} where the analyst cleans a small sample of data and can estimate the results of aggregate queries.Analysts can sample a large dataset, prototype changes on the sample, and evaluate whether these changes have the desired affect.
-The case for sampling is analagous to arguments for Approximate Query Processing (AQP) \cite{DBLP:conf/eurosys/AgarwalMPMMS13}, where a timely approximate answer is more desirable than an exact slow answer.
+The case for sampling is analogous to arguments for Approximate Query Processing (AQP) \cite{DBLP:conf/eurosys/AgarwalMPMMS13}, where a timely approximate answer is more desirable than an exact slow answer.
 Sampling provides a flexible tradeoff between cleaning cost and query result accuracy for aggregate queries, but the question we explore in this paper is how this tradeoff extends to Machine Learning. 
 
 \begin{figure}[t]
 \centering
  \includegraphics[width=0.6\columnwidth]{figs/arch.png}
- \caption{\sysfull (\sys) is an anytime framework from training models on dirty data. Expensive data transformations prior to model training are budgeted with a non-uniform sampling that priortizes examples that are most likely to change the model.  \label{sys-arch}}
+ \caption{\sysfull (\sys) is an anytime framework from training models on dirty data. Expensive data transformations prior to model training are budgeted with a non-uniform sampling that prioritizes examples that are most likely to change the model.  \label{sys-arch}}
 \end{figure}
 
 Machine Learning is far more sensitive to sample size (training data) than aggregate queries.
 However, there are a few observations that make this problem tractable.
 Sampling is naturally part of large-scale Machine Learning, as stochastic optimization methods start at an arbitrary initialization and calculate updates by drawing training examples at random. 
 Even with clean data, in very large datasets, it is well known that substantial progress is made in less than one epoch (i.e., a full pass through the entire dataset) \cite{bottou2012stochastic}.
-In our setting, we do not have to start with an abitrary initialization.
+In our setting, we do not have to start with an arbitrary initialization.
 Errors often happen in batches, often tightly clustered, and affect a small number of features.
 This means that a dirty model may be relatively ``close" to the clean model albeit with bias in a few features.
 Hypothetically, if we had a clean dataset, and were to apply stochastic optimization using the dirty model as an initialization, we can get a highly accurate result with processing far less than an entire epoch.
@@ -55,7 +55,7 @@ Once we clean data, we maintain a running estimate of how cleaning impacts the m
 In summary, our contributions are
 \begin{itemize}[noitemsep]
 \item We propose \sysfull which given dirty data, a convex loss model, and a time budget, returns a model trained with respect to the clean data.
-\item \sysfull is implemented with an non-uniform importance sampling approach that priortizes points in the clean model that are most imformative, and we provide analysis to identify the key tradeoffs.
+\item \sysfull is implemented with an non-uniform importance sampling approach that prioritizes points in the clean model that are most informative, and we provide analysis to identify the key tradeoffs.
 \item There are numerous database techniques that we apply to make this practical. We have to index dirty and clean data, amortize scan costs using shared cursors, and modify some data cleaning operations for correctness when applied to progressively increasing sample sizes.
 \item We evaluate \sysfull on real and synthetic datasets to show that non-uniform sampling achieves improved performance in comparison to uniform sampling, and dirtiness-agnostic prioritization.
 \end{itemize}

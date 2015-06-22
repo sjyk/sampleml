@@ -1,35 +1,43 @@
-\section{Progressive Data Cleaning}
-In the previous section, we described our algorithmic insight into this problem.
-The algorithm treats the data cleaning as a black-box that materializes the clean value,
-however, to make such a system work there are numerous data cleaning considerations.
+\section{Imperfect Partitioning}
+An important aspect of our gradient update is partitioning the dirty and clean data.
+We aggregate an average gradient from both subpopulations when making our update.
+When our partitioning is perfect, at least all of the dirty data is selected in $R_{dirty}$, this estimate in unbiased.
+However, in some cases, characterizing this partioning can be difficult and it may be impossible to ensure this condition unless $R_{dirty} = R$ causing a loss in efficiency if errors are sparse.  
+In this section, we explore the case when the partitioning is imperfect.
 
-\subsection{Incremental Application of Cleaning}
-There are some cases in which cleaning a row of data may require considering the other data in the sample.
-Consider entity resolution, where we have to resolve inconsistent representations of an attribute.
-When cleaning a sample of data this requires considering all of the inconsistent representations in the sample, and then resolving them to a canonical representation.
-However, such operations will fail in the iterative batch mode proposed by \sys.
+\subsection{Why do we partition?}
+Partitioning serves two purposes: (1) it reduces the variance in the gradient update, and (2) it increases the fraction of actually dirty records in the candidate batch.
+The first objective follows directly from the analysis in the previous section (Section \ref{analysis}).
+The second objective is best understood in the context of crowdsourcing.
+If we have a crowdworker clean records, we will have to pay them for the task whether or not the record required cleaning.
+Partitioning the data ensures that the only records cleaned are dirty records.
+Without partitioning, cleaning rare errors might be very wasteful. 
 
-To avoid this issue, we define the data cleaning operator semantics in the following way.
-The data cleaning operation is applied to all previously cleaned points.
-At each iteration \sys samples more data, and we have to define our data cleaning operations to incrementally update to the larger sample (including previously cleaned data).
-For the entity resolution operator, we define incremental maintenance procedures and fall-back to recomputation if there are user-defined operations.
+\subsection{Revised Formulation}
+Even in this setting, our framework is still useful, however we have to modify the formulation of the problem.
+Instead of assuming that we know which records are dirty in advance, we make the assumption that we know which attributes are dirty in advance.
 
-\noindent \textbf{Entity Resolution Operator: } The entity resolution operator can be incrementally maintained by joining the new subsample with cleaned sample and taking the transitive closure. This can be implemented efficiently using a UNION-FIND data structure.
+\noindent\textbf{Error Repair: } When an example $(x,y)$ is cleaned, for each dirty attribute $a$ cleaned becomes a training example for an error classifier $\kappa_a$. This classifier, e.g., Support Vector Machine, that learns which points are dirty and which points are cleaned based on the results of operation.
 
-\subsection{Incremental Re-train}
-As we increase the sample size, the already cleaned rows might require updating as well. 
-Consider the entity resolution operator, which might find a better canonical representation 
-in the new sample.
+\noindent\textbf{Error Detection: } To select $R_{dirty}$, we select the set of records for which any of the error classifiers $\kappa_a$ give a positive error classification.
+Many types of classifiers allow users to tradeoff precision and recall.
+In other words, we can also select any record within some level of confidence of the classification margin.
+For an SVM, we may only classify a point as clean if it is sufficiently far from the margin.
+Or for Logistic Regression, we may do so if its class likelihood is over 80\%.
 
-\reminder{TODO}
-
-\subsection{Physical Design}
-To make incremental cleaning feasible, there are also indexing/partitioning considerations.
-We need to quickly determine which rows are dirty and which have been previously cleaned.
-
-\reminder{TODO}
-
-\subsection{Choosing Error-Predicate vs. General Case}
-Based on the cleaning operator, we can decide whether the operation is in the Error-Predicate Case or General Case.
-If we are in the error-predicate case, then we can build a predicate index to determine which records are clean and dirty efficiently. 
-\reminder{TODO}
+\subsection{Revised Algorithm}
+The general case algorithm is harder to analyze and thus we rely on empirical performance on real data.
+\begin{enumerate}[noitemsep]
+\item Initialize with $\theta^{(0)}$ as the dirty model, $T$ iterations, with a batch size $B$
+\item Initialize all $\Delta = 0$
+\item Initialize $R_{dirty} = R$
+\item For rounds i=1...T
+\begin{enumerate}
+	\item Sample $B$ candidate dirty data points with probabilites as described.
+	\item Apply data cleaning to the sample of data.
+	\item Apply weighted gradient descent to update the model.
+	\item Update $\Delta$ for each feature.
+	\item Update classifiers $\kappa$, and apply the classifier to prune the set $R_{dirty}$ to records clean up to sufficent confidence.
+\end{enumerate}
+\item Return $\theta^{(T)}$
+\end{enumerate}
