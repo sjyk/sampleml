@@ -98,7 +98,7 @@ Not surprisingly, when we remove both these optimizations, \sys is comparable or
 
 \begin{figure}[ht!]
 \centering
- \includegraphics[width=\columnwidth]{exp/exp8.pdf}
+ \includegraphics[width=\columnwidth]{exp/exp8.png}
  \caption{We clean 10\% of the data with the alternative algorithms and also include variants of \sys with optimization removed. We plot the relative error w.r.t the optimized \sys. Both partitioning and importance sampling lead to significant reductions in error. \label{opts}}
 \end{figure}
 
@@ -159,40 +159,44 @@ We hope to explore this problem in further detail in future work.
  \caption{\sys converges with a smaller sample size to the maximum test accuracy in comparison to Active Learning and SampleClean. \label{prio-tperf}}
 \end{figure*}
 
-\subsection{Experiment 3. Error Predicates vs. Classification}
+\subsection{Experiment 3. Predicates vs. Classification}
+
+\subsubsection{3a. Basic Performance}
 In the next set of experiments, we explore the error partitioning in more detail.
 We presented two models for error sampling, one where we are given a set of candidate dirty records through a predicate and one where we have to learn this predicate as we clean.
+In Figure \ref{pred-perf}, we overlay the convergence plots in the previous experiments with a curve (denoted by AC+C) that represents \sys using a classifier instead of an error predicate.
+We use an SVM classifier to predict errors.
+We find an interesting tradeoff where initially \sys is comparable to Active Learning (explanation for why seen in Figure \ref{opts}), as our classifier becomes more effective the partitioning improves the performance.
 
-\reminder{Evaluate how much we lose}
-\begin{figure}[ht!]
+\begin{figure}[t]
 \centering
-  \includegraphics[scale=0.15]{exp/exp5c.pdf}
- \caption{\reminder{TODO} \label{tradeoffs2}}
+ \includegraphics[width=0.48\columnwidth]{exp/exp11a.pdf}
+ \includegraphics[width=0.48\columnwidth]{exp/exp11b.pdf}
+ \caption{While initially \sys is comparable in performance to Active Learning, as the classifier improves, \sys converges faster than Active Learning and SampleClean. \label{pred-perf}}
 \end{figure}
 
-\subsection{Error Types}
-Now, we evaluate the tradeoff space between random errors and systematic errors.
-In the first plot (Figure \ref{tradeoffs}a), we show the relative accuracy between AC+U and AC as a function of predicate randomness. 
-In other words, we start with the 5\% systematic errors that we had before, and increasingly make them more random (i.e., corrupt a random point with $\epsilon$ probability).
-As the errors become more random, AC has less of a benefit in comparison to uniform sampling.
-Next, in Figure \ref{tradeoffs}b, we explore the opposite tradeoff. 
-We start with random errors and vary the magnitude of corruption.
-When errors are random with 0 mean, then AC is equivalent to Active Learning.
-As we increase the bias, the impact estimates from AC change the sampling distribution and there it is more accurate in comparison.  
+\subsubsection{3b. Classifiable Errors}
+Using a classifier to partition errors depends on errors that can be classified.
+For example, random errors that look like other data may be hard to learn.
+As errors become more random, the classifier becomes increasingly erroneous.
+We run an experiment where we start with the systematic errors described earlier.
+With probability $p$, we increasingly make these errors more random.
+We compare these results to AC-P where we do not partition the errors.
+In Figure \ref{tradeoffs2}, we plot the error reduction using a classifier.
+We find that when errors are about 40\% random then we reach a break even point
+where the user is better of not partitiong the data since the errors introduced by incorrect classification are more than the error reductions.
+
 \begin{figure}[ht!]
 \centering
  \includegraphics[scale=0.13]{exp/exp5a.pdf}
- \includegraphics[scale=0.13]{exp/exp5b.pdf}
- \caption{\reminder{The labels are wrong and these plots are confusing} \label{tradeoffs}}
+ \caption{Errors that are less random are easier to classify, and lead to more significant reductions in relative model error. \label{tradeoffs2}}
 \end{figure}
 
-
-
-\subsection{Incremental vs. Sample}
-\reminder{How much bias before SC becomes useful?}
-
-\subsection{Price of a Scan}
-\reminder{With partitioning, without partitioning, with(out) indexing?}
+\subsection{Experiment 4. Price of a Scan}
+In our fourth set of experiments, we evaluate one of the computational premises of our work.
+We argue that the price of a scan of data is cheap compared to data cleaning.
+The overheads of partioning the dirty and clean data and calculating the sampling distribution should be small in comparison to the faster convergence of our model.
+\reminder{How do we quantify the costs of data cleaning?} 
 
 \subsection{Real Scenarios}
 \reminder{Value Filling: MNIST}
