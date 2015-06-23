@@ -199,13 +199,47 @@ The overheads of partioning the dirty and clean data and calculating the samplin
 \reminder{How do we quantify the costs of data cleaning?} 
 
 \subsection{Real Scenarios}
-\reminder{Value Filling: MNIST}
+We evaluate \sys in two real scenarios: base data replacement and constraint-based data repair.
 
-\begin{figure*}[t]
+\subsubsection{Replacing Corrupted Data}
+We consider the following scenario with the MNIST handwritten digit recognition dataset.
+Suppose, our goal is to classify digits into a set of classes.
+However, we suspect that some of our raw images are of low quality.
+Typicaly image processing workflows are long with many different featurization steps.
+As a result, changes to the raw images may have very significant effects on some features.
+In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
+
+The MNIST dataset consists of 64x64 grayscale images.
+We run two experiments, in which we have two types of corruptions: (1) 5x5 block removal where take a random 5x5 block from the image and set its pixel values to 0, and (2) Fuzzy where we run a 4x4 moving average over the entire image.
+We applied these corruptions to a random 5\% of the images.
+In Figure \ref{mnist-corr}, we visualize the corruptions.
+We constructed these features to mimic the random vs. systematic errors that we studied before.
+The 5x5 block removal behaves much more like a systematic error. 
+Typical image processing features are based on edges and corrupting edges leads to ambiguities (e.g., is the image in Figure \ref{mnist-corr} a 4 or a 9).
+On the other hand, the making the image fuzzy is more like a random error.
+
+\begin{figure}[ht]
 \centering
- \includegraphics[scale=0.25]{exp/5x5removal.png}
- \includegraphics[scale=0.15]{exp/exp7a.pdf}
- \caption{One experiment with MNIST}
-\end{figure*}
+\includegraphics[scale=0.10]{exp/original.png}
+ \includegraphics[scale=0.10]{exp/5x5removal.png}
+ \includegraphics[scale=0.10]{exp/fuzzy.png}
+ \caption{We experiment with two forms of corruption in the MNIST image datasets: 5x5 block removal and making the images fuzzy. \label{mnist-corr}}
+\end{figure}
+
+In Figure \ref{mnist}, we present the results.
+As in our earlier experiments, we find that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
+This experiment highlights a few other interesting points.
+First, SampleClean converges at the same rate independent of the data error.
+This is because SampleClean does not depend on any quantity derived from the dirty data.
+Next, the gap between the theoretical AC+O and what we are able to achieve is much larger in this dataset.
+We speculate that this is because classifying errors in a 784 dimensional space is much harder than in our previous experiments, and this in turn leads to reduced accuracy in impact estimation.
+
+
+\begin{figure}[ht]
+\centering
+ \includegraphics[scale=0.10]{exp/exp7a.pdf}
+ \includegraphics[scale=0.10]{exp/exp7b.pdf}
+ \caption{For both types of corruption, \sys converges faster than Active Learning and SampleClean. \label{mnist}}
+\end{figure}
 
 \reminder{CFD: Adult}

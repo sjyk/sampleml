@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  22 JUN 2015 14:03
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  23 JUN 2015 12:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -859,33 +859,50 @@ File: exp/exp5a.pdf Graphic file (type pdf)
 <use exp/exp5a.pdf>
 Package pdftex.def Info: exp/exp5a.pdf used on input line 191.
 (pdftex.def)             Requested size: 112.35367pt x 78.29524pt.
- <exp/5x5removal.png, id=264, 562.1pt x 420.57124pt>
+ <exp/original.png, id=264, 562.1pt x 420.57124pt>
+File: exp/original.png Graphic file (type png)
+
+<use exp/original.png>
+Package pdftex.def Info: exp/original.png used on input line 223.
+(pdftex.def)             Requested size: 56.21329pt x 42.05959pt.
+ <exp/5x5removal.png, id=265, 562.1pt x 420.57124pt>
 File: exp/5x5removal.png Graphic file (type png)
 
 <use exp/5x5removal.png>
-Package pdftex.def Info: exp/5x5removal.png used on input line 206.
-(pdftex.def)             Requested size: 140.52466pt x 105.14255pt.
- <exp/exp7a.pdf, id=265, 1050.92625pt x 734.745pt>
+Package pdftex.def Info: exp/5x5removal.png used on input line 224.
+(pdftex.def)             Requested size: 56.21329pt x 42.05959pt.
+ <exp/fuzzy.png, id=266, 562.1pt x 420.57124pt>
+File: exp/fuzzy.png Graphic file (type png)
+
+<use exp/fuzzy.png>
+Package pdftex.def Info: exp/fuzzy.png used on input line 225.
+(pdftex.def)             Requested size: 56.21329pt x 42.05959pt.
+ [10 <./exp/exp11a.pdf> <./exp/exp11b.pdf> <./exp/exp5a.pdf> <./exp/original.pn
+g (PNG copy)> <./exp/5x5removal.png (PNG copy)> <./exp/fuzzy.png (PNG copy)>] <
+exp/exp7a.pdf, id=381, 1050.92625pt x 734.745pt>
 File: exp/exp7a.pdf Graphic file (type pdf)
 
 <use exp/exp7a.pdf>
-Package pdftex.def Info: exp/exp7a.pdf used on input line 207.
-(pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
+Package pdftex.def Info: exp/exp7a.pdf used on input line 240.
+(pdftex.def)             Requested size: 105.09877pt x 73.47879pt.
+ <exp/exp7b.pdf, id=382, 1050.92625pt x 734.745pt>
+File: exp/exp7b.pdf Graphic file (type pdf)
+
+<use exp/exp7b.pdf>
+Package pdftex.def Info: exp/exp7b.pdf used on input line 241.
+(pdftex.def)             Requested size: 105.09877pt x 73.47879pt.
 ) (./relatedwork.tex
 
-LaTeX Warning: Citation `rineas2012fast' on page 10 undefined on input line 5.
+LaTeX Warning: Citation `rineas2012fast' on page 11 undefined on input line 5.
 
-[10 <./exp/exp11a.pdf> <./exp/exp11b.pdf> <./exp/exp5a.pdf>]) (./conclusion.tex
-
+) (./conclusion.tex
 Overfull \hbox (2.79942pt too wide) in paragraph at lines 2--7
 \OT1/ptm/m/n/9 for-mance in com-par-i-son to uni-form sam-pling, and dirtiness-
 agnostic
  []
 
-) (./outline.bbl [11 <./exp/exp3aa.pdf> <./exp/exp3bb.pdf> <./exp/exp3cc.pdf> <
-./exp/5x5removal.png (PNG copy)> <./exp/exp7a.pdf>]) [12
-
-] (./outline.aux)
+) [11 <./exp/exp3aa.pdf> <./exp/exp3bb.pdf> <./exp/exp3cc.pdf> <./exp/exp7a.pdf
+> <./exp/exp7b.pdf>] (./outline.bbl) [12] (./outline.aux)
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
@@ -894,10 +911,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 8329 strings out of 493315
- 117379 string characters out of 6137904
+ 8346 strings out of 493315
+ 117653 string characters out of 6137904
  254311 words of memory out of 5000000
- 11514 multiletter control sequences out of 15000+600000
+ 11528 multiletter control sequences out of 15000+600000
  36544 words of font info for 76 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  42i,14n,40p,1280b,244s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -917,10 +934,10 @@ xmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dis
 t/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/ty
 pe1/urw/times/utmr8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/urw/ti
 mes/utmri8a.pfb>
-Output written on outline.pdf (12 pages, 929102 bytes).
+Output written on outline.pdf (12 pages, 971972 bytes).
 PDF statistics:
- 568 PDF objects out of 1000 (max. 8388607)
- 388 compressed objects within 4 object streams
+ 605 PDF objects out of 1000 (max. 8388607)
+ 411 compressed objects within 5 object streams
  0 named destinations out of 1000 (max. 500000)
- 86 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 101 words of extra memory for PDF output out of 10000 (max. 10000000)
 
