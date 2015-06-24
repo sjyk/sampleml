@@ -1,28 +1,61 @@
 \section{System Architecture}\label{arch}
 
-\subsection{Problem Formulation}
+\subsection{Overview}
 We revisit the architecture diagram in Figure \ref{sys-arch}, and formalize
 the problems addressed in each one of the stages.
-\sys is a data cleaning methodology that inlines data cleaning with model training, and we formalize the conditions on the data cleaning operations that can fit in our framework.
-Formally, given a relation $R$ with a set of attributes $A$.
+
+\vspace{0.5em}
+
+\textbf{Featurization: } Formally, given a relation $R$ with a set of attributes $A$.
 There is a featurization function $F$ which maps every row in $\mathcal{R}$ to a $d$ dimensional feature vector and a $l$ dimensional label tuple: 
 \[F(r \in \mathcal{R}) \mapsto (\mathbb{R}^l, \mathbb{R}^d)\]
 The result of the featurization are the data matrices $X$ and $Y$.
 \[
 F(R)\rightarrow (X,Y)
 \]
-Every feature and label in $(X,Y)$ should be derived from exactly one column in the base data (i.e., a many-to-one relationship).
-We have a data cleaning operation $\mathcal{D}$, that cleans $R$:
-\[
-F(\mathcal{D}(R))\rightarrow (X_{clean},Y_{clean})
-\]
+The basic assumption is that training examples (i.e., rows in the data matrix) have a one-to-one relationship with rows in the base data ($R$).
+
+\vspace{0.5em}
+
+\textbf{Initialization: } To initialize \sys, the user gives us the base dirty relation $R$, the featurization $F$, and a model $\theta$ that is trained on this dirty relation.
+
+\vspace{0.5em}
+
+\textbf{Error Detection: } The first step in \sys is error detection. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. 
+
+\vspace{0.5em}
+
+\textbf{Error Sampling: } The second step in \sys is sampling. Since we cannot clean all of the dirty records, we take a sample of the records $S_{dirty} \subseteq R_{dirty}$.
+
+\vspace{0.5em}
+
+\textbf{Error Repair: } Next, we apply a repair procedure $C$ to the sample of data $S_{dirty}$ to get a clean sample $S_{clean}$.
+
+\vspace{0.5em}
+
+\textbf{Model Update: } Then, we update the model $\theta$ based on the newly cleaned data $F(S_{clean})$.
+
+\vspace{0.5em}
+
+\textbf{Error Impact Estimate: } Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the model update.
+
+\subsection{User Specified Steps}
+\sys is a data cleaning methodology that iteratively corrects an incorrect result, and we formalize the conditions on the data cleaning operations that can fit in our framework.
+The user has two specify two components: error detection and error repair.
 
 \subsubsection{Error Detection}
-The first step of \sys is error detection.
 We have to select a set of candidate records to be cleaned from the base data.
+In our analysis, we assume that this candidate set is a superset of those records that are actually dirty.
+Later, in Section \ref{imperfect}, we will relax this assumption.
 Formally, given a relation $R$, we select a subset of records to be cleaned $R_{dirty}$.
-$R_{dirty}$ must contain at least all of the records that are actually dirty.
-Associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which tells us which columns are corrupted.
+Associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which tells us which features are corrupted.
+Therefore, the error detection step gives us the following tuple: $(R_{dirty},E_r)$.
+
+\subsubsection{Error Repair}
+Given a dirty record $r$, the error repair module applies a repair $C$ to the record, to return $C(r)\mapsto r_{clean}$. 
+
+\iffalse
+
 
 \subsubsection{Error Sampling}
 Given a set of candidate dirty records, the error sampling step selects a sample to clean.
@@ -61,13 +94,9 @@ This estimate need not be very accurate as it is only used to select the samplin
 \begin{problem}[Error Impact Estimate]\label{imp-est}\sloppy
 Let $(X_{dirty},Y_{dirty})$ be the data submatrices of the dirty data, $E_r$ be the error identifying set, and $(X_{clean},Y_{clean})$ be the submatrices for the cleaned data. Given $(X_{clean},Y_{clean})$, we learn a function $f$ that maps an $(x,y) \in (X_{dirty},Y_{dirty}) \mapsto (\hat{x},\hat{y})$.
 \end{problem}
+\fi
 
-\subsubsection{Summary}
-\sys explores a different data cleaning architecture where data is progressively cleaned while a model is being trained.
-We can feed results back to guide and prioritize data cleaning adaptively.
-
-\subsection{Detection and Repair Models}
-There are two steps, Error Detection and Error Repair, that are dependent on the data cleaning operation. 
+\subsection{Examples}
 We illustrate how data cleaning processes proposed in the literature can apply in our model.
 In particular, we describe how we can select a set of candidate records for cleaning and apply cleaning to the sample.
 
@@ -75,18 +104,20 @@ In particular, we describe how we can select a set of candidate records for clea
 One model for handling errors in database declaring a set of constraints on a database and 
 iteratively fixing records such that the constraints are satisfied \cite{DBLP:journals/pvldb/YakoutENOI11, DBLP:journals/pvldb/FanLMTY10, khayyat2015bigdansing}.
 In this setting, it is relatively inexpensive to query the set of records that violate some constraint, however, automatically repairing the errors is often NP-Hard \cite{DBLP:journals/pvldb/FanLMTY10}.
-Due to the hardness of automatic repair, heuristics are typically used so the fixes can be unreliable.
 Therefore, recently proposed systems like Guided Data Repair \cite{DBLP:journals/pvldb/YakoutENOI11}, use human input to validate suggested fixes.
 The challenge with using human input is that it is expensive and is often with a time or a cost budget.
 One way to characterize this problem setting is that error detection is relatively inexpensive but error repairing is expensive.
 
 Formally, constraint-based error detection and repair can be incorporated into \sys in the following way.
 
+\vspace{0.5em}
+
 \noindent\textbf{Error Detection. } Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
 The allowed constraint classes are Matching Dependencies \cite{bertossi2013data}, Conditional Functional Dependencies \cite{DBLP:journals/pvldb/FanLMTY10}, and Denial Constrains \cite{khayyat2015bigdansing}. 
-We additionally require that $\Sigma$ is transitively closed and the constraints are on disjoint attributes.
 In the error detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
-The set $e_r$ is a subset of $\Sigma$ for each record that is violated.
+The set $e_r$ the set of columns for each record which have a constraint violation.
+
+\vspace{0.5em}
 
 \noindent\textbf{Error Repair. } \sys supports both automated and human validated data repair for constraints. For automated techniques, we can apply the record-level ``local" repair proposed in \cite{DBLP:journals/pvldb/FanLMTY10} or we can use human corrections as in \cite{DBLP:journals/pvldb/YakoutENOI11}. Repair operations must satisfy the local property; that is, a repair to a record cannot cause additional constraint violations.
 
@@ -103,8 +134,12 @@ Park and Widom proposed the system called CrowdFill \cite{park2014crowdfill}, wh
 
 Formally, value filling error detection and repair can be incorporated into \sys in the following way.
 
+\vspace{0.5em}
+
 \noindent\textbf{Error Detection. } Let $\phi$ be the null-symbol (signifying a missing value), and $A$ be the set of attributes of $\mathcal{R}$. In the error detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ where $\mathcal{R}_{dirty}=\{r \in \mathcal{R}: \exists r(a\in A) = \phi \}$.
 The set $e_r$ is the attributes of $r$ that have missing values.
+
+\vspace{0.5em}
 
 \noindent\textbf{Error Repair. } Value filling can be expressed in \sys if the operation fixes an entire record; that is, for all $a$ such that $r(a) = \phi$, a value is filled.
 
@@ -121,8 +156,10 @@ Entity resolution typically consists of two steps: blocking and matching.
 In the blocking step, similar records are grouped together, and in the matching step, they are resolved.
 This process can be expressed in terms of a type of constraint called Matching Dependencies (described above).
 A Matching Dependency (MD) is a constraint that if this pair is similar according to some similarity relationship (e.g., edit distance and a threshold) then their attribute have to be the same
-\[ r \approx r' \implies r(a) \dot{=} r'(a) \].
+\[ r \approx r' \implies r(a) \dot{=} r'(a) \]
 Thus, this is an important special case of the constraint-based cleaning described before.
+
+\vspace{0.5em}
 
 \noindent\textbf{Error Detection. } Let $S$ be a similarity function that takes two records and returns a value in $[0,1]$ (1 most similar and 0 least similar). For some threshold $t$, $S$ defines a similarity relationship between two records $r$ and $r'$:
 \[
@@ -130,6 +167,8 @@ r \approx r' : S(r,r') \ge t
 \] 
 In the error detection step, $R_{dirty}$ is the set of records that have at least one other record in the relation that satisfy $r \approx r'$.
 The set $e_r$ is the attributes of $r$ that have entity resolution problems.
+
+\vspace{0.5em}
 
 \noindent\textbf{Error Repair. } \sys supports both automated and human validated entity resolution.
 

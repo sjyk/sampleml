@@ -80,7 +80,7 @@ In Figure \ref{sys-arch2}, we illustrate the tradeoff space of sampling and data
 At two extremes we have no cleaning (just using the dirty data) and full cleaning.
 We argue that the naive approach of uniform sampling is not suited for Machine Learning (SampleClean) because it struggles at small sample sizes.
 We design \sys to make greater progress at these small sample sizes using the dirty model as an initialization.
-\sys potentially sacrifices asymptotic performance if the dirty model is not a good initialization, we may have to take multiple passes through the data to train an accurate model.
+\sys potentially sacrifices asymptotic performance if the dirty model is not a good initialization, we may have to take a full cleaning pass through the data to train an accurate model.
 We evaluate these tradeoffs extensively in our experiments.
 
 \begin{problem}[ActiveClean Problem]\label{activeclean}\sloppy
