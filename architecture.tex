@@ -17,19 +17,19 @@ The basic assumption is that training examples (i.e., rows in the data matrix) h
 
 \vspace{0.5em}
 
-\textbf{Initialization: } To initialize \sys, the user gives us the base dirty relation $R$, the featurization $F$, and a model $\theta$ that is trained on this dirty relation.
+\noindent\textbf{Initialization: } To initialize \sys, the user gives us the base dirty relation $R$, the featurization $F$, and a model $\theta$ that is trained on this dirty relation.
 
 \vspace{0.5em}
 
-\textbf{Error Detection: } The first step in \sys is error detection. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. 
+\noindent\textbf{Error Detection: } The first step in \sys is error detection. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. 
 
 \vspace{0.5em}
 
-\textbf{Error Sampling: } The second step in \sys is sampling. Since we cannot clean all of the dirty records, we take a sample of the records $S_{dirty} \subseteq R_{dirty}$.
+\noindent\textbf{Error Sampling: } The second step in \sys is sampling. Since we cannot clean all of the dirty records, we take a sample of the records $S_{dirty} \subseteq R_{dirty}$.
 
 \vspace{0.5em}
 
-\textbf{Error Repair: } Next, we apply a repair procedure $C$ to the sample of data $S_{dirty}$ to get a clean sample $S_{clean}$.
+\noindent\textbf{Error Repair: } Next, we apply a repair procedure $C$ to the sample of data $S_{dirty}$ to get a clean sample $S_{clean}$.
 
 \vspace{0.5em}
 
@@ -37,7 +37,7 @@ The basic assumption is that training examples (i.e., rows in the data matrix) h
 
 \vspace{0.5em}
 
-\textbf{Error Impact Estimate: } Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the model update.
+\noindent\textbf{Error Impact Estimate: } Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the model update.
 
 \subsection{User Specified Steps}
 \sys is a data cleaning methodology that iteratively corrects an incorrect result, and we formalize the conditions on the data cleaning operations that can fit in our framework.

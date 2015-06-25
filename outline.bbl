@@ -31,6 +31,11 @@ D.~P. Bertsekas.
   optimization: A survey.
 \newblock {\em Optimization for Machine Learning}, 2010:1--38.
 
+\bibitem{dekel2012optimal}
+O.~Dekel, R.~Gilad-Bachrach, O.~Shamir, and L.~Xiao.
+\newblock Optimal distributed online prediction using mini-batches.
+\newblock {\em The Journal of Machine Learning Research}, 13(1):165--202, 2012.
+
 \bibitem{drineas2012fast}
 P.~Drineas, M.~Magdon-Ismail, M.~W. Mahoney, and D.~P. Woodruff.
 \newblock Fast approximation of matrix coherence and statistical leverage.
@@ -89,6 +94,11 @@ B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
 M.~Nikolic, M.~Elseidy, and C.~Koch.
 \newblock Linview: incremental view maintenance for complex analytical queries.
 \newblock In {\em SIGMOD Conference}, pages 253--264, 2014.
+
+\bibitem{mcbook}
+A.~B. Owen.
+\newblock {\em Monte Carlo theory, methods and examples}.
+\newblock 2013.
 
 \bibitem{pan2010survey}
 S.~J. Pan and Q.~Yang.

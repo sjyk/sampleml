@@ -1,9 +1,10 @@
 \section{Conclusion}
-In this paper, we propose \sysfull (\sys), an anytime framework for training Machine Learning models with data cleaning.
-We implement \sys on Apache Spark to jointly optimize cleaning and modeling pipelines.
-\sys uses an importance sampling-based stochastic gradient descent framework to priortize data cleaning.
-We evaluate \sysfull on real and synthetic datasets to show that non-uniform sampling achieves improved performance in comparison to uniform sampling, and dirtiness-agnostic prioritization.
-\reminder{TODO}
+In this paper, we propose \sysfull (\sys), an anytime framework for training Machine Learning models with a data cleaning budget.
+Naive solutions to this problem can cause sampling errors to dominate any benefit of data cleaning, so instead we propose a gradient-based update to incrementally correct a dirty model.
+To make this update as impactful as possible, we exploit many properties we know about data cleaning such as the relative ease of error enumeration.
+Our solution is a linear approximation of the optimal sampling distribution which empirically shows significant improvements over alternative approaches.
+This formulation fits into a Stochastic Gradient Descent theoretical framework, which allows us to ensure convergence and statistical consistency under relatively mild conditions.
+The elegance of the SGD formulation is that we can use approximations of approximations and still have a methodology that gives bounded results.
 
 \sys is only a first step in a larger integration of data analytics and data aquisition/cleaning. 
 There are several exciting, new avenues for future work.
@@ -11,6 +12,5 @@ First, in this work, we largely study how knowing the Machine Learning model can
 We also believe that the reverse is true, knowing the data cleaning operations and the featurization can optimize model training.
 For example, applying Entity Resolution to one-hot encoded features results in a linear transformation of the feature space.
 For some types of Machine Learning models, we may be able to avoid re-training.
-\reminder{Sounds confusing rewrite shameless self citation ;)}
-The optimizations described in \sys are not only restricted to stochastic gradient descent algorithms. 
+The optimizations described in \sys are not only restricted to SGD algorithms. 
 We believe we can extend a variant of SDCA (Stochastic Dual Coordinate Ascent) \cite{jaggi2014communication} to extend this technique to kernelized methods.

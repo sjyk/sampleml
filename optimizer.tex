@@ -1,4 +1,5 @@
-\section{Imperfect Partitioning}\label{imperfect}
+\section{Relaxing the Enumeration Assumption}\label{imperfect}
+The crucial assumption of the previous sections is that we can enumerate a superset of the dirty records.
 An important aspect of our gradient update is partitioning the dirty and clean data.
 We aggregate an average gradient from both subpopulations when making our update.
 When our partitioning is perfect, at least all of the dirty data is selected in $R_{dirty}$, this estimate in unbiased.
@@ -8,36 +9,39 @@ In this section, we explore the case when the partitioning is imperfect.
 \subsection{Why do we partition?}
 Partitioning serves two purposes: (1) it reduces the variance in the gradient update, and (2) it increases the fraction of actually dirty records in the candidate batch.
 The first objective follows directly from the analysis in the previous section (Section \ref{analysis}).
-The second objective is best understood in the context of crowdsourcing.
+A good example of why we need the second objective is seen in the context of crowdsourcing.
 If we have a crowdworker clean records, we will have to pay them for the task whether or not the record required cleaning.
 Partitioning the data ensures that the only records cleaned are dirty records.
 Without partitioning, cleaning rare errors might be very wasteful. 
 
-\subsection{Revised Formulation}
-Even in this setting, our framework is still useful, however we have to modify the formulation of the problem.
-Instead of assuming that we know which records are dirty in advance, we make the assumption that we know which attributes are dirty in advance.
+\subsection{Using a classifier}
+We retain the assumption that error detection is easier than repair.
+In particular, we argue that it is more feasible to train a classifier to predict error occurance than to train a regression to fix the consequences of error.
+Let there be $u$ types of errors in the database.
+Suppose, we have a multi-class classifier $\kappa$ (e.g. SVM) that classifies every record $r$ into
+$u+1$ classes (the $u$ error types or not dirty).
 
-\noindent\textbf{Error Repair: } When an example $(x,y)$ is cleaned, for each dirty attribute $a$ cleaned becomes a training example for an error classifier $\kappa_a$. This classifier, e.g., Support Vector Machine, that learns which points are dirty and which points are cleaned based on the results of operation.
+To make such a classifier useful, we have the modify our problem formulation:
 
-\noindent\textbf{Error Detection: } To select $R_{dirty}$, we select the set of records for which any of the error classifiers $\kappa_a$ give a positive error classification.
+\vspace{0.5em}
+
+\noindent\textbf{Error Detection: } To select $R_{dirty}$, we select the set of records for which $\kappa$ give a positive error classification (i.e., one of the $u$ error classes).
 Many types of classifiers allow users to tradeoff precision and recall.
 In other words, we can also select any record within some level of confidence of the classification margin.
 For an SVM, we may only classify a point as clean if it is sufficiently far from the margin.
 Or for Logistic Regression, we may do so if its class likelihood is over 80\%.
 
-\subsection{Revised Algorithm}
-The general case algorithm is harder to analyze and thus we rely on empirical performance on real data.
-\begin{enumerate}[noitemsep]
-\item Initialize with $\theta^{(0)}$ as the dirty model, $T$ iterations, with a batch size $B$
-\item Initialize all $\Delta = 0$
-\item Initialize $R_{dirty} = R$
-\item For rounds i=1...T
-\begin{enumerate}
-	\item Sample $B$ candidate dirty data points with probabilites as described.
-	\item Apply data cleaning to the sample of data.
-	\item Apply weighted gradient descent to update the model.
-	\item Update $\Delta$ for each feature.
-	\item Update classifiers $\kappa$, and apply the classifier to prune the set $R_{dirty}$ to records clean up to sufficent confidence.
-\end{enumerate}
-\item Return $\theta^{(T)}$
-\end{enumerate}
+\vspace{0.5em}
+
+\noindent\textbf{Error Repair: } When an example $(x,y)$ is cleaned, the repair step also has to provide a label of to which of the $u+1$ classes it belongs. As more data is cleaned, this data becomes training data for the classifier.
+
+\subsection{Error Estimate}
+Our model update framework still holds in this setting, however, our error estimation framework requires some modification.
+In our derivation, we showed that our error estimate was a linearization of the conditional expectation of the gradient.
+Instead of conditioning on the features that are corrupted, we condition the error classes.
+So for each error class, we compute a $\Delta_{xu}$ and $\Delta_{yu}$.
+These are the average change in the features given that class and the average change in labels given that class respectively.
+\[
+p_{r,u}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{ux} +  M_y \cdot \Delta_{uy}\|
+\] 
+
