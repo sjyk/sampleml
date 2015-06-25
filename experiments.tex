@@ -8,43 +8,81 @@ Finally, we evaluate \sys end-to-end in a number of real-world data cleaning sce
 Every experiment has two steps: data cleaning and model evaluation.
 We evaluate the data cleaning on one metric:
 
-\noindent\textbf{Cleaning Efficiency. } Let $K$ be the number of samples processed by the algorithm, and $K'$ be the number of samples that were actually dirty. The cleaning efficiency is $\frac{K'}{K}$.
+\vspace{0.5em}
 
+\noindent\textbf{Cleaning Efficiency. } Let $K$ be the number of samples processed by the algorithm, and $K'$ be the number of samples that were actually dirty. 
+The cleaning efficiency is $\frac{K'}{K}$.
 In our experiments, we explore three classification models: L1-Hinge Loss SVM, Logistic Regression, and Thresholded Linear Regression.
 We evaluate the trained models on the following metrics:
 
+\vspace{0.5em}
+
 \noindent\textbf{Relative Model Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Then the model error is defined as $\frac{\|\theta - \theta^*\|}{\|\theta^*\|}$.
+
+\vspace{0.5em}
 
 \noindent\textbf{Testing Accuracy. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Let $T(\theta)$ be the out-of-sample testing accuracy when the dirty model is applied to the clean data, and $T(\theta^*)$ be the testing accuracy when the clean model is applied to the clean data. The testing error is defined as $T(\theta^*) - T(\theta)$
 
 \subsubsection{Scenarios}
 We apply these models in the following scenarios:
 
+\vspace{0.5em}
+
 \noindent\textbf{Housing: } In this dataset, our task is to predict housing prices from 13 numerical and categorical covariates. There are 550 data points in this dataset. The model is a Logistic Regression classifier which predicts if the house price is greater than \$500k.
+
+\vspace{0.5em}
 
 \noindent\textbf{Adult: } In this census dataset, our task is to predict the income bracket (binary) from 12 numerical and categorical covariates. There are 45552 data points in this dataset. We use a SVM classifier to predict the income bracket of the person.
 
+\vspace{0.5em}
+
 \noindent\textbf{EEG: } In this dataset, our task is to predict the on set of a seizure (binary) from 15 numerical covariates. There are 14980 data points in this dataset. This dataset is unique because the classification is hard with linear predictors. The model that we use is a thresholded Linear Regression.
 
+\vspace{0.5em}
+
 \noindent\textbf{MNIST: } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
+
+\subsubsection{Alternative Algorithms}
+Here are the alternative methodologies that we consider:
+
+\vspace{0.5em}
+
+\noindent\textbf{Robust Logistic Regression \cite{feng2014robust}. } Feng et al. proposed a variant of logistic regression that is robust to outliers. 
+
+\vspace{0.5em}
+
+\noindent\textbf{Discarding Dirty Data \cite{li2014improved}. } A methodology that has shown suprising empirical success in secure Machine Learning is rejection-on-negative-impact. In this model, data that negatively affects the loss is discarded.
+
+\vspace{0.5em}
+
+\noindent\textbf{SampleClean (SC) \cite{wang1999sample}. } In SampleClean, we take a sample of data, apply data cleaning, and then train a model to completion.
+
+\vspace{0.5em}
+
+\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } There have been recent proposals of integrating Active Learning with stochastic optimization. Active Learning has been widely applied in the data cleaning literature \cite{gokhale2014corleone}, but never integrated with model training. We acknowledge the work in the Machine Learning literature and formulate an Active Learning that uses a prioritization fuction agnostic of the dirty data (no error impact estimates and partitioning). 
+
+\vspace{0.5em}
+
+\noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, we importance sample points by their clean gradient. This represents the theoretical best that our algorithm could hope to achieve given perfect error estimation.
 
 \subsection{Experiment 1. Effect of Cleaning}
 Before we evaluate \sys, we first evaluate the benefits of cleaning on our 4 example datasets.
 We first explore this problem without sampling to understand which types of errors are amenable to data cleaning and which are better suited for robust statistical techniques.
-We compare 4 schemes: (1) cleaning, (2) adding an L2 regularizer tuned to maximal accuracy with a grid search, (3) discarding the dirty data, and (4) baseline of no cleaning.
+We compare 4 schemes: (1) full data cleaning, (2) robust logistic regression, (3) discarding the dirty data, and (4) baseline of no cleaning. We corrupted 5\% of the training examples in each dataset in two different ways:
 
-We corrupted 5\% of the training examples in each dataset.
-We corrupted these data in two different ways.
+\vspace{0.5em}
 
 \noindent\textbf{Random errors: } We simulated high-magnitude random outliers. We select 5\% of the examples and features uniformly at random and replace a feature with 3 times the highest feature value.
+
+\vspace{0.5em}
 
 \noindent\textbf{Systematic errors: } We simulated innocuous looking (but still incorrect) systematic errors. We trained the model on the clean data, find the most important feature (highest weighted). We sort examples but this feature and corrupt the top 5\% of examples with the mean value for that feature.
 
 \begin{figure}[ht!]
 \centering
- \includegraphics[width=0.8\columnwidth]{exp/exp2.pdf}
- \includegraphics[width=0.8\columnwidth]{exp/exp1.pdf}
- \caption{Robust techniques work best when corrupted data are random and look atypical. Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}
+ \includegraphics[width=\columnwidth]{exp/exp2.pdf}
+ \includegraphics[width=\columnwidth]{exp/exp1.pdf}
+ \caption{(a) Robust techniques work best when corrupted data are random and look atypical. (b)Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}
 \end{figure}
 
 In Figure \ref{sys-rand}, we present the results of this experiment.
@@ -59,17 +97,10 @@ While data cleaning requires more effort, it provides benefits in both settings.
 
 \subsection{Experiment 2. Prioritization}
 The next set of experiments evaluate different approaches to cleaning a sample of data.
-In this set of experiments, we use the random errors generated above.
+In this set of experiments, we generate errors in the following way: We select 5\% of the examples at random, then we corrupt the most informative feature by replacing it with 3 times the highest feature value.
 
 \subsubsection{2a. Alternative Algorithms}
-In our first prioritization experiment, we evaluate the samples-to-error tradeoff between three alternative algorithms:
-
-\noindent\textbf{SampleClean (SC): } In SampleClean, we do not use a gradient update and instead take a sample of data and train the model to completion on the sample.
-
-\noindent\textbf{Active Learning (AL): } In Active Learning, we do not consider the effect of ``data cleaning" and prioritze points by their dirty gradient value. We do, however, do this iteratively and update the model.
-
-\noindent\textbf{ActiveClean Oracle (AC+O): } In ActiveClean Oracle, we importance sample points by their clean gradient. This represents the theoretical best that our algorithm could hope to achieve given perfect error estimation.
-
+In our first prioritization experiment, we evaluate the samples-to-error tradeoff between three alternative algorithms: \sys, SampleClean, and Active Learning.
 In Figure \ref{prio-perf}, we present our results on Housing, Adult, and EEG. 
 We find that \sys gives its largest benefits for small sample sizes (up-to 12x).
 \sys makes significant progress because of its intelligent initialization, iterative updates, and partitioning.
@@ -83,7 +114,7 @@ However, \sys's impact estimates and error partitioning allow us to beat Active 
  \includegraphics[scale=0.15]{exp/exp3a.pdf}
  \includegraphics[scale=0.15]{exp/exp3b.pdf}
   \includegraphics[scale=0.15]{exp/exp3c.pdf}
- \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. \label{prio-perf}}
+ \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error (on a log scale) as a function of the number of examples cleaned. \label{prio-perf}}
 \end{figure*}
 
 \subsubsection{2b. Source of Improvements}
@@ -156,7 +187,7 @@ We hope to explore this problem in further detail in future work.
  \includegraphics[scale=0.15]{exp/exp3aa.pdf}
  \includegraphics[scale=0.15]{exp/exp3bb.pdf}
   \includegraphics[scale=0.15]{exp/exp3cc.pdf}
- \caption{\sys converges with a smaller sample size to the maximum test accuracy in comparison to Active Learning and SampleClean. \label{prio-tperf}}
+ \caption{\sys converges with a smaller sample size to the maximum test accuracy in comparison to Active Learning and SampleClean. The reductions in model error correlate well with increased test accuracy in two of the datasets (a) and (b). In (c), we find insignificant gains in terms of test accuracy. \label{prio-tperf}}
 \end{figure*}
 
 \subsection{Experiment 3. Predicates vs. Classification}
@@ -172,7 +203,9 @@ We find an interesting tradeoff where initially \sys is comparable to Active Lea
 \centering
  \includegraphics[width=0.48\columnwidth]{exp/exp11a.pdf}
  \includegraphics[width=0.48\columnwidth]{exp/exp11b.pdf}
- \caption{While initially \sys is comparable in performance to Active Learning, as the classifier improves, \sys converges faster than Active Learning and SampleClean. \label{pred-perf}}
+ \caption{Even with a classifier \sys converges faster than Active Learning and SampleClean.
+ We plot the error on a log scale. 
+ However, initially \sys is comparable in performance to Active Learning, as the classifier acquires training data. \label{pred-perf}}
 \end{figure}
 
 \subsubsection{3b. Classifiable Errors}
@@ -220,10 +253,10 @@ On the other hand, the making the image fuzzy is more like a random error.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[scale=0.10]{exp/original.png}
- \includegraphics[scale=0.10]{exp/5x5removal.png}
- \includegraphics[scale=0.10]{exp/fuzzy.png}
- \caption{We experiment with two forms of corruption in the MNIST image datasets: 5x5 block removal and making the images fuzzy. \label{mnist-corr}}
+\includegraphics[scale=0.20]{exp/original.png}
+ \includegraphics[scale=0.20]{exp/5x5removal.png}
+ \includegraphics[scale=0.20]{exp/fuzzy.png}
+ \caption{We experiment with two forms of corruption in the MNIST image datasets: 5x5 block removal and making the images fuzzy. Image (a) shows an uncorrupted ``9", image (b) shows one corrupted with block removal, and image (c) shows one that is corrupted with fuzziness. \label{mnist-corr}}
 \end{figure}
 
 In Figure \ref{mnist}, we present the results.
@@ -237,8 +270,8 @@ We speculate that this is because classifying errors in a 784 dimensional space 
 
 \begin{figure}[ht]
 \centering
- \includegraphics[scale=0.10]{exp/exp7a.pdf}
- \includegraphics[scale=0.10]{exp/exp7b.pdf}
+ \includegraphics[scale=0.16]{exp/exp7a.pdf}
+ \includegraphics[scale=0.16]{exp/exp7b.pdf}
  \caption{For both types of corruption, \sys converges faster than Active Learning and SampleClean. \label{mnist}}
 \end{figure}
 

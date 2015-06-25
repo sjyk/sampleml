@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  25 JUN 2015 00:05
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  25 JUN 2015 12:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -675,10 +675,6 @@ GD
  []
 
 [7]
-
-LaTeX Warning: Citation `mcbook' on page 8 undefined on input line 262.
-
-
 Overfull \hbox (3.38795pt too wide) in paragraph at lines 306--311
 \OT1/cmr/m/n/9 vi-su-al-ize this in-tu-ition in Fig-ure 5[], and es-sen-tially,
  this lemma
@@ -731,125 +727,128 @@ LaTeX Warning: Reference `analysis' on page 10 undefined on input line 11.
 File: exp/exp2.pdf Graphic file (type pdf)
 
 <use exp/exp2.pdf>
-Package pdftex.def Info: exp/exp2.pdf used on input line 45.
-(pdftex.def)             Requested size: 192.00073pt x 101.66217pt.
+Package pdftex.def Info: exp/exp2.pdf used on input line 83.
+(pdftex.def)             Requested size: 240.0pt x 127.0723pt.
  <exp/exp1.pdf, id=65, 1345.025pt x 707.64375pt>
 File: exp/exp1.pdf Graphic file (type pdf)
 
 <use exp/exp1.pdf>
-Package pdftex.def Info: exp/exp1.pdf used on input line 46.
-(pdftex.def)             Requested size: 192.00073pt x 101.01305pt.
+Package pdftex.def Info: exp/exp1.pdf used on input line 84.
+(pdftex.def)             Requested size: 240.0pt x 126.269pt.
 
-Overfull \hbox (15.12746pt too wide) in paragraph at lines 65--66
+Underfull \vbox (badness 6236) has occurred while \output is active []
+
+
+Overfull \hbox (15.12746pt too wide) in paragraph at lines 103--111
 []\OT1/cmr/m/n/9 In our first pri-or-i-ti-za-tion ex-per-i-ment, we eval-u-ate 
 the samples-
  []
 
-<exp/exp3a.pdf, id=66, 1050.92625pt x 734.745pt>
+[11 <./exp/exp2.pdf> <./exp/exp1.pdf>]
+<exp/exp3a.pdf, id=111, 1050.92625pt x 734.745pt>
 File: exp/exp3a.pdf Graphic file (type pdf)
  <use exp/exp3a.pdf>
-Package pdftex.def Info: exp/exp3a.pdf used on input line 83.
+Package pdftex.def Info: exp/exp3a.pdf used on input line 114.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
 
-<exp/exp3b.pdf, id=67, 1050.92625pt x 734.745pt>
+<exp/exp3b.pdf, id=112, 1050.92625pt x 734.745pt>
 File: exp/exp3b.pdf Graphic file (type pdf)
  <use exp/exp3b.pdf>
-Package pdftex.def Info: exp/exp3b.pdf used on input line 84.
+Package pdftex.def Info: exp/exp3b.pdf used on input line 115.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
 
-<exp/exp3c.pdf, id=68, 1050.92625pt x 734.745pt>
+<exp/exp3c.pdf, id=113, 1050.92625pt x 734.745pt>
 File: exp/exp3c.pdf Graphic file (type pdf)
  <use exp/exp3c.pdf>
-Package pdftex.def Info: exp/exp3c.pdf used on input line 85.
+Package pdftex.def Info: exp/exp3c.pdf used on input line 116.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
- [11 <./exp/exp2.pdf> <./exp/exp1.pdf>] <exp/exp8.png, id=114, 1144.7568pt x 56
-9.9694pt>
+
+<exp/exp8.png, id=114, 1144.7568pt x 569.9694pt>
 File: exp/exp8.png Graphic file (type png)
-
-<use exp/exp8.png>
-Package pdftex.def Info: exp/exp8.png used on input line 101.
+ <use exp/exp8.png>
+Package pdftex.def Info: exp/exp8.png used on input line 132.
 (pdftex.def)             Requested size: 240.0pt x 119.48837pt.
- <exp/exp10.pdf, id=115, 864.22874pt x 674.52pt>
+
+<exp/exp10.pdf, id=115, 864.22874pt x 674.52pt>
 File: exp/exp10.pdf Graphic file (type pdf)
-
-<use exp/exp10.pdf>
-Package pdftex.def Info: exp/exp10.pdf used on input line 113.
+ <use exp/exp10.pdf>
+Package pdftex.def Info: exp/exp10.pdf used on input line 144.
 (pdftex.def)             Requested size: 144.00146pt x 112.39227pt.
- <exp/exp9.pdf, id=116, 851.18pt x 542.025pt>
-File: exp/exp9.pdf Graphic file (type pdf)
 
-<use exp/exp9.pdf>
-Package pdftex.def Info: exp/exp9.pdf used on input line 136.
+<exp/exp9.pdf, id=116, 851.18pt x 542.025pt>
+File: exp/exp9.pdf Graphic file (type pdf)
+ <use exp/exp9.pdf>
+Package pdftex.def Info: exp/exp9.pdf used on input line 167.
 (pdftex.def)             Requested size: 144.00146pt x 91.69641pt.
- [12 <./exp/exp3a.pdf> <./exp/exp3b.pdf> <./exp/exp3c.pdf> <./exp/exp8.png> <./
-exp/exp10.pdf> <./exp/exp9.pdf>]
-<exp/exp3aa.pdf, id=279, 1050.92625pt x 734.745pt>
+ [12 <./exp/exp8.png> <./exp/exp10.pdf> <./exp/exp9.pdf>]
+<exp/exp3aa.pdf, id=180, 1050.92625pt x 734.745pt>
 File: exp/exp3aa.pdf Graphic file (type pdf)
  <use exp/exp3aa.pdf>
-Package pdftex.def Info: exp/exp3aa.pdf used on input line 156.
+Package pdftex.def Info: exp/exp3aa.pdf used on input line 187.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
 
-<exp/exp3bb.pdf, id=280, 1050.92625pt x 734.745pt>
+<exp/exp3bb.pdf, id=181, 1050.92625pt x 734.745pt>
 File: exp/exp3bb.pdf Graphic file (type pdf)
  <use exp/exp3bb.pdf>
-Package pdftex.def Info: exp/exp3bb.pdf used on input line 157.
+Package pdftex.def Info: exp/exp3bb.pdf used on input line 188.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
 
-<exp/exp3cc.pdf, id=281, 1050.92625pt x 734.745pt>
+<exp/exp3cc.pdf, id=182, 1050.92625pt x 734.745pt>
 File: exp/exp3cc.pdf Graphic file (type pdf)
  <use exp/exp3cc.pdf>
-Package pdftex.def Info: exp/exp3cc.pdf used on input line 158.
+Package pdftex.def Info: exp/exp3cc.pdf used on input line 189.
 (pdftex.def)             Requested size: 157.63214pt x 110.20699pt.
 
-<exp/exp11a.pdf, id=282, 1050.92625pt x 734.745pt>
+<exp/exp11a.pdf, id=183, 1050.92625pt x 734.745pt>
 File: exp/exp11a.pdf Graphic file (type pdf)
  <use exp/exp11a.pdf>
-Package pdftex.def Info: exp/exp11a.pdf used on input line 173.
+Package pdftex.def Info: exp/exp11a.pdf used on input line 204.
 (pdftex.def)             Requested size: 115.19897pt x 80.5307pt.
 
-<exp/exp11b.pdf, id=283, 1050.92625pt x 734.745pt>
+<exp/exp11b.pdf, id=184, 1050.92625pt x 734.745pt>
 File: exp/exp11b.pdf Graphic file (type pdf)
  <use exp/exp11b.pdf>
-Package pdftex.def Info: exp/exp11b.pdf used on input line 174.
+Package pdftex.def Info: exp/exp11b.pdf used on input line 205.
 (pdftex.def)             Requested size: 115.19897pt x 80.5307pt.
 
-<exp/exp5a.pdf, id=284, 864.22874pt x 602.25pt>
+<exp/exp5a.pdf, id=185, 864.22874pt x 602.25pt>
 File: exp/exp5a.pdf Graphic file (type pdf)
  <use exp/exp5a.pdf>
-Package pdftex.def Info: exp/exp5a.pdf used on input line 191.
+Package pdftex.def Info: exp/exp5a.pdf used on input line 224.
 (pdftex.def)             Requested size: 112.35367pt x 78.29524pt.
-
-<exp/original.png, id=285, 562.1pt x 420.57124pt>
+ [13 <./exp/exp3a.pdf> <./exp/exp3b.pdf> <./exp/exp3c.pdf> <./exp/exp11a.pdf> <
+./exp/exp11b.pdf> <./exp/exp5a.pdf>] <exp/original.png, id=400, 562.1pt x 420.5
+7124pt>
 File: exp/original.png Graphic file (type png)
- <use exp/original.png>
-Package pdftex.def Info: exp/original.png used on input line 223.
-(pdftex.def)             Requested size: 56.21329pt x 42.05959pt.
 
-<exp/5x5removal.png, id=286, 562.1pt x 420.57124pt>
+<use exp/original.png>
+Package pdftex.def Info: exp/original.png used on input line 256.
+(pdftex.def)             Requested size: 112.418pt x 84.11275pt.
+ <exp/5x5removal.png, id=401, 562.1pt x 420.57124pt>
 File: exp/5x5removal.png Graphic file (type png)
- <use exp/5x5removal.png>
-Package pdftex.def Info: exp/5x5removal.png used on input line 224.
-(pdftex.def)             Requested size: 56.21329pt x 42.05959pt.
 
-<exp/fuzzy.png, id=287, 562.1pt x 420.57124pt>
+<use exp/5x5removal.png>
+Package pdftex.def Info: exp/5x5removal.png used on input line 257.
+(pdftex.def)             Requested size: 112.418pt x 84.11275pt.
+ <exp/fuzzy.png, id=402, 562.1pt x 420.57124pt>
 File: exp/fuzzy.png Graphic file (type png)
- <use exp/fuzzy.png>
-Package pdftex.def Info: exp/fuzzy.png used on input line 225.
-(pdftex.def)             Requested size: 56.21329pt x 42.05959pt.
- [13 <./exp/exp11a.pdf> <./exp/exp11b.pdf> <./exp/exp5a.pdf>]
-<exp/exp7a.pdf, id=403, 1050.92625pt x 734.745pt>
-File: exp/exp7a.pdf Graphic file (type pdf)
- <use exp/exp7a.pdf>
-Package pdftex.def Info: exp/exp7a.pdf used on input line 240.
-(pdftex.def)             Requested size: 105.09877pt x 73.47879pt.
 
-<exp/exp7b.pdf, id=404, 1050.92625pt x 734.745pt>
+<use exp/fuzzy.png>
+Package pdftex.def Info: exp/fuzzy.png used on input line 258.
+(pdftex.def)             Requested size: 112.418pt x 84.11275pt.
+ <exp/exp7a.pdf, id=403, 1050.92625pt x 734.745pt>
+File: exp/exp7a.pdf Graphic file (type pdf)
+
+<use exp/exp7a.pdf>
+Package pdftex.def Info: exp/exp7a.pdf used on input line 273.
+(pdftex.def)             Requested size: 168.15163pt x 117.5616pt.
+ <exp/exp7b.pdf, id=404, 1050.92625pt x 734.745pt>
 File: exp/exp7b.pdf Graphic file (type pdf)
- <use exp/exp7b.pdf>
-Package pdftex.def Info: exp/exp7b.pdf used on input line 241.
-(pdftex.def)             Requested size: 105.09877pt x 73.47879pt.
-)
-(./relatedwork.tex
+
+<use exp/exp7b.pdf>
+Package pdftex.def Info: exp/exp7b.pdf used on input line 274.
+(pdftex.def)             Requested size: 168.15163pt x 117.5616pt.
+) (./relatedwork.tex
 Overfull \hbox (15.7462pt too wide) in paragraph at lines 2--4
 []\OT1/cmr/m/n/9 Bringing to-gether data clean-ing and ma-chine learn-ing prese
 nts
@@ -864,12 +863,8 @@ Overfull \hbox (5.15115pt too wide) in paragraph at lines 5--6
 s-
  []
 
-) (./conclusion.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [14 <./exp/exp3aa.pdf> <./exp/exp3bb.pdf> <./exp/exp3cc.pdf> <./exp/original.p
-ng (PNG copy)> <./exp/5x5removal.png (PNG copy)> <./exp/fuzzy.png (PNG copy)> <
-./exp/exp7a.pdf> <./exp/exp7b.pdf>])
+[14 <./exp/exp3aa.pdf> <./exp/exp3bb.pdf> <./exp/exp3cc.pdf> <./exp/original.pn
+g> <./exp/5x5removal.png> <./exp/fuzzy.png>]) (./conclusion.tex)
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.5> not available
 (Font)              size <8> substituted on input line 165.
@@ -879,7 +874,9 @@ LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <8.5> not available
 LaTeX Font Warning: Font shape `OT1/cmr/m/it' in size <8.5> not available
 (Font)              size <8> substituted on input line 10.
 
-) [15] (./outline.aux)
+[15 <./exp/exp7a.pdf> <./exp/exp7b.pdf>]) [16
+
+] (./outline.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.5pt have occurred.
@@ -892,10 +889,10 @@ LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
  ) 
 Here is how much of TeX's memory you used:
- 8325 strings out of 493315
- 117392 string characters out of 6137904
+ 8328 strings out of 493315
+ 117444 string characters out of 6137904
  253268 words of memory out of 5000000
- 11515 multiletter control sequences out of 15000+600000
+ 11518 multiletter control sequences out of 15000+600000
  25970 words of font info for 66 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  42i,14n,40p,1280b,246s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -921,10 +918,10 @@ ist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2013/tex
 mf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2013/texmf-dist
 /fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2013/texmf-dist/fonts/typ
 e1/urw/times/utmri8a.pfb>
-Output written on outline.pdf (15 pages, 1221678 bytes).
+Output written on outline.pdf (16 pages, 1223708 bytes).
 PDF statistics:
- 647 PDF objects out of 1000 (max. 8388607)
- 436 compressed objects within 5 object streams
+ 650 PDF objects out of 1000 (max. 8388607)
+ 438 compressed objects within 5 object streams
  0 named destinations out of 1000 (max. 500000)
  121 words of extra memory for PDF output out of 10000 (max. 10000000)
 

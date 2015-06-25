@@ -6,6 +6,8 @@ As these data grow, new methodologies for scalable and reliable analysis in the 
 
 Increasingly, data analysis pipelines involve Machine Learning.
 The endpoint of such pipelines can be any number of ``data products", such as recommender systems, spam detectors, and forecasting models, all of which can be very sensitive to data quality \cite{xiaofeature}.
+Increasingly, analytics stacks are moving beyond traditional SQL analytics and natively supporting Machine Learning (e.g. BDAS \cite{bdas}, Stratosphere \cite{alexandrov2014stratosphere}).
+Analysts using Machine Learning will increasingly have to manage the entire processing pipeline from injest to model training in one software stack.
 When data error is systematic, or correlated with the data, errors can significantly bias predictions by a model.
 For example, in a recommender system, we may find that all users from one region have a missing age attribute.
 Discarding or ignoring this problem can make predictions for the affected subpopulation untrustworthy.
