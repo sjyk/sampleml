@@ -263,7 +263,7 @@ This proof follows from \cite{mcbook}, we present it here for intuition.
 It is easy to verify that for sampling probabilities $p(a_i)$, that the unbiased
 estimate of the mean is:
 \[
-\mu = \sum_{i\in\hat{A}}^k \frac{a_i}{p_i}
+\mu = \frac{1}{nk}\cdot\sum_{i\in\hat{A}}^k \frac{a_i}{p_i}
 \]
 The variance of this estimate is given by:
 \[
@@ -276,9 +276,9 @@ Var(\mu) = \mathbb{E}(\mu^2)-\bar{A}^2
 Since $\bar{A}$ is deterministic, we can remove that term during minimization.
 Furthermore, we can write $\mathbb{E}(\mu^2)$ as:
 \[
-\mathbb{E}(\mu^2) = \sum_i^N \frac{a_i^2}{p_i}
+\mathbb{E}(\mu^2) = \frac{1}{n^2}\sum_i^n \frac{a_i^2}{p_i}
 \]
-Then, we can solve the following optimization problem over the set of weights $P=\{p(a_i)\}$:
+Then, we can solve the following optimization problem (removing the proportionality of $\frac{1}{n^2}$) over the set of weights $P=\{p(a_i)\}$:
 \[
 \min_{P} \sum_i^N \frac{a_i^2}{p_i}
 \]

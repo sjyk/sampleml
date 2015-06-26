@@ -2,6 +2,8 @@
 \citation{Gartner}
 \citation{fortunearticle}
 \citation{xiaofeature}
+\citation{bdas}
+\citation{alexandrov2014stratosphere}
 \citation{rahm2000data}
 \citation{kandel2012}
 \citation{gokhale2014corleone,park2014crowdfill}
@@ -22,10 +24,10 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Motivating Example}{2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Machine Learning and Loss Minimization}{2}}
 \citation{wang1999sample}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces ActiveClean\xspace  starts with a dirty model and tries to iterative correct the error in batches. In many datasets, this leads to an improved convergence rate over naive uniform sampling. }}{3}}
-\newlabel{sys-arch2}{{2}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Systematic Biases}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Data Cleaning on a Budget}{3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces ActiveClean\xspace  starts with a dirty model and tries to iterative correct the error in batches. In many datasets, this leads to an improved convergence rate over naive uniform sampling. }}{3}}
+\newlabel{sys-arch2}{{2}{3}}
 \newlabel{activeclean}{{1}{3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Two perspectives on error}{3}}
 \citation{DBLP:journals/pvldb/YakoutENOI11,DBLP:journals/pvldb/FanLMTY10,khayyat2015bigdansing}
@@ -94,40 +96,40 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Experiment 1. Effect of Cleaning}{11}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces (a) Robust techniques work best when corrupted data are random and look atypical. (b)Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.}}{11}}
 \newlabel{sys-rand}{{6}{11}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Experiment 2. Prioritization}{11}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Experiment 2. Budgeted Cleaning}{11}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {7.3.1}2a. Alternative Algorithms}{11}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {7.3.2}2b. Source of Improvements}{12}}
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces We clean 10\% of the data with the alternative algorithms and also include variants of ActiveClean\xspace  with optimization removed. We plot the relative error w.r.t the optimized ActiveClean\xspace  . Both partitioning and importance sampling lead to significant reductions in error. }}{12}}
 \newlabel{opts}{{8}{12}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {7.3.3}2c. Error Dependence}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces As we increase the biasing nature of the corruption, Active Learning is increasingly erroneous w.r.t ActiveClean\xspace  . }}{12}}
-\newlabel{albias}{{9}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces We corrupt an increasing number of entries in the data matrix. At about 30\% corrupted, ActiveClean\xspace  is no longer more efficient than SampleClean. }}{12}}
-\newlabel{bias}{{10}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces We corrupt an increasing number of entries in the data matrix. At about 30\% corrupted, ActiveClean\xspace  is no longer more efficient than SampleClean. }}{12}}
+\newlabel{bias}{{9}{12}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {7.3.4}2d. Testing Accuracy}{12}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces ActiveClean\xspace  converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error (on a log scale) as a function of the number of examples cleaned. }}{13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Experiment 3. Partioning and Estimation}{12}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.4.1}3a. Basic Performance}{12}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces ActiveClean\xspace  converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. }}{13}}
 \newlabel{prio-perf}{{7}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Experiment 3. Predicates vs. Classification}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.4.1}3a. Basic Performance}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces ActiveClean\xspace  converges with a smaller sample size to the maximum test accuracy in comparison to Active Learning and SampleClean. The reductions in model error correlate well with increased test accuracy in two of the datasets (a) and (b). In (c), we find insignificant gains in terms of test accuracy. }}{13}}
+\newlabel{prio-tperf}{{10}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Even with a classifier ActiveClean\xspace  converges faster than Active Learning and SampleClean. We plot the error on a log scale. However, initially ActiveClean\xspace  is comparable in performance to Active Learning, as the classifier acquires training data. }}{13}}
+\newlabel{pred-perf}{{11}{13}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {7.4.2}3b. Classifiable Errors}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Even with a classifier ActiveClean\xspace  converges faster than Active Learning and SampleClean. We plot the error on a log scale. However, initially ActiveClean\xspace  is comparable in performance to Active Learning, as the classifier acquires training data. }}{13}}
-\newlabel{pred-perf}{{12}{13}}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Errors that are less random are easier to classify, and lead to more significant reductions in relative model error. }}{13}}
-\newlabel{tradeoffs2}{{13}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Experiment 4. Price of a Scan}{13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}Real Scenarios}{13}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.6.1}Replacing Corrupted Data}{13}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Errors that are less random are easier to classify, and lead to more significant reductions in relative model error. }}{13}}
+\newlabel{tradeoffs2}{{12}{13}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.4.3}3c. Error Estimation}{13}}
 \citation{zhao2014stochastic}
 \citation{qu2014randomized}
 \citation{rineas2012fast}
 \citation{settles2010active}
 \citation{settles2010active}
 \citation{pan2010survey}
-\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces ActiveClean\xspace  converges with a smaller sample size to the maximum test accuracy in comparison to Active Learning and SampleClean. The reductions in model error correlate well with increased test accuracy in two of the datasets (a) and (b). In (c), we find insignificant gains in terms of test accuracy. }}{14}}
-\newlabel{prio-tperf}{{11}{14}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Related Work}{14}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. }}{14}}
+\newlabel{tradeoffs3}{{13}{14}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Real Scenarios}{14}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {7.5.1}Replacing Corrupted Data}{14}}
 \@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces We experiment with two forms of corruption in the MNIST image datasets: 5x5 block removal and making the images fuzzy. Image (a) shows an uncorrupted ``9", image (b) shows one corrupted with block removal, and image (c) shows one that is corrupted with fuzziness. }}{14}}
 \newlabel{mnist-corr}{{14}{14}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Related Work}{14}}
 \citation{wainwright2012privacy,duchi2013local}
 \citation{nelson2012query}
 \citation{altowim2014progressive}
@@ -146,11 +148,11 @@
 \bibcite{drineas2012fast}{8}
 \bibcite{duchi2013local}{9}
 \bibcite{DBLP:journals/pvldb/FanLMTY10}{10}
-\bibcite{feng2014robust}{11}
-\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces For both types of corruption, ActiveClean\xspace  converges faster than Active Learning and SampleClean. }}{15}}
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces For both types of corruption, ActiveClean\xspace  converges faster than Active Learning and SampleClean. We plot the relative error as function of the number of cleaned examples }}{15}}
 \newlabel{mnist}{{15}{15}}
 \@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{15}}
 \@writefile{toc}{\contentsline {section}{\numberline {10}References}{15}}
+\bibcite{feng2014robust}{11}
 \bibcite{gokhale2014corleone}{12}
 \bibcite{guillory2009active}{13}
 \bibcite{jaggi2014communication}{14}
