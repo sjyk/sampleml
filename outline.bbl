@@ -1,5 +1,8 @@
 \begin{thebibliography}{10}
 
+\bibitem{bdas}
+Berkeley data analytics stack.
+
 \bibitem{fortunearticle}
 Big data's dirty problem.
 
@@ -8,6 +11,13 @@ S.~Agarwal, B.~Mozafari, A.~Panda, H.~Milner, S.~Madden, and I.~Stoica.
 \newblock {BlinkDB:} queries with bounded errors and bounded response times on
   very large data.
 \newblock In {\em EuroSys}, pages 29--42, 2013.
+
+\bibitem{alexandrov2014stratosphere}
+A.~Alexandrov, R.~Bergmann, S.~Ewen, J.-C. Freytag, F.~Hueske, A.~Heise,
+  O.~Kao, M.~Leich, U.~Leser, V.~Markl, et~al.
+\newblock The stratosphere platform for big data analytics.
+\newblock {\em The VLDB Journal—The International Journal on Very Large Data
+  Bases}, 23(6):939--964, 2014.
 
 \bibitem{altowim2014progressive}
 Y.~Altowim, D.~V. Kalashnikov, and S.~Mehrotra.
@@ -35,12 +45,6 @@ D.~P. Bertsekas.
 O.~Dekel, R.~Gilad-Bachrach, O.~Shamir, and L.~Xiao.
 \newblock Optimal distributed online prediction using mini-batches.
 \newblock {\em The Journal of Machine Learning Research}, 13(1):165--202, 2012.
-
-\bibitem{drineas2012fast}
-P.~Drineas, M.~Magdon-Ismail, M.~W. Mahoney, and D.~P. Woodruff.
-\newblock Fast approximation of matrix coherence and statistical leverage.
-\newblock {\em The Journal of Machine Learning Research}, 13(1):3475--3506,
-  2012.
 
 \bibitem{duchi2013local}
 J.~C. Duchi, M.~I. Jordan, and M.~J. Wainwright.

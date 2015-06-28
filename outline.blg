@@ -15,54 +15,54 @@ A bad cross reference---entry "wang1999sample"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
 A bad cross reference---entry "nikolic2014linview"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
-Warning--I didn't find a database entry for "bottou2012stochastic"
 Warning--I didn't find a database entry for "rineas2012fast"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2014"
 Warning--to sort, need author or key in fortunearticle
+Warning--to sort, need author or key in bdas
 Warning--empty journal in bergman2015query
 Warning--empty year in bertsekas2011incremental
 Warning--empty journal in khayyat2015bigdansing
 Warning--empty publisher in mcbook
 Warning--empty journal in xiaofeature
-You've used 33 entries,
+You've used 34 entries,
             2118 wiz_defined-function locations,
-            665 strings with 9285 characters,
-and the built_in function-call counts, 12754 in all, are:
-= -- 1211
-> -- 708
+            669 strings with 9507 characters,
+and the built_in function-call counts, 13100 in all, are:
+= -- 1235
+> -- 744
 < -- 10
-+ -- 282
-- -- 246
-* -- 914
-:= -- 2075
-add.period$ -- 100
-call.type$ -- 33
-change.case$ -- 221
++ -- 298
+- -- 260
+* -- 944
+:= -- 2129
+add.period$ -- 101
+call.type$ -- 34
+change.case$ -- 230
 chr.to.int$ -- 0
-cite$ -- 39
-duplicate$ -- 479
-empty$ -- 934
-format.name$ -- 246
-if$ -- 2679
+cite$ -- 41
+duplicate$ -- 486
+empty$ -- 955
+format.name$ -- 260
+if$ -- 2747
 int.to.chr$ -- 0
-int.to.str$ -- 33
+int.to.str$ -- 34
 missing$ -- 33
-newline$ -- 166
+newline$ -- 169
 num.names$ -- 64
-pop$ -- 254
+pop$ -- 268
 preamble$ -- 1
-purify$ -- 189
+purify$ -- 197
 quote$ -- 0
-skip$ -- 365
+skip$ -- 376
 stack$ -- 0
 substring$ -- 703
-swap$ -- 134
+swap$ -- 135
 text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 130
-warning$ -- 6
+type$ -- 134
+warning$ -- 7
 while$ -- 107
-width$ -- 35
-write$ -- 347
+width$ -- 36
+write$ -- 352
 (There were 4 error messages)
