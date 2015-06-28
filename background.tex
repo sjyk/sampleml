@@ -45,7 +45,7 @@ If our cleaning budget is small, sampling errors will dominate any reductions in
  \caption{\sysfull starts with a dirty model and tries to iterative correct the error in batches. In many datasets, this leads to an improved convergence rate over naive uniform sampling. \label{sys-arch2}}
 \end{figure}
 
-\noindent\textbf{The need for \sys: } In designing \sys, we try to get the best of both worlds. We want the correctness on intermediate results given SampleClean, but we also want to avoid the strong dependence on sample size. In Figure \ref{sys-arch2}, we illustrate the tradeoff space of sampling and data cleaning.
+\noindent\textbf{The Need for \sys: } In designing \sys, we try to get the best of both worlds. We want the correctness on intermediate results given SampleClean, but we also want to avoid the strong dependence on sample size. In Figure \ref{sys-arch2}, we illustrate the tradeoff space of sampling and data cleaning.
 At two extremes we have no cleaning (just using the dirty data) and full cleaning.
 We argue that the naive approach of uniform sampling is not suited for Machine Learning (SampleClean) because it struggles at small sample sizes.
 We design \sys to make greater progress at these small sample sizes using the dirty model as an initialization.

@@ -41,7 +41,7 @@ Our class of Machine Learning models are based on loss minimization, that is the
 Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p_i$.
 We can approximate the global gradient:
 \[
-\nabla\phi(\theta) \approx g_{S}(\theta) = \sum_{i \in S}\frac{1}{p_i}\nabla\phi(x_i^{clean},y_i^{clean},\theta)
+\nabla\phi(\theta) \approx g_{S}(\theta) = \frac{1}{n\mid S \mid} \sum_{i \in S}\frac{1}{p_i}\nabla\phi(x_i^{clean},y_i^{clean},\theta)
 \]
 Then for every batch of data cleaned, we apply the update to the current best model estimate:
 \[
@@ -59,7 +59,7 @@ For example, as data are cleaned, there is no need to resample this data.
 The consequence of this is that the estimate $g_{S}(\theta)$ is now biased.
 We also have to compensate for this bias by averaging this estimate with the gradient with respect to the clean data:
 \[
-g_C(\theta) = \sum_{i \in R - R_{dirty}}\nabla\phi(x_i^{clean},y_i^{clean},\theta)
+g_C(\theta) = \frac{1}{\mid R - R_{dirty}\mid}\sum_{i \in R - R_{dirty}}\nabla\phi(x_i^{clean},y_i^{clean},\theta)
 \]
 Then, for weights $\alpha,\beta$ which we will subsequently discuss how to select:
 \[
