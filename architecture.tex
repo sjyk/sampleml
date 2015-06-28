@@ -1,12 +1,14 @@
 \section{System Architecture}\label{arch}
+Now, we overview the \sys architecture and describe how our framework integrates with existing data cleaning solutions.
 
 \subsection{Overview}
 We revisit the architecture diagram in Figure \ref{sys-arch}, and formalize
-the problems addressed in each one of the stages.
+the problems addressed in each one of the stages. 
+We asterix (*) the steps that are user specified.
 
 \vspace{0.5em}
 
-\textbf{Featurization: } Formally, given a relation $R$ with a set of attributes $A$.
+\noindent \textbf{Featurization: } Formally, given a relation $R$ with a set of attributes $A$.
 There is a featurization function $F$ which maps every row in $\mathcal{R}$ to a $d$ dimensional feature vector and a $l$ dimensional label tuple: 
 \[F(r \in \mathcal{R}) \mapsto (\mathbb{R}^l, \mathbb{R}^d)\]
 The result of the featurization are the data matrices $X$ and $Y$.
@@ -21,7 +23,9 @@ The basic assumption is that training examples (i.e., rows in the data matrix) h
 
 \vspace{0.5em}
 
-\noindent\textbf{Error Detection: } The first step in \sys is error detection. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. 
+\noindent\textbf{Error Detection (*): } The first step in \sys is error detection. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$.  
+Associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which tells us which features are corrupted.
+Therefore, the error detection step gives us the following tuple: $(R_{dirty},E_r)$.
 
 \vspace{0.5em}
 
@@ -29,7 +33,7 @@ The basic assumption is that training examples (i.e., rows in the data matrix) h
 
 \vspace{0.5em}
 
-\noindent\textbf{Error Repair: } Next, we apply a repair procedure $C$ to the sample of data $S_{dirty}$ to get a clean sample $S_{clean}$.
+\noindent\textbf{Error Repair (*): } Next, we apply a repair procedure $C$ to the sample of data $S_{dirty}$ to get a clean sample $S_{clean}$. Given a dirty record $r$, the error repair module applies a repair $C$ to the record, to return $C(r)\mapsto r_{clean}$. 
 
 \vspace{0.5em}
 
@@ -38,21 +42,6 @@ The basic assumption is that training examples (i.e., rows in the data matrix) h
 \vspace{0.5em}
 
 \noindent\textbf{Error Impact Estimate: } Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the model update.
-
-\subsection{User Specified Steps}
-\sys is a data cleaning methodology that iteratively corrects an incorrect result, and we formalize the conditions on the data cleaning operations that can fit in our framework.
-The user has two specify two components: error detection and error repair.
-
-\subsubsection{Error Detection}
-We have to select a set of candidate records to be cleaned from the base data.
-In our analysis, we assume that this candidate set is a superset of those records that are actually dirty.
-Later, in Section \ref{imperfect}, we will relax this assumption.
-Formally, given a relation $R$, we select a subset of records to be cleaned $R_{dirty}$.
-Associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which tells us which features are corrupted.
-Therefore, the error detection step gives us the following tuple: $(R_{dirty},E_r)$.
-
-\subsubsection{Error Repair}
-Given a dirty record $r$, the error repair module applies a repair $C$ to the record, to return $C(r)\mapsto r_{clean}$. 
 
 \iffalse
 

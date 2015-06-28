@@ -107,8 +107,6 @@ Two characterize this problem there are two metrics that we look at:
 
 \noindent\textbf{Testing Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Let $T(\theta)$ be the out-of-sample testing error when the dirty model is applied to the clean data, and $T(\theta^*)$ be the test error when the clean model is applied to the clean data. The testing error is defined as $T(\theta^*) - T(\theta)$
 
-\subsubsection{Active Clean}
-
 \begin{problem}[ActiveClean Problem]\label{activeclean}\sloppy
 Let $R$ be a dirty relation and each row $r \in R$ is 
 turned into a feature vector and label tuple $F(r) \mapsto (x,y)$.
