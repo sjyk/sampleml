@@ -1,24 +1,24 @@
 \section{Introduction}
 Databases are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
-Numerous industrial surveys have shown that dirty data are prevalent \cite{Gartner}, and there is now a growing industry around cleaning dirty data at scale \cite{fortunearticle}.
-Analysts are increasingly deriving data from inherently error-prone processes such as extracting structured data from websites, synthesizing data from multiple networked sensors, and linking entities from disparate data sources.
-As these data grow, new methodologies for scalable and reliable analysis in the presence of errors are required. 
+Numerous industrial surveys have shown that dirty data are prevalent \cite{Gartner}, and there is now a growing industry around cleaning data at scale \cite{fortunearticle}.
+One reasons for the recent research and commericial interest in data cleaning is analysts are increasingly deriving data from inherently error-prone processes such as extracting structured data from websites, synthesizing data from multiple networked sensors, and linking entities from disparate data sources.
+New methodologies for scalable and reliable analysis in the presence of errors are required. 
 
-Increasingly, data analysis pipelines involve Machine Learning.
-The endpoint of such pipelines can be any number of ``data products", such as recommender systems, spam detectors, and forecasting models, all of which can be very sensitive to data quality \cite{xiaofeature}.
-Increasingly, analytics stacks are moving beyond traditional SQL analytics and natively supporting Machine Learning (e.g. BDAS \cite{bdas}, Stratosphere \cite{alexandrov2014stratosphere}).
-Analysts using Machine Learning will increasingly have to manage the entire processing pipeline from injest to model training in one software stack.
-When data error is systematic, or correlated with the data, errors can significantly bias predictions by a model.
+The analysis performed on the data is also becoming more complex.
+The endpoint of modern data analysis pipelines can be any number of ``data products", such as recommender systems, spam detectors, and forecasting models, all of which can be very sensitive to data quality \cite{xiaofeature}.
+Increasingly, analytics stacks are moving beyond traditional SQL analytics and natively supporting Machine Learning (e.g. Berkeley Data Analytics Stack \cite{bdas}, Hadoop, Stratosphere \cite{alexandrov2014stratosphere}).
+When error is systematic, i.e., correlated with the data, errors can significantly bias predictions by a model.
 For example, in a recommender system, we may find that all users from one region have a missing age attribute.
 Discarding or ignoring this problem can make predictions for the affected subpopulation untrustworthy.
 While there is an extensive literature on robust Machine Learning, this work largely focuses on resilience to atypical outliers and not systematically corrupted data.
 
+Since new analytics frameworks encapsulate the entire data processing pipeline from raw data to features to model training, there is an opportunity to address this problem from database perspective.  
 The database community's response to systematic corruption is data cleaning, which is an extensively studied field (see Rahm and Do \cite{rahm2000data} for a survey).
 Cleaning works by repairing (or approximately repairing) the corruption in the base data.
 However, cleaning large data can be expensive, both computationally and in human effort, as an analyst has to program repairs for all errors manifest in the data \cite{kandel2012}.
 In some applications, scripted data transformations may not be reliable necessitating the use of even costlier crowdsourcing techniques \cite{gokhale2014corleone,park2014crowdfill}.
 
-An emerging solution to the growing costs of data cleaning is sampling \cite{wang1999sample} where the analyst cleans a small sample of data and can estimate the results of aggregate queries.
+An emerging solution to the growing costs of data cleaning is sampling \cite{wang1999sample}, where the analyst cleans a small sample of data and can estimate the results of aggregate queries.
 Analysts can sample a large dataset, prototype changes on the sample, and evaluate whether these changes have the desired affect.
 Sampling provides a flexible tradeoff between cleaning cost and query result accuracy for aggregate queries.
 The case for sampling in data cleaning is analogous to arguments for Approximate Query Processing (AQP) \cite{DBLP:conf/eurosys/AgarwalMPMMS13}, where a timely approximate answer is more desirable than an exact slow answer. 
@@ -31,41 +31,36 @@ The case for sampling in data cleaning is analogous to arguments for Approximate
 
 Unfortunately, a naive application of sampling does not generalize to Machine Learning.
 Machine Learning is far more sensitive to sample size (training data) than aggregate queries.
-Suppose we have a budget of cleaning 50 records.
+Suppose we have a budget of cleaning only 50 records.
 This might be sufficient data to approximate some basic aggregate queries such sums and counts, but in any moderately difficult Machine Learning application, 50 examples is not sufficient to train an accurate model.
 In other words, in small samples, the error mitigation by data cleaning is dominated by the error introduced by sampling.
 
-In this work, we explore how we can exploit the structure of a Machine Learning problem to train accurate models under a budget.
-Errors are often sparse and affect a small number of examples and features.
-This means that a dirty model trained on the full dirty data may be relatively ``close" to the true clean model.
-So instead of attempting to retrain a model from scratch, we can clean batches of data and iteratively correct the old model.
-To make each iteration as valuable as possible, we can select data that if cleaned will most significantly affect the model.
+In this work, we explore better methodologies for training models under budgeted data cleaning.
+One insight is that errors are often sparse and affect a small number of examples and features.
+This means that a model trained on the full dirty data may be relatively ``close" to the true clean model.
+So instead of attempting to retrain a model from scratch, we can try to correct the old model.
+The next insight that errors often happen in batches, i.e., there are groups of similarly corrupted records, and as we clean more data, we get more information about how groups of errors affect the model.
+Instead of cleaning a sample of data all at once, we should be cleaning small batches and feeding that information back to inform subsequent iterations.
 
-In this paper, we propose \sys, an anytime framework for training Machine Learning models with data cleaning.
+In this paper, we propose \sys, an anytime framework for training Machine Learning models with budgeted data cleaning.
 Users of \sys have to specify a model, an error detection procedure, and an error repair method.
 Our system will provide an estimation framework to return an accurate model given a repair budget.
 In Figure \ref{sys-arch}, we illustrate our system architecture.
-\sys supports a class of models called regularized-convex loss problems which includes linear regression, logistic regression, generalized linear models, and support vector machines.
+\sys supports a broad class of models which includes linear regression, logistic regression, generalized linear models, and support vector machines.
 We start with a model trained on the dirty data.
 Then, an \emph{error detection} module selects a set of candidate dirty data.
 An \emph{error sampling} module chooses what data from the candidate dirty data to clean.
 We apply the repairs to this small sample with the \emph{error repair} module, and then update the dirty model based on our cleaning.
-Once we clean data, we maintain a running estimate of how cleaning impacts the model and feed that estimate back to adaptively set the sampling distribution.
+Once we clean some data, we maintain a running estimate of how cleaning impacts the model and feed that estimate back to adaptively set the sampling distribution.
 
-The key technical insight of \sys is that even in clean data sampling is naturally part of large-scale Machine Learning.
-Stochastic optimization methods, such as Stochastic Gradient Descent, start at an arbitrary initialization and calculate updates by drawing training examples at random. 
-In very large datasets, it is well known that substantial progress is made in less than one epoch (i.e., a full pass through the entire dataset) \cite{bottou2012stochastic}.
-When errors are relatively sparse, we argue that we often start of with a very good initialization.
-This insight inspires the key idea of this paper, namely, that we can lazily materialize the clean data only when needed by the optimization.
-Since we know that we are going to be limited to a single pass of data, we try to make the initial iterations as valuable as possible.
-There is a growing consensus in Machine Learning research that all training data are not created equal and some data are more informative than others \cite{drineas2012fast, settles2010active}.
-In Active Learning, we often sequentially select the most important points to label \cite{settles2010active}.
-However, the key new challenge in data cleaning is that features and examples that may look unimportant in the dirty data may be important in the clean data and vice versa.
-
+\sys presents a novel framework that tightly integrates data cleaning with model training.
+As a result, there are numerous new opportunities for optimization.
+We can ``push down" the model training to the data cleaning and select data to clean that are most valuable to the model.
+We can also ``push up" the data cleaning to the model training by intelligently batching together model updates on already cleaned data.
 In summary, our contributions are
 \begin{itemize}[noitemsep]
-\item We propose \sysfull which given dirty data, a convex loss model, a data cleaning procedure, and a budget, we can return a highly accurate model for a fraction of the cleaning cost.
-\item \sys relies on two key optimizations, importance sampling and error partitioning, that result in substantial emprical gains in accuracy in comparison to Active Learning.
+\item We propose \sysfull which given dirty data, a model, a data cleaning procedure, and a budget, we can return a highly accurate model for a fraction of the cleaning cost.
+\item \sys relies on two key optimizations, guided error sampling and error partitioning, that result in substantial emprical gains in accuracy in comparison to alternative approaches such as Active Learning.
 \item \sys is implemented with an non-uniform importance sampling approach that prioritizes points in the clean model that are most informative.
 \item \sys partitions dirty and clean data to reduce the variance of the model update at each iteration.
 \item We evaluate \sysfull on real and synthetic datasets to show that non-uniform sampling achieves improved performance in comparison to uniform sampling, and Active Learning.

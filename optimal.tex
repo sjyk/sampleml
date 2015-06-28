@@ -17,27 +17,6 @@ Our goal is that these updates should minimize the error the updated model and t
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]
 
-\subsubsection{Naive Solutions}
-We will explain why this problem neccesitates a new approach as existing techniques will not do what we want.
-If we look at the progressive data cleaning problem in the abstract.
-The first solution to this problem is to clean a sample of data, write this sample back, and then retrain the model on the partially cleaned data.
-In fact, if we were to use current data cleaning architectures unmodified this is what they would do.
-While this solution is guaranteed to be asympotically consistent (i.e., if we clean all the data we are guaranteed the correct solution), the performance of intermediate models can be very unreliable.
-In statistics, there is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can actually result in reversed trends.
-
-So if mixing dirty and clean data is not the correct solution, the next approach would be to neglect the dirty data altogether.
-We could recompute the model on only the cleaned data.
-This solution is also guaranteed to be consistent, and intermediate results only reflect the clean data.
-However, the problem here is that high-dimensional models are very sensitive to the sample size.
-If our cleaning budget is small, sampling errors will dominate any reductions in data error.
-We summarize these two approaches in Figure \ref{update-arch1}.
-
-\begin{figure}[ht!]
-\centering
- \includegraphics[width=\columnwidth]{figs/update-arch.png}
- \caption{The two naive solutions to the problem: writing-back the cleaned data, and training only on the sample. Writing back to the cleaned data potentially creates unreliable mixtures of data, and training only on the sample creates an issue of dimensionality and sample size. \label{update-arch1}}
-\end{figure}
-
 \subsection{Exploiting the Model's Geometry}
 \sys addresses the update problem by using the model's geometry.
 We restrict the class of Machine Learning models to convex regularized loss problems.
