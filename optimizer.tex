@@ -6,14 +6,6 @@ When our partitioning is perfect, at least all of the dirty data is selected in 
 However, in some cases, characterizing this partioning can be difficult and it may be impossible to ensure this condition unless $R_{dirty} = R$ causing a loss in efficiency if errors are sparse.  
 In this section, we explore the case when the partitioning is imperfect.
 
-\subsection{Why do we partition?}
-Partitioning serves two purposes: (1) it reduces the variance in the gradient update, and (2) it increases the fraction of actually dirty records in the candidate batch.
-The first objective follows directly from the analysis in the previous section (Section \ref{analysis}).
-A good example of why we need the second objective is seen in the context of crowdsourcing.
-If we have a crowdworker clean records, we will have to pay them for the task whether or not the record required cleaning.
-Partitioning the data ensures that the only records cleaned are dirty records.
-Without partitioning, cleaning rare errors might be very wasteful. 
-
 \subsection{Using a classifier}
 We retain the assumption that error detection is easier than repair.
 In particular, we argue that it is more feasible to train a classifier to predict error occurance than to train a regression to fix the consequences of error.

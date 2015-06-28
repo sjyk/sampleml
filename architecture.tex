@@ -1,25 +1,28 @@
 \section{System Architecture}\label{arch}
-Now, we overview the \sys architecture and describe how our framework integrates with existing data cleaning solutions.
+Now, we overview the \sys architecture, its goals, and describe how our framework integrates with existing data cleaning solutions.
 
 \subsection{Overview}
-We revisit the architecture diagram in Figure \ref{sys-arch}, and formalize
-the problems addressed in each one of the stages. 
+The primary goal of \sys is to provide a framework that wraps around existing Machine Learning and Data Cleaning systems.
+Instead of cleaning the entire data upfront and then training a model, we initialize the framework with a model, and iteratively correct it with small batches of clean data.
+Built into the framework are feedback mechanisms that use information from the cleaning to improve performance on future batches of clean data.
+To achieve this, our first step is to formalize the interface between all of the components.
+We revisit the architecture diagram in Figure \ref{sys-arch}.
 We asterix (*) the steps that are user specified.
 
 \vspace{0.5em}
 
-\noindent \textbf{Featurization: } Formally, given a relation $R$ with a set of attributes $A$.
+\noindent \textbf{Featurization: } Given a relation $R$ with a set of attributes $A$.
 There is a featurization function $F$ which maps every row in $\mathcal{R}$ to a $d$ dimensional feature vector and a $l$ dimensional label tuple: 
 \[F(r \in \mathcal{R}) \mapsto (\mathbb{R}^l, \mathbb{R}^d)\]
 The result of the featurization are the data matrices $X$ and $Y$.
 \[
 F(R)\rightarrow (X,Y)
 \]
-The basic assumption is that training examples (i.e., rows in the data matrix) have a one-to-one relationship with rows in the base data ($R$).
+We consider problems in which the training examples (i.e., rows in the data matrix) have a one-to-one relationship with rows in the base data ($R$).
 
 \vspace{0.5em}
 
-\noindent\textbf{Initialization: } To initialize \sys, the user gives us the base dirty relation $R$, the featurization $F$, and a model $\theta$ that is trained on this dirty relation.
+\noindent\textbf{Initialization: } To initialize \sys, the user gives us the base dirty relation $R$, the featurization $F$, and a dirty model $\theta^{(d)}$ that is derived from the dirty relation. So initially $\theta^{(0)} = \theta^{(d)}$
 
 \vspace{0.5em}
 
@@ -37,11 +40,47 @@ Therefore, the error detection step gives us the following tuple: $(R_{dirty},E_
 
 \vspace{0.5em}
 
-\noindent\textbf{Model Update: } Then, we update the model $\theta$ based on the newly cleaned data $F(S_{clean})$.
+\noindent\textbf{Model Update: } Then, we update the model $\theta^({(0)})$ based on the newly cleaned data $F(S_{clean})$. The result is the updated model $\theta^({(1)})$.
 
 \vspace{0.5em}
 
-\noindent\textbf{Error Impact Estimate: } Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the model update.
+\noindent\textbf{Error Impact Estimate: } Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the next model update.
+
+\subsection{Designing for Expensive Repair}
+This framework is designed around data cleaning operations where the expensive step is error repair.
+In fact, in many recently published works, per record latencies for data repair are order of magnitude larger than the numerical operations.
+In CrowdFill \cite{park2014crowdfill}, this latency was 32.2 seconds per filled row.
+Even in optimized distributed automated systems such as Big Dansing, data cleaning required 7700 seconds for 3M rows.
+In contrast, a model training framework like CoCoA (implemented on Spark like Big Dansing), requires on the order of minutes to train a model on a similarly sized dataset and compute cluster \cite{jaggi2014communication}.
+In this framework, optimizations must try to aggressively minimize cleaning costs as that is most of the performance bottleneck.
+This performance bottlenecks leads to an accuracy bottlneck.
+If the repair step poses such a steep cost, we are always going to be in the regime of small samples.
+Compared to the dataset size, we will only clean a very small fraction of data.
+When we introduce our algorithms for Model Update and Error Impact Estimation in the follow sections, they will be optimized for this setting of cleaning very small amounts of data.
+
+\subsection{Technical Solutions}
+There are three aspects of \sys, that allow us to achieve this design point: error partitioning, gradient-based model update (Section \ref{model-update}), estimate-driven sampling (Section \ref{sampling}).
+
+\vspace{0.5em}
+
+\noindent\textbf{Partitioning Dirty and Clean Data: } In many applications, enumerating the set of corrupted records is much easier than cleaning them. For example, we may be able to select the set of rows that have missing values but actually filling those missing values is expensive. Likewise, in the constraint literature, selecting a set of rows that have a violated constraint can be done in polynomial time, however, fixing the constraints is NP-Hard.
+In our error detection step, we partition the dirty and clean data.
+Partitioning serves two purposes: (1) it reduces the variance of our updates because we can cheaply scan over data we know that is clean, and (2) it increases the fraction of actually dirty records in the candidate batch.
+A good example of why we need the second objective is seen in the context of crowdsourcing.
+If we have a crowdworker clean records, we will have to pay them for the task whether or not the record required cleaning.
+To efficiently use this partitioning, we need a database solution indexing dirty and clean data.
+
+\vspace{0.5em}
+
+\noindent\textbf{Gradient-Based Updates: } In \sys, we start with a dirty model and then make an update using a gradient step. Here, we can draw an analogy to Materialized View maintenance, since after all, a model parameterized by $\theta$ is just a table of floating point numbers.
+Krishnan et al. proposed a technique called sample view cleaning, in which they take a clean sample of data and propogate the updates to a Materialized View.
+Similarly, in this work, we take the information from a sample of cleaned data and propagate an update with the gradient.
+
+\vspace{0.5em}
+
+\noindent\textbf{Estimate-Driven Sampling: } Repair is the most expensive step in the workflow, so optimizing for scan cost may lead to neglible overall time improvements.
+We can sacrifice a small overhead in pre-computation for each data point to determine its value to the model and select a sampling distribution accordingly.
+Intuitively, while each iteration has an increased cost, it also makes more progress towards the optimum.
 
 \iffalse
 
@@ -92,11 +131,8 @@ In particular, we describe how we can select a set of candidate records for clea
 \subsubsection{Constraint-based Errors}
 One model for handling errors in database declaring a set of constraints on a database and 
 iteratively fixing records such that the constraints are satisfied \cite{DBLP:journals/pvldb/YakoutENOI11, DBLP:journals/pvldb/FanLMTY10, khayyat2015bigdansing}.
-In this setting, it is relatively inexpensive to query the set of records that violate some constraint, however, automatically repairing the errors is often NP-Hard \cite{DBLP:journals/pvldb/FanLMTY10}.
-Therefore, recently proposed systems like Guided Data Repair \cite{DBLP:journals/pvldb/YakoutENOI11}, use human input to validate suggested fixes.
-The challenge with using human input is that it is expensive and is often with a time or a cost budget.
-One way to characterize this problem setting is that error detection is relatively inexpensive but error repairing is expensive.
-
+However, automatically repairing the errors is often NP-Hard \cite{DBLP:journals/pvldb/FanLMTY10}.
+Recently proposed systems like Guided Data Repair \cite{DBLP:journals/pvldb/YakoutENOI11}, use human input to validate suggested fixes.
 Formally, constraint-based error detection and repair can be incorporated into \sys in the following way.
 
 \vspace{0.5em}
@@ -121,8 +157,6 @@ Then, in the error repair step, we could apply a repair that sets the erroneous 
 Value filling is another data cleaning operation that is well studied in the literature.
 Park and Widom proposed the system called CrowdFill \cite{park2014crowdfill}, where human workers fill in missing values in a database.
 
-Formally, value filling error detection and repair can be incorporated into \sys in the following way.
-
 \vspace{0.5em}
 
 \noindent\textbf{Error Detection. } Let $\phi$ be the null-symbol (signifying a missing value), and $A$ be the set of attributes of $\mathcal{R}$. In the error detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ where $\mathcal{R}_{dirty}=\{r \in \mathcal{R}: \exists r(a\in A) = \phi \}$.
@@ -140,9 +174,6 @@ In the error repair step, we could confirm that data with other records to fix t
 
 \subsubsection{Entity Resolution}
 Another common data cleaning task is Entity Resolution \cite{gokhale2014corleone, DBLP:journals/pvldb/KopckeTR10}.
-In Entity Resolution, there is an attribute a in R such that $r(a)$ and $r'(a)$ refer to the same real-world entity but their representations are different $r(a) \ne r'(a)$.
-Entity resolution typically consists of two steps: blocking and matching.
-In the blocking step, similar records are grouped together, and in the matching step, they are resolved.
 This process can be expressed in terms of a type of constraint called Matching Dependencies (described above).
 A Matching Dependency (MD) is a constraint that if this pair is similar according to some similarity relationship (e.g., edit distance and a threshold) then their attribute have to be the same
 \[ r \approx r' \implies r(a) \dot{=} r'(a) \]

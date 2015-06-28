@@ -1,10 +1,9 @@
-\section{Iterative Model Update}
+\section{Iterative Model Update}\label{model-update}
 In this section, we describe how we iteratively update a dirty model based on
 a cleaned batch of data.
 We will show that this model update procedure can be interpreted as a Stochastic 
 Gradient Descent (SGD) algorithm, which gives us a theoretical framework to analyze
 convergence and bound the error at each step.
-This theoretical framework will also inform how we should 
 
 \subsection{Model Update Problem}
 Suppose we have a cleaned batch of data $S_{clean}$ with features and labels $(X_{clean},Y_{clean})$, and a dirty model $\theta^{(d)}$. 
@@ -71,11 +70,6 @@ So then our final gradient update becomes:
 \theta^{(t)} \leftarrow \theta^{(t-1)} - \gamma \cdot g(\theta) \blacksquare
 \]
 
-Here, we can draw an analogy to Materialized View maintenance, since after all, a model parameterized by $\theta$ is just a table of floating point numbers.
-Krishnan et al. proposed a technique called sample view cleaning, in which they take a clean sample of data and propogate the updates to a Materialized View.
-Similarly, in this work, we take the information from a sample of cleaned data and propagate an update with the gradient.
-The insight that many mathematical problems are analogous to view maintenance has recently been noted others as well \cite{nikolic2014linview}.
-
 \subsection{Iterative Model Correction Algorithm}
 Following from this geometric analysis, we propose the iterative model correction algorithm.
 We initialize the algorithm with $\theta^{(d)}$ which is the dirty model.
@@ -124,24 +118,11 @@ The quality of the update depends on how well we can approximate $g^*$ using $g_
 The problem is how should we construct the sample of data to clean $S$ to get the most accurate update.
 In particular, how should we choose the sampling probabilities $p_i$ for each $i \in S$ such that the error is minimized.
 
-\subsubsection{Physical Design Considerations}
-From a systems perspective, the important step in the update algorithm is step 3a.
-We have to query a sample of candidate data points from $R_{dirty}$ which 
-can be expensive.
-As we clean data, we can maintain an index on which points are dirty and clean.
-
 \subsection{Stochastic Gradient Descent}\label{sgd}
 This update policy can be formalized as a class of very well studied algorithms called Stochastic Gradient Descent.
 This gives us a theoretical framework to understand and analyze our update rule, bound the error, and choosing points to clean.
 Mini-batch stochastic gradient descent (SGD) is an algorithm for finding the optimal value
 of $\theta$, given the convex loss, and data.
-In SGD, we start with an abitrary initialization and iterate to convergence.
-In our case, we start with an initialization which is the dirty model, the model trained completely on the dirty data.
-Then, at each iteration we sample a mini-batch of data on which we apply our expensive data cleaning operations.
-The update rules in SGD mirror our update policy:
- \[
- \theta^{(t+1)}\leftarrow\theta^{(t)}-\gamma\frac{1}{\mid S^{(t)}\mid}\sum_{i\in S^{(t)}}\nabla\phi(x_i,y_i,\theta^{(t)})
- \]
 
 \vspace{0.5em}
 
@@ -190,10 +171,7 @@ The key property that we need to preserve is unbiasedness (Proposition \ref{unbi
 
 \vspace{0.5em}
 
-\noindent\textbf{Observation 1. Detection vs. Cleaning: } In many applications, enumerating the set of corrupted records is much easier than cleaning them. For example, we may be able to select the set of rows that have missing values but actually filling those missing values is expensive. Likewise, in the constraint literature, selecting a set of rows that have a violated constraint can be done in polynomial time, however, fixing the constraints is NP-Hard.
-In other words, cleaning a batch of data can be far more expensive than a scan.
-We can use this to our advantage to reduce the variance of the gradient without affecting our batch size.
-
+\noindent\textbf{Use the partitioning: }
 We first select a set of records before starting we select a set of dirty records $R_{dirty} \subseteq R$. 
 We construct batch $S_{dirty}$ only from the dirty records and apply cleaning to this batch.
 Now the problem is that this sample (and the resulting gradient) is possibly biased since we are excluding some data.
@@ -222,11 +200,7 @@ This result follows directly from the linearity of expectation, since we are add
 
 \vspace{0.5em}
 
-\noindent\textbf{Observation 2. Pre-processing is relatively cheap: }
-Data cleaning is often the most expensive step in the workflow, so optimizing for scan cost may lead to neglible overall time improvements.
-We can sacrifice a small overhead in pre-computation for each data point to determine its value to the model and select a sampling distribution accordingly.
-Intuitively, while each iteration has an increased cost, it also makes more progress towards the optimum.
-
+\noindent\textbf{Optimized Sampling: }
 In our problem, we are trying to select a sample $S_{dirty}$ from $R_{dirty}$.
 If we sample every element $i \in R_{dirty}$ with probability $p_i$, the question is
 how can we compute a set of $\{p_i\}$ such that variance of the gradient $\sigma^2$ is minimized.  
@@ -239,6 +213,7 @@ If $\mu$ is the mean $\hat{A}$, the sampling distribution that minimizes
 \end{lemma}
 \begin{proof}
 This proof follows from \cite{mcbook}, we present it here for intuition.
+\reminder{Will be moved to appendix}
 It is easy to verify that for sampling probabilities $p(a_i)$, that the unbiased
 estimate of the mean is:
 \[
