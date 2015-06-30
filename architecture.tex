@@ -5,9 +5,10 @@ Now, we overview the \sys architecture, its goals, and describe how our framewor
 The primary goal of \sys is to provide a framework that wraps around existing Machine Learning and Data Cleaning systems.
 Instead of cleaning the entire data upfront and then training a model, we initialize the framework with a model, and iteratively correct it with small batches of clean data.
 Built into the framework are feedback mechanisms that use information from the cleaning to improve performance on future batches of clean data.
-To achieve this, our first step is to formalize the interface between all of the components.
-We revisit the architecture diagram in Figure \ref{sys-arch}.
-We asterix (*) the steps that are user specified.
+There are two basic operating modes of \sys: (1) error detection oracle and (2) adaptive error detection. 
+We will overview how the architecture and applications change based on these modes.
+
+First, we overview our notation and terminology:
 
 \vspace{0.5em}
 
@@ -22,13 +23,11 @@ We consider problems in which the training examples (i.e., rows in the data matr
 
 \vspace{0.5em}
 
-\noindent\textbf{Initialization: } To initialize \sys, the user gives us the base dirty relation $R$, the featurization $F$, and a dirty model $\theta^{(d)}$ that is derived from the dirty relation. So initially $\theta^{(0)} = \theta^{(d)}$
+\noindent\textbf{Initialization: } To initialize \sys, the user gives us the base dirty relation $R$, the featurization $F$, and a dirty model $\theta^{(d)}$ that is derived from the dirty relation. So initially $\theta^{(1)} = \theta^{(d)}$
 
 \vspace{0.5em}
 
-\noindent\textbf{Error Detection (*): } The first step in \sys is error detection. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$.  
-Associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which tells us which features are corrupted.
-Therefore, the error detection step gives us the following tuple: $(R_{dirty},E_r)$.
+\noindent\textbf{Error Detection: } The first step in \sys is error detection. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$.  
 
 \vspace{0.5em}
 
@@ -36,29 +35,160 @@ Therefore, the error detection step gives us the following tuple: $(R_{dirty},E_
 
 \vspace{0.5em}
 
-\noindent\textbf{Error Repair (*): } Next, we apply a repair procedure $C$ to the sample of data $S_{dirty}$ to get a clean sample $S_{clean}$. Given a dirty record $r$, the error repair module applies a repair $C$ to the record, to return $C(r)\mapsto r_{clean}$. 
+\noindent\textbf{Error Repair: } Next, we apply a repair procedure $C$ to the sample of data $S_{dirty}$ to get a clean sample $S_{clean}$. Given a dirty record $r$, the error repair module applies a repair $C$ to the record, to return $C(r)\mapsto r_{clean}$. 
 
 \vspace{0.5em}
 
-\noindent\textbf{Model Update: } Then, we update the model $\theta^({(0)})$ based on the newly cleaned data $F(S_{clean})$. The result is the updated model $\theta^({(1)})$.
+\noindent\textbf{Model Update: } Then, we update the model $\theta^({(i)})$ based on the newly cleaned data $F(S_{clean})$. The result is the updated model $\theta^({(i+1)})$.
 
 \vspace{0.5em}
 
 \noindent\textbf{Error Impact Estimate: } Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the next model update.
 
+\subsubsection{Error Detection Oracle}
+For many types of errors, it is possible to efficiently enumerate a set of corrupted records and enumerate what is wrong with these records.
+For example, in example \ref{exm-1}, this is the set of records with missing values and we know exactly which attributes (and corresponding features) are corrupted.
+We describe these types of errors as having an \emph{error detection oracle}.
+In Figure \ref{sys-arch4a}, we add more detail to our introductory architecture diagram when we are applying \sys to such errors.
+
+\begin{figure}[t]
+\centering
+ \includegraphics[width=0.6\columnwidth]{figs/arch1a.png}
+ \caption{We detail the \sys architecture when we are using an error detection oracle. In this model, we have a way to enumerate all the records that are dirty before running any cleaning. \label{sys-arch4a}}
+\end{figure}
+
+\begin{enumerate}
+\item Initialize with a dirty model $\theta^{(1)} = \theta^{(d)}$, batch size $b$, and number of iterations $T$
+\item Error Detection. In the first step, we use the oracle to select a set of records $R_{dirty}$.
+Associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which tells us which features are corrupted.
+For example, if a missing value in attribute $a$ affects features $\{1,2,6\}$, then $e_r=\{1,2,6\}$.
+The error detection step gives us the following tuple: $(R_{dirty},E_r)$.
+
+\item For each iteration $i=1,...,T$
+
+\begin{enumerate}
+\item Error Sampling. We sample a batch of records from $R_{dirty}$ each record has a sampling probability $p_i$. (Described in Section \ref{model-update})
+\item Error Repair. We apply the user-specified data cleaning $C(S_{dirty})$
+\item Model Update. We use the results of the cleaning to update the model $\theta^{(i+1)}$ (Described in Section \ref{model-update}).
+\item Error Impact Estimate. Based on the results of the cleaning, we update $p_i$ to guide the data cleaning to the most valuable data (Described in Section \ref{sampling}).
+\end{enumerate}
+\item Return $\theta^{(T+1)}$
+\end{enumerate}
+
+\noindent We highlight example use cases of this architecture using data cleaning methodologies proposed in the liteature.
+
+\vspace{0.5em}
+
+\noindent\textbf{Constraint-based Repair: }
+One model for handling errors in database declaring a set of constraints on a database and 
+iteratively fixing records such that the constraints are satisfied \cite{DBLP:journals/pvldb/YakoutENOI11, DBLP:journals/pvldb/FanLMTY10, khayyat2015bigdansing}.
+However, automatically repairing can be unreliable \cite{DBLP:journals/pvldb/FanLMTY10}.
+Recently proposed systems like Guided Data Repair \cite{DBLP:journals/pvldb/YakoutENOI11}, use human input to validate suggested fixes.
+
+\vspace{0.5em}
+
+\emph{Error Detection. } Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
+In the error detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
+The set $e_r$ is the set of columns for each record which have a constraint violation.
+
+\vspace{0.5em}
+
+\emph{Error Repair. } \sys supports both automated and human validated data repair for constraints. For automated techniques, we can apply the record-level ``local" repair proposed in \cite{DBLP:journals/pvldb/FanLMTY10} or we can use human corrections as in \cite{DBLP:journals/pvldb/YakoutENOI11}. 
+
+\begin{example}
+Consider our EEG data running example, for an example of constraint-based cleaning.
+We can add a constraint that one of the electrical signals cannot be greater than 4V.
+For all records whose value is above 4V, we would select them in the error detection step.
+Then, in the error repair step, we could apply a repair that sets the erroneous signal value to its most likely value.
+\end{example}
+
+\vspace{0.5em}
+
+\noindent\textbf{Entity Resolution: }
+Another common data cleaning task is Entity Resolution \cite{gokhale2014corleone, DBLP:journals/pvldb/KopckeTR10, wang2012crowder}.
+A common pattern in Entity Resolution is to split up the operation into two steps: blocking and matching.
+In blocking, attributes that should be the same are coarsely grouped together.
+In matching, those coarse groups are resolved to a set of distinct entities.
+Increasingly the matching step is done by crowd workers \cite{wang2012crowder, gokhale2014corleone}, leading to very expensive costs.
+
+\vspace{0.5em}
+
+\emph{Error Detection. } This is the matching step. Let $S$ be a similarity function that takes two records and returns a value in $[0,1]$ (1 most similar and 0 least similar). For some threshold $t$, $S$ defines a similarity relationship between two records $r$ and $r'$:
+\[
+r \approx r' : S(r,r') \ge t
+\] 
+In the error detection step, $R_{dirty}$ is the set of records that have at least one other record in the relation that satisfy $r \approx r'$.
+The set $e_r$ is the attributes of $r$ that have entity resolution problems.
+
+\vspace{0.5em}
+
+\emph{Error Repair. } \sys supports both automated and human validated entity resolution for resolving a set of matches to a single entity.
+
+\begin{example}
+An example of an Entity Resolution problem is where the patient's gender is inconsistently represented (e.g., ``Male", ``M", ``Man"). 
+We can define a similarity relationship $(\text{first char =} 'M')$ and select all records that satisfy this condition.
+In the error repair step, a human can fix the inconsistencies setting all records that meet the condition to the canonical value.
+\end{example}
+
+\subsubsection{Adaptive Detection}
+The second operating mode of \sys is adaptive detection.
+In this mode, the analyst does not know the set of errors in advance but learns them as she cleans more data.
+Consider the case when she has to do exploratory data analysis to discover the errors.
+In Figure \ref{sys-arch4b}, we add more detail to our introductory architecture diagram when we are applying \sys to such errors.
+
+\begin{figure}[t]
+\centering
+ \includegraphics[width=0.6\columnwidth]{figs/arch1b.png}
+ \caption{We detail the \sys architecture when we are using adaptive detection. In this model, we do not assume that we can enumerate the set of erroneous records in advance. \label{sys-arch4a}}
+\end{figure}
+
+\begin{enumerate}
+\item Initialize with a dirty model $\theta^{(1)} = \theta^{(d)}$, batch size $b$, number of iterations $T$, and $R_{dirty} = R$
+\item For each iteration $i=1,...,T$
+\begin{enumerate}
+\item Error Sampling. We sample a batch of records from $R_{dirty}$ each record has a sampling probability $p_i$. (Described in Section \ref{model-update})
+\item Error Repair. We apply the user-specified data cleaning $C(S_{dirty})$
+\item Model Update. We use the results of the cleaning to update the model $\theta^{(i+1)}$ (Described in Section \ref{model-update}).
+\item Error Impact Estimate. Based on the results of the cleaning, we update $p_i$ to guide the data cleaning to the most valuable data (Described in Section \ref{sampling}).
+\item We maintain a classifier to prune the set of dirty records based on what was cleaned.
+\end{enumerate}
+\item Return $\theta^{(T+1)}$
+\end{enumerate}
+
+\noindent We highlight an example use case of this architecture.
+
+\vspace{0.5em}
+
+\noindent\textbf{Interactive Data Cleaning with OpenRefine.}
+\begin{example}
+Consider our analyst using an interative tool such as OpenRefine \cite{openrefine} to clean her data. 
+She takes a sample of data from the entire dataset.
+She then uses the tool to determine which records are corrupted and dirty.
+As she marks more records as dirty, the system learns what features determines a dirty record.
+This classifier can be used to guide cleaning in future batches of data.
+\end{example}
+
 \subsection{Designing for Expensive Repair}
 This framework is designed around data cleaning operations where the expensive step is error repair.
-In fact, in many recently published works, per record latencies for data repair are order of magnitude larger than the numerical operations.
-In CrowdFill \cite{park2014crowdfill}, this latency was 32.2 seconds per filled row.
-Even in optimized distributed automated systems such as Big Dansing, data cleaning required 7700 seconds for 3M rows.
-In contrast, a model training framework like CoCoA (implemented on Spark like Big Dansing), requires on the order of minutes to train a model on a similarly sized dataset and compute cluster \cite{jaggi2014communication}.
-In this framework, optimizations must try to aggressively minimize cleaning costs as that is most of the performance bottleneck.
-This performance bottlenecks leads to an accuracy bottlneck.
-If the repair step poses such a steep cost, we are always going to be in the regime of small samples.
-Compared to the dataset size, we will only clean a very small fraction of data.
-When we introduce our algorithms for Model Update and Error Impact Estimation in the follow sections, they will be optimized for this setting of cleaning very small amounts of data.
+It is well known that most constraint-based error repair problems are NP-Hard.
+As the complexity of errors increases, so does the amount of computation needed to resolve them.
+The consequence is that automated repair is either not scalable or relies on greedy repairs that can be unreliable.
+Increasingly, human effort is seen as unavoidable in data cleaning \cite{park2014crowdfill, wang2012crowder, gokhale2014corleone, wang1999sample} either due to the cost of formulating constraints, scripting fixes for all possible errors, or in actually cleaning the data.
 
-\subsection{Technical Solutions}
+When humans are involved, per record latencies for data repair are orders of magnitude larger than the CPU time needed for numerical operations.
+In CrowdFill \cite{park2014crowdfill}, processing 20 rows of data required 10 minutes 54 secs.
+Likewise, in CrowdER \cite{wang2012crowder}, the median crowd task finished in 58secs.
+These latencies severly limit the scale of these systems. 
+Even in highly optimized distributed automated systems such as BigDansing, data cleaning required 7700 seconds for 3M rows.
+Data cleaning is fundementally slow in comparison to the CPU time needed for numerical vector operations.
+In contrast, a model training framework like CoCoA (implemented on Spark like Big Dansing), requires on the order of minutes to train a 3M row model \cite{jaggi2014communication}.
+
+Based on current data cleaning trends, we argue that model training will be orders of magnitude faster than data repair.
+We aggressively optimize our system for this design point, where we clean a very small fraction of data.
+This leads to new problems and opportunities in non-uniform sampling, partitioning, and integrated model training-cleaning.
+
+\iffalse
+\subsection{Optimizations}
 There are three aspects of \sys, that allow us to achieve this design point: error partitioning, gradient-based model update (Section \ref{model-update}), estimate-driven sampling (Section \ref{sampling}).
 
 \vspace{0.5em}
@@ -72,260 +202,15 @@ To efficiently use this partitioning, we need a database solution indexing dirty
 
 \vspace{0.5em}
 
-\noindent\textbf{Gradient-Based Updates: } In \sys, we start with a dirty model and then make an update using a gradient step. Here, we can draw an analogy to Materialized View maintenance, since after all, a model parameterized by $\theta$ is just a table of floating point numbers.
-Krishnan et al. proposed a technique called sample view cleaning, in which they take a clean sample of data and propogate the updates to a Materialized View.
+\noindent\textbf{Gradient-Based Updates: } In \sys, we start with a dirty model and then make an update using a gradient step. Here, we can draw an analogy to Materialized View maintenance, since after all, a model parametrized by $\theta$ is just a table of floating point numbers.
+Krishnan et al. proposed a technique called sample view cleaning, in which they take a clean sample of data and propagate the updates to a Materialized View.
 Similarly, in this work, we take the information from a sample of cleaned data and propagate an update with the gradient.
 
 \vspace{0.5em}
 
-\noindent\textbf{Estimate-Driven Sampling: } Repair is the most expensive step in the workflow, so optimizing for scan cost may lead to neglible overall time improvements.
+\noindent\textbf{Estimate-Driven Sampling: } Repair is the most expensive step in the workflow, so optimizing for scan cost may lead to negligible overall time improvements.
 We can sacrifice a small overhead in pre-computation for each data point to determine its value to the model and select a sampling distribution accordingly.
 Intuitively, while each iteration has an increased cost, it also makes more progress towards the optimum.
-
-\iffalse
-
-
-\subsubsection{Error Sampling}
-Given a set of candidate dirty records, the error sampling step selects a sample to clean.
-Records have to be sampled independently, i.e., sampling record $i$ does not affect the probability of sampling record $j$.
-The input to this step is a sample size $K$ and the output is tuple of the a sample of $K$ records and their sampling probabilities.
-The research problem that we explore in this work is how to construct this sampling distribution and feedback updates from the latest iteration.
-
-\begin{problem}[Sampling Probability]\label{imp-samp}\sloppy
-Given the current best model estimate $\theta$, data matrices $(X,Y)$, for each record $i$ calculate a sampling probability $p_i$.
-\end{problem}
-
-\subsubsection{Error Repair}
-Given a set of sampled records, we apply data cleaning to this sample.
-We define data cleaning as transformations that happens to the base data that result in changes to the feature vector. 
-There is at most a one-to-one relationship between features in the cleaned data and the dirty data.
-We require the following conditions on the data cleaning:
-\begin{enumerate}
-\item Single Operation. A dirty record is completely cleaned after applying the Error Repair module.
-\item Persistence. Once cleaned there is no future operation that can invalidate the cleaning rendering the record dirty.
-\item Sample-Local Write. The data cleaning must only modify the records in the sample.
-\end{enumerate}
-The output of this step are cleaned set of features vectors $\{(x_{clean},y_{clean})\}^K_i$.
-
-\subsubsection{Incremental Model Update}
-Given the sample of cleaned examples $\{(x_{clean},y_{clean})\}^K_i$ and the sampling probabilities, the next problem that we address is to update the model.
-
-\begin{problem}[Incremental Update]\label{imp-update}\sloppy
-Given the current best model estimate $\theta$, a clean sample $\{(x_{clean},y_{clean})\}^K_i$ , and a set of sampling probabilities $\{p\}^K_i$, we update the best model estimate from $\theta \rightarrow \theta'$.
-\end{problem}
-
-\subsubsection{Error Impact Estimate}
-Once we compute $\theta'$, we feed this information back to update and guide the sampling distribution.
-We want to calculate our sampling distribution with respect to the cleaned data, so for each remaining uncleaned record, we have an estimate of its cleaned value $(\hat{X},\hat{Y})$.
-This estimate need not be very accurate as it is only used to select the sampling probabilities.
-
-\begin{problem}[Error Impact Estimate]\label{imp-est}\sloppy
-Let $(X_{dirty},Y_{dirty})$ be the data submatrices of the dirty data, $E_r$ be the error identifying set, and $(X_{clean},Y_{clean})$ be the submatrices for the cleaned data. Given $(X_{clean},Y_{clean})$, we learn a function $f$ that maps an $(x,y) \in (X_{dirty},Y_{dirty}) \mapsto (\hat{x},\hat{y})$.
-\end{problem}
 \fi
 
-\subsection{Examples}
-We illustrate how data cleaning processes proposed in the literature can apply in our model.
-In particular, we describe how we can select a set of candidate records for cleaning and apply cleaning to the sample.
 
-\subsubsection{Constraint-based Errors}
-One model for handling errors in database declaring a set of constraints on a database and 
-iteratively fixing records such that the constraints are satisfied \cite{DBLP:journals/pvldb/YakoutENOI11, DBLP:journals/pvldb/FanLMTY10, khayyat2015bigdansing}.
-However, automatically repairing the errors is often NP-Hard \cite{DBLP:journals/pvldb/FanLMTY10}.
-Recently proposed systems like Guided Data Repair \cite{DBLP:journals/pvldb/YakoutENOI11}, use human input to validate suggested fixes.
-Formally, constraint-based error detection and repair can be incorporated into \sys in the following way.
-
-\vspace{0.5em}
-
-\noindent\textbf{Error Detection. } Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
-The allowed constraint classes are Matching Dependencies \cite{bertossi2013data}, Conditional Functional Dependencies \cite{DBLP:journals/pvldb/FanLMTY10}, and Denial Constrains \cite{khayyat2015bigdansing}. 
-In the error detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
-The set $e_r$ the set of columns for each record which have a constraint violation.
-
-\vspace{0.5em}
-
-\noindent\textbf{Error Repair. } \sys supports both automated and human validated data repair for constraints. For automated techniques, we can apply the record-level ``local" repair proposed in \cite{DBLP:journals/pvldb/FanLMTY10} or we can use human corrections as in \cite{DBLP:journals/pvldb/YakoutENOI11}. Repair operations must satisfy the local property; that is, a repair to a record cannot cause additional constraint violations.
-
-\begin{example}
-Consider our EEG data running example, for an example of constraint-based cleaning.
-We can add a constraint that one of the electrical signals cannot be greater than 4V.
-For all records whose value is above 4V, we would select them in the error detection step.
-Then, in the error repair step, we could apply a repair that sets the erroneous signal value to its most likely value.
-\end{example}
-
-\subsubsection{Value Filling}
-Value filling is another data cleaning operation that is well studied in the literature.
-Park and Widom proposed the system called CrowdFill \cite{park2014crowdfill}, where human workers fill in missing values in a database.
-
-\vspace{0.5em}
-
-\noindent\textbf{Error Detection. } Let $\phi$ be the null-symbol (signifying a missing value), and $A$ be the set of attributes of $\mathcal{R}$. In the error detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ where $\mathcal{R}_{dirty}=\{r \in \mathcal{R}: \exists r(a\in A) = \phi \}$.
-The set $e_r$ is the attributes of $r$ that have missing values.
-
-\vspace{0.5em}
-
-\noindent\textbf{Error Repair. } Value filling can be expressed in \sys if the operation fixes an entire record; that is, for all $a$ such that $r(a) = \phi$, a value is filled.
-
-\begin{example}
-Suppose, some of the patient information data is missing from dataset in our running example.
-In the error detection step, we would select all of the records such there is a missing value.
-In the error repair step, we could confirm that data with other records to fix the missing information.
-\end{example}
-
-\subsubsection{Entity Resolution}
-Another common data cleaning task is Entity Resolution \cite{gokhale2014corleone, DBLP:journals/pvldb/KopckeTR10}.
-This process can be expressed in terms of a type of constraint called Matching Dependencies (described above).
-A Matching Dependency (MD) is a constraint that if this pair is similar according to some similarity relationship (e.g., edit distance and a threshold) then their attribute have to be the same
-\[ r \approx r' \implies r(a) \dot{=} r'(a) \]
-Thus, this is an important special case of the constraint-based cleaning described before.
-
-\vspace{0.5em}
-
-\noindent\textbf{Error Detection. } Let $S$ be a similarity function that takes two records and returns a value in $[0,1]$ (1 most similar and 0 least similar). For some threshold $t$, $S$ defines a similarity relationship between two records $r$ and $r'$:
-\[
-r \approx r' : S(r,r') \ge t
-\] 
-In the error detection step, $R_{dirty}$ is the set of records that have at least one other record in the relation that satisfy $r \approx r'$.
-The set $e_r$ is the attributes of $r$ that have entity resolution problems.
-
-\vspace{0.5em}
-
-\noindent\textbf{Error Repair. } \sys supports both automated and human validated entity resolution.
-
-\begin{example}
-An example of an Entity Resolution problem is where the patient's gender is inconsistently represented (e.g., ``Male", ``M", ``Man"). 
-We can define a similarity relationship $(\text{first char =} 'M')$ and select all records that satisfy this condition.
-In the error repair step, a human can fix the inconsistencies setting all records that meet the condition to the canonical value.
-\end{example}
-
-\iffalse
-
-The cleaning operation $\mathcal{D}$ is a composition of $k$ ``cleaners":
-\[
-\mathcal{D}= C_{1} \circ C_{2} \circ ... C_{k}
-\]
-Each cleaner $C_i$ operates on a disjoint set of attributes of the relation R.
-
-We study two models for these cleaners: Predicate and Learning.
-In the predicate model, associated with each cleaner is a predicate $\rho_i$ that 
-tells us which records are dirty and which are clean.
-There are numerous real-world situations where detecting and enumerating errors are cheap but cleaning is expensive.
-For example, if data is missing e.g., field misalignment it is often clear which rows are affected and which are not.
-Similarly, in the entire field of constraint-based data cleaning \cite{nadeef}, we know in advance which records have constraint violations.
-We can efficiently turn a set of functional dependencies into predicates so this model is compatible with data cleaning operations proposed in that field of work.
-
-In the learning model, we assume nothing a priori about the data.
-Associated with each cleaner is a classifier $\kappa_i$ that 
-tells us which records are dirty and which are clean.
-As we clean more data, we update the classifier.
-
-\subsection{Problems}
-We believe that interactive model building problem is best addressed by an anytime approach, where an analyst has a time budget and wants a best effort result given this time budget.
-\sys optimizes the convergence of the model by adaptively changing the sampling distribution.
-\sys is an optimizer that wraps around the SampleClean data cleaning library and Machine Learning libraries in Spark.
-To achieve this, we have to address the following problems.
-
-\begin{problem}[Importance Sampling Probability]\label{imp-samp}\sloppy
-Given the current best model estimate $\theta$, data matrices $(X,Y)$, for each record $i$ calculate a sampling probability $p_i$ such that variance of the gradient step $\mathbb{E}(\|\nabla\phi\|_{2}^{2})$ is minimized.
-\end{problem}
-
-We will show that the optimal importance sampling distribution requires knowing the clean value of all the data, however, to a first-order, we can approximate it with estimates on already cleaned data.
-We analyze the situation in which this estimate will reduce variance from the uniform sampling case where $p_i = p_j$.
-
-Our algorithm is iterative where we sample data, update the model, and resample.
-We also study the two model update problems:
-\begin{problem}[Model Processing with Predicates]
-Given an importance sampling distribution $p$ (from Problem \ref{imp-samp}), predicates $\{\rho\}_i$, and the model estimate $\theta$, update $\theta$ to $\theta'$.
-\end{problem}
-
-\begin{problem}[General Model Processing]
-Given an importance sampling distribution $p$ (from Problem \ref{imp-samp}), classifiers $\{\kappa\}_i$, and the model estimate $\theta$, update $\theta$ to $\theta'$.
-\end{problem}
-
-\subsection{System Architecture}
-In Figure \ref{sys-arch}, we illustrate our system architecture in contrast to a traditional data cleaning architecture to show how the above problems fit together.
-Traditionally, data cleaning has explored expensive, up-front cleaning of entire datasets for increased accuracy on all possible queries.
-Raw data is cleaned, then featurized, and then a model is trained based on the clean data.
-In contrast, \sys explores a different architecture where data is progressively processed.
-When we know the desired model in advance, we can feed this information back to guide and prioritize data cleaning.
-In the process of fitting the model, we can integrate data cleaning rather than divorcing the two parts.
-
-\subsection{Parameter Updates}
-To achieve this architecture, \sys needs to maintain two states the parameter vector $\theta$ and the sampling distribution $P$.
-We will formally describe the mathematics behind this process in the later sections.
-In Figure \ref{param-arch}, we illustrate the structure of the parameter updates.
-At each iteration, we draw a batch of dirty data using the sampling distribution $P$.
-We calculate the average gradient for this data, and combine this gradient with the average gradient of the cleaned data.
-We then update the parameter $\theta$ which in turn updates the sampling distribution.
-
-\begin{figure}[t]
-\centering
- \includegraphics[width=\columnwidth]{figs/cmldag.pdf}
- \caption{The \sysfull operation DAG. At each iteration, we partition the data into clean and unknown quality. We fuse gradient estimates from the two partitions: (1) a sample from the unknown data using importance sampling, (2) a full (non-stochastic) gradient step on the clean data. After this estimate, we update the sampling distribution and the parameter.   \label{param-arch}}
-\end{figure}
-
-
-
-\subsection{Example Use Case And API}\label{api}
-Consider the following example problem.
-We are given the University of Texas Restaurant \footnote{http://www.cs.utexas.edu/users/ml/riddle/data/restaurant.tar.gz} dataset, which has the following schema:
-\begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
-Restaurant(name$\textrm{,}$ address$\textrm{,}$ city$\textrm{,}$, type)
-\end{lstlisting}
-We want to train a Support Vector Machine classifier that given the tokens in the name and the city, can predict the category of the restaurant (e.g., Chinese or Mexican).
-However, the challenge is that this dataset has numerous entity resolution problems where city names and categories are inconsistently represented.
-\begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
-rex il ristorante,617 s. olive st.,los angeles,italian
-rex il ristorante,617 s. olive st.,los angeles,nuova cucina italian
-21 club,21 w. 52nd st.,new york,american
-21 club,21 w. 52nd st.,new york city,american(new)
-\end{lstlisting}
-Entity resolution can be relatively expensive if the inconsistent representations are very different from each other and are not amenable to similarity measure optimizations such as prefix filtering or sorting.
-
-\reminder{Maybe Describe API Here}
-
-The analyst wants to quickly understand how much better a clean data set would be for this task.
-Using our system, the analyst can construct a data cleaning workflow and specify a budget.
-For example, this is what the code would look like in \sys.
-\begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
-restaurant.load()
-
-.clean(EntityResolution.weightedJaccard(`type',0.6))
-
-.clean(EntityResolution.editDistance(`city',10))
-
-.featureView(List(`type',`label'),(`city',`one_hot'),(`name',`bag_of_words')))
-
-.model(new SVMModel(_))
-
-.budget(5000)
-\end{lstlisting}
-
-\sys proposes an API for data cleaning pipeline construction. 
-The API provides several data cleaning operations with known semantics.
-Thus, we can use the lineage and operator semantics for optimization.
-Of course, useful pipelines will often have User-Defined Functions and 
-we will discuss the allowed operation types below.
-
-
-
-\subsection{Algorithmic Problem Statement}
-To formalize the optimization problem:
-
-\noindent\textbf{Base Data and Featurization: } We are given a base dataset $\mathcal{R}$ which is a relation with $N$ rows. There is a featurization function $F$ which maps every row in $\mathcal{R}$ to a $d$ dimensional feature vector and a $l$ dimensional label tuple: \[F(r \in \mathcal{R}) \mapsto (\mathbb{R}^l, \mathbb{R}^d)\]. 
-
-\noindent\textbf{Data Cleaning: } We define data cleaning as transformations that happens to the base data that result in changes to the feature vector. We do not consider data cleaning operations that change the number of rows in the relation such as row deletion or row deduplication. Allowed operations must result in the following changes to the feature vector: feature transformation and feature addition. Therefore, there is at most a one-to-one relationship beftween features in the cleaned data and the dirty data.
-
-\reminder{Formalize Better}
-
-\noindent\textbf{Budget Specification: } The analyst specifies two hyperparameters a cleaning budget $B$ which is the number of tuples to clean, and the number of cleaning rounds $T$. In each round, $\frac{B}{T}$ rows are processed by the system, we will discuss the tradeoffs between batching and incremental processing in the subsequent sections.
-
-\reminder{Maybe exclude rounds}
-
-\noindent\textbf{Model: } The analyst specifies the model which we require to be solved via convex regularized loss minimization:
-\[
- \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
-\]
-
-\noindent\textbf{Output: } The output of \sys is at each cleaning round we draw the sample of $\frac{B}{T}$ rows from a sampling distribution that incorporates information about the value of cleaning that row to model. After the $T$ cleaning rounds, the user is returned an approximately clean model $\theta^{(c)}$.
-\fi

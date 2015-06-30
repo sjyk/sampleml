@@ -1,7 +1,7 @@
 \section{Introduction}
 Databases are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
 Numerous industrial surveys have shown that dirty data are prevalent \cite{Gartner}, and there is now a growing industry around cleaning data at scale \cite{fortunearticle}.
-One reasons for the recent research and commericial interest in data cleaning is analysts are increasingly deriving data from inherently error-prone processes such as extracting structured data from websites, synthesizing data from multiple networked sensors, and linking entities from disparate data sources.
+One reasons for the recent research and commercial interest in data cleaning is analysts are increasingly deriving data from inherently error-prone processes such as extracting structured data from websites, synthesizing data from multiple networked sensors, and linking entities from disparate data sources.
 New methodologies for scalable and reliable analysis in the presence of errors are required. 
 
 The analysis performed on the data is also becoming more complex.
@@ -25,8 +25,8 @@ The case for sampling in data cleaning is analogous to arguments for Approximate
 
 \begin{figure}[t]
 \centering
- \includegraphics[width=\columnwidth]{figs/arch.png}
- \caption{\sysfull is an anytime framework for training models on dirty data. Expensive data transformations prior to model training are budgeted with a non-uniform sampling that prioritizes examples that are most likely to change the model.  \label{sys-arch}}
+ \includegraphics[width=0.8\columnwidth]{figs/arch.png}
+ \caption{\sysfull presents an adaptive architecture for iteratively correcting dirty Machine Learning models. Users specific error detection and repair procedures and the framework will iteratively clean and sample batches of data from which it will update the model. The detection can be adaptive learning from the repairs. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
 Unfortunately, a naive application of sampling does not generalize to Machine Learning.
@@ -42,16 +42,13 @@ So instead of attempting to retrain a model from scratch, we can try to correct 
 The next insight that errors often happen in batches, i.e., there are groups of similarly corrupted records, and as we clean more data, we get more information about how groups of errors affect the model.
 Instead of cleaning a sample of data all at once, we should be cleaning small batches and feeding that information back to inform subsequent iterations.
 
-In this paper, we propose \sys, an anytime framework for training Machine Learning models with budgeted data cleaning.
-Users of \sys have to specify a model, an error detection procedure, and an error repair method.
-Our system will provide an estimation framework to return an accurate model given a repair budget.
-In Figure \ref{sys-arch}, we illustrate our system architecture.
+In this paper, we propose \sys, an anytime framework for training Machine Learning models with budgeted data cleaning (Figure \ref{sys-arch}).
+Users of \sys have to initialize with a dirty model, and specify an error detection procedure and an error repair method.
+Our system will provide a framework to return an accurate model given a repair budget.
+\sys partitions the dirty and clean data, samples from the dirty data, applies the repairs, then updates the model.
+After model update, the repairs are fed back into the sampling stage to adaptively select the data that are most valuable to our model.
+We can also update the error detection procedure based on our observations in the sample.
 \sys supports a broad class of models which includes linear regression, logistic regression, generalized linear models, and support vector machines.
-We start with a model trained on the dirty data.
-Then, an \emph{error detection} module selects a set of candidate dirty data.
-An \emph{error sampling} module chooses what data from the candidate dirty data to clean.
-We apply the repairs to this small sample with the \emph{error repair} module, and then update the dirty model based on our cleaning.
-Once we clean some data, we maintain a running estimate of how cleaning impacts the model and feed that estimate back to adaptively set the sampling distribution.
 
 \sys presents a novel framework that tightly integrates data cleaning with model training.
 As a result, there are numerous new opportunities for optimization.
@@ -61,7 +58,7 @@ In summary, our contributions are
 \begin{itemize}[noitemsep]
 \item We propose \sysfull which given dirty data, a model, a data cleaning procedure, and a budget, we can return a highly accurate model for a fraction of the cleaning cost.
 \item \sys proposes a novel framework that iteratively corrects a model based on small batches of clean data.
-\item \sys relies on two key optimizations, guided error sampling and error partitioning, that result in substantial emprical gains in accuracy in comparison to alternative approaches such as Active Learning.
+\item \sys relies on two key optimizations, guided error sampling and error partitioning, that result in substantial empirical gains in accuracy in comparison to alternative approaches such as Active Learning.
 \item We evaluate \sysfull on real and synthetic datasets to show that non-uniform sampling achieves improved performance in comparison to uniform sampling, and Active Learning.
 \end{itemize}
 

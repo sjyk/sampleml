@@ -41,6 +41,12 @@ D.~P. Bertsekas.
   optimization: A survey.
 \newblock {\em Optimization for Machine Learning}, 2010:1--38.
 
+\bibitem{bottou2012stochastic}
+L.~Bottou.
+\newblock Stochastic gradient descent tricks.
+\newblock In {\em Neural Networks: Tricks of the Trade}, pages 421--436.
+  Springer, 2012.
+
 \bibitem{dekel2012optimal}
 O.~Dekel, R.~Gilad-Bachrach, O.~Shamir, and L.~Xiao.
 \newblock Optimal distributed online prediction using mini-batches.
@@ -112,11 +118,6 @@ B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
 \newblock {\em The Journal of Machine Learning Research}, 13(1):1293--1332,
   2012.
 
-\bibitem{nikolic2014linview}
-M.~Nikolic, M.~Elseidy, and C.~Koch.
-\newblock Linview: incremental view maintenance for complex analytical queries.
-\newblock In {\em SIGMOD Conference}, pages 253--264, 2014.
-
 \bibitem{mcbook}
 A.~B. Owen.
 \newblock {\em Monte Carlo theory, methods and examples}.
@@ -164,6 +165,11 @@ M.~J. Wainwright, M.~I. Jordan, and J.~C. Duchi.
 \newblock Privacy aware learning.
 \newblock In {\em Advances in Neural Information Processing Systems}, pages
   1430--1438, 2012.
+
+\bibitem{wang2012crowder}
+J.~Wang, T.~Kraska, M.~J. Franklin, and J.~Feng.
+\newblock Crowder: Crowdsourcing entity resolution.
+\newblock {\em Proceedings of the VLDB Endowment}, 5(11):1483--1494, 2012.
 
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.

@@ -5,15 +5,8 @@ Next, we explore different prioritization and model update schemes for data clea
 Finally, we evaluate \sys end-to-end in a number of real-world data cleaning scenarios.
 
 \subsection{Experimental Setup and Notation}
-Every experiment has two steps: data cleaning and model evaluation.
-We evaluate the data cleaning on one metric:
-
-\vspace{0.5em}
-
-\noindent\textbf{Cleaning Efficiency. } Let $K$ be the number of samples processed by the algorithm, and $K'$ be the number of samples that were actually dirty. 
-The cleaning efficiency is $\frac{K'}{K}$.
-In our experiments, we explore three classification models: L1-Hinge Loss SVM, Logistic Regression, and Thresholded Linear Regression.
-We evaluate the trained models on the following metrics:
+Every experiment has two steps, data cleaning and model evaluation.
+We evaluate on two metrics:
 
 \vspace{0.5em}
 
@@ -24,7 +17,7 @@ We evaluate the trained models on the following metrics:
 \noindent\textbf{Testing Accuracy. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Let $T(\theta)$ be the out-of-sample testing accuracy when the dirty model is applied to the clean data, and $T(\theta^*)$ be the testing accuracy when the clean model is applied to the clean data. The testing error is defined as $T(\theta^*) - T(\theta)$
 
 \subsubsection{Scenarios}
-We apply these models in the following scenarios:
+\noindent We apply these models in the following scenarios:
 
 \vspace{0.5em}
 
@@ -43,7 +36,7 @@ We apply these models in the following scenarios:
 \noindent\textbf{MNIST: } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
 
 \subsubsection{Alternative Algorithms}
-Here are the alternative methodologies that we consider:
+\noindent Here are the alternative methodologies that we consider:
 
 \vspace{0.5em}
 
@@ -159,17 +152,17 @@ Since SampleClean only acts on a clean sample of data, it is robust to data erro
 So at some point, the errors in the data are so significant that training a model on a small but clean sample of data is more efficient than iteratively updating the dirty model.
 
 In Figure \ref{bias}, we present the results from this experiment.
-We corrupt entries from the data matrix of the Adult dataset at random (probability on plotted on the x-axis).
+We corrupt entries from the data matrix of the Adult dataset at random.
 Then, we measure the number of records we need to clean before we have a relative error of 0.1\%.
-We find that at about 30\% corruption rate, SampleClean is more accurate than \sys.
-Since the Adult dataset has 12 features, a 30\% corruption rate corresponds to each example with 3.6 features incorrect on average.
+On the x-axis we plot the feature corruption percentage that is the number of corrupted features divded by the number of training examples.
+We find that at about 360\% corruption rate, SampleClean is more accurate than \sys.
 We optimized \sys for sparse and relatively small errors but it still shows reasonable performance even in this highly erroneous setting. 
 At higher corruption rates, \sys requires more than one epoch to converge to an accurate answer which requires cleaning almost all of the data.
 
 \begin{figure}[ht!]
 \centering
- \includegraphics[width=0.6\columnwidth]{exp/exp9.pdf}
- \caption{We corrupt an increasing number of entries in the data matrix. At about 30\% corrupted, \sys is no longer more efficient than SampleClean. \label{bias}}
+ \includegraphics[width=\columnwidth]{exp/exp9.pdf}
+ \caption{We corrupt an increasing number of entries in the data matrix. The feature corruption percentage that is the number of corrupted features divded by the number of training examples. At about 360\% corrupted, \sys is no longer more efficient than SampleClean. \label{bias}}
 \end{figure}
 
 \subsubsection{2d. Testing Accuracy}
@@ -225,11 +218,11 @@ where the user is better of not partitiong the data since the errors introduced 
 
 \begin{figure}[ht!]
 \centering
- \includegraphics[scale=0.13]{exp/exp5a.pdf}
+ \includegraphics[width=\columnwidth]{exp/exp5a.pdf}
  \caption{Errors that are less random are easier to classify, and lead to more significant reductions in relative model error. \label{tradeoffs2}}
 \end{figure}
 
-\subsubsection{3c. Error Estimation}
+\subsubsection{3c. Error Estimation}\label{est}
 In the next experiment, we evaluate our error estimation technique.
 We explore how this technique performs compared to a few alternative error estimation techniques: (1) linear regression where we train a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) average gradient change where we do not use the errors to inform how to apply the estimate, (3) average feature change, and (4) our Taylor series approximation.
 Using the EEG dataset, we measure the relative estimation error (relative L2 error with the true gradient) for different amounts of data cleaned.
@@ -287,4 +280,5 @@ We speculate that this is because classifying errors in a 784 dimensional space 
  \caption{For both types of corruption, \sys converges faster than Active Learning and SampleClean. We plot the relative error as function of the number of cleaned examples \label{mnist}}
 \end{figure}
 
-\reminder{CFD: Adult}
+\subsubsection{Replacing Corrupted Data}
+\reminder{TODO World Bank Data}

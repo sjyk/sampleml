@@ -1,12 +1,12 @@
-\section{Relaxing the Enumeration Assumption}\label{imperfect}
-The crucial assumption of the previous sections is that we can enumerate a superset of the dirty records.
-An important aspect of our gradient update is partitioning the dirty and clean data.
-We aggregate an average gradient from both subpopulations when making our update.
-When our partitioning is perfect, at least all of the dirty data is selected in $R_{dirty}$, this estimate in unbiased.
-However, in some cases, characterizing this partioning can be difficult and it may be impossible to ensure this condition unless $R_{dirty} = R$ causing a loss in efficiency if errors are sparse.  
+\section{Classifier Partitioning}\label{imperfect} 
 In this section, we explore the case when the partitioning is imperfect.
 
 \subsection{Using a classifier}
+An important aspect of our gradient update is partitioning the dirty and clean data.
+We aggregate an average gradient from both subpopulations when making our update.
+When our partitioning is perfect, at least all of the dirty data is selected in $R_{dirty}$, this estimate in unbiased.
+However, in some cases, characterizing this partioning can be difficult and it may be impossible to ensure this condition unless $R_{dirty} = R$ causing a loss in efficiency if errors are sparse. 
+
 We retain the assumption that error detection is easier than repair.
 In particular, we argue that it is more feasible to train a classifier to predict error occurance than to train a regression to fix the consequences of error.
 Let there be $u$ types of errors in the database.

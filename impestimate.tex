@@ -1,12 +1,14 @@
 \section{Approximating the Optimal Distribution}\label{sampling}
-This section describes our solution to problem of constructing and maintaining an inexpensive estimate of the optimal distribution.
+This section describes our solution to problem of constructing and maintaining an inexpensive estimate of the optimal sampling distribution.
 
-\subsection{Avoiding Regression}
+\subsection{Challenges}
+The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t)$.
 One way to approximate this distribution is to learn a function $e(\cdot)$ mapping $(x_{clean}, y_{clean})$, based on the data that we have cleaned.
-However, learning this function can be very expensive and is not guaranteed to be reliable.
+Suppose, we use a regression technique based on the previous data.
 This is a high-dimensional regression problem which may have to learn a very complicated relationship between dirty and clean data.
-Such an estimator has a cold start problem, where if we have cleaned a very small number of errors, the estimator will be inaccurate.
-This problem becomes increasingly worse in higher dimensions as we need more data for an accurate estimate.
+The biggest challenge with such an estimator is the cold start problem, where if we have cleaned a very small number of errors, the estimator will be inaccurate. 
+In \sys, we want to be able to make as much progress as possible in the early iterations so this technique may not work.
+In general, the more complex the model, the more data it will require before sufficient accuracy.
 We take an alternative approach, where we try to exploit what we know about data cleaning to produce an estimate for groups of similarly corrupted records.
 
 \subsection{Error Decoupling}
@@ -15,6 +17,16 @@ For many types of data error, we can return a subset of corrupted attributes and
 Recall, that when we formalized the error detection problem, we ensured that associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which is a set that identifies a set of corrupted columns.
 We will show how we can use this property to construct a coarse estimate of the clean value.
 The main idea is that if we can calculate average changes for each feature, then given an uncleaned (but dirty) record, we can add these average changes to correct the gradient.
+
+\begin{example}
+Consider our EEG dataset with multiple types of errors. 
+Suppose the electrical signals for some records are corrupted with missing data and the patient data for other records are corrupted with inconsistency problems. 
+Each training example will have a set of corrupted features (i.e., $\{1,2,6\}$, $\{1,2,15\}$).
+
+Suppose that we have just cleaned the records $r_1$ and $r_2$ represented as tuples with their corrupted feature set: ($r_1$,$\{1,2,3\}$), ($r_2$,$\{1,2,6\}$).
+Then, we have new record ($r_3$,$\{1,2,3,6\}$). 
+We want to be able to use the cleaning results from $r_1,r_2$ to estimate the gradient in $r_3$.
+\end{example}
 
 Let us formalize this intuition.
 Instead of computing the actual gradient with respect to the 
@@ -37,12 +49,6 @@ For example, let us look at the gradient for linear regression:
 \nabla\phi(x,y,\theta) = (\theta^Tx - y)x
 \]
 We see that it is not possible to isolate the effect of a change of one feature on the gradient.
-To understand why we care so much about the decoupling consider the following example:
-\begin{example}
-Suppose that we have just cleaned the following records represented as tuples with their corrupted feature set: ($r_1$,$\{1,2,3\}$), ($r_2$,$\{1,2,6\}$).
-Then, we have new record ($r_3$,$\{1,2,3,6\}$). 
-We want to be able to use the cleaning results from $r_1,r_2$ to estimate the gradient in $r_3$.
-\end{example}
 Decoupling allows us to treat errors conditioned on each feature independently.
 Alternative techniques such as taking the average change the gradient, without this property, would require to condition on every distinct set of corrupted features which can be combinatorially large. 
 
@@ -93,17 +99,42 @@ M_y[i,1] = x[i]
 \]
 In the appendix, we describe the matrices for common convex losses \reminder{TR}.
 
+\subsection{More Accurate Early Error Estimates}
+We can give some intuition on why the linearization actually avoids amplifying estimation error.
+If we consider the linear regression gradient:
+\[
+\nabla\phi(x,y,\theta) = (\theta^Tx - y)x
+\]
+We can rewrite this as a vector in each component:
+\[
+g[i] = \sum_{i} x[i]^2-x[i]y + \sum_{j \ne i} \theta[j]x[j]
+\]
+We see that this function is already mostly linear in $x$ except for the one quadratic term.
+However, this one quadratic term has potential to amplify errors.
+Consider two estimates:
+\[
+f(x+\epsilon) = (x+\epsilon)^2 = x^2 + 2x\epsilon + \epsilon^2
+\]
+\[
+f(x+\epsilon) \approx f(x) + f'(x)(\epsilon) = x^2 + 2x\epsilon
+\]
+The only difference between the two estimates is the quadratic $\epsilon^2$, if $\epsilon$ is highly uncertain random variable then the quadratic dominates.
+Since we are using an average which is a coarse grained estimate high error is unavoidable.
+The bottom estimate while a potentially biased approximation avoids amplifying this error.
+We evaluate our technique in Section \ref{est} against alternatives, and we find that indeed we provide more accurate estimates for a small number of samples cleaned.
+When the number of cleaned samples increases the alternative techniques are comparable.
+
 \subsection{Maintaining Decoupled Averages}
 This linearization allows us to maintain per feature (or label) average changes and use these changes to center the optimal sampling distribution around the expected clean value.
 We know how to estimate $\mathbb{E}(\Delta x)$ and $\mathbb{E}(\Delta y)$.
 \begin{lemma}[Single Feature]
 For a feature $i$, we average all records cleaned that have an error for that feature, weighted by their sampling probability:
 \[
-\bar{\Delta}_i = \frac{1}{K}\sum_{j=0}^K (x[i]-x_{clean}[i])\times \frac{1}{p_j}
+\bar{\Delta}_i = \frac{1}{NK}\sum_{j=0}^K (x[i]-x_{clean}[i])\times \frac{1}{p_j}
 \]
 Similarly, for a label $i$:
 \[
-\bar{\Delta}_i = \frac{1}{K}\sum_{j=0}^K (y[i]-y_{clean}[i])\times \frac{1}{p_j}
+\bar{\Delta}_i = \frac{1}{NK}\sum_{j=0}^K (y[i]-y_{clean}[i])\times \frac{1}{p_j}
 \]
 \end{lemma}
 
@@ -121,6 +152,5 @@ Then, each record $r$ has a d-dimensional vector $\Delta_r$ which is constructed
 
 With the above theorem, we finally have an approximation to our sampling weights: 
 \[p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|\]
-
 
 

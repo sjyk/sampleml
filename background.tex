@@ -18,6 +18,12 @@ These solutions pose a dichotomy where either the analyst has to face expensive 
 
 \vspace{0.5em}
 
+\begin{figure}[ht!]
+\centering
+ \includegraphics[width=\columnwidth]{figs/update-arch.png}
+ \caption{The two naive solutions to the problem: writing-back the cleaned data, and training only on the sample. Writing back to the cleaned data potentially creates unreliable mixtures of data, and training only on the sample creates an issue of dimensionality and sample size. \label{update-arch1}}
+\end{figure}
+
 \noindent\textbf{Cleaning With a Budget: } The best choice for the analyst is determined by the systematic nature of the errors. The best scenario is if the errors are not systematic (i.e., corruption affects all patients randomly), then she can just discard the corrupted data without any expensive repair options. 
 However, she cannot know this with cleaning the data.
 Let us suppose our analyst wants to quickly evaluate whether the errors are systematic, and we have a budget of cleaning $k \ll N$ records of data.
@@ -26,16 +32,19 @@ While this solution is guaranteed to be asympotically consistent (i.e., if we cl
 In statistics, there is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can actually result in reversed trends.
 
 So if mixing dirty and clean data is not the correct solution, the next approach would be to neglect the dirty data altogether (Figure \ref{update-arch1}b).
-We could recompute the model on only the cleaned data, which is the SampleClean approach \cite{wang1999sample}.
-This solution is also guaranteed to be consistent, and intermediate results only reflect the clean data.
+SampleClean\cite{wang1999sample} approximates the results to aggregate queries by applying them to a clean sample of data.
+For Machine Learning, we could train a model only on the clean sample of data.
+This solution is also guaranteed to be consistent, and intermediate results are meaningful since they only reflect the clean data.
 However, the problem here is that high-dimensional models are very sensitive to the sample size.
 If our cleaning budget is small, sampling errors will dominate any reductions in data error.
+The consequence is that we will not be able to differentiate between data error and sampling error.
 
-\begin{figure}[ht!]
-\centering
- \includegraphics[width=\columnwidth]{figs/update-arch.png}
- \caption{The two naive solutions to the problem: writing-back the cleaned data, and training only on the sample. Writing back to the cleaned data potentially creates unreliable mixtures of data, and training only on the sample creates an issue of dimensionality and sample size. \label{update-arch1}}
-\end{figure}
+\begin{example}
+\textbf{Write-back.} Our analyst corrects 10 incorrect records and retrains her model on the new dataset.
+
+\noindent \textbf{SampleClean.} Our analyst takes a sample of 10 records at random, corrects the records if incorrect, and trains her model only on the sample.
+
+\end{example}
 
 \vspace{0.5em}
 
@@ -60,7 +69,8 @@ In SampleClean \cite{wang1999sample}, the authors formalize the analytics in ter
 Bergman et al. explore the problem of query-oriented data cleaning \cite{bergman2015query}, where a conjunctive query (CQ) guides which records are to be cleaned.
 SQL and CQ formalize a declarative problem specification in database research.
 
-In a loose analogy, loss functions in Empirical Risk Minimization (ERM) serve the same purpose in Machine Learning.
+In this paper, when we refer to Machine Learning, we are refering to a class of problems called Empirical Risk Minimization (ERM).
+In a loose analogy to the declative queries in databases, loss functions in serve the same purpose in ERM.
 In ERM, the goal is to learn a set of model \emph{parameters} $\theta$ from training examples.
 We start with a set of training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$
 on which we minimize an loss function $\phi$ (a penalty for getting the prediction wrong) at each point parametrized that is parametrized by $\theta$.
@@ -71,7 +81,6 @@ For example, in a linear regression $\phi$ is:
 \[
 \phi(x_{i}^T\theta,y_{i}) = \|\theta^Tx_{i} - y_i \|_2^2
 \]
-
 Typically, a \emph{regularization} term $r(\theta)$ is added to this problem.
 The regularization term $r(\theta)$ is traditionally what is used to increase the robustness of the model.
 $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid overfitting to noise in the
@@ -84,6 +93,7 @@ For example, a popular variant of linear regression is called LASSO which is:
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\|\theta^Tx_{i} - y_i \|_2^2 + \lambda \cdot \|\theta\|_1
 \]
 By applying the L1 regularization term, if one of the features is particularly noisy, and does not add predictive value, it will get excluded.
+The loss function specifies a problem independent of the optimization used to calculate the optimal parameter $\theta^{*}$.
 
 A very important class of problems is when $\phi$ and $r$ are convex in $\theta$.
 Convex problems are amenable to a variety of different optimization methodologies
@@ -92,12 +102,31 @@ This class of problems includes all generalized linear models (including linear 
 In this work, we focus on this class of problems as it is very broad yet we can still analyze the results.
 
 \subsubsection{Systematic Biases}
-As in our example, we explore methodologies for training models when data is systematically biased.
-If we train a model with respect to the incorrect data, while we might have achieve a good out-of-sample accuracy on the incorrect data, the classifications are incorrect in a semantic sense.
-Data cleaning gives us information about the ``true" data distribution, which is highly beneficial when errors have systematic biases.
-Without cleaning, certain subpopulations of data might be frequently mispredicted. 
-The problem that we are interested in is when models are being trained on dirty data but are deployed or tested on clean data (or predicting ``real world" trends).
-Two characterize this problem there are two metrics that we look at:
+We explore methodologies for training models when data is systematically incorrect leading to a biased model.
+In our running example, systematic errors could include:
+\begin{example}\label{exm-1}
+Older patients whose records were manually digitized are more likely to have missing values.
+\end{example}
+\begin{example}\label{exm-2}
+Occurances of certain types of seizures are mislabled with more false negatives than false positives.
+\end{example}
+If we ignore these errors, our model may have a few different problems. 
+First, consider Example \ref{exm-1}, if older patients are more likely to have record errors the model's performance of predicting the occurrance of seizures will be unreliable for that subpopulation. 
+A robust model may ``overfit" to the uncorrupted data completely ignoring this corrupted population.
+Next, consider Example \ref{exm-2}, mislabled data is actually a very subtle error.
+The labels are a proxy for predicting a real-world phenomenon.
+If we train a model with respect to the incorrect data, while we might have achieve a good out-of-sample accuracy on the incorrect data, but the classifications are incorrect in a real world sense.
+
+The underlying problem here is that the model is trained on an incorrect data distribution.
+There is a latent data distribution that represents the real world.
+When these two distributions are not aligned (i.e., the training data is not an i.i.d sample from the real world), then there is no guarantee that the model will reliably generalize.
+Consider example \ref{exm-1}, suppose those patients have missing values in a certain attribute.
+If those patients are more likely to get seizures, the model will learn a correlation between the missing data and increased prevalance of seizures.
+While this missing data has some predictive value, these incorrect inferences can lead to analysis pipelines that are brittle.
+Imagine if a batch new patients also lacked the same attribute, they could be incorrectly classified due to this spurious correlation.
+
+Essentially, this problem is of training on one distribution and testing on another.
+To characterize this problem there are two metrics that we look at:
 
 \vspace{0.5em}
 
@@ -115,8 +144,20 @@ by $\theta$ trained on the set of features and labels $\{(x,y)\}$.
 The user specifies two data cleaning components: (1) error detection
 which selects a set of candidate dirty data $R_{dirty}$, and (2) error 
 repair which cleans a record $C(r) \mapsto r_{clean}$.
-With a budget of applying cleaning i.e., $C(\cdot)$, only k times, we return an estimate $\hat{\theta}$ of the optimal clean model.
+With a budget of applying cleaning i.e., $C(\cdot)$, only k times, we return an estimate $\hat{\theta}$ of the clean model.
 \end{problem}
+
+\noindent Here is an example use case of \sys:
+\begin{example}
+Let us suppose that the EEG dataset is corrupted with the systematic errors described in Example \ref{exm-1}.
+The analyst first trains her linear model on the dirty data ignoring the effects of the errors returning a model $\theta^{(d)}$.
+Then, she provides ``error detection" logic, selecting a set of possibly corrupted records $R_{dirty}$ by listing all records with missing values.
+She sets a desired cleaning batch size of $b=10$ and number of iterations $t=4$.
+She initializes \sys with $\theta^{(d)}$ and inspects samples of 10 records from $R_{dirty}$.
+She manually corrects those records by the medical record source data.
+After each batch, the model is updated with the most recent result $\theta^{(t)}$.
+After $t=4$ of cleaning, the analyst can evaluate the difference $\theta^{(d)}$ and the current best model $\theta^{(4)}$ to see if the data error causes a systematic bias.
+\end{example}
 
 \iffalse
 

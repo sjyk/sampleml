@@ -11,7 +11,7 @@ In the model update problem, we update the dirty model with some function $f(\cd
 \[
 \theta^{new} \leftarrow f(X_{clean},Y_{clean},\theta^{(d)})
 \]
-Our goal is that these updates should minimize the error the updated model and the true model $\theta^{(c)}$ (if we cleaned and trained over the entire data):
+Our goal is that these updates should minimize the error of the updated model and the true model $\theta^{(c)}$ (if we cleaned and trained over the entire data):
 \[
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]
@@ -52,7 +52,7 @@ The intuition, which we will formalize in Section \ref{sgd}, is that if we are o
 At the optimal point, the expected gradient will be zero.
 So intuitively, this approach iteratively moves the model downhill, or corrects, the dirty model until the budget is reached.
 
-The tricky part is that only a subset of the records of the records are dirty.
+The tricky part is that only a subset of the records are dirty.
 In our architecture, we suggested that we want to clean only the records that
 are actually dirty $R_{dirty}$.
 For example, as data are cleaned, there is no need to resample this data.
@@ -118,7 +118,7 @@ The quality of the update depends on how well we can approximate $g^*$ using $g_
 The problem is how should we construct the sample of data to clean $S$ to get the most accurate update.
 In particular, how should we choose the sampling probabilities $p_i$ for each $i \in S$ such that the error is minimized.
 
-\subsection{Stochastic Gradient Descent}\label{sgd}
+\subsection{Analysis with Stochastic Gradient Descent}\label{sgd}
 This update policy can be formalized as a class of very well studied algorithms called Stochastic Gradient Descent.
 This gives us a theoretical framework to understand and analyze our update rule, bound the error, and choosing points to clean.
 Mini-batch stochastic gradient descent (SGD) is an algorithm for finding the optimal value
@@ -163,7 +163,14 @@ mean at each iteration you are doing more work.
 In a data cleaning context, this is a problem since the bottlneck is the work at 
 each iteration not the number of iterations.
 
-\subsubsection{Reducing the Variance $\sigma^2$}\label{dist-samp}
+\vspace{0.5em}
+
+\noindent\textbf{ Laziness Argument: } The convergence and the error bounds show that the technique is theoretically justified, but the remaining question is whether the constant factors make this technique practical.
+It is well known that even for arbitrary initializations SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
+In our case, we often have a decent initialization which is the dirty model, which means that we can get close processing far less than the full data.
+Our algorithm is essentially an arguement for lazy materialization, where we only clean the data when needed.
+
+\subsection{Reducing the Variance $\sigma^2$}\label{dist-samp}
 In the Machine Learning and Optimization literature, SGD algorithms are optimized to avoid scanning the entire data.
 Uniform sampling is cheap so it is the preferred solution.
 However, there are a few observations about the data cleaning problem that suggest that we can do better if we carefuly select which points to clean.
