@@ -29,12 +29,6 @@ M.~Bergman, T.~Milo, S.~Novgorodov, and W.-C. Tan.
 \newblock Query-oriented data cleaning with oracles.
 \newblock 2015.
 
-\bibitem{bertossi2013data}
-L.~Bertossi, S.~Kolahi, and L.~V. Lakshmanan.
-\newblock Data cleaning and query answering with matching dependencies and
-  matching functions.
-\newblock {\em Theory of Computing Systems}, 52(3):441--482, 2013.
-
 \bibitem{bertsekas2011incremental}
 D.~P. Bertsekas.
 \newblock Incremental gradient, subgradient, and proximal methods for convex
@@ -153,6 +147,11 @@ B.~Settles.
 N.~Swartz.
 \newblock Gartner warns firms of 'dirty data'.
 \newblock {\em Information Management Journal}, 41(3), 2007.
+
+\bibitem{openrefine}
+R.~Verborgh and M.~De~Wilde.
+\newblock {\em Using OpenRefine}.
+\newblock Packt Publishing Ltd, 2013.
 
 \bibitem{volkovs2014continuous}
 M.~Volkovs, F.~Chiang, J.~Szlichta, and R.~J. Miller.

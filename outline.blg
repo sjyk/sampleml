@@ -24,43 +24,43 @@ Warning--empty publisher in mcbook
 Warning--empty journal in xiaofeature
 You've used 35 entries,
             2118 wiz_defined-function locations,
-            676 strings with 9626 characters,
-and the built_in function-call counts, 13471 in all, are:
-= -- 1279
-> -- 756
+            675 strings with 9510 characters,
+and the built_in function-call counts, 13358 in all, are:
+= -- 1264
+> -- 751
 < -- 10
-+ -- 303
-- -- 264
-* -- 974
-:= -- 2191
++ -- 301
+- -- 262
+* -- 955
+:= -- 2174
 add.period$ -- 105
 call.type$ -- 35
-change.case$ -- 235
+change.case$ -- 233
 chr.to.int$ -- 0
 cite$ -- 42
-duplicate$ -- 498
-empty$ -- 984
-format.name$ -- 264
-if$ -- 2822
+duplicate$ -- 499
+empty$ -- 979
+format.name$ -- 262
+if$ -- 2802
 int.to.chr$ -- 0
 int.to.str$ -- 35
-missing$ -- 34
+missing$ -- 35
 newline$ -- 174
 num.names$ -- 66
-pop$ -- 271
+pop$ -- 276
 preamble$ -- 1
-purify$ -- 201
+purify$ -- 200
 quote$ -- 0
 skip$ -- 381
 stack$ -- 0
-substring$ -- 743
+substring$ -- 718
 swap$ -- 135
 text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 138
+type$ -- 136
 warning$ -- 7
-while$ -- 112
+while$ -- 110
 width$ -- 37
-write$ -- 364
+write$ -- 363
 (There were 3 error messages)

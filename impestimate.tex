@@ -61,6 +61,7 @@ We will show that the sampling distribution can be estimated in the form:
 p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|
 \]
 where $M_x$, $M_y$ are matrices and $\Delta_{rx}$ and $\Delta_{ry}$ are average change vectors for the corrupted features in $r$. 
+Without decoupling, if we were to calculate the expected value conditioned on $e_r$, we would have to condition on all the combinatorial possibilities.
 
 \subsection{Deriving $M_x$, $M_y$}
 We can take the expected value of the Taylor series expansion around the dirty value.
