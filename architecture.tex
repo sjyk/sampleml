@@ -5,7 +5,13 @@ Now, we overview the \sys architecture, its goals, and describe how our framewor
 The primary goal of \sys is to provide a framework that wraps around existing Machine Learning and Data Cleaning systems.
 Instead of cleaning the entire data upfront and then training a model, we initialize the framework with a model, and iteratively correct it with small batches of clean data.
 Built into the framework are feedback mechanisms that use information from the cleaning to improve performance on future batches of clean data.
+
 There are two basic operating modes of \sys: (1) error detection oracle and (2) adaptive error detection. 
+These two modes differ in the way they partition dirty and clean data, where (1) assumes we can differentiate the two in advance, and (2) assumes we can learn it from samples.
+Partitioning serves two purposes: (1) it reduces the variance of our updates because we can cheaply scan over data we know that is clean, and (2) it increases the fraction of actually dirty records in the candidate batch.
+A good example of why we need the second objective is seen in the context of crowdsourcing.
+If we have a crowdworker clean records, we will have to pay them for the task whether or not the record required cleaning.
+Partitioning has important ramifications since classifiying erroneous data as cleaned can impart a bias on our model.
 We will overview how the architecture and applications change based on these modes.
 
 First, we overview our notation and terminology:

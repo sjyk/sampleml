@@ -1,11 +1,15 @@
 \section{Iterative Model Update}\label{model-update}
-In this section, we describe how we iteratively update a dirty model based on
+In this section, we describe how we can iteratively update a dirty model based on
 a cleaned batch of data.
 We will show that this model update procedure can be interpreted as a Stochastic 
 Gradient Descent (SGD) algorithm, which gives us a theoretical framework to analyze
 convergence and bound the error at each step.
 
 \subsection{Model Update Problem}
+The high level challenge is that we want a model update technique that takes advantage of the entire dirty data and a small sample of cleaned data.
+We want this technique to have some provable guarantees like the conditions under which we converge to the right answer as the entire data is cleaned, bounds on error of intermediate results, and at least a guarantee in expectation that the error will not increase after cleaning more data.  
+
+First, let us describe the abstract problem.
 Suppose we have a cleaned batch of data $S_{clean}$ with features and labels $(X_{clean},Y_{clean})$, and a dirty model $\theta^{(d)}$. 
 In the model update problem, we update the dirty model with some function $f(\cdot)$ i.e.,:
 \[
@@ -16,28 +20,49 @@ Our goal is that these updates should minimize the error of the updated model an
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]
 
-\subsection{Exploiting the Model's Geometry}
-\sys addresses the update problem by using the model's geometry.
+There are a couple of challenges that we address in this section.
+As described in our architecture, we do not want to clean data that we have already cleaned or is expected to be clean.
+This leads to our first challenge since the sample $S_{dirty}$ may not be representative of the full data, only $R_{dirty}$. 
+We have to design our update in such a way that it does not bias our result towards the newly cleaned data. 
+The second challenge is that we need to get the sample $S_{dirty}$ from $R_{dirty}$.
+Some records, if cleaned, are more informative than others.
+We show how to incorporate non-uniform sampling into our update and formulate the theoretical optimal sampling problem.
+In the next section, we will discuss how to practically address the optimal sampling problem.
+
+\subsection{The Geometry Of The Problem}
+Let us try to understand the geometry of this problem in one dimension (i.e., the parameter $\theta$ is a scalar vale).
 We restrict the class of Machine Learning models to convex regularized loss problems.
 That is, as we vary the model $\theta$ the loss is bowl-shaped (visualized in Figure \ref{update-arch2}a).
-The model update problem can be visualized as follows.
-We have a model $\theta^{(d)}$ (visualized in red) that is suboptimal with respect to the clean data.
-We want to get to the optimal clean model $\theta^{(c)}$ which is visualized as a yellow star.
+There is a unique optimal value for $\theta$ at the bottom of the bowl.
+If we have dirty data, we are training a model with respect to an incorrect data distribution.
+In other words, we are optimizing the wrong function (Figure \ref{update-arch2}b).
+The resulting dirty model can be thought of as a suboptimal point on clean curve.
 
 \begin{figure}[ht!]
 \centering
  \includegraphics[width=\columnwidth]{figs/update-arch2.png}
- \caption{In \sys, we explore an important class of Machine Learning problems where the loss function (i.e., training error) varies convexly. A stale model can be thought of as a sub-optimal point and we want to move towards the optimal point. \label{update-arch2}}
+ \caption{In \sys, we explore an important class of Machine Learning problems where the loss function (i.e., training error) varies convexly. An incorrect model can be thought of as a sub-optimal point. \label{update-arch2}}
 \end{figure}
 
-Ideally, we want an update that goes in the right direction (one that points to the optimum) along the loss curve (Figure \ref{update-arch2}b).
+We have a model $\theta^{(d)}$ (visualized in brown) that is suboptimal with respect to the clean data.
+We want to get to the optimal clean model $\theta^{(c)}$ which is visualized as a yellow star.
+If we had all of the clean data we could compute $\theta^{(c)}$.
+However, at each iteration, we only have a sample of clean data.
+To resolve this issue, we can exploit the model's geometry.
+For this class of models, given a suboptimal point, we can find the direction to the 
+the global optimum.
 Mathematically, this direction corresponds to gradient of the loss with respect to $\theta$, and we need to move some distance $\gamma$ along this direction:
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
-However, since we can only clean a sample of data, we only approximate the globally optimal direction.
-Our class of Machine Learning models are based on loss minimization, that is they are a sum of losses, and we know that sums commute with derivatives.
+The intuition, which we will formalize in Section \ref{sgd}, is that if we are on average in the right direction the algorithm is guaranteed to converge with analytics bounds on the convergence rate.
+At the optimal point, the expected gradient will be zero.
+So intuitively, this approach iteratively moves the model downhill, or corrects, the dirty model until the budget is reached.
 
+
+\subsection{Average Gradient From a Sample}
+Our class of Machine Learning models are based on loss minimization, that is they are a sum of losses, and we know that sums commute with derivatives.
+So to calculate the average gradient from a sample, we simply calculate the gradient at every data point and average over them.
 Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p_i$.
 We can approximate the global gradient:
 \[
@@ -47,15 +72,8 @@ Then for every batch of data cleaned, we apply the update to the current best mo
 \[
 \theta^{(t)} \leftarrow \theta^{(t-1)} - \gamma \cdot g_{S}(\theta^{(t-1)})
 \]
-In other words, we are moving approximately in the right direction.
-The intuition, which we will formalize in Section \ref{sgd}, is that if we are on average in the right direction the algorithm is guaranteed to converge with analytics bounds on the convergence rate.
-At the optimal point, the expected gradient will be zero.
-So intuitively, this approach iteratively moves the model downhill, or corrects, the dirty model until the budget is reached.
 
-The tricky part is that only a subset of the records are dirty.
-In our architecture, we suggested that we want to clean only the records that
-are actually dirty $R_{dirty}$.
-For example, as data are cleaned, there is no need to resample this data.
+The tricky part is that only a subset of the records are are cleaned.
 The consequence of this is that the estimate $g_{S}(\theta)$ is now biased.
 We also have to compensate for this bias by averaging this estimate with the gradient with respect to the clean data:
 \[
@@ -70,30 +88,21 @@ So then our final gradient update becomes:
 \theta^{(t)} \leftarrow \theta^{(t-1)} - \gamma \cdot g(\theta) \blacksquare
 \]
 
-\subsection{Iterative Model Correction Algorithm}
+\subsection{Model Update Algorithm}
 Following from this geometric analysis, we propose the iterative model correction algorithm.
 We initialize the algorithm with $\theta^{(d)}$ which is the dirty model.
 At each iteration $i=\{1,...,t\}$, we clean a batch of data $b$ selected from the set of candidate dirty records $R_{dirty}$.
 Then, starting with $\theta^{(d)}$, we apply an averaged gradient update to get $\theta^{(i)}$.
 We iterate until our budget of cleaning $k = t \cdot b$ record is reached.
 
-We present the algorithm here:
+We present the model update algorithm here:
 \begin{enumerate}[noitemsep]
-\item Initialize with $\theta^{(0)} = \theta^{(d)}$ as the dirty model, $t$ iterations, with a batch size $b$, $R_{dirty}$, and $R_{clean} = R - R_{dirty}$.
-\item Hyperparamters $\gamma$, $\alpha$, $\beta$.
-\item For rounds i=1...t
-\begin{enumerate}
-	\item Draw a sample of $b$ records from $R_{dirty}$ called $S_{dirty}$.
-	\item Apply data cleaning to the sample of data call the result $S_{clean}$.
 	\item Calculate the gradient over the sample of clean data and call the result $g_S(\theta^{(i-1)})$
-	\item Calculate the average gradient over all the data in $R_{clean}$, and call the result $g_C(\theta^{(i-1)})$
+	\item Calculate the average gradient over all the data in $R_{clean}$, and call the result $g_C(\theta^{(i)})$
 	\item Apply the following update rule:
 	\[
-	\theta^{(i)} \leftarrow \theta^{(i-1)} - \lambda \cdot(\alpha\cdot g_S(\theta^{(i-1)}) + \beta \cdot  g_C(\theta^{(i-1)}))
+	\theta^{(i+1)} \leftarrow \theta^{(i)} - \lambda \cdot(\alpha\cdot g_S(\theta^{(i)}) + \beta \cdot  g_C(\theta^{(i)}))
 	\]
-	\item Update the sets $R_{dirty} = R_{dirty} - S_{dirty}$, $R_{clean} = R_{clean} \cup S_{clean}$
-\end{enumerate}
-\item Return $\theta^{(T)}$
 \end{enumerate} 
 
 \subsubsection{Selecting the Parameters}
@@ -113,7 +122,7 @@ First, we will review all of the parameters that need to be set.
 \vspace{0.5em}
 
 \noindent\textbf{Choosing $S$: } As we mentioned, the optimal clean model depends on \emph{all} the clean data, not just a sample. 
-So $g_S$ is really an approximation of the gradient with some error $g^* \pm \epsilon$. 
+So $g_S$ is really an approximation of the the true gradient $g^*$ with some error $g^* \pm \epsilon$. 
 The quality of the update depends on how well we can approximate $g^*$ using $g_S$.
 The problem is how should we construct the sample of data to clean $S$ to get the most accurate update.
 In particular, how should we choose the sampling probabilities $p_i$ for each $i \in S$ such that the error is minimized.
@@ -174,7 +183,7 @@ Our algorithm is essentially an arguement for lazy materialization, where we onl
 In the Machine Learning and Optimization literature, SGD algorithms are optimized to avoid scanning the entire data.
 Uniform sampling is cheap so it is the preferred solution.
 However, there are a few observations about the data cleaning problem that suggest that we can do better if we carefuly select which points to clean.
-The key property that we need to preserve is unbiasedness (Proposition \ref{unbiased}).
+The key property that we need to preserve is unbiasedness of the gradient (Proposition \ref{unbiased}), so our updates are on average correct.
 
 \vspace{0.5em}
 
@@ -207,10 +216,11 @@ This result follows directly from the linearity of expectation, since we are add
 
 \vspace{0.5em}
 
-\noindent\textbf{Optimized Sampling: }
-In our problem, we are trying to select a sample $S_{dirty}$ from $R_{dirty}$.
+\noindent\textbf{Optimal Sampling Problem: }
+In this problem, we are trying to select a sample $S_{dirty}$ from $R_{dirty}$.
 If we sample every element $i \in R_{dirty}$ with probability $p_i$, the question is
 how can we compute a set of $\{p_i\}$ such that variance of the gradient $\sigma^2$ is minimized.  
+It will turn out that optimal distribution is not realizable without knowing the fully cleaned data, and we will address this problem in the next section.
 To construct these sampling probabilities, we first need the following lemma:
 \begin{lemma}\label{impsample}
 Given a set of real numbers $A = \{a_1,...,a_n\}$, let $\hat{A}$ be 
@@ -218,14 +228,20 @@ a sample with replacement of $A$ of size k.
 If $\mu$ is the mean $\hat{A}$, the sampling distribution that minimizes
  the variance of $\mu$, i.e., the expected square error, is $p(a_i) \propto a_i$.
 \end{lemma}
-\begin{proof}
-This proof follows from \cite{mcbook}, we present it here for intuition.
-\reminder{Will be moved to appendix}
+\begin{proof}[Sketch]
+This proof follows from \cite{mcbook}, as it is a straight forward importance sampling result.
 It is easy to verify that for sampling probabilities $p(a_i)$, that the unbiased
 estimate of the mean is:
 \[
 \mu = \frac{1}{nk}\cdot\sum_{i\in\hat{A}}^k \frac{a_i}{p_i}
 \]
+If we minimize the variance $Var(\mu)$, we can find that:
+\[
+p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
+\]
+\end{proof}
+
+\iffalse
 The variance of this estimate is given by:
 \[
 Var(\mu) = \mathbb{E}(\mu^2)-\mathbb{E}(\mu)^2
@@ -262,7 +278,8 @@ Solving the system of equations, we get:
 \[
 p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
 \]
-\end{proof}
+\fi
+
 
 Based on Lemma \ref{impsample}, we now derive an optimal sampling distribution.
 Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is where we sample proportions to the values.
@@ -282,6 +299,6 @@ However, a better approximation will lead to an improved convergence rate.
 \begin{figure}[ht!]
 \centering
  \includegraphics[width=0.6\columnwidth]{figs/update-arch3.png}
- \caption{The minimum variance estimate of an expected value of a function of a random variable $\mathbb{E}(f(X))$ is found by placing more samples (marked in yellow) on the ``spikes" of the function.\label{update-arch3}}
+ \caption{The minimum variance estimate of an expected value of a function of a random variable $\mathbb{E}(f(X))$ is found by placing more samples (marked in yellow) on the higher parts of the function.\label{update-arch3}}
 \end{figure}
 

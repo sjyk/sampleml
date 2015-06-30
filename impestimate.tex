@@ -1,22 +1,18 @@
 \section{Approximating the Optimal Distribution}\label{sampling}
 This section describes our solution to problem of constructing and maintaining an inexpensive estimate of the optimal sampling distribution.
+Our SGD formulation shows that for any known sampling distribution where the probabilites are all greater than zero, we can converge to the right answer.
+However, lower variance distributions will lead to faster convergence.
+The theoretically minimum variance sampling distribution is not realizable in practice, and will show how to approximate this distribution.
 
-\subsection{Challenges}
+\subsection{Challenges and Goal}
 The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t)$.
 One way to approximate this distribution is to learn a function $e(\cdot)$ mapping $(x_{clean}, y_{clean})$, based on the data that we have cleaned.
 Suppose, we use a regression technique based on the previous data.
 This is a high-dimensional regression problem which may have to learn a very complicated relationship between dirty and clean data.
-The biggest challenge with such an estimator is the cold start problem, where if we have cleaned a very small number of errors, the estimator will be inaccurate. 
+The biggest challenge with such an estimator is the cold start problem, where if we have cleaned a very small number of errors, the estimator will be inaccurate.
 In \sys, we want to be able to make as much progress as possible in the early iterations so this technique may not work.
 In general, the more complex the model, the more data it will require before sufficient accuracy.
 We take an alternative approach, where we try to exploit what we know about data cleaning to produce an estimate for groups of similarly corrupted records.
-
-\subsection{Error Decoupling}
-We come back to the insight of the last section, where error detection is often much easier than error repair.
-For many types of data error, we can return a subset of corrupted attributes and in turn a subset of features that are corrupted; all without cleaning the data.
-Recall, that when we formalized the error detection problem, we ensured that associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which is a set that identifies a set of corrupted columns.
-We will show how we can use this property to construct a coarse estimate of the clean value.
-The main idea is that if we can calculate average changes for each feature, then given an uncleaned (but dirty) record, we can add these average changes to correct the gradient.
 
 \begin{example}
 Consider our EEG dataset with multiple types of errors. 
@@ -28,11 +24,28 @@ Then, we have new record ($r_3$,$\{1,2,3,6\}$).
 We want to be able to use the cleaning results from $r_1,r_2$ to estimate the gradient in $r_3$.
 \end{example}
 
+If most of the features are correct, it would seem like the gradient is only
+incorrect in one or two of its components.
+It would seem like we essentially have the clean gradient.
+The problem is that the gradient $\nabla\phi(\cdot)$ can be a very non-linear function of the features that couple features together.
+For example, let us look at the gradient for linear regression:
+\[
+\nabla\phi(x,y,\theta) = (\theta^Tx - y)x
+\]
+We see that it is not possible to isolate the effect of a change of one feature on the gradient.
+Even if one of the features is corrupted, all of the gradient components will be incorrect.
+
+\subsection{Error Decoupling}
+We can try to approximate the gradient in a way that the effects of features on the gradient are decoupled.
+Recall, that when we formalized the error detection problem, we ensured that associated with each $r \in R_{dirty}$ is a set of errors $e_r$ which is a set that identifies a set of corrupted features.
+We will show how we can use this property to construct a coarse estimate of the clean value.
+The main idea is that if we can calculate average changes for each feature, then given an uncleaned (but dirty) record, we can add these average changes to correct the gradient.
+
 Let us formalize this intuition.
 Instead of computing the actual gradient with respect to the 
 true clean values, let us compute the conditional expectation given that a set of features and labels $f_r$ are corrupted:
 \[
-p_i \propto \mathbb{E}(\nabla\phi(\theta_{(t)}^Tx_{clean},y_{clean}) \mid f_r)
+p_i \propto \mathbb{E}(\nabla\phi(\theta_{(t)}^Tx_{clean},y_{clean}) \mid e_r)
 \]
 What we mean by corrupted features is that:
 \[
@@ -41,20 +54,15 @@ i \notin f_r \implies x_{clean}[i] - x_{dirty}[i] = 0
 \[
 i \notin f_r \implies y_{clean}[i] - y_{dirty}[i] = 0
 \]
-So basically, if most of the features are correct, it would seem like the gradient is only
-incorrect in one or two of its components.
-The problem is that the gradient $\nabla\phi(\cdot)$ can be a very non-linear function of the features that couple features together.
-For example, let us look at the gradient for linear regression:
-\[
-\nabla\phi(x,y,\theta) = (\theta^Tx - y)x
-\]
-We see that it is not possible to isolate the effect of a change of one feature on the gradient.
-Decoupling allows us to treat errors conditioned on each feature independently.
-Alternative techniques such as taking the average change the gradient, without this property, would require to condition on every distinct set of corrupted features which can be combinatorially large. 
 
-\subsection{Linear Approximation}
-We can approximate the gradient in such a way that we can do this.
-This approximation represents a linearization of the errors.
+The needed approximation represents a linearization of the errors.
+We will show that the sampling distribution can be estimated in the form:
+\[
+p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|
+\]
+where $M_x$, $M_y$ are matrices and $\Delta_{rx}$ and $\Delta_{ry}$ are average change vectors for the corrupted features in $r$. 
+
+\subsection{Deriving $M_x$, $M_y$}
 We can take the expected value of the Taylor series expansion around the dirty value.
 If $d$ is the dirty value and $c$ is the clean value, the Taylor series approximation for a function $f$ is given as follows:
 \[
@@ -82,10 +90,13 @@ Then, $M_x = \frac{\partial}{\partial X}\nabla\phi$ is an $d \times d$ matrix, a
 Both of these matrices are computed with respect to dirty data, and we will present an example.
 $\Delta x$ is a $d$ dimensional vector where each component represents a change in that feature and $\Delta y$ is an $l$ dimensional vector that represents the change in each of the labels. 
 
-Let us return to the linear regression example, where the gradient is:
+\subsubsection{Example $M_x$, $M_y$}
+Let us walk through an example, where we calculate $M_x$, $M_y$.
+In the linear regression example, where the gradient is:
 \[
 \nabla\phi(x,y,\theta) = (\theta^Tx - y)x
 \]
+For a record, $r$, suppose we have a feature vector $x$.
 It we take the partial derivatives with respect to x $M_x$ is:
 \[
 M_x[i,i] = 2x[i] + \sum_{i \ne j} \theta[j]x[j] - y 
@@ -97,7 +108,7 @@ Similarly $M_y$ is:
 \[
 M_y[i,1] = x[i] 
 \]
-In the appendix, we describe the matrices for common convex losses \reminder{TR}.
+In the appendix, we describe the matrices for common convex losses.
 
 \subsection{More Accurate Early Error Estimates}
 We can give some intuition on why the linearization actually avoids amplifying estimation error.
@@ -151,6 +162,8 @@ Then, each record $r$ has a d-dimensional vector $\Delta_r$ which is constructed
 \end{lemma}
 
 With the above theorem, we finally have an approximation to our sampling weights: 
-\[p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|\]
+\[p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|
+\blacksquare
+\]
 
 
