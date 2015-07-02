@@ -55,10 +55,10 @@ Mathematically, this direction corresponds to gradient of the loss with respect 
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
+In our visualization, this corresponds to whether we should move left or right.
 The intuition, which we will formalize in Section \ref{sgd}, is that if we are on average in the right direction the algorithm is guaranteed to converge with analytics bounds on the convergence rate.
 At the optimal point, the expected gradient will be zero.
 So intuitively, this approach iteratively moves the model downhill, or corrects, the dirty model until the budget is reached.
-
 
 \subsection{Average Gradient From a Sample}
 Our class of Machine Learning models are based on loss minimization, that is they are a sum of losses, and we know that sums commute with derivatives.
