@@ -1,0 +1,100 @@
+\section{Detection}
+An important part of \sys is dirty data detection.
+When we sample data to clean, we want to ensure that the data that we are sampling is actually dirty.
+Therefore, before we can sample, we have to detect whether the record is dirty.
+
+\subsection{Goals}
+The detection component needs to give us two important pieces of information about a record.
+First, it needs to tell us if a record is dirty or clean.
+In this framework, we favor false positives (record is clean but marked as dirty) over false negatives as the false negatives will never get sampled and cleaned.
+Next, the detection also needs to tell us what is wrong with the record.
+This is important so we can estimate how valuable cleaning will be for this record.
+There are two cases that we explore in \sys: a priori and adaptive.
+In the a priori case, we recognize that for many data cleaning methodologies, we can efficiently select the set of dirty records without repair.
+In the adaptive case, we relax this assumption, and explore how we can learn which records are dirty and clean with a classifier.
+
+\subsection{A Priori Case}
+For many types of dirtiness, it is possible to efficiently enumerate a set of corrupted records and enumerate what is wrong with these records.
+
+\begin{definition}[A Priori Detection]
+Let $r$ be a record in $R$. An a priori detector is a detector is a detector that returns a Boolean of whether the record is dirty and a set of columns $e_r$ that are dirty.
+\[
+D(r) = ({0,1}, e_r)
+\]
+From the set of columns that are dirty, we can find the corresponding features that are dirty $f_r$.
+\end{definition}
+
+\noindent We highlight example use cases of this definition using data cleaning methodologies proposed in the liteature.
+
+\vspace{0.5em}
+
+\noindent\textbf{Constraint-based Repair: }
+One model for handling errors in database declaring a set of constraints on a database and 
+iteratively fixing records such that the constraints are satisfied \cite{DBLP:journals/pvldb/YakoutENOI11, DBLP:journals/pvldb/FanLMTY10, khayyat2015bigdansing}.
+
+\vspace{0.5em}
+
+\emph{Detection. } Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
+In the detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
+The set $e_r$ is the set of columns for each record which have a constraint violation. 
+
+\begin{example}
+Consider our EEG data running example, for an example of constraint-based cleaning.
+We can add a constraint that one of the electrical signals cannot be greater than 4V.
+For all records whose value is above 4V, we would select them in the error detection step.
+\end{example}
+
+\vspace{0.5em}
+
+\noindent\textbf{Entity Resolution: }
+Another common data cleaning task is Entity Resolution \cite{gokhale2014corleone, DBLP:journals/pvldb/KopckeTR10, wang2012crowder}.
+A common pattern in Entity Resolution is to split up the operation into two steps: blocking and matching.
+In blocking, attributes that should be the same are coarsely grouped together.
+In matching, those coarse groups are resolved to a set of distinct entities.
+
+\vspace{0.5em}
+
+\emph{Detection. } This is the matching step. Let $S$ be a similarity function that takes two records and returns a value in $[0,1]$ (1 most similar and 0 least similar). For some threshold $t$, $S$ defines a similarity relationship between two records $r$ and $r'$:
+\[
+r \approx r' : S(r,r') \ge t
+\] 
+In the detection step, $R_{dirty}$ is the set of records that have at least one other record in the relation that satisfy $r \approx r'$.
+The set $e_r$ is the attributes of $r$ that have entity resolution problems.
+
+\begin{example}
+An example of an Entity Resolution problem is where the patient's gender is inconsistently represented (e.g., ``Male", ``M", ``Man"). 
+We can define a similarity relationship $(\text{first char =} 'M')$ and select all records that satisfy this condition.
+\end{example}
+
+\subsection{Adaptive Detection}
+Next, we explore how we can handle the case where the detection is learned as we clean data.
+The challenge in formulating this problem is that we not only need to know whether or not a record is dirty, but also how it is dirty (e.g. $e_r$ in the a priori case).
+We try to formulate a technique that generalizes what we did before.
+Instead of assuming that we know which features are corrupted, let us say that we know that there are $u$ classes of data corruption.
+As the analyst cleans data, she tags dirty data with one of the $u$ classes.
+Then, the detection problem reduces to a multiclass classification problem.
+To address this problem, we can use any multiclass classifier, and we use an all-versus-one SVM in our experiments.
+
+When an example $(x,y)$ is cleaned, the repair step also has to provide a label of which of the ${\text{clean}, 1,2,...,u}$ classes it belongs. It is possible that $u$ increases each iteration as more types of dirtiness are discovered. 
+Thus, we after cleaning $k$ records, we have a dataset of $k$ records labeled with $u+1$ classes (including not dirty).
+
+\begin{definition}[Adaptive Case]
+To select $R_{dirty}$, we select the set of records for which $\kappa$ give a positive error classification (i.e., one of the $u$ error classes).
+After each sample of data is cleaned, the classifier $\kappa$ is retrained.
+\end{definition}
+
+As we mentioned before, we favor false positive errors over false negative errors when detecting dirty data.
+Many types of classifiers allow users to tradeoff precision and recall.
+In other words, we can also select any record within some level of confidence of the classification margin.
+For an SVM, we may only classify a point as clean if it is sufficiently far from the margin.
+Or for Logistic Regression, we may do so if its class likelihood is over 80\%.
+
+\vspace{0.5em}
+
+\noindent\textbf{Interactive Data Cleaning with OpenRefine.}
+\begin{example}
+Consider our analyst using an interative tool such as OpenRefine \cite{openrefine} to clean her data. 
+She takes a sample of data from the entire dataset.
+She then uses the tool to determine which records are corrupted and dirty.
+As she marks more records as dirty, the system learns what features determines a dirty record.
+\end{example}

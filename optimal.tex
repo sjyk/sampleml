@@ -1,6 +1,8 @@
-\section{Iterative Model Update}\label{model-update}
-In this section, we describe how we can iteratively update a dirty model based on
-a cleaned batch of data.
+\section{Model Update}\label{model-update}
+Before we discuss sampling, we will first discuss how to update a model.
+We will assume that our detection step in the previous section has selected 
+a set of candidate records $R_{dirty}$ and our sampling step has sampled from this
+set of candidate records.
 We will show that this model update procedure can be interpreted as a Stochastic 
 Gradient Descent (SGD) algorithm, which gives us a theoretical framework to analyze
 convergence and bound the error at each step.
