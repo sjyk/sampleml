@@ -1,4 +1,4 @@
-\section{Approximating the Optimal Distribution}\label{sampling}
+\section{Estimation}\label{sampling}
 This section describes our solution to problem of constructing and maintaining an inexpensive estimate of the optimal sampling distribution.
 Our SGD formulation shows that for any known sampling distribution where the probabilites are all greater than zero, we can converge to the right answer.
 However, lower variance distributions will lead to faster convergence.
@@ -167,4 +167,13 @@ With the above theorem, we finally have an approximation to our sampling weights
 \blacksquare
 \]
 
+\subsection{Error Estimate For Adaptive Case}
+Our model update framework still holds in this setting, however, our error estimation framework requires some modification.
+In our derivation, we showed that our error estimate was a linearization of the conditional expectation of the gradient.
+Instead of conditioning on the features that are corrupted, we condition the error classes.
+So for each error class, we compute a $\Delta_{xu}$ and $\Delta_{yu}$.
+These are the average change in the features given that class and the average change in labels given that class respectively.
+\[
+p_{r,u}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{ux} +  M_y \cdot \Delta_{uy}\|
+\] 
 
