@@ -8,12 +8,13 @@ Gradient Descent (SGD) algorithm, which gives us a theoretical framework to anal
 convergence and bound the error at each step.
 
 \subsection{Update Problem}
-The high level challenge is that we want a model update technique that takes advantage of the entire dirty data and a small sample of cleaned data.
-We want this technique to have some provable guarantees like the conditions under which we converge to the right answer as the entire data is cleaned, bounds on error of intermediate results, and a guarantee that cleaning will improve the error.  
-
-First, let us describe the abstract problem.
-Suppose we have a cleaned batch of data $S_{clean}$ with features and labels $(X_{clean},Y_{clean})$, and a dirty model $\theta^{(d)}$. 
-In the model update problem, we update the dirty model with some function $f(\cdot)$ i.e.,:
+The challenge is that we want a model update technique that takes advantage of the entire dirty data and a small sample of cleaned data.
+However, we want to avoid the Simpson's paradox problem discussed previously.
+Let us describe the abstract problem.
+Suppose we have a random sample of data $S_{dirty} \subseteq R_{dirty}$ from the results of the detection in the previous section.
+We also know the sampling probabilities of each record $p(r)$.
+We apply our repair to the sample and get $S_{clean}$, and then apply our featurization to get features and labels $(X_{clean},Y_{clean})$. 
+In the model update problem, we update the dirty model $\theta^{(d)}$ with some function $f(\cdot)$ i.e.,:
 \[
 \theta^{new} \leftarrow f(X_{clean},Y_{clean},\theta^{(d)})
 \]
@@ -21,15 +22,6 @@ Our goal is that these updates should minimize the error of the updated model an
 \[
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]
-
-There are a couple of challenges that we address in this section.
-As described in our architecture, we do not want to clean data that we have already cleaned or is expected to be clean.
-This leads to our first challenge since the sample $S_{dirty}$ may not be representative of the full data, only $R_{dirty}$. 
-We have to design our update in such a way that it does not bias our result towards the newly cleaned data. 
-The second challenge is that we need to get the sample $S_{dirty}$ from $R_{dirty}$.
-Some records, if cleaned, are more informative than others.
-We show how to incorporate non-uniform sampling into our update and formulate the theoretical optimal sampling problem.
-In the next section, we will discuss how to practically address the optimal sampling problem.
 
 \subsection{The Geometry Of The Problem}
 Let us try to understand the geometry of this problem in one dimension (i.e., the parameter $\theta$ is a scalar vale).
