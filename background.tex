@@ -157,7 +157,7 @@ Increasingly, human effort is seen as unavoidable in data cleaning \cite{park201
 When humans are involved, per record latencies for data repair are orders of magnitude larger than the CPU time needed for model training.
 We can compare recent results in data cleaning to a model training framework like CoCoA implemented on Spark \cite{jaggi2014communication}.
 Per record, BigDansing, a highly optimized automated Spark-based data cleaning system is 15.5x slower\footnote{For CoCoA to reach a precision of 1e-3}.
-Crowd based techiques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100000x slower per record.
+Crowd based techiques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100,000x slower per record.
 
 \noindent Here is an example application of \sys with our running example:
 \begin{example}
@@ -170,12 +170,6 @@ After each batch, the model is updated with the most recent cleaning results $\t
 The model improves after each iteration.
 After $t=4$ of cleaning, the analyst has an accurate model trained with 40 cleaned records but still utilizes the entire dirty data.
 \end{example}
-
-Now that we have introduced the problem, the rest of the paper is organized as follows.
-We describe the framework and walk through the algorithm in Section \ref{arch}.
-Then, in Section \ref{model-update}, we describe how to apply model updates based on a sample of cleaned data with a gradient.
-In Section \ref{optimizations}, we describe an optimal sampling problem which assumes we know the clean data in advance.
-Then, in Section \ref{sampling}, we make the theoretical results of previous section practical using an error estimation procedure.
 
 \iffalse
 
