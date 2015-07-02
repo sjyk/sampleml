@@ -1,79 +1,83 @@
-\section{Problem Setup}
-\subsection{Motivating Example}
-To motivate our solution, we present a running example scenario that is inspired by our experimental dataset.
+\section{Problem Setup}\label{background}
+\subsection{Motivating Scenario}
+We introduce the concepts in this paper with a running example scenario that is inspired by our experimental dataset.
 A medical analyst is interested in understanding the correlation between neurological data (EEG data), patient predispositions, and the onset of seizures.
 
 \begin{example}
 An analyst is given a 15-dimensional feature vector $x \in \mathbb{R}^{15}$ of electrical signals and three binary features indicating risk factors including family history, age, and gender.
 The observation is a label $y\in \{0,1\}$ of whether the patient is having a seizure.
-The analyst trains a linear regression on this data.
+The analyst wants to trains a linear regression model to predict seizures.
+This will allow her to understand how doctors can suggest diagnostics for new patients.
 
 Medical records are often dirty due various problems in digitization and data integration \cite{fortunearticle}.
-After model training, the analyst is informed of inconsistencies in the three binary features representing patient data.
-However, the procedure to determine which patients' data are corrupted requires querying source medical records.
+After model training, the analyst is informed of corruption in the patient data.
+With some preliminary data exploration, she finds out that older patients whose records were manually digitized are more likely to have missing values.
+Occurances of certain types of seizures are mislabled based on a changing medical definition.
+However, the procedure to determine which patients' data are corrupted requires querying source medical records which are in a semi-structured format.
 \end{example}
-
-\noindent\textbf{Cleaning or No Cleaning: } The first choice the analyst needs to make is how she should address the corruption. With existing tools, the analyst has a few options: (1) she can ignore the errors and assume that the inconsistencies do not affect the results, (2) she can discard the data and assume that the errors are not correlated with the other covariates, or (3) she can clean the entire dataset and retrain her model.
-These solutions pose a dichotomy where either the analyst has to face expensive data cleaning, complete retraining, or cope with potentially unreliable analysis.
-
-\vspace{0.5em}
 
 \begin{figure}[ht!]
 \centering
  \includegraphics[width=\columnwidth]{figs/update-arch.png}
- \caption{The two naive solutions to the problem: writing-back the cleaned data, and training only on the sample. Writing back to the cleaned data potentially creates unreliable mixtures of data, and training only on the sample creates an issue of dimensionality and sample size. \label{update-arch1}}
+ \caption{When there are systematic biases, mixing dirty and cleaned data can lead to unreliable models. In this example, a best fit line after cleaning two data points reverses its trend.\label{update-arch1}}
 \end{figure}
 
-\noindent\textbf{Cleaning With a Budget: } The best choice for the analyst is determined by the systematic nature of the errors. The best scenario is if the errors are not systematic (i.e., corruption affects all patients randomly), then she can just discard the corrupted data without any expensive repair options. 
-However, she cannot know this with cleaning the data.
-Let us suppose our analyst wants to quickly evaluate whether the errors are systematic, and we have a budget of cleaning $k \ll N$ records of data.
-The first solution to this problem (Figure \ref{update-arch1}a) is to clean a sample of data, write this sample back, and then retrain the model on the partially cleaned data.
-While this solution is guaranteed to be asympotically consistent (i.e., if we clean all the data we are guaranteed the correct solution), the performance of intermediate models can be very unreliable.
-In statistics, there is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can actually result in reversed trends.
+\noindent\textbf{Cleaning With a Budget: }  The best scenario is if the dirtiness is not systematic (i.e., corruption affects all patients randomly), then she can just discard the corrupted data which would be equivalent to random sampling.
+However, she knows that certain records are more likely to be affected by the corruption and possibly making her linear regression model inaccurate. 
+Let us suppose our analyst wants evaluate whether the problems affect her model, and she wants to do this without having to manually validate every record.
 
-So if mixing dirty and clean data is not the correct solution, the next approach would be to neglect the dirty data altogether (Figure \ref{update-arch1}b).
-SampleClean\cite{wang1999sample} approximates the results to aggregate queries by applying them to a clean sample of data.
-For Machine Learning, we could train a model only on the clean sample of data.
-This solution is also guaranteed to be consistent, and intermediate results are meaningful since they only reflect the clean data.
-However, the problem here is that high-dimensional models are very sensitive to the sample size.
-If our cleaning budget is small, sampling errors will dominate any reductions in data error.
-The consequence is that we will not be able to differentiate between data error and sampling error.
+The first solution to this problem is to clean a sample of data, write this sample back, and then retrain the model on the partially cleaned data.
+However, this solution can give unreliable results since we are mixing dirty and clean data.
+In Figure \ref{update-arch1}, we illustrate the dangers of this approach on a very simple dirty dataset and model.
+Suppose, we are trying to find a best fit line (marked in blue) for two variables. 
+One of the variables is systematically corrupted with a translation in the x-axis, and we illustrate the dirty, clean, and partially cleaned data.
+If we clean two of the data points, we find that the trend of the partially cleaned model is the opposite of what it is supposed to be.
+This is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can result in spurious relationships.
 
-\begin{example}
-\textbf{Write-back.} Our analyst corrects 10 incorrect records and retrains her model on the new dataset.
-
-\noindent \textbf{SampleClean.} Our analyst takes a sample of 10 records at random, corrects the records if incorrect, and trains her model only on the sample.
-
-\end{example}
+The next solution our analyst could try is avoiding using the dirty data altogether.
+She can take a sample of data, apply data cleaning, and train a model only on that sample of data.
+This approach is called SampleClean \cite{wang1999sample} and was proposed to approximate the results to aggregate queries by applying them to a clean sample of data.
+We discussed the problem with this approach in our introduction.
+Machine Learning models are highly senstive to sample size when high dimensional.
+The result is that the models will not be useful (i.e., cannot accurately predict test data) when the sample size is too small.
 
 \vspace{0.5em}
 
 \begin{figure}[t]
 \centering
  \includegraphics[width=0.6\columnwidth]{figs/arch2.png}
- \caption{\sysfull starts with a dirty model and tries to iterative correct the error in batches. In many datasets, this leads to an improved convergence rate over naive uniform sampling. \label{sys-arch2}}
+ \caption{Our goal with \sys is to converge to an accurate model with fewer cleaned records than a naive uniform sampling approach (SampleClean). \label{sys-arch2}}
 \end{figure}
 
-\noindent\textbf{The Need for \sys: } In designing \sys, we try to get the best of both worlds. We want the correctness on intermediate results given SampleClean, but we also want to avoid the strong dependence on sample size. In Figure \ref{sys-arch2}, we illustrate the tradeoff space of sampling and data cleaning.
+\noindent\textbf{The Need for \sys: } In designing \sys, we try to get the best of both worlds. We want the correctness on intermediate results given SampleClean, but we also want to avoid the strong dependence on sample size. 
+In Figure \ref{sys-arch2}, we illustrate the tradeoff space of sampling and data cleaning.
 At two extremes we have no cleaning (just using the dirty data) and full cleaning.
 We argue that the naive approach of uniform sampling is not suited for Machine Learning (SampleClean) because it struggles at small sample sizes.
+Our goal is to optimize our system for faster convergence to an accurate model at these small sizes.
+
+
+\iffalse
+
 We design \sys to make greater progress at these small sample sizes using the dirty model as an initialization.
 Doing so is not trivial since it requires analysis of both the Machine Learning model and the data cleaning operations.
 Data may look unimportant to a dirty model but when cleaned are very important.
 Also, data cleaning and model training can happen at very different time scales, we have to carefully budget our effort to ensure that any optimizations actually address rate-determining steps in the workflow.
 Finally, in this line of work, the tradeoff space is enormous, and we have to carefully pick a design point and tailor our optimizations to this preferred regime.
+\fi
 
 \subsection{Preliminaries}
+\iffalse
 There have been a few proposals of tighter integration of data cleaning and analytics.
 In SampleClean \cite{wang1999sample}, the authors formalize the analytics in terms of a SQL aggregate query.
 Bergman et al. explore the problem of query-oriented data cleaning \cite{bergman2015query}, where a conjunctive query (CQ) guides which records are to be cleaned.
 SQL and CQ formalize a declarative problem specification in database research.
-
-In this paper, when we refer to Machine Learning, we are refering to a class of problems called Empirical Risk Minimization (ERM).
 In a loose analogy to the declative queries in databases, loss functions in serve the same purpose in ERM.
+\fi
+
+In this paper, when we refer to Machine Learning, we are refering to a class of problems called Empirical Risk Minimization (ERM) (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
 In ERM, the goal is to learn a set of model \emph{parameters} $\theta$ from training examples.
 We start with a set of training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$
-on which we minimize an loss function $\phi$ (a penalty for getting the prediction wrong) at each point parametrized that is parametrized by $\theta$.
+on which we minimize a loss function $\phi$ (a penalty for getting the prediction wrong) at each point parametrized by $\theta$.
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i}^T\theta,y_{i})
 \]
@@ -82,9 +86,7 @@ For example, in a linear regression $\phi$ is:
 \phi(x_{i}^T\theta,y_{i}) = \|\theta^Tx_{i} - y_i \|_2^2
 \]
 Typically, a \emph{regularization} term $r(\theta)$ is added to this problem.
-The regularization term $r(\theta)$ is traditionally what is used to increase the robustness of the model.
-$r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid overfitting to noise in the
-training examples.
+$r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid overfitting to noise in the training examples.
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i}^T\theta,y_{i}) + r(\theta)
 \]
@@ -96,37 +98,13 @@ By applying the L1 regularization term, if one of the features is particularly n
 The loss function specifies a problem independent of the optimization used to calculate the optimal parameter $\theta^{*}$.
 
 A very important class of problems is when $\phi$ and $r$ are convex in $\theta$.
-Convex problems are amenable to a variety of different optimization methodologies
+For example, convex problems are amenable to a variety of different optimization methodologies
 and have strong theoretical guarantees on convergence rates.
 This class of problems includes all generalized linear models (including linear and logistic regression), and all variants of support vector machines.
-In this work, we focus on this class of problems as it is very broad yet we can still analyze the results.
+In this work, we focus on this class of problems as it is very broad yet we can prove guarantees about the results.
 
-\subsubsection{Systematic Biases}
-We explore methodologies for training models when data is systematically incorrect leading to a biased model.
-In our running example, systematic errors could include:
-\begin{example}\label{exm-1}
-Older patients whose records were manually digitized are more likely to have missing values.
-\end{example}
-\begin{example}\label{exm-2}
-Occurances of certain types of seizures are mislabled with more false negatives than false positives.
-\end{example}
-If we ignore these errors, our model may have a few different problems. 
-First, consider Example \ref{exm-1}, if older patients are more likely to have record errors the model's performance of predicting the occurrance of seizures will be unreliable for that subpopulation. 
-A robust model may ``overfit" to the uncorrupted data completely ignoring this corrupted population.
-Next, consider Example \ref{exm-2}, mislabled data is actually a very subtle error.
-The labels are a proxy for predicting a real-world phenomenon.
-If we train a model with respect to the incorrect data, while we might have achieve a good out-of-sample accuracy on the incorrect data, but the classifications are incorrect in a real world sense.
-
-The underlying problem here is that the model is trained on an incorrect data distribution.
-There is a latent data distribution that represents the real world.
-When these two distributions are not aligned (i.e., the training data is not an i.i.d sample from the real world), then there is no guarantee that the model will reliably generalize.
-Consider example \ref{exm-1}, suppose those patients have missing values in a certain attribute.
-If those patients are more likely to get seizures, the model will learn a correlation between the missing data and increased prevalance of seizures.
-While this missing data has some predictive value, these incorrect inferences can lead to analysis pipelines that are brittle.
-Imagine if a batch new patients also lacked the same attribute, they could be incorrectly classified due to this spurious correlation.
-
-Essentially, this problem is of training on one distribution and testing on another.
-To characterize this problem there are two metrics that we look at:
+\subsubsection{Types of Errors}
+When we use the term error in a model, we precisely refer to the following metrics:
 
 \vspace{0.5em}
 
@@ -136,28 +114,68 @@ To characterize this problem there are two metrics that we look at:
 
 \noindent\textbf{Testing Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Let $T(\theta)$ be the out-of-sample testing error when the dirty model is applied to the clean data, and $T(\theta^*)$ be the test error when the clean model is applied to the clean data. The testing error is defined as $T(\theta^*) - T(\theta)$
 
+\vspace{0.5em}
+
+The \emph{error} in the model and in testing is caused by two underlying problems:
+
+\vspace{0.5em}
+
+\noindent\textbf{Data Error. } Error caused by dirtiness in the base data.
+
+\vspace{0.5em}
+
+\noindent\textbf{Sampling Error. } Error introduced by sampling the data i.e., the difference between a model trained on $p\%$ of the data and $100\%$ of the data.
+
+\vspace{0.5em}
+
+In this paper, when we use the term \emph{error}, we are refering to \textbf{model error}.
+We will be explicit when we are using the word error to describe problems regarding dirtiness in the underlying data.
+
+\subsection{\sys Problem}
+Now, we introduce the problem that \sys address.
 \begin{problem}[ActiveClean Problem]\label{activeclean}\sloppy
 Let $R$ be a dirty relation and each row $r \in R$ is 
 turned into a feature vector and label tuple $F(r) \mapsto (x,y)$.
 We are given a convex regularized loss model parametrized
 by $\theta$ trained on the set of features and labels $\{(x,y)\}$.
-The user specifies two data cleaning components: (1) error detection
-which selects a set of candidate dirty data $R_{dirty}$, and (2) error 
-repair which cleans a record $C(r) \mapsto r_{clean}$.
+The user specifies a data repair step which cleans a record 
+$C(r) \mapsto r_{clean}$.
+Optionally, the user can provide a predicate that selects 
+a set of candidate dirty data $R_{dirty}$.
 With a budget of applying cleaning i.e., $C(\cdot)$, only k times, we return an estimate $\hat{\theta}$ of the clean model.
 \end{problem}
 
-\noindent Here is an example use case of \sys:
+The \sys problem is essentially how can we use the information from a statistical model to inform data cleaning on samples, and how we can use the information from clean samples to udpate a statistical model.
+The tight feedback loop between model training and data cleaning poses a new algorithmic challenge. 
+Data cleaning and model training happen at very different time scales, we have to carefully budget our effort to ensure that any optimizations actually address rate-determining steps in the workflow.
+
+This framework is optimized around problems with expensive data cleaning.
+It is well known that most constraint-based repair problems are NP-Hard.
+As the complexity of dirtiness increases, so does the amount of computation needed to resolve them.
+The consequence is that automated repair is either not scalable or relies on greedy repairs that can be unreliable.
+Increasingly, human effort is seen as unavoidable in data cleaning \cite{park2014crowdfill, wang2012crowder, gokhale2014corleone, wang1999sample}.
+When humans are involved, per record latencies for data repair are orders of magnitude larger than the CPU time needed for model training.
+We can compare recent results in data cleaning to a model training framework like CoCoA implemented on Spark \cite{jaggi2014communication}.
+Per record, BigDansing, a highly optimized automated Spark-based data cleaning system is 15.5x slower\footnote{For CoCoA to reach a precision of 1e-3}.
+Crowd based techiques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100000x slower per record.
+
+\noindent Here is an example application of \sys with our running example:
 \begin{example}
-Let us suppose that the EEG dataset is corrupted with the systematic errors described in Example \ref{exm-1}.
 The analyst first trains her linear model on the dirty data ignoring the effects of the errors returning a model $\theta^{(d)}$.
-Then, she provides ``error detection" logic, selecting a set of possibly corrupted records $R_{dirty}$ by listing all records with missing values.
 She sets a desired cleaning batch size of $b=10$ and number of iterations $t=4$.
-She initializes \sys with $\theta^{(d)}$ and inspects samples of 10 records from $R_{dirty}$.
-She manually corrects those records by the medical record source data.
-After each batch, the model is updated with the most recent result $\theta^{(t)}$.
-After $t=4$ of cleaning, the analyst can evaluate the difference $\theta^{(d)}$ and the current best model $\theta^{(4)}$ to see if the data error causes a systematic bias.
+She initializes \sys with $\theta^{(d)}$.
+\sys samples an intial batch of 10 records and 
+She manually cleans those records by the medical record source data.
+After each batch, the model is updated with the most recent cleaning results $\theta^{(t)}$.
+The model improves after each iteration.
+After $t=4$ of cleaning, the analyst has an accurate model trained with 40 cleaned records but still utilizes the entire dirty data.
 \end{example}
+
+Now that we have introduced the problem, the rest of the paper is organized as follows.
+We describe the framework and walk through the algorithm in Section \ref{arch}.
+Then, in Section \ref{model-update}, we describe how to apply model updates based on a sample of cleaned data with a gradient.
+In Section \ref{optimizations}, we describe an optimal sampling problem which assumes we know the clean data in advance.
+Then, in Section \ref{sampling}, we make the theoretical results of previous section practical using an error estimation procedure.
 
 \iffalse
 

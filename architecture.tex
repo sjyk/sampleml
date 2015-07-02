@@ -174,25 +174,6 @@ As she marks more records as dirty, the system learns what features determines a
 This classifier can be used to guide cleaning in future batches of data.
 \end{example}
 
-\subsection{Designing for Expensive Repair}
-This framework is designed around data cleaning operations where the expensive step is error repair.
-It is well known that most constraint-based error repair problems are NP-Hard.
-As the complexity of errors increases, so does the amount of computation needed to resolve them.
-The consequence is that automated repair is either not scalable or relies on greedy repairs that can be unreliable.
-Increasingly, human effort is seen as unavoidable in data cleaning \cite{park2014crowdfill, wang2012crowder, gokhale2014corleone, wang1999sample} either due to the cost of formulating constraints, scripting fixes for all possible errors, or in actually cleaning the data.
-
-When humans are involved, per record latencies for data repair are orders of magnitude larger than the CPU time needed for numerical operations.
-In CrowdFill \cite{park2014crowdfill}, processing 20 rows of data required 10 minutes 54 secs.
-Likewise, in CrowdER \cite{wang2012crowder}, the median crowd task finished in 58secs.
-These latencies severly limit the scale of these systems. 
-Even in highly optimized distributed automated systems such as BigDansing, data cleaning required 7700 seconds for 3M rows.
-Data cleaning is fundementally slow in comparison to the CPU time needed for numerical vector operations.
-In contrast, a model training framework like CoCoA (implemented on Spark like Big Dansing), requires on the order of minutes to train a 3M row model \cite{jaggi2014communication}.
-
-Based on current data cleaning trends, we argue that model training will be orders of magnitude faster than data repair.
-We aggressively optimize our system for this design point, where we clean a very small fraction of data.
-This leads to new problems and opportunities in non-uniform sampling, partitioning, and integrated model training-cleaning.
-
 \iffalse
 \subsection{Optimizations}
 There are three aspects of \sys, that allow us to achieve this design point: error partitioning, gradient-based model update (Section \ref{model-update}), estimate-driven sampling (Section \ref{sampling}).

@@ -41,7 +41,7 @@ In this paper, we propose \sys, an anytime framework for training Machine Learni
 \sys is initialized with a dirty model and users specify an error repair method.
 Our system will provide a framework to return an accurate model given a repair budget.
 \sys selects a sample of data, applies the repairs, then updates the model.
-After model update, the repairs are fed back into the sampling stage to adaptively select the next sample of data.
+After model update, the repairs are fed back to adaptively select the next sample of data.
 We can optionally integrate user specified error detection rules into the framework to further narrow our sampling.
 \sys supports a broad class of models which includes linear regression, logistic regression, generalized linear models, and support vector machines.
 
@@ -56,8 +56,6 @@ In summary, our contributions are
 \item \sys relies on two key optimizations, guided error sampling and error partitioning, that result in substantial empirical gains in accuracy in comparison to alternative approaches such as Active Learning.
 \item We evaluate \sysfull on real and synthetic datasets to show that non-uniform sampling achieves improved performance in comparison to uniform sampling, and Active Learning.
 \end{itemize}
-
-
 
 
 
