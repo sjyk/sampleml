@@ -134,6 +134,19 @@
 \maketitle
 
 \begin{abstract}
+There have been numerous proposals to extend data management systems and frameworks with support for machine learning. % so that query execution uses, or trains predictive models.
+A perennial challange in these systems is the presence of dirty data -- in the form of missing, duplicate, incorrect or inconsistent values -- which can bias the learning algorithms, leading to incorrect or error-prone predictions.
+Although this can be ameliorated by cleaning the input dataset using existing data cleaning techniques, the cost of doing so (e.g., manually finding and cleaning all dirtiness) is practically and economically infeasible.  
+In addition, existing learning algorithms are not suited for training on partially cleaned datasets, which can lead to wholly incorrect models.
+In response, we have designed and implemented the ActiveClean system that integrates incremental data cleaning with machine learning algorithms.  
+ActiveClean iteratively updates a machine learning model as data records are individually (or in batches) updated.  
+We additionally study numerous database and ML-oriented optimizations to speed the end-to-end process.
+Our evaluation on four real-world datasets suggest that our methodology can learn more accurate models by cleaning significantly less data records than existing alternatives such as uniform sampling and active learning, 
+thus bridging the gap between the reality of dirty data sources and final data products such as predictive models.
+\end{abstract}
+
+\if{0}
+\begin{abstract}
 Databases are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
 Increasingly, modern data analysis pipelines involve Machine Learning for predictive models which can be sensitive to dirty data.
 Dirty data is often expensive to repair, and naive sampling solutions are not suited for training high dimensional models.
@@ -141,6 +154,7 @@ In this paper, we propose \sysfull, an anytime framework for training Machine Le
 Our framework updates a model iteratively as small samples of data are cleaned, and includes numerous optimizations such as importance weighting and dirty data detection.
 We evaluate \sys on 4 real datasets and find that our methodology can return more accurate models for a smaller cost than alternatives such as uniform sampling and active learning.
 \end{abstract}
+\fi
 
 \setcounter{page}{1}
 
