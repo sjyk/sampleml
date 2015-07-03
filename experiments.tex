@@ -51,24 +51,24 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 \vspace{0.5em}
 
-\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } There have been recent proposals of integrating Active Learning with stochastic optimization. Active Learning has been widely applied in the data cleaning literature \cite{gokhale2014corleone}, but never integrated with model training. We acknowledge the work in the Machine Learning literature and formulate an Active Learning that uses a prioritization fuction agnostic of the dirty data (no error impact estimates and partitioning). We clean in batches of 25 records and we use this parameter setting for both AL and \sys.
+\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } There have been recent proposals of integrating Active Learning with stochastic optimization. Active Learning has been widely applied in the data cleaning literature \cite{gokhale2014corleone}, but never integrated with model training. We acknowledge the work in the Machine Learning literature and formulate an Active Learning that uses a prioritization fuction agnostic of the dirty data (no estimation and detection). We clean in batches of 25 records and we use this parameter setting for both AL and \sys.
 
 \vspace{0.5em}
 
-\noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, we importance sample points by their clean gradient. This represents the theoretical best that our algorithm could hope to achieve given perfect error estimation.
+\noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, we importance sample points by their clean gradient. This represents the theoretical best that our algorithm could hope to achieve given perfect estimation.
 
 \subsection{Effect of Cleaning}
 Before we evaluate \sys, we first evaluate the benefits of cleaning on 2 of our example datasets (EEG and Adult).
-We first explore this problem without sampling to understand which types of errors are amenable to data cleaning and which are better suited for robust statistical techniques.
+We first explore this problem without sampling to understand which types of data corruption are amenable to data cleaning and which are better suited for robust statistical techniques.
 We compare 4 schemes: (1) full data cleaning, (2) robust logistic regression, (3) discarding the dirty data, and (4) baseline of no cleaning. We corrupted 5\% of the training examples in each dataset in two different ways:
 
 \vspace{0.5em}
 
-\noindent\textbf{Random errors: } We simulated high-magnitude random outliers. We select 5\% of the examples and features uniformly at random and replace a feature with 3 times the highest feature value.
+\noindent\textbf{Random Corruption: } We simulated high-magnitude random outliers. We select 5\% of the examples and features uniformly at random and replace a feature with 3 times the highest feature value.
 
 \vspace{0.5em}
 
-\noindent\textbf{Systematic errors: } We simulated innocuous looking (but still incorrect) systematic errors. We trained the model on the clean data, find the three most important feature (highest weighted). We sort examples by each these features and corrupt the top of examples with the mean value for that feature. 
+\noindent\textbf{Systematic Corruption: } We simulated innocuous looking (but still incorrect) systematic corruption. We trained the model on the clean data, find the three most important feature (highest weighted). We sort examples by each these features and corrupt the top of examples with the mean value for that feature. 
 At the end, we have corrupted 5\% of the examples.
 It is important to note the some examples can have multiple corrupted features.
 
@@ -83,14 +83,14 @@ In Figure \ref{sys-rand}, we present the results of this experiment.
 We plot the test accuracy for models trained on both types of data with the different techniques, since it is a binary classification task with balanced class distributions we cut the plots at 50\% (random accuracy).
 As we argued in this paper, the robust method performs well on the random high-magnitude outliers, however, falters on the systematic corruption.
 In the random setting, discarding dirty data also performs well.
-However, when errors are systematic data cleaning is the most reliable option across datasets.
-The problem is that without cleaning we do not know if data error is random or systematic.
+However, with systematic corruption, data cleaning is the most reliable option across datasets.
+The problem is that without cleaning we do not know if the corruption is random or systematic.
 While data cleaning requires more effort, it provides benefits in both settings.
-In the remaining experiments, unless otherwise noted, we use the systematic errors.
+In the remaining experiments, unless otherwise noted, we use the systematic corruption.
 
 \subsection{Budgeted Cleaning}
 The next set of experiments evaluate different approaches to cleaning a sample of data.
-In this set of experiments, we use the \emph{a priori} case for error detection.
+In this set of experiments, we use the \emph{a priori} case for detection.
 We assume that we know all of the corrupted records in advance but do not know how to repair them. 
 
 \subsubsection{Alternative Algorithms}
@@ -160,7 +160,7 @@ However, as the bias increases, the fact that Active Learning prioritizes w.r.t 
 Both Active Learning and \sys outperform SampleClean in our experiments.
 In our next experiment (Figure \ref{bias}), we try to understand how much of this performance 
 is due to the initialization (i.e., SampleClean trains a model from ``scratch").
-We vary the systematic error rate and plot the number of records cleaned to achieve 1\% relative error for SampleClean and \sys.
+We vary the systematic corruption rate and plot the number of records cleaned to achieve 1\% relative error for SampleClean and \sys.
 SampleClean does not use the dirty data and thus is not dependent on this rate.
 We find that SampleClean outperforms \sys only when corruptions are very severe (45\% in Adult and nearly 60\% in EEG). 
 
@@ -173,7 +173,7 @@ We find that SampleClean outperforms \sys only when corruptions are very severe 
 
 \subsection{Adaptive Detection}
 In this experiment, we explore how the results of the previous experiment change when we use an adaptive detector rather than the a priori detector.
-In our systematic errors, we corrupted 3 of the most informative features at random, thus we group these errors into 3 classes.
+In our systematic corruption, we corrupted 3 of the most informative features at random, thus we group these problems into 3 classes.
 We use a all-versus-one SVM to learn the categorization.
 
 \subsubsection{3a. Basic Performance}
@@ -188,23 +188,23 @@ We find an interesting tradeoff where initially \sys is comparable to Active Lea
 \end{figure}
 
 \subsubsection{Classifiable Errors}
-The adaptive case depends on being able to predict errors
+The adaptive case depends on being able to predict corrupted records.
 For example, random corruption that look like other data may be hard to learn.
-As errors become more random, the classifier becomes increasingly erroneous.
-We run an experiment where we start with the systematic errors described earlier.
-With probability $p$, we increasingly make these errors more random.
+As corruption becomes more random, the classifier becomes increasingly erroneous.
+We run an experiment where we start with the systematic corruption described earlier.
+With probability $p$, we increasingly make these problems more random.
 We compare these results to AC-D where we do not have a detector at all.
 In Figure \ref{tradeoffs2}, we plot the relative error reduction using a classifier.
-We find that when errors are about 40\% random then we reach a break even point.
+We find that when the corruption is about 40\% random then we reach a break even point.
 
 \begin{figure}[ht!]
 \vspace{-1em}
 \centering
  \includegraphics[width=0.5\columnwidth]{exp/exp5a.pdf}
- \caption{Errors that are less random are easier to classify, and lead to more significant reductions in relative model error. \label{tradeoffs2}}
+ \caption{Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. \label{tradeoffs2}}
 \end{figure}
 
-\subsection{Error Estimation}\label{est}
+\subsection{Estimation}\label{est}
 In the next experiment, we evaluate our estimation technique.
 We explore how this technique performs compared to a few alternative estimation techniques: (1) ``linear regression" where we train a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" change where we do not use the detection to inform how to apply the estimate, (3) ``average feature change" where we do not linearize but use detection, and (4) our taylor series linear approximation.
 Using the EEG dataset, we measure the relative estimation error (relative L2 error with the true gradient) for different amounts of data cleaned.
@@ -235,11 +235,11 @@ We devise an ``adaptive detection" \sys scenario for this example.
 The MNIST dataset consists of 64x64 grayscale images.
 We run two experiments, in which we have two types of corruptions: (1) 5x5 block removal where take a random 5x5 block from the image and set its pixel values to 0, and (2) Fuzzy where we run a 4x4 moving average over the entire image.
 We applied these corruptions to a random 5\% of the images.
-We constructed these features to mimic the random vs. systematic errors that we studied before.
-The 5x5 block removal behaves much more like a systematic error. 
+We constructed these features to mimic the random vs. systematic corruption that we studied before.
+The 5x5 block removal behaves much more like a systematic corruption. 
 Typical image processing features are based on edges and corrupting edges leads to ambiguities.
-On the other hand, the making the image fuzzy is more like a random error.
-We use a 9 class classifier (one for each digit) to detect the error.
+On the other hand, the making the image fuzzy is more like a random corruption.
+We use a 9 class classifier (one for each digit) to detect the corruption.
 
 
 \iffalse
@@ -255,10 +255,10 @@ We use a 9 class classifier (one for each digit) to detect the error.
 In Figure \ref{mnist}, we present the results.
 As in our earlier experiments, we find that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
 This experiment highlights a few other interesting points.
-First, SampleClean converges at the same rate independent of the data error.
+First, SampleClean converges at the same rate independent of the data corruption.
 This is because SampleClean does not depend on any quantity derived from the dirty data.
 Next, the gap between the theoretical AC+O and what we are able to achieve is much larger in this dataset.
-We speculate that this is because classifying errors in a 784 dimensional space is much harder than in our previous experiments, and this in turn leads to reduced accuracy in impact estimation.
+We speculate that this is because classifying corruption in a 784 dimensional space is much harder than in our previous experiments, and this in turn leads to reduced accuracy in impact estimation.
 
 \begin{figure}[ht]
 \centering
