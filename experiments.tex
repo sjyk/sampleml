@@ -5,8 +5,7 @@ Next, we explore different prioritization and model update schemes for data clea
 Finally, we evaluate \sys end-to-end in a number of real-world data cleaning scenarios.
 
 \subsection{Experimental Setup and Notation}
-Every experiment has two steps, data cleaning and model evaluation.
-We evaluate on two metrics:
+Our main metric for evaluation is a relative measure of trained model with \sys (or an alternative technique) and the model if all of the data is cleaned.
 
 \vspace{0.5em}
 
@@ -17,11 +16,11 @@ We evaluate on two metrics:
 \noindent\textbf{Testing Accuracy. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Let $T(\theta)$ be the out-of-sample testing accuracy when the dirty model is applied to the clean data, and $T(\theta^*)$ be the testing accuracy when the clean model is applied to the clean data. The testing error is defined as $T(\theta^*) - T(\theta)$
 
 \subsubsection{Scenarios}
-\noindent We apply these models in the following scenarios:
+\noindent We apply \sys to the following scenarios:
 
-\vspace{0.5em}
+%\vspace{0.5em}
 
-\noindent\textbf{Housing: } In this dataset, our task is to predict housing prices from 13 numerical and categorical covariates. There are 550 data points in this dataset. The model is a Logistic Regression classifier which predicts if the house price is greater than \$500k.
+%\noindent\textbf{Housing: } In this dataset, our task is to predict housing prices from 13 numerical and categorical covariates. There are 550 data points in this dataset. The model is a Logistic Regression classifier which predicts if the house price is greater than \$500k.
 
 \vspace{0.5em}
 
@@ -40,11 +39,11 @@ We evaluate on two metrics:
 
 \vspace{0.5em}
 
-\noindent\textbf{Robust Logistic Regression \cite{feng2014robust}. } Feng et al. proposed a variant of logistic regression that is robust to outliers. 
+\noindent\textbf{Robust Logistic Regression \cite{feng2014robust}. } Feng et al. proposed a variant of logistic regression that is robust to outliers. We chose this algorithm because it is a robust extension of the convex regularized loss model, leading to a better apples-to-apples comparison between the techniques.  
 
 \vspace{0.5em}
 
-\noindent\textbf{Discarding Dirty Data \cite{li2014improved}. } A methodology that has shown suprising empirical success in secure Machine Learning is rejection-on-negative-impact. In this model, data that negatively affects the loss is discarded.
+\noindent\textbf{Discarding Dirty Data. } As a baseline we explore model accuracy when dirty data is discarded.
 
 \vspace{0.5em}
 
@@ -52,14 +51,14 @@ We evaluate on two metrics:
 
 \vspace{0.5em}
 
-\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } There have been recent proposals of integrating Active Learning with stochastic optimization. Active Learning has been widely applied in the data cleaning literature \cite{gokhale2014corleone}, but never integrated with model training. We acknowledge the work in the Machine Learning literature and formulate an Active Learning that uses a prioritization fuction agnostic of the dirty data (no error impact estimates and partitioning). 
+\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } There have been recent proposals of integrating Active Learning with stochastic optimization. Active Learning has been widely applied in the data cleaning literature \cite{gokhale2014corleone}, but never integrated with model training. We acknowledge the work in the Machine Learning literature and formulate an Active Learning that uses a prioritization fuction agnostic of the dirty data (no error impact estimates and partitioning). We clean in batches of 25 records and we use this parameter setting for both AL and \sys.
 
 \vspace{0.5em}
 
 \noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, we importance sample points by their clean gradient. This represents the theoretical best that our algorithm could hope to achieve given perfect error estimation.
 
-\subsection{Experiment 1. Effect of Cleaning}
-Before we evaluate \sys, we first evaluate the benefits of cleaning on our 4 example datasets.
+\subsection{Effect of Cleaning}
+Before we evaluate \sys, we first evaluate the benefits of cleaning on 2 of our example datasets (EEG and Adult).
 We first explore this problem without sampling to understand which types of errors are amenable to data cleaning and which are better suited for robust statistical techniques.
 We compare 4 schemes: (1) full data cleaning, (2) robust logistic regression, (3) discarding the dirty data, and (4) baseline of no cleaning. We corrupted 5\% of the training examples in each dataset in two different ways:
 
@@ -75,57 +74,72 @@ It is important to note the some examples can have multiple corrupted features.
 
 \begin{figure}[ht!]
 \centering
- \includegraphics[width=\columnwidth]{exp/exp2.pdf}
- \includegraphics[width=\columnwidth]{exp/exp1.pdf}
- \caption{(a) Robust techniques work best when corrupted data are random and look atypical. (b)Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}
+ \includegraphics[width=0.49\columnwidth]{exp/exp2.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp1.pdf}
+ \caption{(a) Robust techniques and discarding data work when corrupted data are random and look atypical. (b) Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}
 \end{figure}
 
 In Figure \ref{sys-rand}, we present the results of this experiment.
+We plot the test accuracy for models trained on both types of data with the different techniques, since it is a binary classification task with balanced class distributions we cut the plots at 50\% (random accuracy).
 As we argued in this paper, the robust method performs well on the random high-magnitude outliers, however, falters on the systematic corruption.
-Interestingly enough, in the random setting, discarding dirty data also performs well.
+In the random setting, discarding dirty data also performs well.
 However, when errors are systematic data cleaning is the most reliable option across datasets.
-In the MNIST dataset, we see a particularly significant effect of systematic corruption
-where the test accuracy drops from nearly 98\% to 78\%.
-Multiclass classification is particularly sensitive to systematic corruption when the corruptions can make classes ambiguous (e.g. reconizing a ``4" and a ``9").
-The problem is that a priori, we do not know if data error is random or systematic.
+The problem is that without cleaning we do not know if data error is random or systematic.
 While data cleaning requires more effort, it provides benefits in both settings.
 In the remaining experiments, unless otherwise noted, we use the systematic errors.
 
-\subsection{Experiment 2. Budgeted Cleaning}
+\subsection{Budgeted Cleaning}
 The next set of experiments evaluate different approaches to cleaning a sample of data.
+In this set of experiments, we use the \emph{a priori} case for error detection.
+We assume that we know all of the corrupted records in advance but do not know how to repair them. 
 
-\subsubsection{2a. Alternative Algorithms}
-In our first prioritization experiment, we evaluate the samples-to-error tradeoff between three alternative algorithms: \sys, SampleClean, and Active Learning.
-In Figure \ref{prio-perf}, we present our results on Housing, Adult, and EEG. 
-We find that \sys gives its largest benefits for small sample sizes (up-to 12x).
+\subsubsection{Alternative Algorithms}
+In our first prioritization experiment, we evaluate the samples-to-error tradeoff between three alternative algorithms: \sys (AC), SampleClean, Active Learning, and \sys+Oracle (AC+O).
+In Figure \ref{prio-perf}, we present our results on Adult and EEG. 
+We find that \sys gives its largest benefits for small sample sizes (up-to 12x more accurate than SampleClean).
 \sys makes significant progress because of its intelligent initialization, iterative updates, and partitioning.
 For example, the EEG dataset is the hardest classification task.
 SampleClean has difficulty on this dataset since it takes a uniform sample of data (only 5\% of which are corrupted on average) and tries to train a model using only this data.
 \sys and Active Learning leverage the initialization from the dirty data to get an improved result. 
-However, \sys's impact estimates and error partitioning allow us to beat Active Learning on all three of the datasets.
-
-\begin{figure*}[t]
-\centering
- \includegraphics[scale=0.15]{exp/exp3a.pdf}
- \includegraphics[scale=0.15]{exp/exp3b.pdf}
-  \includegraphics[scale=0.15]{exp/exp3c.pdf}
- \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. \label{prio-perf}}
-\end{figure*}
-
-\subsubsection{2b. Source of Improvements}
-Throughout the paper, we proposed numerous optimizations.
-Now, we try to understand the source of our improvements w.r.t Active Learning and SampleClean.
-We pick a single point on the curves shown in Figure \ref{prio-perf} that corresponds to 10\% of the data cleaned (55 for Housing, 4555 for Adult, 150 for EEG) and compare the performance of \sys with and without various optimizations.
-We denote \sys without partitioning as (AC-P) and \sys without partitioning and importance sampling as (AC-P-I).
-In Figure \ref{opts}, we plot the relative error of the alternatives w.r.t to the optimized version of \sys.
-Partitioning significantly improves our results in all of the datasets, and accounts for a substantial part of the improvements over Active Learning.
-However, when we remove partitioning we still see some improvements since our importance sampling relies on error impact estimates that judge how valuable a point is to the clean model rather than the dirty model in Active Learning.
-Not surprisingly, when we remove both these optimizations, \sys is comparable or slightly worse than Active Learning.
+However, \sys's estimates and detection allow us to beat Active Learning on all three of the datasets.
+\sys also is relatively close in performance to the oracular version (theoretical optimum).
 
 \begin{figure}[ht!]
 \centering
- \includegraphics[width=\columnwidth]{exp/exp8.png}
- \caption{We clean 10\% of the data with the alternative algorithms and also include variants of \sys with optimization removed. We plot the relative error w.r.t the optimized \sys. Both partitioning and importance sampling lead to significant reductions in error. \label{opts}}
+ %\includegraphics[scale=0.15]{exp/exp3a.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp3b.pdf}
+  \includegraphics[width=0.49\columnwidth]{exp/exp3c.pdf}
+ \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. \label{prio-perf}}
+\end{figure}
+
+\subsubsection{Testing Accuracy}
+In the previous experiment, we studied the relative model error which measures the training loss. 
+However, to an end user the metric that matters is test accuracy.
+In the next experiment, we try to understand how reductions in model error correlate to improvements in test error.
+In Figure \ref{prio-tperf}, we present the results for the two datasets: Adult and EEG.
+We find that in both Adult and EEG, \sys converges to clean test accuracy faster than the alternatives.
+
+\begin{figure}[ht!]
+\centering
+ \includegraphics[width=0.49\columnwidth]{exp/exp3bb.pdf}
+  \includegraphics[width=0.49\columnwidth]{exp/exp3cc.pdf}
+ \caption{\sys converges with a smaller sample size to the maximum test accuracy in comparison to Active Learning and SampleClean. The reductions in model error correlate well with increased test accuracy in (a). Due to the hardness of the task in (b), we small gains in terms of test accuracy. \label{prio-tperf}}
+\end{figure}
+
+\subsubsection{Source of Improvements}
+Now, we try to understand the source of our improvements w.r.t Active Learning and SampleClean.
+We pick a single point on the curves shown in Figure \ref{prio-perf} that corresponds to 500 records cleaned and compare the performance of \sys with and without various optimizations.
+We denote \sys without detection as (AC-D) (that is at each iteration we sample from the entire dirty data) and \sys without detection and importance sampling as (AC-D-I).
+In Figure \ref{opts}, we plot the relative error of the alternatives and \sys with and without the optimizations.
+Detection significantly improves our results in all of the datasets, and accounts for a substantial part of the improvements over Active Learning.
+However, when we remove detection we still see some improvements since our importance sampling relies on error impact estimates.
+Not surprisingly, when we remove both these optimizations, \sys is slightly worse (but still comparable to) than Active Learning.
+
+\begin{figure}[ht!]
+\centering
+ \includegraphics[width=0.49\columnwidth]{exp/exp8a.png}
+ \includegraphics[width=0.49\columnwidth]{exp/exp8b.png}
+ \caption{We clean 500 records and plot the relative error of \sys with and without optimizations. -D denotes no detection, and -D-I denotes no detection and no importance sampling. Both optimization significantly help \sys outperform SampleClean and Active Learning. \label{opts}}
 \end{figure}
 
 \iffalse
@@ -142,102 +156,72 @@ However, as the bias increases, the fact that Active Learning prioritizes w.r.t 
 \end{figure}
 \fi
 
-\subsubsection{2c. Error Dependence}
+\subsubsection{Error Dependence}
 Both Active Learning and \sys outperform SampleClean in our experiments.
-In our next experiment, we try to understand how much of this performance 
+In our next experiment (Figure \ref{bias}), we try to understand how much of this performance 
 is due to the initialization (i.e., SampleClean trains a model from ``scratch").
-We vary the rate of random error, thus making the initialization more and more arbitrary, 
-and measure the relative performance between SampleClean and \sys.
-Since SampleClean only acts on a clean sample of data, it is robust to data error.
-So at some point, the errors in the data are so significant that training a model on a small but clean sample of data is more efficient than iteratively updating the dirty model.
-
-In Figure \ref{bias}, we present the results from this experiment.
-We corrupt entries from the data matrix of the Adult dataset at random.
-Then, we measure the number of records we need to clean before we have a relative error of 0.1\%.
-On the x-axis we plot the feature corruption percentage that is the number of corrupted features divded by the number of training examples.
-We find that at about 360\% corruption rate, SampleClean is more accurate than \sys.
-We optimized \sys for sparse and relatively small errors but it still shows reasonable performance even in this highly erroneous setting. 
-At higher corruption rates, \sys requires more than one epoch to converge to an accurate answer which requires cleaning almost all of the data.
+We vary the systematic error rate and plot the number of records cleaned to achieve 1\% relative error for SampleClean and \sys.
+SampleClean does not use the dirty data and thus is not dependent on this rate.
+We find that SampleClean outperforms \sys only when corruptions are very severe (45\% in Adult and nearly 60\% in EEG). 
 
 \begin{figure}[ht!]
 \centering
- \includegraphics[width=\columnwidth]{exp/exp9.pdf}
- \caption{We corrupt an increasing number of entries in the data matrix. The feature corruption percentage that is the number of corrupted features divded by the number of training examples. At about 360\% corrupted, \sys is no longer more efficient than SampleClean. \label{bias}}
+ \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
+  \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}
+ \caption{We corrupt an increasing number of entries in the data matrix. \sys performs well until the corruption is so severe that the dirty model is not a good initialization.  \label{bias}}
 \end{figure}
 
-\subsubsection{2d. Testing Accuracy}
-In the previous experiments, we studied the relative model error which measures the training loss. 
-However, to an end user the metric that matters is test accuracy.
-In the next experiment, we try to understand how reductions in model error correlate to improvements in test error.
-In Figure \ref{prio-tperf}, we present the results for the three datasets: Adult, Housing, and EEG.
-We find that in two of the datasets, Housing and Adult, \sys converges to clean test accuracy faster than the alternatives.
-
-However, there is a curious negative result with the EEG dataset that we would like to highlight. 
-We find that even though \sys has significantly lower model error (Figure \ref{prio-perf}), this does not correspond to as significant of an increase in test accuracy.
-We speculate this is due to the inherrent hardness of the EEG classification problem.
-\sys may encourage overfitting at intermediate results for hard classification tasks.
-The solution to this problem may be to add additional regularization, thus actually changing the optimization problem.
-We hope to explore this problem in further detail in future work.
-
-\begin{figure*}[t]
-\centering
- \includegraphics[scale=0.15]{exp/exp3aa.pdf}
- \includegraphics[scale=0.15]{exp/exp3bb.pdf}
-  \includegraphics[scale=0.15]{exp/exp3cc.pdf}
- \caption{\sys converges with a smaller sample size to the maximum test accuracy in comparison to Active Learning and SampleClean. The reductions in model error correlate well with increased test accuracy in two of the datasets (a) and (b). In (c), we find insignificant gains in terms of test accuracy. \label{prio-tperf}}
-\end{figure*}
-
-\subsection{Experiment 3. Partioning and Estimation}
+\subsection{Adaptive Detection}
+In this experiment, we explore how the results of the previous experiment change when we use an adaptive detector rather than the a priori detector.
+In our systematic errors, we corrupted 3 of the most informative features at random, thus we group these errors into 3 classes.
+We use a all-versus-one SVM to learn the categorization.
 
 \subsubsection{3a. Basic Performance}
-In the next set of experiments, we explore the error partitioning in more detail.
-We presented two models for error sampling, one where we are given a set of candidate dirty records through a predicate and one where we have to learn this predicate as we clean.
-In Figure \ref{pred-perf}, we overlay the convergence plots in the previous experiments with a curve (denoted by AC+C) that represents \sys using a classifier instead of an error predicate.
-We use an SVM classifier to predict errors.
-We find an interesting tradeoff where initially \sys is comparable to Active Learning (explanation for why seen in Figure \ref{opts}), as our classifier becomes more effective the partitioning improves the performance.
+In Figure \ref{pred-perf}, we overlay the convergence plots in the previous experiments with a curve (denoted by AC+C) that represents \sys using a classifier instead of the a priori detection.
+We find an interesting tradeoff where initially \sys is comparable to Active Learning, as our classifier becomes more effective the partitioning improves the performance.
 
 \begin{figure}[t]
 \centering
- \includegraphics[width=0.48\columnwidth]{exp/exp11a.pdf}
- \includegraphics[width=0.48\columnwidth]{exp/exp11b.pdf}
- \caption{Even with a classifier \sys converges faster than Active Learning and SampleClean.
- We plot the error on a log scale. 
- However, initially \sys is comparable in performance to Active Learning, as the classifier acquires training data. \label{pred-perf}}
+ \includegraphics[width=0.49\columnwidth]{exp/exp11a.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp11b.pdf}
+ \caption{Even with a classifier \sys converges faster than Active Learning and SampleClean. \label{pred-perf}}
 \end{figure}
 
-\subsubsection{3b. Classifiable Errors}
-Using a classifier to partition errors depends on errors that can be classified.
-For example, random errors that look like other data may be hard to learn.
+\subsubsection{Classifiable Errors}
+The adaptive case depends on being able to predict errors
+For example, random corruption that look like other data may be hard to learn.
 As errors become more random, the classifier becomes increasingly erroneous.
 We run an experiment where we start with the systematic errors described earlier.
 With probability $p$, we increasingly make these errors more random.
-We compare these results to AC-P where we do not partition the errors.
-In Figure \ref{tradeoffs2}, we plot the error reduction using a classifier.
-We find that when errors are about 40\% random then we reach a break even point
-where the user is better of not partitiong the data since the errors introduced by incorrect classification are more than the error reductions.
+We compare these results to AC-D where we do not have a detector at all.
+In Figure \ref{tradeoffs2}, we plot the relative error reduction using a classifier.
+We find that when errors are about 40\% random then we reach a break even point.
 
 \begin{figure}[ht!]
+\vspace{-1em}
 \centering
- \includegraphics[width=\columnwidth]{exp/exp5a.pdf}
+ \includegraphics[width=0.5\columnwidth]{exp/exp5a.pdf}
  \caption{Errors that are less random are easier to classify, and lead to more significant reductions in relative model error. \label{tradeoffs2}}
 \end{figure}
 
-\subsubsection{3c. Error Estimation}\label{est}
-In the next experiment, we evaluate our error estimation technique.
-We explore how this technique performs compared to a few alternative error estimation techniques: (1) linear regression where we train a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) average gradient change where we do not use the errors to inform how to apply the estimate, (3) average feature change, and (4) our Taylor series approximation.
+\subsection{Error Estimation}\label{est}
+In the next experiment, we evaluate our estimation technique.
+We explore how this technique performs compared to a few alternative estimation techniques: (1) ``linear regression" where we train a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" change where we do not use the detection to inform how to apply the estimate, (3) ``average feature change" where we do not linearize but use detection, and (4) our taylor series linear approximation.
 Using the EEG dataset, we measure the relative estimation error (relative L2 error with the true gradient) for different amounts of data cleaned.
 The Taylor series approximation proposed in this work gives more accurate for small cleaning sizes, which is exactly the regime in which we are interested in optimizing.
 The other techniques require more data to converge.
-The linear regression and the gradient do not exploit what we know about the data cleaning, and the gradients can amplify estimation errors in the average feature change approach at small sample sizes.
+The linear regression and the gradient do not exploit what we know about the data cleaning, and the gradients can amplify estimation errors in the average feature change approach at small sample sizes (Section \ref{acc}).
 
 \begin{figure}[ht!]
+\vspace{-2em}
 \centering
- \includegraphics[width=\columnwidth]{exp/exp12.pdf}
+ \includegraphics[width=0.5\columnwidth]{exp/exp12.pdf}
  \caption{The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs3}}
 \end{figure}
 
+
 \subsection{Real Scenarios}
-We evaluate \sys in two real scenarios: base data replacement and constraint-based data repair.
+We evaluate \sys in two real scenarios, one demonstrating the adaptive detection case and one demonstrating the a priori case.
 
 \subsubsection{Replacing Corrupted Data}
 We consider the following scenario with the MNIST handwritten digit recognition dataset.
@@ -246,16 +230,19 @@ However, we suspect that some of our raw images are of low quality.
 Typicaly image processing workflows are long with many different featurization steps.
 As a result, changes to the raw images may have very significant effects on some features.
 In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
+We devise an ``adaptive detection" \sys scenario for this example.
 
 The MNIST dataset consists of 64x64 grayscale images.
 We run two experiments, in which we have two types of corruptions: (1) 5x5 block removal where take a random 5x5 block from the image and set its pixel values to 0, and (2) Fuzzy where we run a 4x4 moving average over the entire image.
 We applied these corruptions to a random 5\% of the images.
-In Figure \ref{mnist-corr}, we visualize the corruptions.
 We constructed these features to mimic the random vs. systematic errors that we studied before.
 The 5x5 block removal behaves much more like a systematic error. 
-Typical image processing features are based on edges and corrupting edges leads to ambiguities (e.g., is the image in Figure \ref{mnist-corr} a 4 or a 9).
+Typical image processing features are based on edges and corrupting edges leads to ambiguities.
 On the other hand, the making the image fuzzy is more like a random error.
+We use a 9 class classifier (one for each digit) to detect the error.
 
+
+\iffalse
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.20]{exp/original.png}
@@ -263,6 +250,7 @@ On the other hand, the making the image fuzzy is more like a random error.
  \includegraphics[scale=0.20]{exp/fuzzy.png}
  \caption{We experiment with two forms of corruption in the MNIST image datasets: 5x5 block removal and making the images fuzzy. Image (a) shows an uncorrupted ``9", image (b) shows one corrupted with block removal, and image (c) shows one that is corrupted with fuzziness. \label{mnist-corr}}
 \end{figure}
+\fi
 
 In Figure \ref{mnist}, we present the results.
 As in our earlier experiments, we find that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
@@ -272,12 +260,11 @@ This is because SampleClean does not depend on any quantity derived from the dir
 Next, the gap between the theoretical AC+O and what we are able to achieve is much larger in this dataset.
 We speculate that this is because classifying errors in a 784 dimensional space is much harder than in our previous experiments, and this in turn leads to reduced accuracy in impact estimation.
 
-
 \begin{figure}[ht]
 \centering
- \includegraphics[scale=0.16]{exp/exp7a.pdf}
- \includegraphics[scale=0.16]{exp/exp7b.pdf}
- \caption{For both types of corruption, \sys converges faster than Active Learning and SampleClean. We plot the relative error as function of the number of cleaned examples \label{mnist}}
+ \includegraphics[width=0.49\columnwidth]{exp/exp7a.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp7b.pdf}
+ \caption{In a real adaptive detection scenario with the MNIST dataset, \sys outperforms Active Learning and SampleClean. We simulate systematic corruptions with image block removal and random corruptions with image fuzzying.  \label{mnist}}
 \end{figure}
 
 \subsubsection{Replacing Corrupted Data}
