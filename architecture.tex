@@ -6,7 +6,7 @@ We will address the individual components in the subsequent sections.
 We revist the architecture diagram (Figure \ref{sys-arch}) in more detail.
 The first step of the system is \emph{initialization}.
 In this step, the user provides a dirty dataset $R$, a repair technique $C(\cdot)$, and a dirty model $\theta^{(d)}$ trained on the dirty dataset. 
-Optionally, if available, the user can provide a dirty data detector $D(\cdot)$ which selects the set of corrupted records when applied to $R$.
+Optionally, the user can provide a dirty data detector $D(\cdot)$ which selects the set of corrupted records when applied to $R$.
 This is possible for some types of data errors such as constraint violations and missing values.
 If one is not provided, we will start by assuming all of the data is dirty and try to learn a detector as we clean more data.
 At initialization, there are two hyperparameters to set, the batch size (how much data per iteration to repair) and the number of iterations.
@@ -14,7 +14,7 @@ At initialization, there are two hyperparameters to set, the batch size (how muc
 After initialization, \sys begins the cleaning and model update iterations.
 The first iterative step is \emph{sampling}.
 \sys selects a sample of dirty data based on the batch size.
-At this step, \sys can use any information (such as the detector $D$) to narrow the sample to select only dirty data.
+At this step, \sys can use the detector $D$ to narrow the sample to select only dirty data.
 Once a sample is selected, we apply the user-specified data cleaning operation to the sample in the \emph{repair} step.
 Then, after the sample is cleaned, the dirty model is updated in the model \emph{update} step.
 
@@ -38,7 +38,7 @@ To summarize the architecture in pseudocode:
 \end{enumerate}
 
 \subsection{Challenges and Formalization}
-The repair step is user-specified and the other steps build a framework around this. 
+We highlight the important components and formalize the research questions that we explore in this paper. 
 
 \vspace{0.5em}
 
@@ -53,21 +53,21 @@ We consider problems in which the training examples (i.e., rows in the data matr
 
 \vspace{0.5em}
 
-\noindent\textbf{Detect (Section ??). } The first challenge in \sys is dirty data dection. This is key part of our sampling framework. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. We will discuss two techniques to do this: (1) an a priori case, and (2) and adaptive case. In the a priori case, we know which data is dirty in advance. In the adaptive case, we have to train a classifier based on data we have already cleaned to select the dirty data. This serves two purposes: (1) it reduces the variance of our updates because we can cheaply scan over data we know that is clean, and (2) it increases the fraction of actually dirty records in the candidate batch.
+\noindent\textbf{Detect (Section \ref{det}). } The first challenge in \sys is dirty data dection. This is key part of our sampling framework. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. We will discuss two techniques to do this: (1) an a priori case, and (2) and adaptive case. In the a priori case, we know which data is dirty in advance. In the adaptive case, we have to train a classifier based on data we have already cleaned to select the dirty data. This serves two purposes: (1) it reduces the variance of our updates because we can cheaply scan over data we know that is clean, and (2) it increases the fraction of actually dirty records in the candidate batch.
 
 \vspace{0.5em}
 
-\noindent\textbf{Sample (Section ??). } We take a sample of the records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p_r$.
+\noindent\textbf{Sample (Section \ref{dist-samp}). } We take a sample of the records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p_r$.
 We will show that we can derive the optimal sampling distribution (choice of $p_r$ that minimizes the variance of our updates) theoretically, however, it will depend on knowing the cleaned data before we actually clean. This is why we introduce an estimation step to approximate this cleaned value.
 
 \vspace{0.5em}
 
-\noindent\textbf{Update (Section ??). } Then, we update the model $\theta^({(i)})$ based on the newly cleaned data $F(S_{clean})$. The result is the updated model $\theta^({(i+1)})$. We will present the model update before we derive the optimal sampling distribution.
+\noindent\textbf{Update (Section \ref{model-update}). } Then, we update the model $\theta^({(i)})$ based on the newly cleaned data $F(S_{clean})$. The result is the updated model $\theta^({(i+1)})$. We will present the model update before we derive the optimal sampling distribution.
 This is because that distribution will naturally fall out of our update procedure.
 
 \vspace{0.5em}
 
-\noindent\textbf{Estimate (Section ??): } The estimation step approximates the optimal distribution derived in the Sample step. Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the next model update.
+\noindent\textbf{Estimate (Section \ref{sampling}): } The estimation step approximates the optimal distribution derived in the Sample step. Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the next model update.
 
 \iffalse
 \subsection{Optimizations}

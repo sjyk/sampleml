@@ -1,8 +1,6 @@
 \section{Estimation}\label{sampling}
-In this section, we make the sampling result of the previous section practical.
-To avoid the chicken-or-egg problem, we estimate the cleaned value based on prior cleaned 
-data.
-The main challenge is deriving accurate estimates when the amount of cleaned data is small.
+In this section, we make the sampling result of the previous section practical,
+and estimate the cleaned data.
 
 \subsection{Challenges and Goal}
 The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t)$.
@@ -14,7 +12,7 @@ In \sys, we want to be able to make as much progress as possible in the early it
 We take an alternative approach, where we try to exploit what we know about data cleaning to produce an estimate for groups of similarly corrupted records.
 To define ``similarly corrupted", we are going to show how we can use the detection step to make this problem tractable.
 
-\subsection{Estimates A Priori Detection}
+\subsection{Estimation For A Priori Detection}
 \begin{example}
 Consider our EEG dataset with multiple types of errors. 
 Suppose the electrical signals for some records are corrupted with missing data and the patient data for other records are corrupted with inconsistency problems. 

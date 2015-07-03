@@ -1,4 +1,4 @@
-\section{Detection}
+\section{Detection}\label{det}
 An important part of \sys is dirty data detection.
 When we sample data to clean, we want to ensure that the data that we are sampling is actually dirty.
 Therefore, before we can sample, we have to detect whether the record is dirty.
@@ -9,7 +9,7 @@ First, it needs to tell us if a record is dirty or clean.
 In this framework, we favor false positives (record is clean but marked as dirty) over false negatives as the false negatives will never get sampled and cleaned.
 Next, the detection also needs to tell us what is wrong with the record.
 This is important so we can estimate how valuable cleaning will be for this record.
-There are two cases that we explore in \sys: a priori and adaptive.
+There are two cases that we explore in \sys: \emph{a priori} and adaptive.
 In the a priori case, we recognize that for many data cleaning methodologies, we can efficiently select the set of dirty records without repair.
 In the adaptive case, we relax this assumption, and explore how we can learn which records are dirty and clean with a classifier.
 

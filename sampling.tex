@@ -84,11 +84,11 @@ Based on Lemma \ref{impsample}, we now derive an optimal sampling distribution.
 Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is where we sample proportions to the values.
 This is insight leads to a direct higher-dimensional generalization, where at iteration $t$ we should sample the records in $R_{dirty}$ with probabilities:
 \[
-p_i \propto \|\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t)\|
+p_i \propto \|\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t)\| \blacksquare
 \]
 
 However, in our case, it leads to a chicken-and-egg problem.
-The optimal sampling distribution requires knowing $(x^{(clean)}_i,y^{(clean)}_i)$, however, we have to sample and clean those points to get $(x^{(clean)}_i,y^{(clean)}_i)$.
+The optimal sampling distribution requires knowing $(x^{(clean)}_i,y^{(clean)}_i)$, however, we have to sample and clean those points to get those values.
 In the next section, we discuss how to inexpensively approximate this optimal distribution.
 As our technique can work with \emph{any} distribution, we are guaranteed convergence no matter how inaccurate this approximation.
 However, a better approximation will lead to an improved convergence rate.

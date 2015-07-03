@@ -115,7 +115,7 @@
 %\newcommand{\reminder}[1] {}
 \pagestyle{plain}
 
-\title{ActiveClean: Training Models on Dirty Data Under a Cleaning Budget}
+\title{ActiveClean: Iteratively Improving Convex-Loss Models With Data Cleaning}
 
 %\numberofauthors{1}
 %\author{\large Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, Tim Kraska{$\,^\dag$} \\
@@ -135,12 +135,10 @@
 
 \begin{abstract}
 Databases are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
-Increasingly, modern data analysis pipelines involve Machine Learning for predictive models.
-In this paper, we propose \sysfull (\sys), an anytime framework for training Machine Learning models with data cleaning.
-As we draw samples of our training examples as a part of stochastic optimization, we clean the data as required avoiding data that we have already cleaned or we believe is clean.
-The sampling is distribution is non-uniform prioritizing points that will likely affect the model significantly.
-The optimization iteratively converges giving us the desired anytime behavior.
-We index dirty and clean data to achieve to implement the framework efficiently.
+Increasingly, modern data analysis pipelines involve Machine Learning for predictive models which can be sensitive to dirty data.
+Dirty data is often expensive to repair, and naive sampling solutions are not suited for training high dimensional models.
+In this paper, we propose \sysfull, an anytime framework for training Machine Learning models with budgeted data cleaning.
+Our framework updates a model iteratively as small samples of data are cleaned, and includes numerous optimizations such as importance weighting and dirty data detection.
 We evaluate \sys on 4 real datasets and find that our methodology can return more accurate models for a smaller cost than alternatives such as uniform sampling and active learning.
 \end{abstract}
 

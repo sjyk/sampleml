@@ -1,7 +1,7 @@
 \section{Introduction}
 Databases are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
 Numerous industrial surveys have shown that dirty data are prevalent \cite{Gartner}, and there is now a growing industry around cleaning data at scale \cite{fortunearticle}.
-One reasons for the recent research and commercial interest in data cleaning is analysts are increasingly deriving data from inherently error-prone processes such as extracting structured data from websites and synthesizing data from noisy sensors.
+Recent research and commercial interest is driven by increasing analytics from inherently error-prone processes such as extracting structured data from websites and synthesizing data from noisy sensors.
 New methodologies for scalable and reliable analysis in the presence of errors are required. 
 
 Data analysis pipelines are also growing in complexity.
@@ -12,23 +12,23 @@ Consider a music recommender system, we may find that due to a software bug all 
 A recommendation model trained on this data may spuriously ``learn" a correlation relationship between the ``18-24" age group and music liked by European users.
 While there is an extensive literature on robust Machine Learning, this work largely focuses on resilience to atypical outliers (i.e., age of ``1000") and not systematically corrupted data.
 
-Since new analytics frameworks encapsulate the entire data processing pipeline from raw data to features to model training, there is an opportunity to address this problem from a database perspective.  
+Since new analytics frameworks encapsulate the entire data processing pipeline from raw data to features to model training, there is an opportunity to address this problem from an end-to-end data management perspective.  
 The database community's response to systematic corruption is data cleaning, which is an extensively studied field (see Rahm and Do \cite{rahm2000data} for a survey).
 Cleaning works by repairing (or approximately repairing) the corruption in the base data.
 However, data cleaning can be a very time consuming process.
 Programming data transformations to fix all problems manifest in the data requires substantial developer effort \cite{kandel2012}.
-As errors increase in complexity, such as comparing whether two records refer to the same entity, scripted transformations and automated rules may not suffice. 
+As errors increase in complexity, scripted transformations and automated rules may not suffice. 
 Works such as Corleone\cite{gokhale2014corleone} and CrowdFill\cite{park2014crowdfill} address this problem by using crowdsourcing.
-Consequently, even moderately sized datasets are very challenging to clean.
+While more it is more accurate, even moderately sized datasets are very challenging to clean with the crowd.
 
-An emerging solution to the growing costs of data cleaning is sampling \cite{wang1999sample}. The analyst cleans a small sample of $k \ll N$ records and can estimate the results of aggregate queries based on cleaning this sample.
+An emerging solution to the growing costs of data cleaning is sampling as proposed in the SampleClean work\cite{wang1999sample}. The analyst cleans a small sample of $k \ll N$ records and can estimate the results of aggregate queries based on cleaning this sample.
 Adjusting the sample size $k$ provides a flexible tradeoff between cleaning cost and query result accuracy for aggregate queries.
 The case for sampling in data cleaning is analogous to arguments for Approximate Query Processing (AQP) \cite{DBLP:conf/eurosys/AgarwalMPMMS13}, where a timely approximate answer is more desirable than an exact slow answer. 
 
 \begin{figure}[t]
 \centering
  \includegraphics[width=\columnwidth]{figs/arch.png}
- \caption{\sysfull presents an architecture where data cleaning is integrated with model training. The user specifies error repair, and we provide a framework for sampling, model update, and feedback through error estimation. \label{sys-arch}}\vspace{-2em}
+ \caption{\sysfull presents an architecture where data cleaning is integrated with model training. The user specifies a data repair method, and we provide a framework for sampling, model update, and feedback through estimation. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
 Unfortunately, a naive application of sampling will not work well for the high-dimensional models learned in Machine Learning.
@@ -38,12 +38,12 @@ A small sample of clean data may not be able to support a viable Machine Learnin
 The predictions from this model may be inaccurate and the problems introduced by the small sample size may dominate any gains from data cleaning. 
 
 In this paper, we propose \sys, an anytime framework for training Machine Learning models with budgeted data cleaning (Figure \ref{sys-arch}) that iteratively corrects a dirty model rather than retraining it on a sample of clean data.
-\sys is initialized with a dirty model and users specify an error repair method.
+\sys is initialized with a dirty model and users specify a repair method.
 Our system will provide a framework to return an accurate model given a repair budget.
 \sys selects a sample of data, applies the repairs, then updates the model.
 After model update, the repairs are fed back to adaptively select the next sample of data.
-We can optionally integrate user specified error detection rules into the framework to further narrow our sampling.
-\sys supports a broad class of models which includes linear regression, logistic regression, generalized linear models, and support vector machines.
+We can optionally integrate user specified dirty data detection rules (such as constraints) into the framework to further narrow our sampling.
+\sys supports a broad class of models, called convex-loss models, which includes linear regression, logistic regression, generalized linear models, and support vector machines.
 
 \sys presents a novel framework that tightly integrates data cleaning with model training.
 As a result, there are numerous new opportunities for optimization.

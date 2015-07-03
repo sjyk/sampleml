@@ -12,7 +12,7 @@ This will allow her to understand how doctors can suggest diagnostics for new pa
 Medical records are often dirty due various problems in digitization and data integration \cite{fortunearticle}.
 After model training, the analyst is informed of corruption in the patient data.
 With some preliminary data exploration, she finds out that older patients whose records were manually digitized are more likely to have missing values.
-Occurances of certain types of seizures are mislabled based on a changing medical definition.
+In addtion, cccurances of certain types of seizures are mislabled based on a changing medical definition.
 However, the procedure to determine which patients' data are corrupted requires querying source medical records which are in a semi-structured format.
 \end{example}
 
@@ -34,7 +34,7 @@ One of the variables is systematically corrupted with a translation in the x-axi
 If we clean two of the data points, we find that the trend of the partially cleaned model is the opposite of what it is supposed to be.
 This is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can result in spurious relationships.
 
-The next solution our analyst could try is avoiding using the dirty data altogether.
+The next solution is avoiding the dirty data altogether.
 She can take a sample of data, apply data cleaning, and train a model only on that sample of data.
 This approach is called SampleClean \cite{wang1999sample} and was proposed to approximate the results to aggregate queries by applying them to a clean sample of data.
 We discussed the problem with this approach in our introduction.
@@ -49,10 +49,10 @@ The result is that the models will not be useful (i.e., cannot accurately predic
  \caption{Our goal with \sys is to converge to an accurate model with fewer cleaned records than a naive uniform sampling approach (SampleClean). \label{sys-arch2}}
 \end{figure}
 
-\noindent\textbf{The Need for \sys: } In designing \sys, we try to get the best of both worlds. We want the correctness on intermediate results given SampleClean, but we also want to avoid the strong dependence on sample size. 
-In Figure \ref{sys-arch2}, we illustrate the tradeoff space of sampling and data cleaning.
+\noindent\textbf{The Need for \sys: } In designing \sys, we try to get the best of both worlds. We want the correctness on intermediate results of SampleClean, but we also want to avoid the strong dependence on sample size. 
+In Figure \ref{sys-arch2}, we illustrate the our ideal tradeoff space of sampling and data cleaning.
 At two extremes we have no cleaning (just using the dirty data) and full cleaning.
-We argue that the naive approach of uniform sampling is not suited for Machine Learning (SampleClean) because it struggles at small sample sizes.
+We argue that the naive approach of SampleClean is not suited for Machine Learning (SampleClean) because it struggles at small sample sizes.
 Our goal is to optimize our system for faster convergence to an accurate model at these small sizes.
 
 
@@ -74,7 +74,7 @@ SQL and CQ formalize a declarative problem specification in database research.
 In a loose analogy to the declative queries in databases, loss functions in serve the same purpose in ERM.
 \fi
 
-In this paper, when we refer to Machine Learning, we are refering to a class of problems called Empirical Risk Minimization (ERM) (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
+In this paper, when we refer to ``Machine Learning", we are refering to a class of Supervised Learning problems called Empirical Risk Minimization (ERM) (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
 In ERM, the goal is to learn a set of model \emph{parameters} $\theta$ from training examples.
 We start with a set of training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$
 on which we minimize a loss function $\phi$ (a penalty for getting the prediction wrong) at each point parametrized by $\theta$.
@@ -104,7 +104,7 @@ This class of problems includes all generalized linear models (including linear 
 In this work, we focus on this class of problems as it is very broad yet we can prove guarantees about the results.
 
 \subsubsection{Types of Errors}
-When we use the term error in a model, we precisely refer to the following metrics:
+When discussion ``errors" in Machine Learning models, we precisely refer to the following metrics:
 
 \vspace{0.5em}
 
@@ -116,7 +116,7 @@ When we use the term error in a model, we precisely refer to the following metri
 
 \vspace{0.5em}
 
-The \emph{error} in the model and in testing is caused by two underlying problems:
+\noindent The \emph{error} in the model and in testing is caused by two underlying problems:
 
 \vspace{0.5em}
 
@@ -129,10 +129,11 @@ The \emph{error} in the model and in testing is caused by two underlying problem
 \vspace{0.5em}
 
 In this paper, when we use the term \emph{error}, we are refering to \textbf{model error}.
-We will be explicit when we are using the word error to describe problems regarding dirtiness in the underlying data.
+We will be explicit when we are using the word error to describe problems regarding dirtiness in the underlying data (e.g. ``data corruption").
 
 \subsection{\sys Problem}
-Now, we introduce the problem that \sys address.
+Now, we introduce the basic problem that we address in this work.
+
 \begin{problem}[ActiveClean Problem]\label{activeclean}\sloppy
 Let $R$ be a dirty relation and each row $r \in R$ is 
 turned into a feature vector and label tuple $F(r) \mapsto (x,y)$.
@@ -145,7 +146,7 @@ a set of candidate dirty data $R_{dirty}$.
 With a budget of applying cleaning i.e., $C(\cdot)$, only k times, we return an estimate $\hat{\theta}$ of the clean model.
 \end{problem}
 
-The \sys problem is essentially how can we use the information from a statistical model to inform data cleaning on samples, and how we can use the information from clean samples to udpate a statistical model.
+Essentially, this problem describes how can we use the information from a statistical model to inform data cleaning on samples, and how we can use the information from clean samples to udpate a statistical model.
 The tight feedback loop between model training and data cleaning poses a new algorithmic challenge. 
 Data cleaning and model training happen at very different time scales, we have to carefully budget our effort to ensure that any optimizations actually address rate-determining steps in the workflow.
 

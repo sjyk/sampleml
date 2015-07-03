@@ -63,6 +63,11 @@ J.~Feng, H.~Xu, S.~Mannor, and S.~Yan.
 \newblock In {\em Advances in Neural Information Processing Systems}, pages
   253--261, 2014.
 
+\bibitem{friedman2001elements}
+J.~Friedman, T.~Hastie, and R.~Tibshirani.
+\newblock {\em The elements of statistical learning}, volume~1.
+\newblock Springer series in statistics Springer, Berlin, 2001.
+
 \bibitem{gokhale2014corleone}
 C.~Gokhale, S.~Das, A.~Doan, J.~F. Naughton, N.~Rampalli, J.~Shavlik, and
   X.~Zhu.
@@ -98,12 +103,6 @@ H.~K{\"o}pcke, A.~Thor, and E.~Rahm.
 \newblock Evaluation of entity resolution approaches on real-world match
   problems.
 \newblock {\em PVLDB}, 3(1):484--493, 2010.
-
-\bibitem{li2014improved}
-H.~Li and P.~P. Chan.
-\newblock An improved reject on negative impact defense.
-\newblock In {\em Machine Learning and Cybernetics}, pages 452--459. Springer,
-  2014.
 
 \bibitem{nelson2012query}
 B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
