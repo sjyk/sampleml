@@ -52,8 +52,9 @@ We can also ``push up" the data cleaning to the model training by intelligently 
 In summary, our contributions are
 \begin{itemize}[noitemsep]
 \item We propose \sysfull which given dirty data, a model, a data cleaning procedure, and a budget, we can return a highly accurate model for a fraction of the cleaning cost.
-\item \sys proposes a novel framework that iteratively corrects a model based on small batches of clean data.
-\item \sys relies on two key optimizations, guided error sampling and error partitioning, that result in substantial empirical gains in accuracy in comparison to alternative approaches such as Active Learning.
+\item A gradient-based incremental model correction technique, that uses cleaned data to update a dirty model.
+\item A linearization-based estimation technique that estimates which data are most valuable to the model to guide data sampling.
+\item Integration with existing dirty data dection for estimation, update, and sampling.
 \item We evaluate \sysfull on real and synthetic datasets to show that non-uniform sampling achieves improved performance in comparison to uniform sampling, and Active Learning.
 \end{itemize}
 
