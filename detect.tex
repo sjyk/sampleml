@@ -19,7 +19,7 @@ For many types of dirtiness, it is possible to efficiently enumerate a set of co
 \begin{definition}[A Priori Detection]
 Let $r$ be a record in $R$. An a priori detector is a detector is a detector that returns a Boolean of whether the record is dirty and a set of columns $e_r$ that are dirty.
 \[
-D(r) = ({0,1}, e_r)
+D(r) = (\{0,1\}, e_r)
 \]
 From the set of columns that are dirty, we can find the corresponding features that are dirty $f_r$.
 \end{definition}
@@ -81,6 +81,8 @@ Thus, we after cleaning $k$ records, we have a dataset of $k$ records labeled wi
 \begin{definition}[Adaptive Case]
 To select $R_{dirty}$, we select the set of records for which $\kappa$ give a positive error classification (i.e., one of the $u$ error classes).
 After each sample of data is cleaned, the classifier $\kappa$ is retrained.
+So the result is:
+\[D(r) = (\{1,0\},\{1,...,u+1\})\]
 \end{definition}
 
 As we mentioned before, we favor false positive errors over false negative errors when detecting dirty data.
