@@ -24,13 +24,15 @@ error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]
 
 \subsection{The Geometry Of The Problem}
-Let us try to understand the geometry of this problem in one dimension (i.e., the parameter $\theta$ is a scalar vale).
-We restrict the class of Machine Learning models to convex regularized loss problems.
-That is, as we vary the model $\theta$ the loss is bowl-shaped (visualized in Figure \ref{update-arch2}a).
-There is a unique optimal value for $\theta$ at the bottom of the bowl.
-If we have dirty data, we are training a model with respect to an incorrect data distribution.
-In other words, we are optimizing the wrong function (Figure \ref{update-arch2}b).
-The resulting dirty model can be thought of as a suboptimal point on clean curve.
+We will present the update algorithm intuitively by describing it in terms of the convex geometry of the problem.
+Let us consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar vale), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
+Convexity means, as we vary the model $\theta$ the loss is essentially bowl-shaped (visualized in Figure \ref{update-arch2}a).
+
+The way that dirty data affects this problem, is that we are optimizing the wrong function.
+We are optimizing the function $l'(\theta)$, when we really want to optimize $l(\theta)$.
+Figure \ref{update-arch2}a, illustrates the consequence of this optimization.
+If we train a model on the dirty data, the model is not the optimal model for the cleaned data.
+The resulting dirty model is a suboptimal point on clean curve.
 
 \begin{figure}[ht!]
 \centering
@@ -38,24 +40,27 @@ The resulting dirty model can be thought of as a suboptimal point on clean curve
  \caption{In \sys, we explore an important class of Machine Learning problems where the loss function (i.e., training error) varies convexly. An incorrect model can be thought of as a sub-optimal point. \label{update-arch2}}
 \end{figure}
 
-We have a model $\theta^{(d)}$ (visualized in brown) that is suboptimal with respect to the clean data.
 We want to get to the optimal clean model $\theta^{(c)}$ which is visualized as a yellow star.
-If we had all of the clean data we could compute $\theta^{(c)}$.
-However, at each iteration, we only have a sample of clean data.
-To resolve this issue, we can exploit the model's geometry.
+The first question is which direction do we move theta.
+Without cleaning the data, we do not know whether we need to move left or right.
+
+First, consider if we had all of the clean data we could compute $\theta^{(c)}$.
 For this class of models, given a suboptimal point, we can find the direction to the 
 the global optimum.
-Mathematically, this direction corresponds to gradient of the loss with respect to $\theta$, and we need to move some distance $\gamma$ along this direction:
+Mathematically, this direction corresponds to gradient of the loss with respect to $\theta$, and we need to move some distance $\gamma$ along this direction (Figure \ref{update-arch2}b):
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
 In our visualization, this corresponds to whether we should move left or right.
-The intuition, which we will formalize in Section \ref{sgd}, is that if we are on average in the right direction the algorithm is guaranteed to converge with analytics bounds on the convergence rate.
 At the optimal point, the expected gradient will be zero.
 So intuitively, this approach iteratively moves the model downhill, or corrects, the dirty model until the budget is reached.
 
+However, in reality, we do not have the all of the clean data and have to approximate this gradient from a sample.
+The intuition, which we will formalize in Section \ref{sgd}, is that if we are on average in the right direction the algorithm is guaranteed to converge with analytics bounds on the convergence rate.
+
 \subsection{Average Gradient From a Sample}
-Our class of Machine Learning models are based on loss minimization, that is they are a sum of losses, and we know that sums commute with derivatives.
+To derive a sample-based update rule, the first property that we should recognize is that sums commute with derivatives and gradients.
+Our class of Machine Learning models are based on loss minimization, that is they are a sum of losses.
 So to calculate the average gradient from a sample, we simply calculate the gradient at every data point and average over them.
 Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p_i$.
 We can approximate the global gradient:
@@ -67,8 +72,7 @@ Then for every batch of data cleaned, we apply the update to the current best mo
 \theta^{(t)} \leftarrow \theta^{(t-1)} - \gamma \cdot g_{S}(\theta^{(t-1)})
 \]
 
-The tricky part is that only a subset of the records are are cleaned.
-The consequence of this is that the estimate $g_{S}(\theta)$ is now biased.
+The dection in the previous step adds a small complication, since the sample $S_{dirty}$ is not representative of all of the data only $R_{dirty}$.
 We also have to compensate for this bias by averaging this estimate with the gradient with respect to the clean data:
 \[
 g_C(\theta) = \frac{1}{\mid R - R_{dirty}\mid}\sum_{i \in R - R_{dirty}}\nabla\phi(x_i^{clean},y_i^{clean},\theta)
@@ -145,6 +149,35 @@ For an appropriately chosen learning rate $\gamma_t$, batch stochastic gradient 
 A direct result of convergence is a guarantee on statistical consistency.
 Another interesting consequence of this result is that we can sample $S$ in any way that we want
 as long as our estimate in unbiased.
+
+\vspace{0.5em}
+
+\noindent\textbf{Deriving $\alpha$ and $\beta$: }
+We first select a set of records before starting we select a set of dirty records $R_{dirty} \subseteq R$. 
+We construct batch $S_{dirty}$ only from the dirty records and apply cleaning to this batch.
+Now the problem is that this sample (and the resulting gradient) is possibly biased since we are excluding some data.
+However, since we know that the set $R_{clean} = R - R_{dirty}$ is clean, we can compute the average gradient over those records without cleaning:
+\[
+g_C(\theta^{t}) = \frac{1}{\mid R - R_{dirty} \mid} \sum g_i(\theta^{t})
+\]
+Since we know the partition sizes, we can combine the two estimates $g_C$ and $g_S$ togther:
+\[
+g(\theta^{t}) = \frac{\mid R_{dirty} \mid \cdot g_S + \mid R_{clean} \mid \cdot g_C  }{\mid R \mid}
+\]
+Therefore,
+\[
+\alpha = \frac{R_{clean}}{R}, \beta = \frac{R_{dirty}}{R} \blacksquare
+\]
+
+\begin{lemma}
+The gradient estimate $g(\theta^{t})$ is unbiased if $g_S$ is an unbiased estimate of:
+\[
+\frac{1}{\mid R_{dirty} \mid} \sum g_i(\theta^{t})
+\]
+\end{lemma}
+\begin{proof}[Sketch]
+This result follows directly from the linearity of expectation, since we are adding a deterministic result with an unbiased result.
+\end{proof}
 
 \vspace{0.5em}
 

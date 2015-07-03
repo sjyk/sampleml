@@ -1,45 +1,26 @@
 \section{Sampling}\label{dist-samp}
+In the previous section, we assumed that our model update recieved a sample with probabilities $p(r)$
+In this section, we derive an optimal sampling problem that directly follows from our analysis of our update rule via SGD.
+It will turn out that the solution to the optimal sampling problem is not realizable in practice (as it depends on knowing the cleaned value), but we can use this to inform the next section where we estimate the cleaned value.
+
+\subsection{Goals and Challenges}
 In the Machine Learning and Optimization literature, SGD algorithms are optimized to avoid scanning the entire data.
 Uniform sampling is cheap so it is the preferred solution.
-However, there are a few observations about the data cleaning problem that suggest that we can do better if we carefuly select which points to clean.
-The key property that we need to preserve is unbiasedness of the gradient (Proposition \ref{unbiased}), so our updates are on average correct.
+However, data cleaning costs can be many orders of magnitude higher than model training.
+As a result, uniform sampling may not be the most efficient option.
+We can sacrifice computational overhead by precomputing some results over the entire data for savings during the data cleaning phase.
+We formulate this problem as an optimal sampling problem where we want to compute the sampling probabilities $p(r)$ that maximize the accuracy of our updates.
 
-\vspace{0.5em}
-
-\noindent\textbf{Use the partitioning: }
-We first select a set of records before starting we select a set of dirty records $R_{dirty} \subseteq R$. 
-We construct batch $S_{dirty}$ only from the dirty records and apply cleaning to this batch.
-Now the problem is that this sample (and the resulting gradient) is possibly biased since we are excluding some data.
-However, since we know that the set $R_{clean} = R - R_{dirty}$ is clean, we can compute the average gradient over those records without cleaning:
+\subsection{Optimal Sampling Problem}
+Recall that the convergence rate of an SGD algorithm is bounded by $\sigma^2$ which is the variance of the gradient.
+\begin{definition}[Optimal Sampling Problem]
+Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find sampling probabilites $p(r)$ such that over all samples $S$ of size $k$ it minimizes:
 \[
-g_C(\theta^{t}) = \frac{1}{\mid R - R_{dirty} \mid} \sum g_i(\theta^{t})
+\mathbb{E}(\|g_S - g^*\|^2)
 \]
-Since we know the partition sizes, we can combine the two estimates $g_C$ and $g_S$ togther:
-\[
-g(\theta^{t}) = \frac{\mid R_{dirty} \mid \cdot g_S + \mid R_{clean} \mid \cdot g_C  }{\mid R \mid}
-\]
-Therefore,
-\[
-\alpha = \frac{R_{clean}}{R}, \beta = \frac{R_{dirty}}{R} \blacksquare
-\]
+\end{definition}
+In other words, we want to most accurately (in the mean squared error sense) estimate the gradient.
 
-\begin{lemma}
-The gradient estimate $g(\theta^{t})$ is unbiased if $g_S$ is an unbiased estimate of:
-\[
-\frac{1}{\mid R_{dirty} \mid} \sum g_i(\theta^{t})
-\]
-\end{lemma}
-\begin{proof}[Sketch]
-This result follows directly from the linearity of expectation, since we are adding a deterministic result with an unbiased result.
-\end{proof}
-
-\vspace{0.5em}
-
-\noindent\textbf{Optimal Sampling Problem: }
-In this problem, we are trying to select a sample $S_{dirty}$ from $R_{dirty}$.
-If we sample every element $i \in R_{dirty}$ with probability $p_i$, the question is
-how can we compute a set of $\{p_i\}$ such that variance of the gradient $\sigma^2$ is minimized.  
-It will turn out that optimal distribution is not realizable without knowing the fully cleaned data, and we will address this problem in the next section.
 To construct these sampling probabilities, we first need the following lemma:
 \begin{lemma}\label{impsample}
 Given a set of real numbers $A = \{a_1,...,a_n\}$, let $\hat{A}$ be 
@@ -99,24 +80,15 @@ p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
 \]
 \fi
 
-
 Based on Lemma \ref{impsample}, we now derive an optimal sampling distribution.
 Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is where we sample proportions to the values.
-We visualize this intuition in Figure \ref{update-arch3}, and essentially, this lemma shows
-that when estimating a function of a random variable $\mathbb{E}(f(X))$ the optimal sampling distribution is to align the samples as closely as possible with the function.
 This is insight leads to a direct higher-dimensional generalization, where at iteration $t$ we should sample the records in $R_{dirty}$ with probabilities:
 \[
 p_i \propto \|\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t)\|
 \]
-This is an insight which has recently been of great interest in the Machine Learning community \cite{zhao2014stochastic}.
+
 However, in our case, it leads to a chicken-and-egg problem.
 The optimal sampling distribution requires knowing $(x^{(clean)}_i,y^{(clean)}_i)$, however, we have to sample and clean those points to get $(x^{(clean)}_i,y^{(clean)}_i)$.
 In the next section, we discuss how to inexpensively approximate this optimal distribution.
 As our technique can work with \emph{any} distribution, we are guaranteed convergence no matter how inaccurate this approximation.
 However, a better approximation will lead to an improved convergence rate.
-
-\begin{figure}[ht!]
-\centering
- \includegraphics[width=0.6\columnwidth]{figs/update-arch3.png}
- \caption{The minimum variance estimate of an expected value of a function of a random variable $\mathbb{E}(f(X))$ is found by placing more samples (marked in yellow) on the higher parts of the function.\label{update-arch3}}
-\end{figure}
