@@ -12,14 +12,13 @@ If one is not provided, we will start by assuming all of the data is dirty and t
 At initialization, there are two hyperparameters to set, the batch size (how much data per iteration to repair) and the number of iterations.
 
 After initialization, \sys begins the cleaning and model update iterations.
-The first iterative step is \emph{sampling}.
-\sys selects a sample of dirty data based on the batch size.
+The \emph{sampler} selects a sample of dirty data based on the batch size.
 At this step, \sys can use the detector $D$ to narrow the sample to select only dirty data.
 Once a sample is selected, we apply the user-specified data cleaning operation to the sample in the \emph{repair} step.
-Then, after the sample is cleaned, the dirty model is updated in the model \emph{update} step.
+Then, after the sample is cleaned, the dirty model is updated by the \emph{updater}.
 
 The next two steps in the archictecture are feedback steps where we update the sampling for the next iteration.
-We have an \emph{estimation} step which estimates the change on the model if a dirty record is cleaned based on prior cleaned data.
+The \emph{estimator} estimates the change on the model if a dirty record is cleaned based on prior cleaned data.
 This information can be used to guide sampling towards more valuable records.
 After estimation, we also update our detector $D(\cdot)$ based on the data that we have cleaned.
 After all of the iterations are complete, the system returns the cleaned model.
@@ -29,11 +28,11 @@ To summarize the architecture in pseudocode:
 \item \texttt{Init(dirty\_data, dirty\_model, batch, iter)}
 \item For each i in $\{1,...,T\}$
 \begin{enumerate}
-	\item \texttt{dirty\_sample $=$ Sample(dirty\_data, sample\_prob, detector, batch)}
+	\item \texttt{dirty\_sample $=$ Sampler(dirty\_data, sample\_prob, detector, batch)}
 	\item \texttt{clean\_sample $=$ Repair(dirty\_sample)}
-	\item \texttt{dirty\_model $=$ Update(dirty\_model, sample\_prob, clean\_sample)}
-	\item \texttt{sample\_prob $=$ Estimate(dirty\_data, cleaned\_data, detector)}
-	\item \texttt{detector $=$ UpdateDetector(detector)}
+	\item \texttt{dirty\_model $=$ Updater(dirty\_model, sample\_prob, clean\_sample)}
+	\item \texttt{sample\_prob $=$ Estimator(dirty\_data, cleaned\_data, detector)}
+	\item \texttt{detector $=$ DetectorUpdater(detector)}
 \end{enumerate}
 \end{enumerate}
 
@@ -53,21 +52,21 @@ We consider problems in which the training examples (i.e., rows in the data matr
 
 \vspace{0.5em}
 
-\noindent\textbf{Detect (Section \ref{det}). } The first challenge in \sys is dirty data dection. This is key part of our sampling framework. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. We will discuss two techniques to do this: (1) an a priori case, and (2) and adaptive case. In the a priori case, we know which data is dirty in advance. In the adaptive case, we have to train a classifier based on data we have already cleaned to select the dirty data. This serves two purposes: (1) it reduces the variance of our updates because we can cheaply scan over data we know that is clean, and (2) it increases the fraction of actually dirty records in the candidate batch.
+\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data dection. This is key part of our sampling framework. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. We will discuss two techniques to do this: (1) an a priori case, and (2) and adaptive case. In the a priori case, we know which data is dirty in advance. In the adaptive case, we have to train a classifier based on data we have already cleaned to select the dirty data. This serves two purposes: (1) it reduces the variance of our updates because we can cheaply scan over data we know that is clean, and (2) it increases the fraction of actually dirty records in the candidate batch.
 
 \vspace{0.5em}
 
-\noindent\textbf{Sample (Section \ref{dist-samp}). } We take a sample of the records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p_r$.
+\noindent\textbf{Sampler (Section \ref{dist-samp}). } We take a sample of the records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p_r$.
 We will show that we can derive the optimal sampling distribution (choice of $p_r$ that minimizes the variance of our updates) theoretically, however, it will depend on knowing the cleaned data before we actually clean. This is why we introduce an estimation step to approximate this cleaned value.
 
 \vspace{0.5em}
 
-\noindent\textbf{Update (Section \ref{model-update}). } Then, we update the model $\theta^({(i)})$ based on the newly cleaned data $F(S_{clean})$. The result is the updated model $\theta^({(i+1)})$. We will present the model update before we derive the optimal sampling distribution.
+\noindent\textbf{Updater (Section \ref{model-update}). } Then, we update the model $\theta^({(i)})$ based on the newly cleaned data $F(S_{clean})$. The result is the updated model $\theta^({(i+1)})$. We will present the model update before we derive the optimal sampling distribution.
 This is because that distribution will naturally fall out of our update procedure.
 
 \vspace{0.5em}
 
-\noindent\textbf{Estimate (Section \ref{sampling}): } The estimation step approximates the optimal distribution derived in the Sample step. Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the next model update.
+\noindent\textbf{Estimator (Section \ref{sampling}): } The estimator approximates the optimal distribution derived in the Sample step. Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, we direct the next iteration of sampling to select points that will have changes most valuable to the next model update.
 
 \iffalse
 \subsection{Optimizations}

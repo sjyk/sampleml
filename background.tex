@@ -148,6 +148,7 @@ With a budget of applying cleaning i.e., $C(\cdot)$, only k times, we return an 
 
 Essentially, this problem describes how can we use the information from a statistical model to inform data cleaning on samples, and how we can use the information from clean samples to udpate a statistical model.
 The tight feedback loop between model training and data cleaning poses a new algorithmic challenge. 
+If we are not careful about how we update the model, we can end up with the Simpsons paradox problem described before.
 Data cleaning and model training happen at very different time scales, we have to carefully budget our effort to ensure that any optimizations actually address rate-determining steps in the workflow.
 
 This framework is optimized around problems with expensive data cleaning.
