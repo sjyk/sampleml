@@ -25,44 +25,48 @@ error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 
 \subsection{Geometric Interpretation}
 We will present the update algorithm intuitively by describing it in terms of the convex geometry of the problem.
-Let us consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar vale), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
-Convexity means, as we vary the model $\theta$ the loss is essentially bowl-shaped (visualized in Figure \ref{update-arch2}a).
-
+Let us consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar value), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
 The consequence of dirty data is that we optimize the wrong loss function.
 We are optimizing the function $l'(\theta)$, when we really want to optimize $l(\theta)$.
-Figure \ref{update-arch2}a, illustrates the consequence of this optimization.
-The resulting dirty model is a suboptimal point on clean curve.
+Figure \ref{update-arch2}A, illustrates the consequence of this optimization.
+The brown dotted line shows the loss function on the dirty data.
+If we optimize this loss function, we find the $\theta$ that at the minimum point.
+However, the true loss function (w.r.t to the clean data) is in blue.
+This optimal value is a suboptimal point on clean curve.
 
 \begin{figure}[ht!]
 \centering
  \includegraphics[width=\columnwidth]{figs/update-arch2.png}
- \caption{In \sys, we explore an important class of Machine Learning problems where the loss function (i.e., training error) varies convexly. An incorrect model can be thought of as a sub-optimal point. \label{update-arch2}}
+ \caption{(A) A model trained on dirty data can be thought of as a sub-optimal point w.r.t to the clean data. (B) The gradient gives us the direction in which we need to move the suboptimal model to approach the true optimum. \label{update-arch2}}
 \end{figure}
 
 We want to get to the optimal clean model $\theta^{(c)}$ which is visualized as a yellow star.
-The first question is which direction do we move theta.
-Without cleaning the data, we do not know whether we need to move left or right.
-
-First, consider if we had all of the clean data we could compute $\theta^{(c)}$.
-For this class of models, given a suboptimal point, we can find the direction to the 
+The first question is which direction do we move $\theta$.
+We do not know whether we need to move left or right.
+For this class of models, given a suboptimal point, we can find the direction to 
 the global optimum.
-Mathematically, this direction corresponds to gradient of the loss with respect to $\theta$, and we need to move some distance $\gamma$ along this direction (Figure \ref{update-arch2}b):
+Mathematically, this direction corresponds to gradient of the loss function.
+The gradient is a function of the clean data that returns a $d$-dimensional vector w.r.t the current dirty optimal model i.e., the direction between the dirty model and the true clean model.
+We need to move some distance $\gamma$ along this direction (Figure \ref{update-arch2}b):
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
 In our visualization, this corresponds to whether we should move left or right.
 At the optimal point, the expected gradient will be zero.
-So intuitively, this approach iteratively moves the model downhill, or corrects, the dirty model until the budget is reached.
+So intuitively, this approach iteratively moves the model downhill to, or corrects, the dirty model until the budget is reached.
 
 However, in reality, we do not have the all of the clean data and have to approximate this gradient from a sample.
 The intuition, which we will formalize in Section \ref{sgd}, is that if we are on average in the right direction the algorithm is guaranteed to converge with analytics bounds on the convergence rate.
+It turns out that for an appropriately chosen $\gamma$, this convergence will hold for any batch size that we choose.
 
 \subsection{Average Gradient From a Sample}
 To derive a sample-based update rule, the first property that we should recognize is that sums commute with derivatives and gradients.
-Our class of Machine Learning models are based on loss minimization, that is they are a sum of losses.
-So to calculate the average gradient from a sample, we simply calculate the gradient at every data point and average over them.
-Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p_i$.
-We can approximate the global gradient:
+Our class of Machine Learning models are based on loss minimization, that is they are a sum of losses, so the gradient $\nabla\phi(\theta)$ is:
+\[
+\nabla\phi(\theta) = \frac{1}{n} \nabla\phi(x_i^{clean},y_i^{clean},\theta)
+\]
+We estimate this gradient from a sample by averaging over a sample of clean data and reweighting them by their sampling probability.
+Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p_i$:
 \[
 \nabla\phi(\theta) \approx g_{S}(\theta) = \frac{1}{n\mid S \mid} \sum_{i \in S}\frac{1}{p_i}\nabla\phi(x_i^{clean},y_i^{clean},\theta)
 \]
@@ -71,22 +75,24 @@ Then for every batch of data cleaned, we apply the update to the current best mo
 \theta^{(t)} \leftarrow \theta^{(t-1)} - \gamma \cdot g_{S}(\theta^{(t-1)})
 \]
 
-The dection in the previous step adds a small complication, since the sample $S_{dirty}$ is not representative of all of the data only $R_{dirty}$.
+The detection in the previous step adds a small complication, since the sample $S_{dirty}$ is not representative of all of the data.
 We also have to compensate for this bias by averaging this estimate with the gradient with respect to the clean data:
 \[
 g_C(\theta) = \frac{1}{\mid R - R_{dirty}\mid}\sum_{i \in R - R_{dirty}}\nabla\phi(x_i^{clean},y_i^{clean},\theta)
 \]
-Then, for weights $\alpha,\beta$ which we will subsequently discuss how to select:
+Then, for weights $\alpha,\beta$ which we will subsequently discuss how to select (Section \ref{params}):
 \[
 g(\theta) = \alpha \cdot g_C(\theta) + \beta \cdot g_S(\theta)
 \]
-So then our final gradient update becomes:
+This average represents a novel optimization for the data cleaning that is not studied in the stochastic optimization literature.
+Since some data are less expensive to process than others, we can batch together processing the clean data and sample to process the dirty data.
+Finally, we add in the iteration, and at each iteration $i$, the update becomes:
 \[
-\theta^{(t)} \leftarrow \theta^{(t-1)} - \gamma \cdot g(\theta) \blacksquare
+\theta^{(i+1)} \leftarrow \theta^{(i)} - \gamma \cdot g(\theta^{(i)}) \blacksquare
 \]
 
 \subsection{Model Update Algorithm}
-Following from this geometric analysis, we propose the iterative model correction algorithm.
+We propose the iterative model correction algorithm.
 We initialize the algorithm with $\theta^{(d)}$ which is the dirty model.
 At each iteration $i=\{1,...,t\}$, we clean a batch of data $b$ selected from the set of candidate dirty records $R_{dirty}$.
 Then, starting with $\theta^{(d)}$, we apply an averaged gradient update to get $\theta^{(i)}$.
@@ -95,63 +101,57 @@ We iterate until our budget of cleaning $k = t \cdot b$ record is reached.
 We present the model update algorithm here:
 \begin{enumerate}[noitemsep]
 	\item Calculate the gradient over the sample of clean data and call the result $g_S(\theta^{(i-1)})$
-	\item Calculate the average gradient over all the data in $R_{clean}$, and call the result $g_C(\theta^{(i)})$
+	\item Calculate the average gradient over all the data in $R_{clean}=R-R_{dirty}$, and call the result $g_C(\theta^{(i)})$
 	\item Apply the following update rule:
 	\[
 	\theta^{(i+1)} \leftarrow \theta^{(i)} - \lambda \cdot(\alpha\cdot g_S(\theta^{(i)}) + \beta \cdot  g_C(\theta^{(i)}))
 	\]
 \end{enumerate} 
 
-\subsubsection{Selecting the Parameters}
-The proposed update policy makes intuitive sense.
-However, we have still have to set the parameters $\lambda$, $\alpha$, $\beta$.
-We will show that theory from the stochastic optimization literature can allow us to understand this iterative algorithm.
+\subsubsection{Selecting the Parameters}\label{params}
+We have to set the parameters $b$, $\lambda$, $\alpha$, $\beta$.
+We will show that theory from the stochastic optimization literature can inform how to set these parameters.
 First, we will review all of the parameters that need to be set.
 
-\vspace{0.5em}
-
-\noindent\textbf{Step Size $\gamma$ : } The first problem is that we have not explained how to pick the step size $\gamma$. In other words, how far should we travel in the gradient direction.
+\noindent\textbf{Batch Size $\b$ : } The batch size $b$ controls the frequency of iteration. Larger batches provide a more accurate estimate of the gradient at each iteration but analyst gets less frequent model updates. 
 
 \vspace{0.5em}
 
-\noindent\textbf{Step Size $\alpha,\beta$ : } The next problem is deriving the proportions with which we should combine $g_S(\theta)$ and $g_C(\theta)$. It turns out that $\alpha = \frac{R_{clean}}{R}$ and $\beta = \frac{R_{dirty}}{R}$, and we will show a derivation below.
+\noindent\textbf{Step Size $\gamma$ : } We have not explained how to pick the step size $\gamma$. In other words, how far should we travel in the gradient direction.
+
+\vspace{0.5em}
+
+\noindent\textbf{Weights $\alpha,\beta$ : } The next problem is deriving the proportions with which we should combine $g_S(\theta)$ and $g_C(\theta)$. It turns out that $\alpha = \frac{R_{clean}}{R}$ and $\beta = \frac{R_{dirty}}{R}$, and we will show a derivation below.
 
 \vspace{0.5em}
 
 \noindent\textbf{Choosing $S$: } As we mentioned, the optimal clean model depends on \emph{all} the clean data, not just a sample. 
-So $g_S$ is really an approximation of the the true gradient $g^*$ with some error $g^* \pm \epsilon$. 
+So $g_S$ is an approximation of the true gradient $g^*$ with some error $g^* \pm \epsilon$. 
 The quality of the update depends on how well we can approximate $g^*$ using $g_S$.
 The problem is how should we construct the sample of data to clean $S$ to get the most accurate update.
 In particular, how should we choose the sampling probabilities $p_i$ for each $i \in S$ such that the error is minimized.
 
 \subsection{Analysis with Stochastic Gradient Descent}\label{sgd}
 This update policy can be formalized as a class of very well studied algorithms called Stochastic Gradient Descent.
-This gives us a theoretical framework to understand and analyze our update rule, bound the error, and choosing points to clean.
+This gives us a theoretical framework to understand and analyze our update rule, bound the error, and choose points to clean.
 Mini-batch stochastic gradient descent (SGD) is an algorithm for finding the optimal value
 of $\theta$, given the convex loss, and data.
+In mini-batch SGD, random subsets of data are selected at each iteration and the average gradient is computed for every batch.
+The key difference is that in traditional SGD there is no notion of dirty and clean data, and we have to formalize our method as a variant of mini-batch SGD to apply the theory.
 
 \vspace{0.5em}
 
-\noindent\textbf{ Setting $\gamma$: } There is extensive literature in machine learning for choosing $\gamma$ appropriately. $\gamma$ can be set either to be a constant or decayed over time. Many machine learning frameworks (e.g., MLLib, Sci-kit Learn, Vowpal Wabbit) automatically set learning rates or provide different learning scheduling frameworks. 
-In our experiments, we use a technique called inverse scaling where there is a parameter $\gamma_0=0.1$, and at each iteration we reduce it to $\gamma_t = \frac{\gamma_0}{\mid S \mid t}$. 
+\noindent\textbf{ \sys as Lazy SGD: } The update technique is \sys can be formalized as a variant of SGD that lazily materializes the clean value.
+We apply SGD to dirty dataset, as data is sampled at each iteration, data is cleaned.
+To the SGD algorithm it is as if the entire data is clean but we are lazily materializing the clean values.
+It is well known that even for arbitrary initializations SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
+Furthermore in our setting, the dirty model can be much more accurate than an arbitrary initialization.
+This is the property that we exploit to make significant progress by cleaning only a sample of data.
 
 \vspace{0.5em}
 
-\noindent\textbf{ Convergence: } The next property of concern is convergence. Convergence properties of batch SGD formulations has been well studied \cite{dekel2012optimal}. 
-The conditions on this convergence are essentially that at each step the estimate of the gradient $g_S$ has to be unbiased, that is on average correct. 
-
-\begin{proposition}
-For an appropriately chosen learning rate $\gamma_t$, batch stochastic gradient descent will converge if $\mathbb{E}(g_S)=g^*$.
-\label{unbiased}
-\end{proposition}
-
-A direct result of convergence is a guarantee on statistical consistency.
-Another interesting consequence of this result is that we can sample $S$ in any way that we want
-as long as our estimate in unbiased.
-
-\vspace{0.5em}
-
-\noindent\textbf{Deriving $\alpha$ and $\beta$: }
+\noindent\textbf{Deriving $\alpha$ and $\beta$: } We first want to show how to select $\alpha$ and $\beta$ such that our estimate of the gradient is unbiased. 
+We will then show that SGD will converge when the estimate is unbiased and the step-size is chosen appropriately.
 We first select a set of records before starting we select a set of dirty records $R_{dirty} \subseteq R$. 
 We construct batch $S_{dirty}$ only from the dirty records and apply cleaning to this batch.
 Now the problem is that this sample (and the resulting gradient) is possibly biased since we are excluding some data.
@@ -165,7 +165,7 @@ g(\theta^{t}) = \frac{\mid R_{dirty} \mid \cdot g_S + \mid R_{clean} \mid \cdot 
 \]
 Therefore,
 \[
-\alpha = \frac{R_{clean}}{R}, \beta = \frac{R_{dirty}}{R} \blacksquare
+\alpha = \frac{R_{clean}}{R}, \beta = \frac{R_{dirty}}{R}
 \]
 
 \begin{lemma}
@@ -177,6 +177,20 @@ The gradient estimate $g(\theta^{t})$ is unbiased if $g_S$ is an unbiased estima
 \begin{proof}[Sketch]
 This result follows directly from the linearity of expectation, since we are adding a deterministic result with an unbiased result.
 \end{proof}
+
+\vspace{0.5em}
+
+\noindent\textbf{ Setting $\gamma$: } There is extensive literature in machine learning for choosing the step size $\gamma$ appropriately. $\gamma$ can be set either to be a constant or decayed over time. Many machine learning frameworks (e.g., MLLib, Sci-kit Learn, Vowpal Wabbit) automatically set learning rates or provide different learning scheduling frameworks. 
+In our experiments, we use a technique called inverse scaling where there is a parameter $\gamma_0=0.1$, and at each iteration we reduce it to $\gamma_t = \frac{\gamma_0}{\mid S \mid t}$. 
+
+\vspace{0.5em}
+
+\noindent\textbf{ Convergence: } Convergence properties of batch SGD formulations has been well studied \cite{dekel2012optimal}. From the preceding analysis, we know that our gradient estimate is unbiased and we know how to select the step size.  
+
+\begin{proposition}
+For an appropriately chosen learning rate $\gamma_t$, batch stochastic gradient descent will converge if $\mathbb{E}(g_S)=g^*$.
+\label{unbiased}
+\end{proposition}
 
 \vspace{0.5em}
 
@@ -192,16 +206,12 @@ $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 \]
 \end{proposition}
 
+\vspace{0.5em}
+
+\noindent\textbf{ Batch size: }
 There is an interesting tradeoff between batch size an convergence rate.
 Increasing the batch size reduces the variance $\sigma^2$, however it does
 mean at each iteration you are doing more work.
 In a data cleaning context, this is a problem since the bottlneck is the work at 
 each iteration not the number of iterations.
-
-\vspace{0.5em}
-
-\noindent\textbf{ Laziness Argument: } The convergence and the error bounds show that the technique is theoretically justified, but the remaining question is whether the constant factors make this technique practical.
-It is well known that even for arbitrary initializations SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
-In our case, we often have a decent initialization which is the dirty model, which means that we can get close processing far less than the full data.
-Our algorithm is essentially an arguement for lazy materialization, where we only clean the data when needed.
 
