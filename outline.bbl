@@ -1,23 +1,19 @@
 \begin{thebibliography}{10}
 
-\bibitem{bdas}
-Berkeley data analytics stack.
-
 \bibitem{fortunearticle}
 Big data's dirty problem.
 
-\bibitem{DBLP:conf/eurosys/AgarwalMPMMS13}
-S.~Agarwal, B.~Mozafari, A.~Panda, H.~Milner, S.~Madden, and I.~Stoica.
-\newblock {BlinkDB:} queries with bounded errors and bounded response times on
-  very large data.
-\newblock In {\em EuroSys}, pages 29--42, 2013.
+\bibitem{dollarsfordocs}
+Dollars for docs.
+\newblock \url{http://projects.propublica.org/open-payments/}.
 
-\bibitem{alexandrov2014stratosphere}
-A.~Alexandrov, R.~Bergmann, S.~Ewen, J.-C. Freytag, F.~Hueske, A.~Heise,
-  O.~Kao, M.~Leich, U.~Leser, V.~Markl, et~al.
-\newblock The stratosphere platform for big data analytics.
-\newblock {\em The VLDB Journal—The International Journal on Very Large Data
-  Bases}, 23(6):939--964, 2014.
+\bibitem{importstats}
+List of countries by imports.
+\newblock \url{https://en.wikipedia.org/wiki/List_of_countries_by_imports}.
+
+\bibitem{sampleclean}
+Sampleclean.
+\newblock http://sampleclean.org/, 2015.
 
 \bibitem{altowim2014progressive}
 Y.~Altowim, D.~V. Kalashnikov, and S.~Mehrotra.
@@ -40,6 +36,17 @@ L.~Bottou.
 \newblock Stochastic gradient descent tricks.
 \newblock In {\em Neural Networks: Tricks of the Trade}, pages 421--436.
   Springer, 2012.
+
+\bibitem{chu2015katara}
+X.~Chu, J.~Morcos, I.~F. Ilyas, M.~Ouzzani, P.~Papotti, N.~Tang, and Y.~Ye.
+\newblock Katara: A data cleaning system powered by knowledge bases and
+  crowdsourcing.
+\newblock 2015.
+
+\bibitem{crotty2014tupleware}
+A.~Crotty, A.~Galakatos, and T.~Kraska.
+\newblock Tupleware: Distributed machine learning on small clusters.
+\newblock {\em IEEE Data Eng. Bull}, 37(3), 2014.
 
 \bibitem{dekel2012optimal}
 O.~Dekel, R.~Gilad-Bachrach, O.~Shamir, and L.~Xiao.
@@ -80,6 +87,12 @@ A.~Guillory, E.~Chastain, and J.~Bilmes.
 \newblock In {\em International Conference on Artificial Intelligence and
   Statistics}, pages 201--208, 2009.
 
+\bibitem{hellerstein2012madlib}
+J.~M. Hellerstein, C.~R{\'e}, F.~Schoppmann, D.~Z. Wang, E.~Fratkin,
+  A.~Gorajek, K.~S. Ng, C.~Welton, X.~Feng, K.~Li, et~al.
+\newblock The madlib analytics library: or mad skills, the sql.
+\newblock {\em Proceedings of the VLDB Endowment}, 5(12):1700--1711, 2012.
+
 \bibitem{jaggi2014communication}
 M.~Jaggi, V.~Smith, M.~Tak{\'a}c, J.~Terhorst, S.~Krishnan, T.~Hofmann, and
   M.~I. Jordan.
@@ -103,6 +116,12 @@ H.~K{\"o}pcke, A.~Thor, and E.~Rahm.
 \newblock Evaluation of entity resolution approaches on real-world match
   problems.
 \newblock {\em PVLDB}, 3(1):484--493, 2010.
+
+\bibitem{kraska2013mlbase}
+T.~Kraska, A.~Talwalkar, J.~C. Duchi, R.~Griffith, M.~J. Franklin, and M.~I.
+  Jordan.
+\newblock Mlbase: A distributed machine-learning system.
+\newblock In {\em CIDR}, 2013.
 
 \bibitem{nelson2012query}
 B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
@@ -141,6 +160,12 @@ E.~Rahm and H.~H. Do.
 B.~Settles.
 \newblock Active learning literature survey.
 \newblock {\em University of Wisconsin, Madison}, 52(55-66):11, 2010.
+
+\bibitem{simpson1951interpretation}
+E.~H. Simpson.
+\newblock The interpretation of interaction in contingency tables.
+\newblock {\em Journal of the Royal Statistical Society. Series B
+  (Methodological)}, pages 238--241, 1951.
 
 \bibitem{Gartner}
 N.~Swartz.

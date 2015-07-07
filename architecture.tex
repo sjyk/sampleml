@@ -1,27 +1,29 @@
 \section{System Architecture}\label{arch}
-Now, we overview the \sys architecture, and setup the basic algorithmic framework.
+We describe the \sys architecture and the basic algorithmic framework.
 We will address the individual components in the subsequent sections.
 
 \subsection{Overview}
-We revist the architecture diagram (Figure \ref{sys-arch}) in more detail.
+We revisit the architecture diagram (Figure \ref{sys-arch}) in more detail.
 The first step of the system is \emph{initialization}.
-In this step, the user provides a dirty dataset $R$, a repair technique $C(\cdot)$, and a dirty model $\theta^{(d)}$ trained on the dirty dataset. 
-Optionally, the user can provide a dirty data detector $D(\cdot)$ which selects the set of corrupted records when applied to $R$.
+In this step, the user provides a relation $R$, a data cleaning technique $C(\cdot)$, and a dirty model $\theta^{(d)}$ trained on the dirty dataset. 
+Optionally, the user can provide a dirty data detector $D(\cdot)$ which selects the set of likely corrupted records from $R$.
 This is possible for some types of data errors such as constraint violations and missing values.
-If one is not provided, we will start by assuming all of the data is dirty and try to learn a detector as we clean more data.
-At initialization, there are two hyperparameters to set, the batch size (how much data per iteration to repair) and the number of iterations.
+If one is not provided, we start by treating all of the data is dirty and try to learn a detector as we clean more data.
+We are given a \emph{featurization} function $F(\cdot)$ that maps each record in $R$ to a feature vector and a label.
+At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $t = \frac{k}{b}$).
+We discuss how to set $b$ and the tradeoffs in setting a larger or smaller $b$ in Section \label{model-update}.
 
 After initialization, \sys begins the cleaning and model update iterations.
 The \emph{sampler} selects a sample of dirty data based on the batch size.
 At this step, \sys can use the detector $D$ to narrow the sample to select only dirty data.
-Once a sample is selected, we apply the user-specified data cleaning operation to the sample in the \emph{repair} step.
+Once a sample is selected, we apply the user-specified data cleaning operation to clean the sample (the \emph{cleaner}).
 Then, after the sample is cleaned, the dirty model is updated by the \emph{updater}.
 
 The next two steps in the archictecture are feedback steps where we update the sampling for the next iteration.
 The \emph{estimator} estimates the change on the model if a dirty record is cleaned based on prior cleaned data.
 This information can be used to guide sampling towards more valuable records.
 After estimation, we also update our detector $D(\cdot)$ based on the data that we have cleaned.
-After all of the iterations are complete, the system returns the cleaned model.
+After all of the iterations are complete, the system returns the updated model.
 
 To summarize the architecture in pseudocode:
 \begin{enumerate}\scriptsize\sloppy
@@ -30,10 +32,11 @@ To summarize the architecture in pseudocode:
 \begin{enumerate}
 	\item \texttt{dirty\_sample $=$ Sampler(dirty\_data, sample\_prob, detector, batch)}
 	\item \texttt{clean\_sample $=$ Repair(dirty\_sample)}
-	\item \texttt{dirty\_model $=$ Updater(dirty\_model, sample\_prob, clean\_sample)}
+	\item \texttt{current\_model $=$ Updater(current\_model, sample\_prob, clean\_sample)}
 	\item \texttt{sample\_prob $=$ Estimator(dirty\_data, cleaned\_data, detector)}
 	\item \texttt{detector $=$ DetectorUpdater(detector)}
 \end{enumerate}
+\item \texttt{Output: current_model}
 \end{enumerate}
 
 \subsection{Challenges and Formalization}
@@ -48,16 +51,15 @@ The result of the featurization are the data matrices $X$ and $Y$.
 \[
 F(R)\rightarrow (X,Y)
 \]
-We consider problems in which the training examples (i.e., rows in the data matrix) have a one-to-one relationship with rows in the base data ($R$).
 
 \vspace{0.5em}
 
-\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data dection. This is key part of our sampling framework. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. We will discuss two techniques to do this: (1) an a priori case, and (2) and adaptive case. In the a priori case, we know which data is dirty in advance. In the adaptive case, we have to train a classifier based on data we have already cleaned to select the dirty data. This serves two purposes: (1) it reduces the variance of our updates because we can cheaply scan over data we know that is clean, and (2) it increases the fraction of actually dirty records in the candidate batch.
+\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data detection. This is key part of our sampling framework. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. We will discuss two techniques to do this: (1) an a priori case, and (2) and an adaptive case. In the a priori case, we know which data is dirty in advance. In the adaptive case, we train a classifier based on data that we have already cleaned to select the dirty data.
 
 \vspace{0.5em}
 
 \noindent\textbf{Sampler (Section \ref{dist-samp}). } We take a sample of the records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p_r$.
-We will show that we can derive the optimal sampling distribution (choice of $p_r$ that minimizes the variance of our updates) theoretically, however, it will depend on knowing the cleaned data before we actually clean. This is why we introduce an estimation step to approximate this cleaned value.
+We will show that we can derive the optimal sampling distribution theoretically, however, it will depend on knowing the cleaned data before we actually clean. This is why we introduce an estimation step to approximate this cleaned value.
 
 \vspace{0.5em}
 
