@@ -1,6 +1,6 @@
 \section{Introduction}
 There have been several recent proposals to extend existing data management systems with native Machine Learning support (e.g., MLBase \cite{kraska2013mlbase}, MADLIB\cite{hellerstein2012madlib}, TupleWare\cite{crotty2014tupleware}).
-While these extensions can dramatically reduce programmer effort in developing learning-driven applications, such as recommender systems, fraud detection systems, and forecasting models, pre-processing or ``cleaning" data is still a serious bottleneck \cite{kandel2012}. 
+While these extensions can dramatically reduce programmer effort in developing learning-driven applications, pre-processing or ``cleaning" data is still a serious bottleneck \cite{kandel2012}. 
 Data are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
 Industrial surveys have established that dirty data are prevalent \cite{Gartner}, and there is a growing industry around cleaning data \cite{fortunearticle}.
 Machine Learning is known to be sensitive to data quality \cite{xiaofeature}, and improper handling of dirty data can lead to unreliable and error-prone predictions.
@@ -18,7 +18,7 @@ When scripted transformations do not suffice, crowdsourcing is a popular alterna
 However, crowdsourcing comes at the cost of additional latency and significant monetary expense.
 
 Thus, for many corrupted datasets, the analyst can only practically clean $k \ll N$ records.
-This cleaning budget poses a significant challenge to Machine Learning.
+Strict budgets pose a significant challenge to Machine Learning.
 Machine Learning applications can require a large amount of training data to learn correlations between possibly hundreds of features and labels.
 A small sample of clean data may not be able to support a viable Machine Learning model.
 The predictions from this model may be inaccurate and the problems introduced by the small sample size may dominate any benefits from data cleaning. 
