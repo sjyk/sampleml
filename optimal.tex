@@ -113,7 +113,7 @@ We have to set the parameters $b$, $\lambda$, $\alpha$, $\beta$.
 We will show that theory from the stochastic optimization literature can inform how to set these parameters.
 First, we will review all of the parameters that need to be set.
 
-\noindent\textbf{Batch Size $\b$ : } The batch size $b$ controls the frequency of iteration. Larger batches provide a more accurate estimate of the gradient at each iteration but analyst gets less frequent model updates. 
+\noindent\textbf{Batch Size $b$ : } The batch size $b$ controls the frequency of iteration. Larger batches provide a more accurate estimate of the gradient at each iteration but analyst gets less frequent model updates. 
 
 \vspace{0.5em}
 
@@ -208,10 +208,14 @@ $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 
 \vspace{0.5em}
 
-\noindent\textbf{ Batch size: }
-There is an interesting tradeoff between batch size an convergence rate.
-Increasing the batch size reduces the variance $\sigma^2$, however it does
-mean at each iteration you are doing more work.
-In a data cleaning context, this is a problem since the bottlneck is the work at 
-each iteration not the number of iterations.
+\noindent\textbf{ Setting the batch size: } The batch size should be set by the analyst to have the desired properties.
+Larger batches will take longer to clean and will make more progress towards the clean model, but will have less fequent model updates.
+On the other hand, smaller batches are cleaned faster and have more frequent model updates but make less progress.
+The overheads introduced by our approach are more evident at smaller batch sizes.
+There are diminishing returns to increasing the batch size $O(\frac{1}{\sqrt{b}})$.
+Empirically, we find that batch sizes of 50 converge the fastest on our data and we specify this parameter in our experiments.
+If a data cleaning technique requires a larger batch size than this, i.e., data cleaning is fast enough that the iteration overhead is significant compared to cleaning 50 records, we can always apply the updates in smaller batches.
+For example, the batch size set by the analyst might be $b=1000$, but we apply the model updates after every $50$ records are cleaned.
+This way we can dissociate the requirements of SGD and the data cleaning technique.
+
 
