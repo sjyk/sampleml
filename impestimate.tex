@@ -68,7 +68,7 @@ If $d$ is the dirty value and $c$ is the clean value, the Taylor series approxim
 f(c) = f(d) + f'(d)\cdot(d-c) + ...
 \]
 If we ignore the higher order terms, we see that the linear term $f'(d)\cdot(c-d)$ decouples the features.
-We only have know the change in each feature to estimate the change in value.
+We only have to know the change in each feature to estimate the change in value.
 In our case the function $f$ is the gradient $\nabla\phi$.
 So, the resulting linearization is:
 \[
@@ -96,7 +96,7 @@ In the linear regression example, where the gradient is:
 \nabla\phi(x,y,\theta) = (\theta^Tx - y)x
 \]
 For a record, $r$, suppose we have a feature vector $x$.
-It we take the partial derivatives with respect to x $M_x$ is:
+If we take the partial derivatives with respect to x, $M_x$ is:
 \[
 M_x[i,i] = 2x[i] + \sum_{i \ne j} \theta[j]x[j] - y 
 \]
@@ -121,7 +121,7 @@ g[i] = \sum_{i} x[i]^2-x[i]y + \sum_{j \ne i} \theta[j]x[j]
 \]
 We see that this function is already mostly linear in $x$ except for the one quadratic term.
 However, this one quadratic term has potential to amplify errors.
-Consider two estimates:
+Consider two expressions:
 \[
 f(x+\epsilon) = (x+\epsilon)^2 = x^2 + 2x\epsilon + \epsilon^2
 \]
@@ -129,8 +129,8 @@ f(x+\epsilon) = (x+\epsilon)^2 = x^2 + 2x\epsilon + \epsilon^2
 f(x+\epsilon) \approx f(x) + f'(x)(\epsilon) = x^2 + 2x\epsilon
 \]
 The only difference between the two estimates is the quadratic $\epsilon^2$, if $\epsilon$ is highly uncertain random variable then the quadratic dominates.
-Since we are using an average which is a coarse grained estimate high error is unavoidable.
-The bottom estimate while a potentially biased approximation avoids amplifying this error.
+Our estimate $\epsilon$ is an average, so at the least, its error is given by the variance in the data.
+If this variance is large, the Taylor estimate avoids amplifying this error.
 We evaluate our technique in Section \ref{est} against alternatives, and we find that indeed we provide more accurate estimates for a small number of samples cleaned.
 When the number of cleaned samples increases the alternative techniques are comparable.
 
@@ -140,11 +140,11 @@ We know how to estimate $\mathbb{E}(\Delta x)$ and $\mathbb{E}(\Delta y)$.
 \begin{lemma}[Single Feature]
 For a feature $i$, we average all records cleaned that have an error for that feature, weighted by their sampling probability:
 \[
-\bar{\Delta}_i = \frac{1}{NK}\sum_{j=0}^K (x[i]-x_{clean}[i])\times \frac{1}{p_j}
+\bar{\Delta}_i = \frac{1}{NK}\sum_{j=1}^K (x[i]-x_{clean}[i])\times \frac{1}{p_j}
 \]
 Similarly, for a label $i$:
 \[
-\bar{\Delta}_i = \frac{1}{NK}\sum_{j=0}^K (y[i]-y_{clean}[i])\times \frac{1}{p_j}
+\bar{\Delta}_i = \frac{1}{NK}\sum_{j=1}^K (y[i]-y_{clean}[i])\times \frac{1}{p_j}
 \]
 \end{lemma}
 
@@ -169,7 +169,7 @@ With the above theorem, we finally have an approximation to our sampling weights
 The same logic still holds in the adaptive setting, however, we have to reformulate what we mean by ``similarly" corrupted.
 Here, we use $u$ dirtiness classes.
 Instead of conditioning on the features that are corrupted, we condition the classes.
-So for each error class, we compute a $\Delta_{xu}$ and $\Delta_{yu}$.
+So for each error class, we compute a $\Delta_{ux}$ and $\Delta_{uy}$.
 These are the average change in the features given that class and the average change in labels given that class respectively.
 \[
 p_{r,u}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{ux} +  M_y \cdot \Delta_{uy}\|
