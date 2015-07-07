@@ -31,7 +31,7 @@ To summarize the architecture in pseudocode:
 \item For each i in $\{1,...,T\}$
 \begin{enumerate}
 	\item \texttt{dirty\_sample $=$ Sampler(dirty\_data, sample\_prob, detector, batch)}
-	\item \texttt{clean\_sample $=$ Repair(dirty\_sample)}
+	\item \texttt{clean\_sample $=$ Cleaner(dirty\_sample)}
 	\item \texttt{current\_model $=$ Updater(current\_model, sample\_prob, clean\_sample)}
 	\item \texttt{sample\_prob $=$ Estimator(dirty\_data, cleaned\_data, detector)}
 	\item \texttt{detector $=$ DetectorUpdater(detector)}

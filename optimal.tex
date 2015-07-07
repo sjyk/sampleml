@@ -12,26 +12,25 @@ The challenge is that we want a model update technique that takes advantage of t
 However, we want to avoid the Simpson's paradox problem discussed previously.
 Let us describe the abstract problem.
 Suppose we have a random sample of data $S_{dirty} \subseteq R_{dirty}$ from the results of the detection in the previous section.
-We also know the sampling probabilities of each record $p(r)$.
-We apply our repair to the sample and get $S_{clean}$, and then apply our featurization to get features and labels $(X_{clean},Y_{clean})$. 
-In the model update problem, we update the dirty model $\theta^{(d)}$ with some function $f(\cdot)$ i.e.,:
+We also know the sampling probability of each record $p(r)$.
+We apply our data cleaning technique to the sample and get $S_{clean}$, and then apply our featurization to get features and labels $(X_{clean},Y_{clean})$. 
+In the model update problem, we update the dirty model $\theta^{(d)}$ with some function $f(\cdot)$, i.e.,
 \[
 \theta^{new} \leftarrow f(X_{clean},Y_{clean},\theta^{(d)})
 \]
-Our goal is that these updates should minimize the error of the updated model and the true model $\theta^{(c)}$ (if we cleaned and trained over the entire data):
+Our goal is that these updates should minimize the error of the updated model and the true model $\theta^{(c)}$ (if we cleaned the entire data and trained over the entire data):
 \[
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]
 
-\subsection{The Geometry Of The Problem}
+\subsection{Geometric Interpretation}
 We will present the update algorithm intuitively by describing it in terms of the convex geometry of the problem.
 Let us consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar vale), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
 Convexity means, as we vary the model $\theta$ the loss is essentially bowl-shaped (visualized in Figure \ref{update-arch2}a).
 
-The way that dirty data affects this problem, is that we are optimizing the wrong function.
+The consequence of dirty data is that we optimize the wrong loss function.
 We are optimizing the function $l'(\theta)$, when we really want to optimize $l(\theta)$.
 Figure \ref{update-arch2}a, illustrates the consequence of this optimization.
-If we train a model on the dirty data, the model is not the optimal model for the cleaned data.
 The resulting dirty model is a suboptimal point on clean curve.
 
 \begin{figure}[ht!]
