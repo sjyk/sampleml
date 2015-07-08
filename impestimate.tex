@@ -43,7 +43,7 @@ Let us formalize this intuition.
 Instead of computing the actual gradient with respect to the 
 true clean values, let us compute the conditional expectation given that a set of features and labels $f_r$ are corrupted:
 \[
-p_i \propto \mathbb{E}(\nabla\phi(\theta_{(t)}^Tx_{clean},y_{clean}) \mid e_r)
+p_i \propto \mathbb{E}(\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t) \mid e_r)
 \]
 What we mean by corrupted features is that:
 \[
@@ -72,17 +72,17 @@ We only have to know the change in each feature to estimate the change in value.
 In our case the function $f$ is the gradient $\nabla\phi$.
 So, the resulting linearization is:
 \[
-\nabla\phi(\theta^Tx_{clean},y_{clean}) \approx \nabla\phi(\theta^Tx,y) + \frac{\partial}{\partial X}\nabla\phi(\theta^Tx,y)\cdot (x - x_{clean}) \]
-\[+ \frac{\partial}{\partial Y}\nabla\phi(\theta^Tx,y)\cdot (y - y_{clean})
+\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot (x - x_{clean}) \]
+\[+ \frac{\partial}{\partial Y}\phi(x,y,\theta)\cdot (y - y_{clean})
 \]
 When we take the expected value:
 \[
-\mathbb{E}(\nabla\phi(\theta^Tx_{clean},y_{clean})) \approx \nabla\phi(\theta^Tx,y) + \frac{\partial}{\partial X}\nabla\phi(\theta^Tx,y)\cdot \mathbb{E}(\Delta x) \]
-\[+ \frac{\partial}{\partial Y}\nabla\phi(\theta^Tx,y)\cdot \mathbb{E}(\Delta y)
+\mathbb{E}(\nabla\phi(x_{clean},y_{clean},\theta)) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot \mathbb{E}(\Delta x) \]
+\[+ \frac{\partial}{\partial Y}\nabla\phi(x,y,\theta)\cdot \mathbb{E}(\Delta y)
 \]
 So the resulting estimation formula takes the following form:
 \[
-\approx \nabla\phi(\theta^Tx,y) + M_x \cdot \mathbb{E}(\Delta x) + M_y \cdot \mathbb{E}(\Delta y) 
+\approx \nabla\phi(x,y,\theta) + M_x \cdot \mathbb{E}(\Delta x) + M_y \cdot \mathbb{E}(\Delta y) 
 \]
 Recall that we have a $d$ dimensional feature space and $l$ dimensional label space.
 Then, $M_x = \frac{\partial}{\partial X}\nabla\phi$ is an $d \times d$ matrix, and $M_y = \frac{\partial}{\partial Y}\nabla\phi$ is a $d \times l$ matrix.

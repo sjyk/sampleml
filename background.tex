@@ -93,16 +93,16 @@ and have strong theoretical guarantees on convergence rates.
 This class of problems includes all generalized linear models (including linear and logistic regression), and all variants of support vector machines.
 Formally,
 \[
- \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i}^T\theta,y_{i})
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i}^T,y_{i},\theta)
 \]
 For example, in a linear regression $\phi$ is:
 \[
-\phi(x_{i}^T\theta,y_{i}) = \|\theta^Tx_{i} - y_i \|_2^2
+\phi(x_{i}^T,y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
 \]
 Typically, a \emph{regularization} term $r(\theta)$ is added to this problem.
 $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid overfitting to noise in the training examples.
 \[
- \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i}^T\theta,y_{i}) + r(\theta)
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i}^T,y_{i},\theta) + r(\theta)
 \]
 For example, a popular variant of linear regression is called LASSO which is:
 \[
