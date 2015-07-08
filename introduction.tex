@@ -6,7 +6,7 @@ Industrial surveys have established that dirty data are prevalent \cite{Gartner}
 Machine Learning is known to be sensitive to data quality \cite{xiaofeature}, and improper handling of dirty data can lead to unreliable and error-prone predictions.
 
 Supervised Machine Learning relies on correlating features with labels, and systematically corrupted data can lead to confouding correlations.
-Consider a music recommender system, we may find that due to a software bug all users from Europe have an incorrect age attribute defaulted to ``18-24".
+Consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
 A recommendation model trained on this data may spuriously ``learn" a correlation relationship between the ``18-24" age group and music liked by European users.
 While there is an extensive literature on robust Machine Learning, this work largely focuses on resilience to atypical outliers (i.e., age ``150") and not spuriously correlations.
 
@@ -39,13 +39,13 @@ The cleaning is iterative, applying the data cleaning procedure to samples and f
 The key insight is that the iterative data cleaning and update process can be analyzed as a form of Stochastic Optimization \cite{bertsekas2011incremental} allowing us to leverage convex-analysis theory to develop optimized sampling and estimation methods.
 
 
-As analytics frameworks increasingly support Machine Learning methodologies for optimizing across the entire pipeline are required.
+As analytics frameworks increasingly support Machine Learning, methodologies for optimizing across the entire pipeline are required.
 In this work, we explore the new opportunities for joint optimization of data cleaning and model training.
 We can ``push down" the model training to the data cleaning and select data to clean that are most valuable to the model.
 We can also ``push up" the data cleaning to the model training by intelligently batching together model updates from already cleaned data.
 Specifically, our contributions are:
 \begin{itemize}[noitemsep]
-\item We propose a technique that updates a dirty model from clean data based using a gradient descent step.
+\item We propose a technique that updates a dirty model from clean data based on gradient descent.
 \item We derive an optimal sampling distribution for estimating the gradient descent step, which while practically incomputable, can be approximated by maintaining an estimate of the impact of data cleaning on a record. 
 \item The estimation technique applies linearization to decouple changes in different features allowing us to integrate knowledge about what is wrong with the data (i.e. analyst-specified detection rules) to better estimate error impact.
 \item We show that batching together data that we expect to be clean can lead to significant improvements especially when the sample size is small.

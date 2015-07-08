@@ -218,4 +218,14 @@ If a data cleaning technique requires a larger batch size than this, i.e., data 
 For example, the batch size set by the analyst might be $b=1000$, but we apply the model updates after every $50$ records are cleaned.
 This way we can dissociate the requirements of SGD and the data cleaning technique.
 
+\vspace{0.5em}
+
+\noindent\textbf{ Non-covex losses: } We acknowledge that there is an increasing popularity of non-convex losses in the Neural Network and Deep Learning literature. 
+However, even for these losses, gradient descent techniques still apply. 
+Instead of converging to a global optimum they converge to a locally optimal value. 
+Likewise, \sys will converge to the closest locally optimal value to the dirty model. 
+Because of this, it is harder to reason about the results.
+Different initializations will lead to different local optima, and thus, introduces a complex dependence on the initialization with the dirty model.
+This problem is not fundemental to \sys and any gradient technique suffers this challenge for general non-convex losses, and we hope to explore this more in the future.
+
 
