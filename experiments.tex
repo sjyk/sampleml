@@ -209,10 +209,15 @@ The adaptive case depends on being able to predict corrupted records.
 For example, random corruption that look like other data may be hard to learn.
 As corruption becomes more random, the classifier becomes increasingly erroneous.
 We run an experiment where we start with the systematic corruption described earlier.
-With probability $p$, we increasingly make these problems more random.
-We compare these results to AC-D where we do not have a detector at all.
+We increasingly make this corruption more random.
+Instead of selecting the highest valued records for the most valuable features, we corrupt random records with probability $p$. 
+We compare these results to AC-D where we do not have a detector at all at one vertical slice of the previous plot (cleaning 1000 records).
 In Figure \ref{tradeoffs2}, we plot the relative error reduction using a classifier.
-We find that when the corruption is about 40\% random then we reach a break even point.
+We find that when the corruption is about 50\% random then we reach a break even point.
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: The adaptive detection can tolerate some misclassifications and still provides improvements until corruption is very random. }
 
 \begin{figure}[ht!]
 \vspace{-1em}
@@ -222,12 +227,18 @@ We find that when the corruption is about 40\% random then we reach a break even
 \end{figure}
 
 \subsection{Estimation}\label{est}
-In the next experiment, we evaluate our estimation technique.
-We explore how this technique performs compared to a few alternative estimation techniques: (1) ``linear regression" where we train a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" change where we do not use the detection to inform how to apply the estimate, (3) ``average feature change" where we do not linearize but use detection, and (4) our taylor series linear approximation.
+In Figure \ref{tradeoffs3}, we explore how estimation technique performs compared to a few alternative estimation techniques: (1) ``linear regression" where we train a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" change where we do not use the detection to inform how to apply the estimate, (3) ``average feature change" where we do not linearize but use detection, and (4) our taylor series linear approximation.
+We only how accurately the technique can estimate the gradient for sampling.
+More accurate gradient estimates will result in faster convergence.
+
 Using the EEG dataset, we measure the relative estimation error (relative L2 error with the true gradient) for different amounts of data cleaned.
-The Taylor series approximation proposed in this work gives more accurate for small cleaning sizes, which is exactly the regime in which we are interested in optimizing.
-The other techniques require more data to converge.
-The linear regression and the gradient do not exploit what we know about the data cleaning, and the gradients can amplify estimation errors in the average feature change approach at small sample sizes (Section \ref{acc}).
+The Taylor series approximation proposed in this work gives more accurate for small cleaning sizes.
+We give the intuition in Section \ref{acc} where the linearization prevents amplification of errors due to quadratic terms.
+Linear regression and the average feature change technique do eventually perform comparably but only after cleaning much more data.
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: Linearized gradient estimates are more accurate when estimated from small samples. }
 
 \begin{figure}[ht!]
 \vspace{-2em}
@@ -240,7 +251,7 @@ The linear regression and the gradient do not exploit what we know about the dat
 \subsection{Real Scenarios}
 We evaluate \sys in two real scenarios, one demonstrating the adaptive detection case and one demonstrating the a priori case.
 
-\subsubsection{Replacing Corrupted Data}
+\subsubsection{Replacing Corrupted Handwriting Data}
 We consider the following scenario with the MNIST handwritten digit recognition dataset.
 Suppose, our goal is to classify digits into a set of classes.
 However, we suspect that some of our raw images are of low quality.
@@ -252,7 +263,7 @@ We devise an ``adaptive detection" \sys scenario for this example.
 The MNIST dataset consists of 64x64 grayscale images.
 We run two experiments, in which we have two types of corruptions: (1) 5x5 block removal where take a random 5x5 block from the image and set its pixel values to 0, and (2) Fuzzy where we run a 4x4 moving average over the entire image.
 We applied these corruptions to a random 5\% of the images.
-We constructed these features to mimic the random vs. systematic corruption that we studied before.
+We constructed these corruptions to mimic the random vs. systematic corruption that we studied before.
 The 5x5 block removal behaves much more like a systematic corruption. 
 Typical image processing features are based on edges and corrupting edges leads to ambiguities.
 On the other hand, the making the image fuzzy is more like a random corruption.
@@ -269,13 +280,13 @@ We use a 9 class classifier (one for each digit) to detect the corruption.
 \end{figure}
 \fi
 
-In Figure \ref{mnist}, we present the results.
-As in our earlier experiments, we find that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
-This experiment highlights a few other interesting points.
-First, SampleClean converges at the same rate independent of the data corruption.
-This is because SampleClean does not depend on any quantity derived from the dirty data.
-Next, the gap between the theoretical AC+O and what we are able to achieve is much larger in this dataset.
-We speculate that this is because classifying corruption in a 784 dimensional space is much harder than in our previous experiments, and this in turn leads to reduced accuracy in impact estimation.
+Figure \ref{mnist} shows that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
+To achieve a 2\% error for the block removal, we can inspect 2200 fewer images than Active Learning and 2750 fewer images than SampleCLean.
+For the fuzzy images, both Active Learning and \sys reach 2\% error after cleaning fewer than 100 images, while SampleClean requires 1750.
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: In a real adaptive detection scenario, \sys significantly reduces the number of records to clean to train an accurate model. }
 
 \begin{figure}[ht]
 \centering
