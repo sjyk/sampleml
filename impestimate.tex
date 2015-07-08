@@ -16,10 +16,10 @@ To define ``similarly corrupted", we are going to show how we can use the detect
 \begin{example}
 Consider our EEG dataset with multiple types of errors. 
 Suppose the electrical signals for some records are corrupted with missing data and the patient data for other records are corrupted with inconsistency problems. 
-Each training example will have a set of corrupted features (i.e., $\{1,2,6\}$, $\{1,2,15\}$).
+Each training example will have a set of corrupted features (e.g., $\{1,2,6\}$, $\{1,2,15\}$).
 
 Suppose that we have just cleaned the records $r_1$ and $r_2$ represented as tuples with their corrupted feature set: ($r_1$,$\{1,2,3\}$), ($r_2$,$\{1,2,6\}$).
-Then, we have new record ($r_3$,$\{1,2,3,6\}$). 
+Then, we have a new record ($r_3$,$\{1,2,3,6\}$). 
 We want to be able to use the cleaning results from $r_1,r_2$ to estimate the gradient in $r_3$.
 \end{example}
 
