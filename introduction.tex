@@ -21,7 +21,7 @@ Thus, for many corrupted datasets, the analyst can only practically clean $k \ll
 Strict budgets pose a significant challenge to Machine Learning.
 Machine Learning applications can require a large amount of training data to learn correlations between possibly hundreds of features and labels.
 A small sample of clean data may not be able to support a viable Machine Learning model.
-The predictions from this model may be inaccurate and the problems introduced by the small sample size may dominate any benefits from data cleaning. 
+Likewise, training on partially cleaned data, where cleaned data is mixed with dirty data, can lead to dramtically incorrect models (Figure \label{update-arch1}).
 This leads to the central question that we explore in this work, namely, when and how to apply data cleaning in a Machine Learning model training pipeline to avoid the severe dependence on sample size.
 
 \begin{figure}[t]
@@ -30,19 +30,17 @@ This leads to the central question that we explore in this work, namely, when an
  \caption{\sysfull presents an architecture where data cleaning is integrated with model training. The user specifies a data cleaning procedure, and we provide a framework for sampling, model update, and feedback through estimation. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
-In this paper, we propose \sys, a framework that integrates existing data cleaning solutions with Machine Learning model training.
+In this paper, we propose \sys, a framework that integrates existing data cleaning solutions with Machine Learning model training in a way that ensures reliable intermediate results.
 Suppose an analyst has a large dirty dataset, a data cleaning technique, a budget of cleaning $k$ records, and a model she wishes to train.
-\sys uses the model to select the most valuable samples of data to clean, and updates the model after cleaning.
+\sys uses the model to select the most valuable samples of data to clean, and incrementally updates the model after cleaning.
 The cleaning is iterative, applying the data cleaning procedure to samples and feeding the results back to adaptively select the next sample. 
 \sys can integrate user specified dirty data detection rules (such as constraints) into the framework to further guide our sampling.
 \sys supports a broad class of models, called convex-loss models, and a variety of data cleaning techniques (e.g., contraint-based, value filling, and entity resolution).
 The key insight is that the iterative data cleaning and update process can be analyzed as a form of Stochastic Optimization \cite{bertsekas2011incremental} allowing us to leverage convex-analysis theory to develop optimized sampling and estimation methods.
 
 
-As analytics frameworks increasingly support Machine Learning, methodologies for optimizing across the entire pipeline are required.
-In this work, we explore the new opportunities for joint optimization of data cleaning and model training.
-We can ``push down" the model training to the data cleaning and select data to clean that are most valuable to the model.
-We can also ``push up" the data cleaning to the model training by intelligently batching together model updates from already cleaned data.
+As analytics frameworks increasingly support Machine Learning, tools that encourage appropriate methodologies are required.
+The incremental updates from \sys give provable bounds on intermediate results and these results are also viable models that can be used for prediction. 
 Specifically, our contributions are:
 \begin{itemize}[noitemsep]
 \item We propose a technique that updates a dirty model from clean data based on gradient descent.

@@ -3,13 +3,12 @@ As analytics frameworks increasingly support Machine Learning, methodologies for
 In this paper, we propose \sysfull, a framework that integrates existing data cleaning solutions with Machine Learning model training.
 \sys information from a statistical model to inform data cleaning on samples, and uses the information from clean samples to update a statistical model.
 The tight feedback loop between model training and data cleaning poses several new algorithmic challenges which we address with a stochastic gradient descent framework.
-
 Our experimental results are really promising as they suggest that these optimization can significantly reduce data cleaning costs.
 Techniques such as Active Learning and SampleClean are not optimized for this setting, and we are able to achieve sharper cost-accuracy tradeoffs than either technique.
 
 \sys is only a first step in a larger integration of data analytics and data aquisition/cleaning. 
 There are several exciting, new avenues for future work.
-The empirical success of Deep Learning has led to increasing industry and research adoption for many tasks that were traditionally served by convex models.
+The empirical success of Deep Learning has led to increasing industry and research adoption in many tasks that were traditionally served by convex models.
 We hope to explore how we can integrate with such frameworks and what we can analyze about the performance.
-We also hope to explore what we can do if the analytics at the end of the pipeline is a black box function.
+We will also explore what we can do if the analytics at the end of the pipeline is a black box function.
 Techniques proposed in Reinforcement Learning likely apply as we simultaneously have to learn the properties of the function as we are cleaning.

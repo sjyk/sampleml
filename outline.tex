@@ -137,7 +137,7 @@
 There have been numerous proposals to extend data management systems and frameworks with support for machine learning. % so that query execution uses, or trains predictive models.
 A perennial challange in these systems is the presence of dirty data -- in the form of missing, duplicate, incorrect or inconsistent values -- which can bias the learning algorithms, leading to incorrect or error-prone predictions.
 Although this can be ameliorated by cleaning the input dataset using existing data cleaning techniques, the cost of doing so (e.g., manually finding and cleaning all dirtiness) is practically and economically infeasible.  
-In addition, existing learning algorithms are not suited for training on partially cleaned datasets, which can lead to wholly incorrect models.
+In addition, existing learning algorithms are not suited for training on partially cleaned datasets, which can lead to dramatically incorrect models.
 In response, we have designed and implemented the ActiveClean system that integrates incremental data cleaning with machine learning algorithms.  
 ActiveClean iteratively updates a machine learning model as data records are individually (or in batches) updated.  
 We additionally study numerous database and ML-oriented optimizations to speed the end-to-end process.
