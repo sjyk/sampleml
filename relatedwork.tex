@@ -2,14 +2,29 @@
 Bringing together data cleaning and machine learning presents us with several exciting new research opportunities that incorporates results from both communities.
 We highlight some of the key relevant work in this field and how this relates to our proposal.
 
-\noindent \textbf{Stochastic Optimization: } Zhao and Tong recently proposed using importance sampling in conjunction with stochastic gradient descent \cite{zhao2014stochastic}. However, calculating the optimal importance sampling distribution is very expensive and is only justified in our case because data cleaning is even more expensive. Zhao and Tong use an approximation to work around this problem. This work is one of many in an emerging consensus in stochastic optimization that not all data are equal (e.g., \cite{qu2014randomized}). This line of work builds on prior results in linear algebra that show that some matrix columns are more informative than others \cite{rineas2012fast}, and Active Learning which shows that some labels are more informative that others \cite{settles2010active}.
+\noindent \textbf{Stochastic Optimization and Active Learning: } Zhao and Tong recently proposed using importance sampling in conjunction with stochastic gradient descent \cite{zhao2014stochastic}. 
+However, calculating the optimal importance sampling distribution is very expensive and is only justified in our case because data cleaning is even more expensive. 
+Zhao and Tong use a different approximation to work around this problem. 
+This work is one of many in an emerging consensus in stochastic optimization that not all data are equal (e.g., \cite{qu2014randomized}). 
+This line of work builds on prior results in linear algebra that show that some matrix columns are more informative than others \cite{drineas2012fast}, and Active Learning which shows that some labels are more informative that others \cite{settles2010active}.
+Active Learning largely studies the problem of label acquisition \cite{settles2010active},
+and recently the links between Active Learning and Stochastic optimization have been studied \cite{guillory2009active}. 
+We use the work in Guillory et al. to evaluate a state-of-the-art Active Learning technique against our method.
 
-\noindent \textbf{Active vs. Transfer Learning: } While it is natural to draw the connection between \sys and Active Learning, which is widely used in data cleaning, they differ in a few crucial ways. 
-Active Learning largely studies the problem of label acquisition \cite{settles2010active}.
-This can be seen as a narrower problem setting than our problem (missing data in the label attribute), and in fact, our proposed approach can be viewed as an Active Learning algorithm.
-\sys has a stronger link to a field called Transfer Learning \cite{pan2010survey}. The basic idea of Transfer Learning is that suppose a model is trained on a dataset $D$ but tested on a dataset $D'$. In transfer learning, the model is often weighted or transformed in such a way that it can still predict on $D'$. Transfer Learning has not considered the data cleaning setting, in which there is a bijective map between $D \mapsto D'$ that is expensive to compute. Much of the complexity and contribution of our work comes from efficiently cleaning the data.
+\noindent \textbf{Transfer Learning: }  
+\sys has a strong link to a field called Transfer Learning \cite{pan2010survey}. The basic idea of Transfer Learning is that suppose a model is trained on a dataset $D$ but tested on a dataset $D'$. In transfer learning, the model is often weighted or transformed in such a way that it can still predict on $D'$. Transfer Learning has not considered the data cleaning setting, in which there is a bijective map between $D \mapsto D'$ that is expensive to compute. Much of the complexity and contribution of our work comes from efficiently cleaning the data.
 
 \noindent \textbf{Secure Learning: } Another relevant line of work is the work in private machine learning  \cite{wainwright2012privacy, duchi2013local}. Learning is performed on a noisy variant of the data which mitigates privacy concerns. The goal is to extrapolate the insights from the noisy data to the hidden real data. Our results are applicable in this setting in the following way. Imagine, we were allowed to query $k$ true data points from the real data, which points are the most valuable to query. This is also related work in adversarial learning \cite{nelson2012query}, where the goal is to make models robust to adversarial data manipulation.
 
-\noindent \textbf{Data Cleaning: } There are also several recent results in data cleaning that we would like to highlight. Altowim et al. proposed a framework for progressive entity resolution \cite{altowim2014progressive}. As in our work, this work studies the tradeoff between resolution cost and result accuracy. This work presents many important ideas on which we build in our paper: (1) it recognizes that ER is expensive and some operations are more valuable than others, and (2) anytime behavior is desirable. We take these ideas one step further where we pushdown the model at the end of the pipeline to data cleaning and choose data that is most valuable to the model. Volkovs et al. explored a topic called progressive data cleaning \cite{volkovs2014continuous}. They looked at maintaining constraint-based data cleaning rules as base data changes. Many of the database tricks employed including indexing and incremental maintenance were valuable insights for our work. Bergman et al. explore the problem of query-oriented data cleaning \cite{bergman2015query}. Given a query they clean data relevant to that query. Bergman et al. does not explore aggregates or the Machine Learning models studied in this work.
+\noindent \textbf{Data Cleaning and Database: } There are also several recent results in data cleaning that we would like to highlight. 
+Progressive data cleaning methodologies have been proposed, however, these techniques tend to be application agnostic \cite{mayfield2010eracer}.
+Altowim et al. proposed a framework for progressive entity resolution \cite{altowim2014progressive}. 
+Volkovs et al. explored a related topic of maintaining data cleaning rules that change over time \cite{volkovs2014continuous}. 
+Recently, in works such as SampleClean \cite{wang1999sample}, the application (i.e., queries) are used to inform data cleaning methodology.
+When the workload is made up of aggregate queries, cleaning samples of data may suffice. 
+Similarly, Bergman et al. explore the problem of query-oriented data cleaning \cite{bergman2015query}. Given a query they clean data relevant to that query. 
+Bergman et al. does not explore the Machine Learning applications studied in this work.
+Finally, Deshpande et al. studied data aquisition in sensor networks \cite{deshpande2004model}. They explored value of information based prioritization of data aquisition for estimating aggregate queries of sensor readings.
+
+
 

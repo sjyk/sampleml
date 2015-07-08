@@ -53,6 +53,18 @@ O.~Dekel, R.~Gilad-Bachrach, O.~Shamir, and L.~Xiao.
 \newblock Optimal distributed online prediction using mini-batches.
 \newblock {\em The Journal of Machine Learning Research}, 13(1):165--202, 2012.
 
+\bibitem{deshpande2004model}
+A.~Deshpande, C.~Guestrin, S.~R. Madden, J.~M. Hellerstein, and W.~Hong.
+\newblock Model-driven data acquisition in sensor networks.
+\newblock In {\em Proceedings of the Thirtieth international conference on Very
+  large data bases-Volume 30}, pages 588--599. VLDB Endowment, 2004.
+
+\bibitem{drineas2012fast}
+P.~Drineas, M.~Magdon-Ismail, M.~W. Mahoney, and D.~P. Woodruff.
+\newblock Fast approximation of matrix coherence and statistical leverage.
+\newblock {\em The Journal of Machine Learning Research}, 13(1):3475--3506,
+  2012.
+
 \bibitem{duchi2013local}
 J.~C. Duchi, M.~I. Jordan, and M.~J. Wainwright.
 \newblock Local privacy and statistical minimax rates.
@@ -122,6 +134,13 @@ T.~Kraska, A.~Talwalkar, J.~C. Duchi, R.~Griffith, M.~J. Franklin, and M.~I.
   Jordan.
 \newblock Mlbase: A distributed machine-learning system.
 \newblock In {\em CIDR}, 2013.
+
+\bibitem{mayfield2010eracer}
+C.~Mayfield, J.~Neville, and S.~Prabhakar.
+\newblock Eracer: a database approach for statistical inference and data
+  cleaning.
+\newblock In {\em Proceedings of the 2010 ACM SIGMOD International Conference
+  on Management of data}, pages 75--86. ACM, 2010.
 
 \bibitem{nelson2012query}
 B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and

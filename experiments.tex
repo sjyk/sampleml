@@ -30,7 +30,7 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 \noindent\textbf{Handwriting Recognition (MNIST): } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
 
-\subsubsection{Alternative Algorithms}
+\subsubsection{Compared Algorithms}
 \noindent Here are the alternative methodologies that we consider:
 
 \vspace{0.5em}
@@ -47,16 +47,16 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 \vspace{0.5em}
 
-\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } There have been recent proposals of integrating Active Learning with stochastic optimization. Active Learning has been widely applied in the data cleaning literature \cite{gokhale2014corleone}, but never integrated with model training. We acknowledge the work in the Machine Learning literature and formulate an Active Learning that uses a prioritization fuction agnostic of the dirty data (no estimation and detection). We clean in batches of 25 records and we use this parameter setting for both AL and \sys.
+\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } There have been recent proposals of integrating Active Learning with stochastic optimization. Active Learning has been widely applied in the data cleaning literature \cite{gokhale2014corleone}, but never integrated with model training. We acknowledge the work in the Machine Learning literature and formulate an Active Learning that uses a prioritization fuction agnostic of the dirty data (no estimation and detection). We clean in batches of 50 records and we use this parameter setting for both AL and \sys.
 
 \vspace{0.5em}
 
 \noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, we importance sample points by their clean gradient. This represents the theoretical best that our algorithm could hope to achieve given perfect estimation.
 
-\subsection{Effect of Cleaning}
+\subsection{Does Data Cleaning Matter}
 Before we evaluate \sys, we first evaluate the benefits of cleaning on 2 of our example datasets (EEG and Adult).
 We first explore this problem without sampling to understand which types of data corruption are amenable to data cleaning and which are better suited for robust statistical techniques.
-We compare 4 schemes: (1) full data cleaning, (2) robust logistic regression, (3) discarding the dirty data, and (4) baseline of no cleaning. We corrupted 5\% of the training examples in each dataset in two different ways:
+We compare 4 schemes: (1) full data cleaning uncorrupted, (2) baseline of no cleaning, (3) discarding the dirty data, and (4) robust logistic regression,. We corrupted 5\% of the training examples in each dataset in two different ways:
 
 \vspace{0.5em}
 
@@ -75,30 +75,44 @@ It is important to note the some examples can have multiple corrupted features.
  \caption{(a) Robust techniques and discarding data work when corrupted data are random and look atypical. (b) Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}
 \end{figure}
 
-In Figure \ref{sys-rand}, we present the results of this experiment.
-We plot the test accuracy for models trained on both types of data with the different techniques, since it is a binary classification task with balanced class distributions we cut the plots at 50\% (random accuracy).
+We plot the test accuracy for models trained on both types of data with the different techniques, since it is a binary classification task with balanced class distributions we cut the plots at 50\% (random accuracy) (Figure \ref{sys-rand}).
 As we argued in this paper, the robust method performs well on the random high-magnitude outliers, however, falters on the systematic corruption.
 In the random setting, discarding dirty data also performs well.
-However, with systematic corruption, data cleaning is the most reliable option across datasets.
+However, when the corruption is systematic, neither alternative works.
+Data cleaning is the most reliable option across datasets and corruption types.
 The problem is that without cleaning we do not know if the corruption is random or systematic.
 While data cleaning requires more effort, it provides benefits in both settings.
 In the remaining experiments, unless otherwise noted, we use the systematic corruption.
 
-\subsection{Budgeted Cleaning}
+\vspace{0.25em}
+
+\noindent \emph{Summary: Data cleaning mitigates the effects of both systematic and random corruption.}
+
+\subsection{\sys A Priori Detection}
 The next set of experiments evaluate different approaches to cleaning a sample of data.
 In this set of experiments, we use the \emph{a priori} case for detection.
 We assume that we know all of the corrupted records in advance but do not know how to repair them. 
 
-\subsubsection{Alternative Algorithms}
-In our first prioritization experiment, we evaluate the samples-to-error tradeoff between three alternative algorithms: \sys (AC), SampleClean, Active Learning, and \sys+Oracle (AC+O).
+\subsubsection{Comparison with Active Learning and SampleClean}
+In our first experiment, we evaluate the samples-to-error tradeoff between three alternative algorithms: \sys (AC), SampleClean, Active Learning, and \sys+Oracle (AC+O).
 In Figure \ref{prio-perf}, we present our results on Adult and EEG. 
 We find that \sys gives its largest benefits for small sample sizes (up-to 12x more accurate than SampleClean).
 \sys makes significant progress because of its intelligent initialization, iterative updates, and partitioning.
 For example, the EEG dataset is the hardest classification task.
 SampleClean has difficulty on this dataset since it takes a uniform sample of data (only 5\% of which are corrupted on average) and tries to train a model using only this data.
 \sys and Active Learning leverage the initialization from the dirty data to get an improved result. 
-However, \sys's estimates and detection allow us to beat Active Learning on all three of the datasets.
+However, \sys and Active Learning differ in the way they prioritize cleaning.
+Active Learning prioritizes with respect to a dirty model (i.e., is agnostic to data error) and \sys uses estimation and detection.
+\sys's estimates and detection allow us to beat Active Learning on all three of the datasets.
 \sys also is relatively close in performance to the oracular version (theoretical optimum).
+
+However, to an end user the metric that matters is test accuracy.
+In Figure \ref{prio-tperf}, we present the results for the two datasets: Adult and EEG.
+We find that in both Adult and EEG, \sys converges to clean test accuracy faster than the alternatives.
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: \sys with a priori detection converges faster than SampleClean and Active Learning.}
 
 \begin{figure}[ht!]
 \centering
@@ -107,14 +121,6 @@ However, \sys's estimates and detection allow us to beat Active Learning on all 
   \includegraphics[width=0.49\columnwidth]{exp/exp3c.pdf}
  \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. \label{prio-perf}}
 \end{figure}
-
-\subsubsection{Testing Accuracy}
-In the previous experiment, we studied the relative model error which measures the training loss. 
-However, to an end user the metric that matters is test accuracy.
-In the next experiment, we try to understand how reductions in model error correlate to improvements in test error.
-In Figure \ref{prio-tperf}, we present the results for the two datasets: Adult and EEG.
-We find that in both Adult and EEG, \sys converges to clean test accuracy faster than the alternatives.
-
 \begin{figure}[ht!]
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp3bb.pdf}
@@ -125,11 +131,17 @@ We find that in both Adult and EEG, \sys converges to clean test accuracy faster
 \subsubsection{Source of Improvements}
 Now, we try to understand the source of our improvements w.r.t Active Learning and SampleClean.
 We pick a single point on the curves shown in Figure \ref{prio-perf} that corresponds to 500 records cleaned and compare the performance of \sys with and without various optimizations.
+This is a vertical slice of the plots in the previous experiments.
+
 We denote \sys without detection as (AC-D) (that is at each iteration we sample from the entire dirty data) and \sys without detection and importance sampling as (AC-D-I).
 In Figure \ref{opts}, we plot the relative error of the alternatives and \sys with and without the optimizations.
 Detection significantly improves our results in all of the datasets, and accounts for a substantial part of the improvements over Active Learning.
 However, when we remove detection we still see some improvements since our importance sampling relies on error impact estimates.
 Not surprisingly, when we remove both these optimizations, \sys is slightly worse (but still comparable to) than Active Learning.
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: Both a priori detection and non-uniform sampling significantly contribute to the gains over Active Learning.}
 
 \begin{figure}[ht!]
 \centering
@@ -152,13 +164,17 @@ However, as the bias increases, the fact that Active Learning prioritizes w.r.t 
 \end{figure}
 \fi
 
-\subsubsection{Error Dependence}
+\subsubsection{Corruption Rate}
 Both Active Learning and \sys outperform SampleClean in our experiments.
 In our next experiment (Figure \ref{bias}), we try to understand how much of this performance 
 is due to the initialization (i.e., SampleClean trains a model from ``scratch").
 We vary the systematic corruption rate and plot the number of records cleaned to achieve 1\% relative error for SampleClean and \sys.
 SampleClean does not use the dirty data and thus is not dependent on this rate.
 We find that SampleClean outperforms \sys only when corruptions are very severe (45\% in Adult and nearly 60\% in EEG). 
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: SampleClean is beneficial in comparison to \sys when corruption rats exceed 45\% in our experiments.}
 
 \begin{figure}[ht!]
 \centering
@@ -169,12 +185,17 @@ We find that SampleClean outperforms \sys only when corruptions are very severe 
 
 \subsection{Adaptive Detection}
 In this experiment, we explore how the results of the previous experiment change when we use an adaptive detector rather than the a priori detector.
-In our systematic corruption, we corrupted 3 of the most informative features at random, thus we group these problems into 3 classes.
-We use a all-versus-one SVM to learn the categorization.
+Recall, in our systematic corruption, we corrupted 3 of the most informative features at random, thus we group these problems into 3 classes.
+We use an all-versus-one SVM to learn the categorization.
 
 \subsubsection{Basic Performance}
 In Figure \ref{pred-perf}, we overlay the convergence plots in the previous experiments with a curve (denoted by AC+C) that represents \sys using a classifier instead of the a priori detection.
-We find an interesting tradeoff where initially \sys is comparable to Active Learning, as our classifier becomes more effective the partitioning improves the performance.
+We find an interesting tradeoff where initially \sys is comparable to Active Learning, as our classifier becomes more effective the detection improves the performance.
+For both datasets, after cleaning 1000 records, \sys is within 10\% of a priori detection performance.
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: \sys with a classifier converges faster than Active Learning and SampleClean.}
 
 \begin{figure}[t]
 \centering
