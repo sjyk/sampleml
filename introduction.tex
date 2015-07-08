@@ -8,7 +8,7 @@ Machine Learning is known to be sensitive to data quality \cite{xiaofeature}, an
 Supervised Machine Learning relies on correlating features with labels, and systematically corrupted data can lead to confouding correlations.
 Consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
 A recommendation model trained on this data may spuriously ``learn" a correlation relationship between the ``18-24" age group and music liked by European users.
-While there is an extensive literature on robust Machine Learning, this work largely focuses on resilience to atypical outliers (i.e., age ``150") and not spuriously correlations.
+While there is an extensive literature on robust Machine Learning, this work largely focuses on resilience to atypical outliers (i.e., age ``150") and not spurious correlations.
 
 Such problems can be ameliorated by a variety of data cleaning techniques (see Rahm and Do \cite{rahm2000data} for a survey).
 Recently, several scalable data cleaning frameworks have been proposed including BigDansing\cite{khayyat2015bigdansing}, SampleClean\cite{sampleclean}, and Katara \cite{chu2015katara}. 
