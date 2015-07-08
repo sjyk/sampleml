@@ -38,12 +38,11 @@ The procedure to determine which patients' data are corrupted requires querying 
 However, this solution can give unreliable results since we are mixing dirty and clean data.
 In Figure \ref{update-arch1}, we illustrate the dangers of this approach on a very simple dirty dataset and model.
 Suppose, we are trying to find a best fit line for two variables. 
-One of the variables is systematically corrupted with a translation in the x-axis.
+One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
 We mark the dirty data in brown and the clean data in orange, and show their respective best fit lines in blue.
-If we clean two of the data points, we find that the partially cleaned model is dramatically incorrect; actually showing the opposite trend.
+If we clean two of the data points, and the find the best fit line the partially cleaned model is dramatically incorrect; actually showing the opposite trend.
 This is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
-Likewise, if we fit a line with only two data points, we can find a sample that results in a similarly incorrect model.
-The result is surprising, namely, when models based on correlation are involved existing data cleaning methodologies can \emph{dramatically reduce accuracy}.
+The result is surprising, namely, Machine Learning on partially cleaned data can lead to misleading results.
 
 \begin{figure}[ht!]
 \centering
@@ -57,7 +56,7 @@ The next solution is avoiding the dirty data altogether.
 She can take a sample of data, apply data cleaning, and train a model only on that sample of data.
 This is similar to SampleClean \cite{wang1999sample}; proposed to approximate the results to aggregate queries by applying them to a clean sample of data.
 Machine Learning models are highly senstive to sample size when high dimensional.
-The result is that the models will not be useful (i.e., cannot accurately predict test data) when the sample size is too small (Figure \ref{update-arch1}).
+The result is that the models will not be useful (i.e., cannot accurately predict test data) when the sample size is too small (Figure \ref{update-arch1}c).
 
 \begin{figure}[t]
 \centering
