@@ -11,10 +11,6 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 \noindent\textbf{Relative Model Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Then the model error is defined as $\frac{\|\theta - \theta^*\|}{\|\theta^*\|}$.
 
-\vspace{0.5em}
-
-\noindent\textbf{Testing Accuracy. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Let $T(\theta)$ be the out-of-sample testing accuracy when the dirty model is applied to the clean data, and $T(\theta^*)$ be the testing accuracy when the clean model is applied to the clean data. The testing error is defined as $T(\theta^*) - T(\theta)$
-
 \subsubsection{Scenarios}
 \noindent We apply \sys to the following scenarios:
 
@@ -24,15 +20,15 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 \vspace{0.5em}
 
-\noindent\textbf{Adult: } In this census dataset, our task is to predict the income bracket (binary) from 12 numerical and categorical covariates. There are 45552 data points in this dataset. We use a SVM classifier to predict the income bracket of the person.
+\noindent\textbf{Income Classification (Adult): } In this census dataset, our task is to predict the income bracket (binary) from 12 numerical and categorical covariates. There are 45552 data points in this dataset. We use a SVM classifier to predict the income bracket of the person.
 
 \vspace{0.5em}
 
-\noindent\textbf{EEG: } In this dataset, our task is to predict the on set of a seizure (binary) from 15 numerical covariates. There are 14980 data points in this dataset. We chose this dataset since the classification task is hard with an accuracy in clean data of 65\%. The model that we use is a thresholded Linear Regression.
+\noindent\textbf{Seizure Classification (EEG): } In this dataset, our task is to predict the on set of a seizure (binary) from 15 numerical covariates. There are 14980 data points in this dataset. We chose this dataset since the classification task is hard with an accuracy in clean data of 65\%. The model that we use is a thresholded Linear Regression.
 
 \vspace{0.5em}
 
-\noindent\textbf{MNIST: } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
+\noindent\textbf{Handwriting Recognition (MNIST): } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
 
 \subsubsection{Alternative Algorithms}
 \noindent Here are the alternative methodologies that we consider:

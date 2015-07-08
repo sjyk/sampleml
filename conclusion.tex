@@ -1,16 +1,15 @@
 \section{Conclusion}
-In this paper, we propose \sysfull (\sys), an anytime framework for training Machine Learning models with a data cleaning budget.
-Naive solutions to this problem can cause sampling errors to dominate any benefit of data cleaning, so instead we propose a gradient-based update to incrementally correct a dirty model.
-To make this update as impactful as possible, we exploit many properties we know about data cleaning such as the relative ease of error enumeration.
-Our solution is a linear approximation of the optimal sampling distribution which empirically shows significant improvements over alternative approaches.
-This formulation fits into a Stochastic Gradient Descent theoretical framework, which allows us to ensure convergence and statistical consistency under relatively mild conditions.
-The elegance of the SGD formulation is that we can use approximations of approximations and still have a methodology that gives bounded results.
+As analytics frameworks increasingly support Machine Learning, methodologies for optimizing across the entire pipeline from data cleaning to model training are required.
+In this paper, we propose \sysfull, a framework that integrates existing data cleaning solutions with Machine Learning model training.
+\sys information from a statistical model to inform data cleaning on samples, and uses the information from clean samples to update a statistical model.
+The tight feedback loop between model training and data cleaning poses several new algorithmic challenges which we address with a stochastic gradient descent framework.
+
+Our experimental results are really promising as they suggest that these optimization can significantly reduce data cleaning costs.
+Techniques such as Active Learning and SampleClean are not optimized for this setting, and we are able to achieve sharper cost-accuracy tradeoffs than either technique.
 
 \sys is only a first step in a larger integration of data analytics and data aquisition/cleaning. 
 There are several exciting, new avenues for future work.
-First, in this work, we largely study how knowing the Machine Learning model can optimize data cleaning.
-We also believe that the reverse is true, knowing the data cleaning operations and the featurization can optimize model training.
-For example, applying Entity Resolution to one-hot encoded features results in a linear transformation of the feature space.
-For some types of Machine Learning models, we may be able to avoid re-training.
-The optimizations described in \sys are not only restricted to SGD algorithms. 
-We believe we can extend a variant of SDCA (Stochastic Dual Coordinate Ascent) \cite{jaggi2014communication} to extend this technique to kernelized methods.
+The empirical success of Deep Learning has led to increasing industry and research adoption for many tasks that were traditionally served by convex models.
+We hope to explore how we can integrate with such frameworks and what we can analyze about the performance.
+We also hope to explore what we can do if the analytics at the end of the pipeline is a black box function.
+Techniques proposed in Reinforcement Learning likely apply as we simultaneously have to learn the properties of the function as we are cleaning.

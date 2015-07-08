@@ -152,8 +152,8 @@ a set of candidate dirty data $R_{dirty}$.
 With a budget of applying cleaning i.e., $C(\cdot)$, only k times, return an estimate $\hat{\theta}$ of the clean model.
 \end{problem}
 
-Our goal is to use information from a statistical model to inform data cleaning on samples, and use the information from clean samples to update a statistical model.
-The tight feedback loop between model training and data cleaning poses a new algorithmic challenge. 
+Our goal is to use information from a statistical model to inform data cleaning on samples, and uses the information from clean samples to update a statistical model.
+The tight feedback loop between model training and data cleaning poses several new algorithmic challenges. 
 If we are not careful about how we update the model, we can end up with the Simpsons paradox problem described before.
 Data cleaning and model training happen at very different time scales, we have to carefully budget our effort to ensure that optimizations address rate-determining steps in the workflow.
 
