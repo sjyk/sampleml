@@ -30,6 +30,13 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 \noindent\textbf{Handwriting Recognition (MNIST): } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
 
+\vspace{0.5em}
+
+\noindent\textbf{Dollars For Docs: } ProPublica has collected a dataset of 240089 corporate contributions to doctors for analysis of whether these contributions affect research. 
+There are 5 textual attributes and one numerical attribute.
+We use this dataset to classify whether a research contribution is ``not covered" under the declared experimental protocal from the attributes.
+The model is a binary SVM using a bag-of-words model to featurize the textual attributes.
+
 \subsubsection{Compared Algorithms}
 \noindent Here are the alternative methodologies that we consider:
 
@@ -249,9 +256,76 @@ Linear regression and the average feature change technique do eventually perform
 
 
 \subsection{Real Scenarios}
-We evaluate \sys in two real scenarios, one demonstrating the adaptive detection case and one demonstrating the a priori case.
+We evaluate \sys in two real scenarios, one demonstrating the a priori case and one for the adaptive detection case.
 
-\subsubsection{Replacing Corrupted Handwriting Data}
+\subsubsection{A Priori: Constraint Cleaning}
+In our first real scenario, we explore the Dollars for Docs dataset published by Pro Publica.
+This dataset consists of medical research contributions from pharmaceutical corporations and subsequent research by universities and hospitals.
+In this dataset, our application is inspired by a fraud dection application.
+Each research publication is with whether the contribution is ``covered" or ``not covered" by the experimental protocol.
+Our goal is to classify research contributions as being not covered (i.e., possibly fraudulent) based on 5 attributes: the principal investigator's speciality, the drug or device in question, the corporation, the amount contributed, and whether the research was disputed.
+
+However, the dataset is very dirty, and Pro Publica highlights the cleaning that they performed before publishing this dataset \cite{dollarsfordocs} including entity resolution and enforcing quality constraints.
+Errors include: 
+
+\vspace{0.25em}
+
+\noindent \textbf{Corporations are inconsistently represented: } ``Pfizer", ``Pfizer Inc.", ``Pfizer Incorporated".
+
+\vspace{0.25em}
+
+\noindent \textbf{Drugs are inconsistently represented: } ``TAXOTERE  DOCETAXEL -PROSTATE CANCER" and ``TAXOTERE"
+
+\vspace{0.25em}
+
+\noindent \textbf{Label of covered and not covered are not consistent: } ``No", ``Yes",``N", ``This study is not supported", ``None", ``Combination"
+
+\vspace{0.25em} 
+
+\noindent \textbf{Research subject must be a drug OR a medical device and not both: } ``BIO FLU QPAN H7N9AS03 Vaccine" and ``BIO FLU QPAN H7N9AS03 Device"
+
+\vspace{0.5em} 
+
+We treat this problem as a constraint-based cleaning problem where we encode these problems as data quality constraints. 
+
+\vspace{0.25em}
+
+\noindent \textbf{Rule 1: } Matching dependency on corporation (Weighted Jaccard Similarity $>$ 0.8).
+
+\vspace{0.25em}
+
+\noindent \textbf{Rule 2: } Matching dependency on drug (Weighted Jaccard Similarity $>$ 0.8).
+
+\vspace{0.25em}
+
+\noindent \textbf{Rule 3: } Label must either be ``covered" or ``not covered".
+
+\vspace{0.25em} 
+
+\noindent \textbf{Rule 4: } Either drug or medical device should be null.
+
+\vspace{0.5em}
+
+This provides us with a detector for the corruption. 
+We confirmed drug names with company catalogs and used judgement to make the labels consistent.
+To run this experiment, we manually cleaned the entire dataset up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data.
+Figure \ref{dfd}a shows that \sys converges faster than Active Learning and SampleClean.
+To achieve a 4\% relative error (i.e., a 75\% error reduction from the dirty model), \sys cleans 40000 fewer records than Active Learning.
+Also, for 10000 records cleaned, \sys has 3.5x smaller error than SampleClean.
+
+Figure \ref{dfd}b shows the true positive rate (fractiion of non-covered research contributions identified) of the classifier as a function of the number of records cleaned. 
+We find that on the dirty data, we can only classify 66\% of the positive examples correctly.
+On the cleaned data, this classifier is nearly perfect with a 97\% true positive rate.
+\sys converges to the cleaned accuracy faster than the alternatives.
+
+\begin{figure}[ht!]
+\centering
+ \includegraphics[width=0.49\columnwidth]{exp/exp13a.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp13b.pdf}
+ \caption{(A) The relative model error as a function of the number of cleaned records. (B) The true postive rate as a function of the number of cleaned records. \label{dfd}}
+\end{figure}
+
+\subsubsection{Adaptive: Replacing Corrupted Handwriting Data}
 We consider the following scenario with the MNIST handwritten digit recognition dataset.
 Suppose, our goal is to classify digits into a set of classes.
 However, we suspect that some of our raw images are of low quality.
@@ -293,12 +367,4 @@ For the fuzzy images, both Active Learning and \sys reach 2\% error after cleani
  \includegraphics[width=0.49\columnwidth]{exp/exp7a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp7b.pdf}
  \caption{In a real adaptive detection scenario with the MNIST dataset, \sys outperforms Active Learning and SampleClean. We simulate systematic corruptions with image block removal and random corruptions with image fuzzying.  \label{mnist}}
-\end{figure}
-
-\subsubsection{Constraint Cleaning}
-\begin{figure}[ht!]
-\centering
- \includegraphics[width=0.49\columnwidth]{exp/exp13a.pdf}
- \includegraphics[width=0.49\columnwidth]{exp/exp13b.pdf}
- \caption{ \label{dfd}}
 \end{figure}
