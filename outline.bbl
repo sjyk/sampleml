@@ -2,6 +2,7 @@
 
 \bibitem{fortunearticle}
 Big data's dirty problem.
+\newblock \url{http://fortune.com/2014/06/30/big-data-dirty-problem/}.
 
 \bibitem{dollarsfordocs}
 Dollars for docs.
@@ -39,14 +40,16 @@ L.~Bottou.
 
 \bibitem{chu2015katara}
 X.~Chu, J.~Morcos, I.~F. Ilyas, M.~Ouzzani, P.~Papotti, N.~Tang, and Y.~Ye.
-\newblock Katara: A data cleaning system powered by knowledge bases and
+\newblock {KATARA:} {A} data cleaning system powered by knowledge bases and
   crowdsourcing.
-\newblock 2015.
+\newblock In {\em Proceedings of the 2015 {ACM} {SIGMOD} International
+  Conference on Management of Data, Melbourne, Victoria, Australia, May 31 -
+  June 4, 2015}, pages 1247--1261, 2015.
 
 \bibitem{crotty2014tupleware}
 A.~Crotty, A.~Galakatos, and T.~Kraska.
 \newblock Tupleware: Distributed machine learning on small clusters.
-\newblock {\em IEEE Data Eng. Bull}, 37(3), 2014.
+\newblock {\em {IEEE} Data Eng. Bull.}, 37(3):63--76, 2014.
 
 \bibitem{dekel2012optimal}
 O.~Dekel, R.~Gilad-Bachrach, O.~Shamir, and L.~Xiao.
@@ -54,10 +57,11 @@ O.~Dekel, R.~Gilad-Bachrach, O.~Shamir, and L.~Xiao.
 \newblock {\em The Journal of Machine Learning Research}, 13(1):165--202, 2012.
 
 \bibitem{deshpande2004model}
-A.~Deshpande, C.~Guestrin, S.~R. Madden, J.~M. Hellerstein, and W.~Hong.
+A.~Deshpande, C.~Guestrin, S.~Madden, J.~M. Hellerstein, and W.~Hong.
 \newblock Model-driven data acquisition in sensor networks.
-\newblock In {\em Proceedings of the Thirtieth international conference on Very
-  large data bases-Volume 30}, pages 588--599. VLDB Endowment, 2004.
+\newblock In {\em (e)Proceedings of the Thirtieth International Conference on
+  Very Large Data Bases, Toronto, Canada, August 31 - September 3 2004}, pages
+  588--599, 2004.
 
 \bibitem{drineas2012fast}
 P.~Drineas, M.~Magdon-Ismail, M.~W. Mahoney, and D.~P. Woodruff.
@@ -100,10 +104,10 @@ A.~Guillory, E.~Chastain, and J.~Bilmes.
   Statistics}, pages 201--208, 2009.
 
 \bibitem{hellerstein2012madlib}
-J.~M. Hellerstein, C.~R{\'e}, F.~Schoppmann, D.~Z. Wang, E.~Fratkin,
-  A.~Gorajek, K.~S. Ng, C.~Welton, X.~Feng, K.~Li, et~al.
-\newblock The madlib analytics library: or mad skills, the sql.
-\newblock {\em Proceedings of the VLDB Endowment}, 5(12):1700--1711, 2012.
+J.~M. Hellerstein, C.~R{\'{e}}, F.~Schoppmann, D.~Z. Wang, E.~Fratkin,
+  A.~Gorajek, K.~S. Ng, C.~Welton, X.~Feng, K.~Li, and A.~Kumar.
+\newblock The madlib analytics library or {MAD} skills, the {SQL}.
+\newblock {\em {PVLDB}}, 5(12):1700--1711, 2012.
 
 \bibitem{jaggi2014communication}
 M.~Jaggi, V.~Smith, M.~Tak{\'a}c, J.~Terhorst, S.~Krishnan, T.~Hofmann, and
@@ -113,9 +117,9 @@ M.~Jaggi, V.~Smith, M.~Tak{\'a}c, J.~Terhorst, S.~Krishnan, T.~Hofmann, and
   3068--3076, 2014.
 
 \bibitem{kandel2012}
-S.~Kandel, A.~Paepcke, J.~Hellerstein, and H.~Jeffrey.
+S.~Kandel, A.~Paepcke, J.~M. Hellerstein, and J.~Heer.
 \newblock Enterprise data analysis and visualization: An interview study.
-\newblock {\em VAST}, 2012.
+\newblock {\em {IEEE} Trans. Vis. Comput. Graph.}, 18(12):2917--2926, 2012.
 
 \bibitem{khayyat2015bigdansing}
 Z.~Khayyat, I.~F. Ilyas, A.~Jindal, S.~Madden, M.~Ouzzani, P.~Papotti, J.-A.
@@ -132,15 +136,35 @@ H.~K{\"o}pcke, A.~Thor, and E.~Rahm.
 \bibitem{kraska2013mlbase}
 T.~Kraska, A.~Talwalkar, J.~C. Duchi, R.~Griffith, M.~J. Franklin, and M.~I.
   Jordan.
-\newblock Mlbase: A distributed machine-learning system.
-\newblock In {\em CIDR}, 2013.
+\newblock Mlbase: {A} distributed machine-learning system.
+\newblock In {\em {CIDR} 2013, Sixth Biennial Conference on Innovative Data
+  Systems Research, Asilomar, CA, USA, January 6-9, 2013, Online Proceedings},
+  2013.
+
+\bibitem{DBLP:conf/recsys/KrishnanPFG14}
+S.~Krishnan, J.~Patel, M.~J. Franklin, and K.~Goldberg.
+\newblock A methodology for learning, analyzing, and mitigating social
+  influence bias in recommender systems.
+\newblock In {\em Eighth {ACM} Conference on Recommender Systems, RecSys '14,
+  Foster City, Silicon Valley, CA, {USA} - October 06 - 10, 2014}, pages
+  137--144, 2014.
+
+\bibitem{DBLP:conf/case/MahlerKLSMKPWFAG14}
+J.~Mahler, S.~Krishnan, M.~Laskey, S.~Sen, A.~Murali, B.~Kehoe, S.~Patil,
+  J.~Wang, M.~Franklin, P.~Abbeel, and K.~Y. Goldberg.
+\newblock Learning accurate kinematic control of cable-driven surgical robots
+  using data cleaning and gaussian process regression.
+\newblock In {\em 2014 {IEEE} International Conference on Automation Science
+  and Engineering, {CASE} 2014, New Taipei, Taiwan, August 18-22, 2014}, pages
+  532--539, 2014.
 
 \bibitem{mayfield2010eracer}
 C.~Mayfield, J.~Neville, and S.~Prabhakar.
-\newblock Eracer: a database approach for statistical inference and data
+\newblock {ERACER:} a database approach for statistical inference and data
   cleaning.
-\newblock In {\em Proceedings of the 2010 ACM SIGMOD International Conference
-  on Management of data}, pages 75--86. ACM, 2010.
+\newblock In {\em Proceedings of the {ACM} {SIGMOD} International Conference on
+  Management of Data, {SIGMOD} 2010, Indianapolis, Indiana, USA, June 6-10,
+  2010}, pages 75--86, 2010.
 
 \bibitem{nelson2012query}
 B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
@@ -162,8 +186,9 @@ S.~J. Pan and Q.~Yang.
 
 \bibitem{park2014crowdfill}
 H.~Park and J.~Widom.
-\newblock Crowdfill: Collecting structured data from the crowd.
-\newblock In {\em SIGMOD}, 2014.
+\newblock Crowdfill: collecting structured data from the crowd.
+\newblock In {\em International Conference on Management of Data, {SIGMOD}
+  2014, Snowbird, UT, USA, June 22-27, 2014}, pages 577--588, 2014.
 
 \bibitem{qu2014randomized}
 Z.~Qu, P.~Richt{\'a}rik, and T.~Zhang.
@@ -174,6 +199,12 @@ Z.~Qu, P.~Richt{\'a}rik, and T.~Zhang.
 E.~Rahm and H.~H. Do.
 \newblock Data cleaning: Problems and current approaches.
 \newblock {\em IEEE Data Eng. Bull.}, 23(4):3--13, 2000.
+
+\bibitem{krishnan2015svc}
+M.~J. F. K.~G. Sanjay~Krishnan, Jiannan~Wang and T.~Kraska.
+\newblock Stale view cleaning: Getting fresh answers from stale materialized
+  views.
+\newblock {\em Proceedings of the VLDB Endowment}, 8(12), 2015.
 
 \bibitem{settles2010active}
 B.~Settles.
@@ -211,7 +242,7 @@ M.~J. Wainwright, M.~I. Jordan, and J.~C. Duchi.
 \bibitem{wang2012crowder}
 J.~Wang, T.~Kraska, M.~J. Franklin, and J.~Feng.
 \newblock Crowder: Crowdsourcing entity resolution.
-\newblock {\em Proceedings of the VLDB Endowment}, 5(11):1483--1494, 2012.
+\newblock {\em {PVLDB}}, 5(11):1483--1494, 2012.
 
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.

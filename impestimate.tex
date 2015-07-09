@@ -3,8 +3,8 @@ In this section, we make the sampling result of the previous section practical,
 and estimate the cleaned data.
 
 \subsection{Challenges and Goal}
-The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t)$.
-One way to approximate this distribution is to learn a function $e(\cdot)$ mapping $(x_{clean}, y_{clean})$, based on the data that we have cleaned.
+The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{clean}_i,y^{clean}_i,\theta^t)$.
+One way to approximate this distribution is to learn a function $e(\cdot)$ mapping $(x^{clean}, y^{clean})$, based on the data that we have cleaned.
 Suppose, we use a regression technique based on the previous data.
 This is a high-dimensional regression problem which may have to learn a very complicated relationship between dirty and clean data.
 The biggest challenge with such an estimator is the cold start problem, where if we have cleaned a small amount of data, the estimator will be inaccurate.
@@ -43,14 +43,14 @@ Let us formalize this intuition.
 Instead of computing the actual gradient with respect to the 
 true clean values, let us compute the conditional expectation given that a set of features and labels $f_r$ are corrupted:
 \[
-p_i \propto \mathbb{E}(\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t) \mid e_r)
+p_i \propto \mathbb{E}(\nabla\phi(x^{clean}_i,y^{clean}_i,\theta^t) \mid e_r)
 \]
 What we mean by corrupted features is that:
 \[
-i \notin f_r \implies x_{clean}[i] - x_{dirty}[i] = 0
+i \notin f_r \implies x^{clean}[i] - x^{dirty}[i] = 0
 \]
 \[
-i \notin f_r \implies y_{clean}[i] - y_{dirty}[i] = 0
+i \notin f_r \implies y^{clean}[i] - y^{dirty}[i] = 0
 \]
 
 The needed approximation represents a linearization of the errors.
@@ -67,47 +67,16 @@ If $d$ is the dirty value and $c$ is the clean value, the Taylor series approxim
 \[
 f(c) = f(d) + f'(d)\cdot(d-c) + ...
 \]
-If we ignore the higher order terms, we see that the linear term $f'(d)\cdot(c-d)$ decouples the features.
-We only have to know the change in each feature to estimate the change in value.
-In our case the function $f$ is the gradient $\nabla\phi$.
-So, the resulting linearization is:
+If we ignore the higher order terms, we see that the linear term $f'(d)\cdot(d-c)$ is a linear function in each feature and label.
+Then, it follows that:
 \[
-\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot (x - x_{clean}) \]
-\[+ \frac{\partial}{\partial Y}\phi(x,y,\theta)\cdot (y - y_{clean})
+\approx \nabla\phi(x,y,\theta) + M_x \cdot \mathbb{E}(\Delta x) + M_y \cdot \mathbb{E}(\Delta y)
 \]
-When we take the expected value:
-\[
-\mathbb{E}(\nabla\phi(x_{clean},y_{clean},\theta)) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot \mathbb{E}(\Delta x) \]
-\[+ \frac{\partial}{\partial Y}\nabla\phi(x,y,\theta)\cdot \mathbb{E}(\Delta y)
-\]
-So the resulting estimation formula takes the following form:
-\[
-\approx \nabla\phi(x,y,\theta) + M_x \cdot \mathbb{E}(\Delta x) + M_y \cdot \mathbb{E}(\Delta y) 
-\]
+where $M_x = \frac{\partial}{\partial X}\nabla\phi$ and $M_y = \frac{\partial}{\partial Y}\nabla\phi$ (See Appendix \ref{taylor-deriv} for derivation).
 Recall that we have a $d$ dimensional feature space and $l$ dimensional label space.
-Then, $M_x = \frac{\partial}{\partial X}\nabla\phi$ is an $d \times d$ matrix, and $M_y = \frac{\partial}{\partial Y}\nabla\phi$ is a $d \times l$ matrix.
-Both of these matrices are computed with respect to dirty data, and we will present an example.
+Then, $M_x$ is an $d \times d$ matrix, and $M_y$ is a $d \times l$ matrix.
+Both of these matrices are computed for each record (see Appendix \ref{example-deriv} for an example derivation).
 $\Delta x$ is a $d$ dimensional vector where each component represents a change in that feature and $\Delta y$ is an $l$ dimensional vector that represents the change in each of the labels. 
-
-\subsubsection{Example $M_x$, $M_y$}
-Let us walk through an example, where we calculate $M_x$, $M_y$.
-In the linear regression example, where the gradient is:
-\[
-\nabla\phi(x,y,\theta) = (\theta^Tx - y)x
-\]
-For a record, $r$, suppose we have a feature vector $x$.
-If we take the partial derivatives with respect to x, $M_x$ is:
-\[
-M_x[i,i] = 2x[i] + \sum_{i \ne j} \theta[j]x[j] - y 
-\]
-\[
-M_x[i,j] = \theta[j]x[i]
-\]
-Similarly $M_y$ is:
-\[
-M_y[i,1] = x[i] 
-\]
-In the appendix, we describe the matrices for common convex losses.
 
 \subsubsection{More Accurate Early Error Estimates}\label{acc}
 We can give some intuition on why the linearization actually avoids amplifying estimation error.
@@ -140,11 +109,11 @@ We know how to estimate $\mathbb{E}(\Delta x)$ and $\mathbb{E}(\Delta y)$.
 \begin{lemma}[Single Feature]
 For a feature $i$, we average all records cleaned that have an error for that feature, weighted by their sampling probability:
 \[
-\bar{\Delta}_i = \frac{1}{NK}\sum_{j=1}^K (x[i]-x_{clean}[i])\times \frac{1}{p_j}
+\bar{\Delta}_i = \frac{1}{NK}\sum_{j=1}^K (x^{dirty}[i]-x^{clean}[i])\times \frac{1}{p_j}
 \]
 Similarly, for a label $i$:
 \[
-\bar{\Delta}_i = \frac{1}{NK}\sum_{j=1}^K (y[i]-y_{clean}[i])\times \frac{1}{p_j}
+\bar{\Delta}_i = \frac{1}{NK}\sum_{j=1}^K (y^{dirty}[i]-y^{clean}[i])\times \frac{1}{p_j}
 \]
 \end{lemma}
 

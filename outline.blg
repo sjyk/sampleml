@@ -3,66 +3,93 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: outline.aux
 The style file: abbrv.bst
 Database file #1: ref.bib
-Repeated entry---line 1734 of file ref.bib
+Repeated entry---line 1792 of file ref.bib
  : @inproceedings{wang1999sample
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1788 of file ref.bib
+Repeated entry---line 1846 of file ref.bib
  : @inproceedings{volkovs2014continuous
  :                                     ,
 I'm skipping whatever remains of this entry
+A bad cross reference---entry "kraska2013mlbase"
+refers to entry "DBLP:conf/cidr/2013", which doesn't exist
+A bad cross reference---entry "chu2015katara"
+refers to entry "DBLP:conf/sigmod/2015", which doesn't exist
 A bad cross reference---entry "wang1999sample"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
+A bad cross reference---entry "park2014crowdfill"
+refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
+A bad cross reference---entry "DBLP:conf/case/MahlerKLSMKPWFAG14"
+refers to entry "DBLP:conf/case/2014", which doesn't exist
+A bad cross reference---entry "DBLP:conf/recsys/KrishnanPFG14"
+refers to entry "DBLP:conf/recsys/2014", which doesn't exist
+A bad cross reference---entry "mayfield2010eracer"
+refers to entry "DBLP:conf/sigmod/2010", which doesn't exist
+A bad cross reference---entry "deshpande2004model"
+refers to entry "DBLP:conf/vldb/2004", which doesn't exist
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2014"
+Warning--I didn't find a database entry for "DBLP:conf/sigmod/2015"
+Warning--I didn't find a database entry for "DBLP:conf/cidr/2013"
+Warning--I didn't find a database entry for "DBLP:conf/sigmod/2010"
+Warning--I didn't find a database entry for "DBLP:conf/vldb/2004"
+Warning--I didn't find a database entry for "DBLP:conf/case/2014"
+Warning--I didn't find a database entry for "DBLP:conf/recsys/2014"
 Warning--to sort, need author or key in fortunearticle
 Warning--to sort, need author or key in sampleclean
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in importstats
+Name 1 in "Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, and Tim Kraska" has a comma at the end for entry krishnan2015svc
+while executing---line 1049 of file abbrv.bst
+Too many commas in name 1 of "Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, and Tim Kraska" for entry krishnan2015svc
+while executing---line 1049 of file abbrv.bst
 Warning--empty journal in bergman2015query
 Warning--empty year in bertsekas2011incremental
-Warning--empty journal in chu2015katara
 Warning--empty journal in khayyat2015bigdansing
 Warning--empty publisher in mcbook
+Name 1 in "Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, and Tim Kraska" has a comma at the end for entry krishnan2015svc
+while executing---line 1090 of file abbrv.bst
+Too many commas in name 1 of "Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, and Tim Kraska" for entry krishnan2015svc
+while executing---line 1090 of file abbrv.bst
 Warning--empty journal in xiaofeature
-You've used 43 entries,
+You've used 46 entries,
             2118 wiz_defined-function locations,
-            708 strings with 10749 characters,
-and the built_in function-call counts, 15899 in all, are:
-= -- 1507
-> -- 890
-< -- 12
-+ -- 358
-- -- 310
-* -- 1131
-:= -- 2588
-add.period$ -- 129
-call.type$ -- 43
-change.case$ -- 280
+            743 strings with 12604 characters,
+and the built_in function-call counts, 17985 in all, are:
+= -- 1717
+> -- 984
+< -- 16
++ -- 396
+- -- 344
+* -- 1289
+:= -- 2874
+add.period$ -- 137
+call.type$ -- 46
+change.case$ -- 307
 chr.to.int$ -- 0
-cite$ -- 53
-duplicate$ -- 590
-empty$ -- 1173
-format.name$ -- 310
-if$ -- 3333
+cite$ -- 55
+duplicate$ -- 672
+empty$ -- 1332
+format.name$ -- 344
+if$ -- 3797
 int.to.chr$ -- 0
-int.to.str$ -- 43
-missing$ -- 42
-newline$ -- 213
-num.names$ -- 78
-pop$ -- 339
+int.to.str$ -- 46
+missing$ -- 45
+newline$ -- 229
+num.names$ -- 84
+pop$ -- 368
 preamble$ -- 1
-purify$ -- 240
+purify$ -- 264
 quote$ -- 0
-skip$ -- 446
+skip$ -- 524
 stack$ -- 0
-substring$ -- 832
-swap$ -- 153
-text.length$ -- 12
+substring$ -- 1034
+swap$ -- 198
+text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 166
-warning$ -- 10
-while$ -- 128
-width$ -- 45
-write$ -- 444
-(There were 3 error messages)
+type$ -- 178
+warning$ -- 9
+while$ -- 150
+width$ -- 48
+write$ -- 481
+(There were 14 error messages)

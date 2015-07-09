@@ -1,10 +1,10 @@
 \section{Introduction}
-There have been several recent proposals to extend existing data management systems with native Machine Learning support (e.g., MLBase \cite{kraska2013mlbase}, MADLIB\cite{hellerstein2012madlib}, TupleWare\cite{crotty2014tupleware}).
-While these extensions can dramatically reduce programmer effort in developing learning-driven applications, pre-processing or ``cleaning" data is still a serious bottleneck \cite{kandel2012}. 
-Data are susceptible to various forms of corruption, or \emph{dirtiness}, such as missing, incorrect, or inconsistent values.
+There have been several recent proposals to extend existing data management systems with advanced analytics that go beyond SQL aggregates (e.g., MLBase \cite{kraska2013mlbase}, MADLIB\cite{hellerstein2012madlib}, TupleWare\cite{crotty2014tupleware}).
+While these extensions can dramatically reduce the required effort in developing Machine Learning and other predictive applications, pre-processing or ``cleaning" data is still a serious bottleneck \cite{kandel2012}. 
+Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent values.
 Industrial surveys have established that dirty data are prevalent \cite{Gartner}, and there is a growing industry around cleaning data \cite{fortunearticle}.
-Machine Learning is known to be sensitive to data quality \cite{xiaofeature}, and improper handling of dirty data can lead to unreliable and error-prone predictions.
 
+Machine Learning is known to be sensitive to data quality \cite{xiaofeature}, and improper handling of dirty data can lead to unreliable and error-prone predictions.
 Supervised Machine Learning relies on correlating features with labels, and systematically corrupted data can lead to confouding correlations.
 Consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
 A recommendation model trained on this data may spuriously ``learn" a correlation relationship between the ``18-24" age group and music liked by European users.

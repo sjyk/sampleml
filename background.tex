@@ -3,7 +3,7 @@
 \subsection{Examples of Systematic Corruption}
 We first introduce a few examples of systematic corruption in publically available data.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Dollars for Docs: }
 ProPublica has collected a dataset of corporate contributions to doctors for analysis of whether these contributions affect research.
@@ -11,7 +11,7 @@ On their website \cite{dollarsfordocs}, they list numerous types of corruption t
 The most significant contributions were made by large companies whose names were more often inconsistently represented in the data e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
 If this corruption is not cleaned, contributions from larger companies might be underestimated.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Country Imports: }
 The monetary value of a country's imports are an important metric for understanding purchasing power, balance of payments, and economic strength. 
@@ -44,24 +44,18 @@ If we clean two of the data points (Figure \ref{update-arch1}b), and then find t
 This is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
 The result is surprising, namely, Machine Learning on partially cleaned data can lead to misleading results.
 
-\begin{figure}[ht!]
-\centering
- \includegraphics[width=\columnwidth]{figs/update-arch.png}
- \caption{We present a dataset with a systematic corruption (translation) in one variable where the dirty data is in brown and the clean data is in yellow. If we draw the best fit line (i.e., linear regression), we see that the systematic corruption affects the line.
- However, after cleaning two data points, applying the same model to partially clean data results in a dramatically incorrect answer.
-Likewise, small sample sizes can result in similarly incorrect models. \label{update-arch1}}
-\end{figure}
-
 The next solution is avoiding the dirty data altogether.
 She can take a sample of data, apply data cleaning, and train a model only on that sample of data.
 This is similar to SampleClean \cite{wang1999sample}; proposed to approximate the results to aggregate queries by applying them to a clean sample of data.
 Machine Learning models are highly senstive to sample size when high dimensional.
 The result is that the models will not be useful (i.e., cannot accurately predict test data) when the sample size is too small (Figure \ref{update-arch1}c).
 
-\begin{figure}[t]
+\begin{figure}[ht!]
 \centering
- \includegraphics[width=0.6\columnwidth]{figs/arch2.png}
- \caption{Our goal with \sys is designed to converge to an accurate model with fewer cleaned records than a uniform sampling approach (SampleClean). \label{sys-arch2}}
+ \includegraphics[width=\columnwidth]{figs/update-arch.png}
+ \caption{(a) We present a dataset with a systematic corruption (translation) in one variable where the dirty data is in brown and the clean data is in yellow. If we draw the best fit line (i.e., linear regression), we see that the systematic corruption affects the line.
+ (b) However, after cleaning two data points, applying the same model to partially clean data results in a dramatically incorrect answer.
+(c) Likewise, small sample sizes can result in similarly incorrect models. \label{update-arch1}}
 \end{figure}
 
 \sys avoids both pitfalls, Simpsons's paradox and sample size dependence.
@@ -70,6 +64,12 @@ This takes advantage of the dirty data as well as the clean data, but still have
 In Figure \ref{sys-arch2}, we illustrate our ideal tradeoff space of sampling and data cleaning.
 At two extremes we have no cleaning (just using the dirty data) and full cleaning.
 \sys is optimized for convergence for smaller sample sizes than a uniform sampling approach.
+
+\begin{figure}[t]
+\centering
+ \includegraphics[width=0.5\columnwidth]{figs/arch2.png}
+ \caption{Our goal with \sys is designed to converge to an accurate model with fewer cleaned records than a uniform sampling approach (SampleClean). \label{sys-arch2}}\vspace{-1em}
+\end{figure}
 
 \iffalse
 
@@ -118,13 +118,13 @@ By applying the L1 regularization term, if one of the features is particularly n
 The loss function specifies a problem independent of the optimization used to calculate the optimal parameter $\theta^{*}$.
 
 \subsubsection{Types of Errors}
-When discussing``errors" in Machine Learning models, we refer to the following metrics:
+When discussing ``errors" in Machine Learning models, we refer to the following metrics:
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Model Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it were cleaned. Then the model error is defined as $\|\theta - \theta^*\|$.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Testing Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it were cleaned. Let $T(\theta)$ be the out-of-sample testing error when the dirty model is applied to the clean data, and $T(\theta^*)$ be the test error when the clean model is applied to the clean data. The testing error is defined as $T(\theta^*) - T(\theta)$
 
@@ -132,15 +132,15 @@ When discussing``errors" in Machine Learning models, we refer to the following m
 
 \noindent The \emph{error} in the model and in testing is caused by two underlying problems:
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Data Error. } Error caused by dirtiness.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Sampling Error. } Error introduced by sampling i.e., the difference between a model trained on $p\%$ of the data and $100\%$ of the data.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 In this paper, when we use the term \emph{error}, we are refering to \textbf{model error}.
 We will be explicit when we are using the word error to describe problems regarding dirtiness in the underlying data (e.g. ``data corruption").
@@ -160,7 +160,7 @@ a set of candidate dirty data $R_{dirty}$.
 With a budget of applying cleaning i.e., $C(\cdot)$, only k times, return an estimate $\hat{\theta}$ of the clean model.
 \end{problem}
 
-Our goal is to use information from a statistical model to inform data cleaning on samples, and uses the information from clean samples to update a statistical model.
+Our goal is to use information from the model to inform data cleaning on samples, and use the information from clean samples to update the model.
 The tight feedback loop between model training and data cleaning poses several new algorithmic challenges. 
 If we are not careful about how we update the model, we can end up with the Simpsons paradox problem described before.
 Data cleaning and model training happen at very different time scales, we have to carefully budget our effort to ensure that optimizations address rate-determining steps in the workflow.

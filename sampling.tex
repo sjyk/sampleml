@@ -23,9 +23,7 @@ Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find 
 \mathbb{E}(\|g_S - g^*\|^2)
 \]
 \end{definition}
-In other words, we want to most accurately (in the mean squared error sense) estimate the gradient.
-
-To construct these sampling probabilities, we first need the following lemma about importance sampling.
+In other words, we want to most accurately (in the mean squared error sense) estimate the gradient. To construct these sampling probabilities, we first need the following lemma about importance sampling.
 This lemma describes the optimal distribution over a set of scalars:
 \begin{lemma}\label{impsample}
 Given a set of real numbers $A = \{a_1,...,a_n\}$, let $\hat{A}$ be 
@@ -34,65 +32,18 @@ If $\mu$ is the mean $\hat{A}$, the sampling distribution that minimizes
  the variance of $\mu$, i.e., the expected square error, is $p(a_i) \propto a_i$.
 \end{lemma}
 \begin{proof}[Sketch]
-This proof follows from \cite{mcbook}, as it is a straight forward importance sampling result.
-It is easy to verify that for sampling probabilities $p(a_i)$, that the unbiased
-estimate of the mean is:
-\[
-\mu = \frac{1}{nk}\cdot\sum_{i\in\hat{A}}^k \frac{a_i}{p_i}
-\]
-If we minimize the variance $Var(\mu)$, we can find that:
-\[
-p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
-\]
+This proof follows from \cite{mcbook}, as it is a straight-forward importance sampling result.
+We include the proof in the appendix (Section \ref{impsample-deriv})
 \end{proof}
-
-\iffalse
-The variance of this estimate is given by:
-\[
-Var(\mu) = \mathbb{E}(\mu^2)-\mathbb{E}(\mu)^2
-\] 
-Since the estimate is unbiased, we can replace $\mathbb{E}(\mu)$ with the average of $A$:
-\[
-Var(\mu) = \mathbb{E}(\mu^2)-\bar{A}^2
-\]
-Since $\bar{A}$ is deterministic, we can remove that term during minimization.
-Furthermore, we can write $\mathbb{E}(\mu^2)$ as:
-\[
-\mathbb{E}(\mu^2) = \frac{1}{n^2}\sum_i^n \frac{a_i^2}{p_i}
-\]
-Then, we can solve the following optimization problem (removing the proportionality of $\frac{1}{n^2}$) over the set of weights $P=\{p(a_i)\}$:
-\[
-\min_{P} \sum_i^N \frac{a_i^2}{p_i}
-\]
-\[
-\text{subject to: } P > 0, \sum P = 1
-\]
-Applying Lagrange multipliers, an equivalent unconstrained optimization problem is:
-\[
-\min_{P > 0,\lambda > 0} \sum_i^N \frac{a_i^2}{p_i} + \lambda \cdot (\sum P - 1)
-\]
-If, we take the derivatives with respect to $p_i$ and set them equal to zero:
-\[
--\frac{a_i^2}{2 \cdot p_i^2} + \lambda = 0
-\]
-If, we take the derivative with respect to $\lambda$ and set it equal to zero:
-\[
-\sum P - 1
-\]
-Solving the system of equations, we get:
-\[
-p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
-\]
-\fi
 
 Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is where we sample proportionally to the values.
 This insight leads to a direct higher-dimensional generalization, where at iteration $t$ we should sample the records in $R_{dirty}$ with probabilities:
 \[
-p_i \propto \|\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta^t)\| \blacksquare
+p_i \propto \|\nabla\phi(x^{clean}_i,y^{clean}_i,\theta^t)\| \blacksquare
 \]
 
 However, in our case, it leads to a chicken-and-egg problem.
-The optimal sampling distribution requires knowing $(x^{(clean)}_i,y^{(clean)}_i)$, however, we have to sample and clean those points to get those values.
+The optimal sampling distribution requires knowing $(x^{clean}_i,y^{clean}_i)$, however, we have to sample and clean those points to get those values.
 In the next section, we discuss how to inexpensively approximate this optimal distribution.
 As our technique can work with \emph{any} distribution, we are guaranteed convergence no matter how inaccurate this approximation is.
 However, a better approximation will lead to an improved convergence rate.

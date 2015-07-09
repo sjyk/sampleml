@@ -34,7 +34,7 @@
 
 \lstset{basicstyle=\scriptsize,breaklines=true,language=SQL,belowcaptionskip=.1\baselineskip}
 
-\linespread{0.965}
+\linespread{0.96}
 
 \makeatletter
 \def\@copyrightspace{\relax}
@@ -115,7 +115,7 @@
 %\newcommand{\reminder}[1] {}
 \pagestyle{plain}
 
-\title{ActiveClean: Progressive Data Cleaning For Machine Learning}
+\title{ActiveClean: Progressive Data Cleaning For Advanced Analytics}
 
 %\numberofauthors{1}
 %\author{\large Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, Tim Kraska{$\,^\dag$} \\
@@ -132,15 +132,15 @@
 \maketitle
 
 \begin{abstract}
-There have been numerous proposals to extend data management systems and frameworks with support for machine learning. % so that query execution uses, or trains predictive models.
+Data management systems are increasingly supporting advanced analytics such as Machine Learning. % so that query execution uses, or trains predictive models.
 A perennial challenge in these systems is the presence of dirty data -- in the form of missing, duplicate, incorrect or inconsistent values -- which can bias the learning algorithms, leading to incorrect or error-prone predictions.
-Although this can be ameliorated by cleaning the input dataset using existing data cleaning techniques, the cost of doing so (e.g., manually finding and cleaning all dirtiness) is practically and economically infeasible.  
-In addition, existing learning algorithms are not suited for training on partially cleaned datasets, which can lead to dramatically incorrect models.
-In response, we have designed and implemented the ActiveClean system that integrates incremental data cleaning with machine learning algorithms.  
-ActiveClean iteratively updates a machine learning model as data records are individually (or in batches) updated.  
+Although, this can be ameliorated by cleaning the input dataset using existing data cleaning techniques, the cost of doing so (e.g., manually finding and cleaning all data) is practically and economically infeasible.  
+In addition, existing learning algorithms are not suited for training on partially cleaned data, which can lead to dramatically incorrect models.
+In response, we have developed the ActiveClean system, which integrates incremental data cleaning with machine learning algorithms.  
+ActiveClean iteratively updates a machine learning model as data records are individually (or in batches) cleaned.  
 We additionally study numerous database and ML-oriented optimizations to speed the end-to-end process.
-Our evaluation on four real-world datasets suggest that our methodology can learn more accurate models by cleaning significantly less data records than existing alternatives such as uniform sampling and active learning, 
-thus bridging the gap between the reality of dirty data sources and final data products such as predictive models.
+Evaluation on four real-world datasets suggests that our methodology can learn more accurate models by cleaning significantly fewer records than alternatives such as uniform sampling and active learning, 
+thus bridging the gap between the reality of dirty data sources and the quality of predictive models at the end of the pipeline.
 \end{abstract}
 
 \if{0}
@@ -175,10 +175,11 @@ We evaluate \sys on 4 real datasets and find that our methodology can return mor
 
 %\bibliographystyle{abbrv}
 %\scriptsize
-\fontsize{8.5pt}{8.7pt} \selectfont
+\fontsize{7.9pt}{8.2pt} \selectfont
 \bibliographystyle{abbrv}
 \bibliography{ref} 
 
-%\input{appendix.tex}
+\normalsize \selectfont
+\input{appendix.tex}
 
 \end{document}

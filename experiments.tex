@@ -7,7 +7,7 @@ Finally, we evaluate \sys end-to-end in a number of real-world data cleaning sce
 \subsection{Experimental Setup and Notation}
 Our main metric for evaluation is a relative measure of trained model with \sys (or an alternative technique) and the model if all of the data is cleaned.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Relative Model Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Then the model error is defined as $\frac{\|\theta - \theta^*\|}{\|\theta^*\|}$.
 
@@ -18,19 +18,19 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 %\noindent\textbf{Housing: } In this dataset, our task is to predict housing prices from 13 numerical and categorical covariates. There are 550 data points in this dataset. The model is a Logistic Regression classifier which predicts if the house price is greater than \$500k.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Income Classification (Adult): } In this census dataset, our task is to predict the income bracket (binary) from 12 numerical and categorical covariates. There are 45552 data points in this dataset. We use a SVM classifier to predict the income bracket of the person.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Seizure Classification (EEG): } In this dataset, our task is to predict the on set of a seizure (binary) from 15 numerical covariates. There are 14980 data points in this dataset. We chose this dataset since the classification task is hard with an accuracy in clean data of 65\%. The model that we use is a thresholded Linear Regression.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Handwriting Recognition (MNIST): } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Dollars For Docs: } ProPublica has collected a dataset of 240089 corporate contributions to doctors for analysis of whether these contributions affect research. 
 There are 5 textual attributes and one numerical attribute.
@@ -40,27 +40,27 @@ The model is a binary SVM using a bag-of-words model to featurize the textual at
 \subsubsection{Compared Algorithms}
 \noindent Here are the alternative methodologies that we consider:
 
-\vspace{0.5em}
+\vspace{0.25em}
 
-\noindent\textbf{Robust Logistic Regression \cite{feng2014robust}. } Feng et al. proposed a variant of logistic regression that is robust to outliers. We chose this algorithm because it is a robust extension of the convex regularized loss model, leading to a better apples-to-apples comparison between the techniques.  
+\noindent\textbf{Robust Logistic Regression \cite{feng2014robust}. } Feng et al. proposed a variant of logistic regression that is robust to outliers. We chose this algorithm because it is a robust extension of the convex regularized loss model, leading to a better apples-to-apples comparison between the techniques. (See details in Appendix \ref{rlogit})  
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{Discarding Dirty Data. } As a baseline we explore model accuracy when dirty data is discarded.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{SampleClean (SC) \cite{wang1999sample}. } In SampleClean, we take a sample of data, apply data cleaning, and then train a model to completion.
 
-\vspace{0.5em}
+\vspace{0.25em}
 
-\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } There have been recent proposals of integrating Active Learning with stochastic optimization. Active Learning has been widely applied in the data cleaning literature \cite{gokhale2014corleone}, but never integrated with model training. We acknowledge the work in the Machine Learning literature and formulate an Active Learning that uses a prioritization fuction agnostic of the dirty data (no estimation and detection). We clean in batches of 50 records and we use this parameter setting for both AL and \sys.
+\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } We compare against an Active Learning algorithm that integrates with stochastic optimization (See details in Appendix \ref{al}). 
 
-\vspace{0.5em}
+\vspace{0.25em}
 
 \noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, we importance sample points by their clean gradient. This represents the theoretical best that our algorithm could hope to achieve given perfect estimation.
 
-\subsection{Does Data Cleaning Matter}
+\subsection{Does Data Cleaning Matter?}
 Before we evaluate \sys, we first evaluate the benefits of cleaning on 2 of our example datasets (EEG and Adult).
 We first explore this problem without sampling to understand which types of data corruption are amenable to data cleaning and which are better suited for robust statistical techniques.
 We compare 4 schemes: (1) full data cleaning uncorrupted, (2) baseline of no cleaning, (3) discarding the dirty data, and (4) robust logistic regression,. We corrupted 5\% of the training examples in each dataset in two different ways:
@@ -114,7 +114,7 @@ Active Learning prioritizes with respect to a dirty model (i.e., is agnostic to 
 \sys also is relatively close in performance to the oracular version (theoretical optimum).
 
 However, to an end user the metric that matters is test accuracy.
-In Figure \ref{prio-tperf}, we present the results for the two datasets: Adult and EEG.
+In Figure \ref{prio-perf}, we present the results for the two datasets: Adult and EEG.
 We find that in both Adult and EEG, \sys converges to clean test accuracy faster than the alternatives.
 
 \vspace{0.25em}
@@ -125,14 +125,10 @@ We find that in both Adult and EEG, \sys converges to clean test accuracy faster
 \centering
  %\includegraphics[scale=0.15]{exp/exp3a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp3b.pdf}
+    \includegraphics[width=0.49\columnwidth]{exp/exp3bb.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp3c.pdf}
- \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. \label{prio-perf}}
-\end{figure}
-\begin{figure}[ht!]
-\centering
- \includegraphics[width=0.49\columnwidth]{exp/exp3bb.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp3cc.pdf}
- \caption{\sys converges with a smaller sample size to the maximum test accuracy in comparison to Active Learning and SampleClean. The reductions in model error correlate well with increased test accuracy in (a). Due to the hardness of the task in (b), we small gains in terms of test accuracy. \label{prio-tperf}}
+ \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. \label{prio-perf}}
 \end{figure}
 
 \subsubsection{Source of Improvements}
@@ -187,7 +183,7 @@ We find that SampleClean outperforms \sys only when corruptions are very severe 
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}
- \caption{We corrupt an increasing number of entries in the data matrix. \sys performs well until the corruption is so severe that the dirty model is not a good initialization.  \label{bias}}
+ \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization.  \label{bias}}
 \end{figure}
 
 \subsection{Adaptive Detection}
@@ -229,12 +225,13 @@ We find that when the corruption is about 50\% random then we reach a break even
 \begin{figure}[ht!]
 \vspace{-1em}
 \centering
- \includegraphics[width=0.5\columnwidth]{exp/exp5a.pdf}
- \caption{Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. \label{tradeoffs2}}
+ \includegraphics[width=0.49\columnwidth]{exp/exp5a.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp12.pdf}
+ \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}
 \end{figure}
 
 \subsection{Estimation}\label{est}
-In Figure \ref{tradeoffs3}, we explore how estimation technique performs compared to a few alternative estimation techniques: (1) ``linear regression" where we train a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" change where we do not use the detection to inform how to apply the estimate, (3) ``average feature change" where we do not linearize but use detection, and (4) our taylor series linear approximation.
+In Figure \ref{tradeoffs2}b, we explore how estimation technique performs compared to a few alternative estimation techniques: (1) ``linear regression" where we train a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" change where we do not use the detection to inform how to apply the estimate, (3) ``average feature change" where we do not linearize but use detection, and (4) our taylor series linear approximation.
 We only how accurately the technique can estimate the gradient for sampling.
 More accurate gradient estimates will result in faster convergence.
 
@@ -247,14 +244,6 @@ Linear regression and the average feature change technique do eventually perform
 
 \noindent \emph{Summary: Linearized gradient estimates are more accurate when estimated from small samples. }
 
-\begin{figure}[ht!]
-\vspace{-2em}
-\centering
- \includegraphics[width=0.5\columnwidth]{exp/exp12.pdf}
- \caption{The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs3}}
-\end{figure}
-
-
 \subsection{Real Scenarios}
 We evaluate \sys in two real scenarios, one demonstrating the a priori case and one for the adaptive detection case.
 
@@ -266,47 +255,9 @@ Each research publication is with whether the contribution is ``covered" or ``no
 Our goal is to classify research contributions as being not covered (i.e., possibly fraudulent) based on 5 attributes: the principal investigator's speciality, the drug or device in question, the corporation, the amount contributed, and whether the research was disputed.
 
 However, the dataset is very dirty, and Pro Publica highlights the cleaning that they performed before publishing this dataset \cite{dollarsfordocs} including entity resolution and enforcing quality constraints.
-Errors include: 
-
-\vspace{0.25em}
-
-\noindent \textbf{Corporations are inconsistently represented: } ``Pfizer", ``Pfizer Inc.", ``Pfizer Incorporated".
-
-\vspace{0.25em}
-
-\noindent \textbf{Drugs are inconsistently represented: } ``TAXOTERE  DOCETAXEL -PROSTATE CANCER" and ``TAXOTERE"
-
-\vspace{0.25em}
-
-\noindent \textbf{Label of covered and not covered are not consistent: } ``No", ``Yes",``N", ``This study is not supported", ``None", ``Combination"
-
-\vspace{0.25em} 
-
-\noindent \textbf{Research subject must be a drug OR a medical device and not both: } ``BIO FLU QPAN H7N9AS03 Vaccine" and ``BIO FLU QPAN H7N9AS03 Device"
-
-\vspace{0.5em} 
-
-We treat this problem as a constraint-based cleaning problem where we encode these problems as data quality constraints. 
-
-\vspace{0.25em}
-
-\noindent \textbf{Rule 1: } Matching dependency on corporation (Weighted Jaccard Similarity $>$ 0.8).
-
-\vspace{0.25em}
-
-\noindent \textbf{Rule 2: } Matching dependency on drug (Weighted Jaccard Similarity $>$ 0.8).
-
-\vspace{0.25em}
-
-\noindent \textbf{Rule 3: } Label must either be ``covered" or ``not covered".
-
-\vspace{0.25em} 
-
-\noindent \textbf{Rule 4: } Either drug or medical device should be null.
-
-\vspace{0.5em}
-
+We treat this problem as a constraint-based cleaning problem where we encode these problems as data quality constraints (see Appendix \ref{dfd-errors} for constraints and example errors). 
 This provides us with a detector for the corruption. 
+To fix the detected violations, we manually cleaned data.
 We confirmed drug names with company catalogs and used judgement to make the labels consistent.
 To run this experiment, we manually cleaned the entire dataset up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data.
 Figure \ref{dfd}a shows that \sys converges faster than Active Learning and SampleClean.
@@ -329,7 +280,7 @@ On the cleaned data, this classifier is nearly perfect with a 97\% true positive
  \caption{(A) The relative model error as a function of the number of cleaned records. (B) The true postive rate as a function of the number of cleaned records. \label{dfd}}
 \end{figure}
 
-\subsubsection{Adaptive: Replacing Corrupted Handwriting Data}
+\subsubsection{Adaptive: Replacing Corrupted Data}
 We consider the following scenario with the MNIST handwritten digit recognition dataset.
 Suppose, our goal is to classify digits into a set of classes.
 However, we suspect that some of our raw images are of low quality.
