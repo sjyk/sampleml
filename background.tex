@@ -26,15 +26,14 @@ Contribution(pi_speciality$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm
 
 \vspace{0.25em}
 
-Using this dataset, consider the following analysis scenario.
+\noindent Using this dataset, consider the following analysis scenario.
 \begin{example}
-We are interested in predicting impropriety in medical research contributions, by exploring what features of a research contribution predict the \texttt{status} (i.e., not allowed in the protocol).
+We are interested in predicting impropriety in medical research contributions, by exploring what features of a research contribution predict the \texttt{status} (i.e., whether it was not allowed by the protocol).
 We featurize the textual attributes with a bag-of-words model and treat the \texttt{amount}/\texttt{dispute} attributes as numerical features.
 The predictive model is a Support Vector Machine (SVM) that predicts the label $\{1,0\}$ where $1$ indicates a disallowed contribution.
 \end{example}
 
-In an ideal world, such a model would be robust to small corruption in the data.
-However, the systematic nature of the corruption, can result in a misleading model.
+However, this dataset is very dirty, and the systematic nature of the corruption can result in a misleading model.
 On the Pro Publica website \cite{dollarsfordocs}, they list numerous types of corruption that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
 For example, the most significant contributions were made by large companies whose names were also more often inconsistently represented in the data e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
 In a fraud detection scenario such as this one, the effect of systematic error can be serious.

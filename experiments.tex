@@ -32,10 +32,9 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 \vspace{0.25em}
 
-\noindent\textbf{Dollars For Docs: } ProPublica has collected a dataset of 240089 corporate contributions to doctors for analysis of whether these contributions affect research. 
-There are 5 textual attributes and one numerical attribute.
-We use this dataset to classify whether a research contribution is ``not covered" under the declared experimental protocal from the attributes.
-The model is a binary SVM using a bag-of-words model to featurize the textual attributes.
+\noindent\textbf{Dollars For Docs: } We introduced this dataset earlier in the paper, and here we highlight some of the details. The dataset has 240089 records with 5 textual attributes and one numerical attribute.
+We used a bag-of-words featurization model for the textual attributes which resulted in a 2021 dimensional feature vector. 
+We use this feature vector via a binary SVM to classify whether a research contribution is ``not covered" under the declared experimental protocal from the attributes.
 
 \subsubsection{Compared Algorithms}
 \noindent Here are the alternative methodologies that we consider:
