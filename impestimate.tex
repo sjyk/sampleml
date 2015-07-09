@@ -14,8 +14,7 @@ To define ``similarly corrupted", we are going to show how we can use the detect
 
 \subsection{Estimation For A Priori Detection}
 \begin{example}
-Consider our EEG dataset with multiple types of errors. 
-Suppose the electrical signals for some records are corrupted with missing data and the patient data for other records are corrupted with inconsistency problems. 
+Suppose records from running example dataset are corrupted with both entity resolution problems, missing data, and constraint violations. 
 Each training example will have a set of corrupted features (e.g., $\{1,2,6\}$, $\{1,2,15\}$).
 
 Suppose that we have just cleaned the records $r_1$ and $r_2$ represented as tuples with their corrupted feature set: ($r_1$,$\{1,2,3\}$), ($r_2$,$\{1,2,6\}$).

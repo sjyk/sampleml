@@ -11,8 +11,6 @@ Repeated entry---line 1846 of file ref.bib
  : @inproceedings{volkovs2014continuous
  :                                     ,
 I'm skipping whatever remains of this entry
-A bad cross reference---entry "kraska2013mlbase"
-refers to entry "DBLP:conf/cidr/2013", which doesn't exist
 A bad cross reference---entry "chu2015katara"
 refers to entry "DBLP:conf/sigmod/2015", which doesn't exist
 A bad cross reference---entry "wang1999sample"
@@ -29,67 +27,58 @@ A bad cross reference---entry "deshpande2004model"
 refers to entry "DBLP:conf/vldb/2004", which doesn't exist
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2014"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2015"
-Warning--I didn't find a database entry for "DBLP:conf/cidr/2013"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2010"
 Warning--I didn't find a database entry for "DBLP:conf/vldb/2004"
 Warning--I didn't find a database entry for "DBLP:conf/case/2014"
 Warning--I didn't find a database entry for "DBLP:conf/recsys/2014"
-Warning--to sort, need author or key in fortunearticle
+Warning--to sort, need author or key in bdas
 Warning--to sort, need author or key in sampleclean
+Warning--to sort, need author or key in fortunearticle
 Warning--to sort, need author or key in dollarsfordocs
-Warning--to sort, need author or key in importstats
-Name 1 in "Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, and Tim Kraska" has a comma at the end for entry krishnan2015svc
-while executing---line 1049 of file abbrv.bst
-Too many commas in name 1 of "Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, and Tim Kraska" for entry krishnan2015svc
-while executing---line 1049 of file abbrv.bst
 Warning--empty journal in bergman2015query
 Warning--empty year in bertsekas2011incremental
 Warning--empty journal in khayyat2015bigdansing
 Warning--empty publisher in mcbook
-Name 1 in "Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, and Tim Kraska" has a comma at the end for entry krishnan2015svc
-while executing---line 1090 of file abbrv.bst
-Too many commas in name 1 of "Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, and Tim Kraska" for entry krishnan2015svc
-while executing---line 1090 of file abbrv.bst
 Warning--empty journal in xiaofeature
-You've used 46 entries,
+You've used 47 entries,
             2118 wiz_defined-function locations,
-            743 strings with 12604 characters,
-and the built_in function-call counts, 17985 in all, are:
-= -- 1717
-> -- 984
+            748 strings with 12857 characters,
+and the built_in function-call counts, 18719 in all, are:
+= -- 1779
+> -- 1066
 < -- 16
-+ -- 396
-- -- 344
-* -- 1289
-:= -- 2874
-add.period$ -- 137
-call.type$ -- 46
-change.case$ -- 307
++ -- 431
+- -- 376
+* -- 1371
+:= -- 3013
+add.period$ -- 140
+call.type$ -- 47
+change.case$ -- 326
 chr.to.int$ -- 0
-cite$ -- 55
-duplicate$ -- 672
-empty$ -- 1332
-format.name$ -- 344
-if$ -- 3797
+cite$ -- 56
+duplicate$ -- 679
+empty$ -- 1348
+format.name$ -- 376
+if$ -- 3922
 int.to.chr$ -- 0
-int.to.str$ -- 46
-missing$ -- 45
-newline$ -- 229
-num.names$ -- 84
-pop$ -- 368
+int.to.str$ -- 47
+missing$ -- 46
+newline$ -- 234
+num.names$ -- 86
+pop$ -- 381
 preamble$ -- 1
-purify$ -- 264
+purify$ -- 282
 quote$ -- 0
-skip$ -- 524
+skip$ -- 530
 stack$ -- 0
-substring$ -- 1034
+substring$ -- 1066
 swap$ -- 198
 text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 178
+type$ -- 182
 warning$ -- 9
-while$ -- 150
-width$ -- 48
-write$ -- 481
-(There were 14 error messages)
+while$ -- 154
+width$ -- 49
+write$ -- 492
+(There were 9 error messages)

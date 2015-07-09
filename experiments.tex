@@ -247,14 +247,8 @@ Linear regression and the average feature change technique do eventually perform
 \subsection{Real Scenarios}
 We evaluate \sys in two real scenarios, one demonstrating the a priori case and one for the adaptive detection case.
 
-\subsubsection{A Priori: Constraint Cleaning}
-In our first real scenario, we explore the Dollars for Docs dataset published by Pro Publica.
-This dataset consists of medical research contributions from pharmaceutical corporations and subsequent research by universities and hospitals.
-In this dataset, our application is inspired by a fraud dection application.
-Each research publication is with whether the contribution is ``covered" or ``not covered" by the experimental protocol.
-Our goal is to classify research contributions as being not covered (i.e., possibly fraudulent) based on 5 attributes: the principal investigator's speciality, the drug or device in question, the corporation, the amount contributed, and whether the research was disputed.
-
-However, the dataset is very dirty, and Pro Publica highlights the cleaning that they performed before publishing this dataset \cite{dollarsfordocs} including entity resolution and enforcing quality constraints.
+\subsubsection{A Priori: Constraint Cleaning}\label{dfd-exp}
+In our first real scenario, we explore the Dollars for Docs dataset published by Pro Publica that we described throughout the paper.
 We treat this problem as a constraint-based cleaning problem where we encode these problems as data quality constraints (see Appendix \ref{dfd-errors} for constraints and example errors). 
 This provides us with a detector for the corruption. 
 To fix the detected violations, we manually cleaned data.

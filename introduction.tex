@@ -1,11 +1,10 @@
 \section{Introduction}
-The proliferation of learning-based applications such as recommender systems, fraud detection, and automated content tagging, has encouraged the development of optimized advanced analytics libraries integrated with the data management stack \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib}. 
-While these libraries can dramatically reduce the required effort in developing scalable predictive applications, acquiring ``clean" data of sufficient quality for learning is still a bottleneck.
+The proliferation of learning-based applications such as recommender systems, fraud detection, and automated content tagging, has encouraged the development of numerous advanced analytics libraries integrated with the data management stack \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib}. 
+While this dramatically reduces the required effort in developing scalable learning applications, acquiring ``clean" data of sufficient quality is still a bottleneck.
 Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations, and industrial surveys have established that dirty data are prevalent  \cite{Gartner}.
-Data corruption, when systematic or correlated with the data\cite{taylor1982introduction}, can bias learning algorithms, leading to incorrect or error-prone predictions.
+Data corruption, when systematic or correlated with the data\cite{taylor1982introduction}, can bias learning algorithms, leading to incorrect or error-prone predictions \cite{xiaofeature}.
 
-A broad class of predictive models, supervised machine learning, are known to be sensitive to data quality \cite{xiaofeature}.
-Supervised Machine Learning relies on correlating features with labels, and systematically corrupted data can lead to confouding correlations.
+An important class of advanced analytics, Supervised Machine Learning, relies on correlating features with labels, and systematically corrupted data can lead to confouding correlations.
 Consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
 A recommendation model trained on this data may spuriously ``learn" a correlation relationship between the ``18-24" age group and music liked by European users.
 While there is an extensive literature on robust Machine Learning, this work largely focuses on resilience to atypical outliers (i.e., age ``150") and not spurious correlations.
@@ -14,15 +13,16 @@ Such problems can be ameliorated by a variety of data cleaning techniques (see R
 Recently, several scalable data cleaning frameworks have been proposed including BigDansing\cite{khayyat2015bigdansing}, SampleClean\cite{sampleclean}, and Katara \cite{chu2015katara}. 
 Unfortunately, even with recent research results, data cleaning can be time consuming and economically infeasible\cite{wang1999sample}.
 Programming data transformations to fix all problems manifest in the data requires substantial developer effort \cite{kandel2012}.
-When scripted transformations do not suffice, crowdsourcing is a popular alternative with recent success in missing value filling and entity resolution (\cite{gokhale2014corleone, park2014crowdfill, sampleclean,chu2015katara}.
+When scripted transformations do not suffice, crowdsourcing is a popular alternative with recent success in missing value filling and entity resolution \cite{gokhale2014corleone, park2014crowdfill, sampleclean,chu2015katara}.
 However, crowdsourcing comes at the cost of additional latency, overhead of managing human workers, and significant monetary expense.
 
 Thus, for many corrupted datasets, the analyst can only practically clean $k \ll N$ records.
-However, budgeting data cleaning poses a few problematic methodological challenges for Machine Learning.
+However, budgeting data cleaning poses a few problematic methodological issues for Machine Learning.
 First, mixing dirty and clean data violates homogeneity assumptions and may lead to dramtically incorrect models (Figure \ref{update-arch1}).
-To avoid this problem, we could use a random sampling approach (e.g., \cite{wang1999sample}) where the analyst cleans and trains only on a subset of $k$ examples.
-Machine Learning applications can require a large amount of training data to learn correlations between possibly hundreds of features and labels, and $k$ training examples may not be enough data to support a viable model.
-Finally, if errors are sparse, any random sampling-based approach will largely select already cleaned data leading to wasted effort.
+To avoid this problem, we could use a random sampling approach (e.g., \cite{wang1999sample}), where the analyst first samples $k$ records, applies data cleaning to this subset, and then trains a model using only the clean data.
+While this avoids the homogeneity problem, Machine Learning applications can require a large amount of training data and $k$ training examples may not be enough to support a viable model.
+Furthermore, if errors are sparse, any random sampling-based approach will largely select already cleaned data leading to wasted effort.
+The consequence is that errors introduced by poor methodology may dominate any gains from data cleaning, leading to unreliable or even misleading conclusions.
 
 \begin{figure}[t]
 \centering
@@ -30,7 +30,7 @@ Finally, if errors are sparse, any random sampling-based approach will largely s
  \caption{\sysfull presents an architecture where data cleaning is integrated with model training. The user specifies a data cleaning procedure, and we provide a framework for sampling, model update, and feedback through estimation. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
-In response to these challenges, we propose \sys, a framework that integrates existing data cleaning techniques with Machine Learning model training in a way that ensures reliable and accurate for progressive data cleaning.
+In response to these problems, we propose \sys, a framework that integrates existing data cleaning techniques with Machine Learning model training in a way that ensures reliable and accurate for progressive data cleaning.
 Suppose an analyst has a large dirty dataset, a data cleaning technique, a budget of cleaning $k$ records, and a model she wishes to train.
 \sys uses the model to select the most valuable samples of data to clean, and incrementally updates the model after cleaning.
 \sys can integrate user specified dirty data detection rules (such as constraints) into the framework to further guide our sampling.

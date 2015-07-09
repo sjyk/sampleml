@@ -1,40 +1,49 @@
 \section{Problem Setup}\label{background}
 
-\subsection{Examples of Systematic Corruption}
-We first introduce a few examples of systematic corruption in publically available data.
-
-\vspace{0.25em}
-
-\noindent\textbf{Dollars for Docs: }
-ProPublica has collected a dataset of corporate contributions to doctors for analysis of whether these contributions affect research.
-On their website \cite{dollarsfordocs}, they list numerous types of corruption that had to be cleaned before publishing the data.
-The most significant contributions were made by large companies whose names were more often inconsistently represented in the data e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
-If this corruption is not cleaned, contributions from larger companies might be underestimated.
-
-\vspace{0.25em}
-
-\noindent\textbf{Country Imports: }
-The monetary value of a country's imports are an important metric for understanding purchasing power, balance of payments, and economic strength. 
-Import statistics available on publically curated datasets such as Wikipedia \cite{importstats} are up-to-date for large countries but are 8-10 years behind for smaller countries. 
-Smaller countries often experience more rapid growth (or decline) than larger countries making this systematic corruption problematic.
-
 \subsection{Motivating Analysis Scenario}
-Consider the following motivating scenario.
-An analyst is interested in understanding the correlation between neurological data (EEG data), patient predispositions, and the onset of seizures.
+Large dirty data are prevelant \cite{fortunearticle}, and we introduce an example of systematic corruption in publically available data. We present the following running example with our Dollars for Docs dataset (see Experiments, Section \ref{dfd-exp}):
 
+\vspace{0.25em}
+
+\noindent\textbf{Dollars for Docs. }
+ProPublica has collected a dataset of corporate contributions to doctors for analysis of whether these contributions (negatively) affect research. 
+The dataset has the following schema:
+\begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
+Contribution(pi_speciality$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$ corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
+\end{lstlisting}
+
+\noindent\texttt{pi\_speciality} is a textual attribute describing the speciality of the doctor recieving the contribution.
+
+\noindent\texttt{drug\_name} is the branded name of the drug in the research study (null if not a drug).
+
+\noindent\texttt{device\_name} is the branded name of the device in the study (null if not a device).
+
+\noindent\texttt{amount} is a numerical attribute representing the contribution amount.
+
+\noindent\texttt{dispute} is a boolean attribute describing whether the research was disputed.
+
+\noindent\texttt{status} is a string label describing whether the contribution was covered under the declared research protocol. There are two statuses ``Covered" and ``Non-Covered".
+
+\vspace{0.25em}
+
+Using this dataset, consider the following analysis scenario.
 \begin{example}
-An analyst is given a 15-dimensional feature vector $x \in \mathbb{R}^{15}$ of sampled from a few seconds of electrical signals and three binary features indicating risk factors including family history, age, and gender.
-The classification is a label $y\in \{0,1\}$ of whether the patient is having a seizure.
-The analyst wants to trains a linear regression model to predict seizures.
-
-Medical records are often dirty due to digitization and data integration \cite{fortunearticle}.
-After model training, the analyst is informed of corruption in the patient data.
-With some preliminary data exploration, she discovers that older patients whose records were manually digitized are more likely to have missing values.
-In addtion, occcurances of certain types of seizures are mislabled based on a changing medical definition.
-The procedure to determine which patients' data are corrupted requires querying source medical records which are in a semi-structured format.
+We are interested in predicting impropriety in medical research contributions, by exploring what features of a research contribution predict the \texttt{status} (i.e., not allowed in the protocol).
+We featurize the textual attributes with a bag-of-words model and treat the \texttt{amount}/\texttt{dispute} attributes as numerical features.
+The predictive model is a Support Vector Machine (SVM) that predicts the label $\{1,0\}$ where $1$ indicates a disallowed contribution.
 \end{example}
 
-\noindent\textbf{Cleaning With a Budget: }  Let us suppose our analyst wants evaluate whether the problems affect her model, and she wants to do this without having to manually validate every record. The first solution to this problem is to clean a sample of data, write this sample back, and then retrain the model on the partially cleaned data.
+In an ideal world, such a model would be robust to small corruption in the data.
+However, the systematic nature of the corruption, can result in a misleading model.
+On the Pro Publica website \cite{dollarsfordocs}, they list numerous types of corruption that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
+For example, the most significant contributions were made by large companies whose names were also more often inconsistently represented in the data e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
+In a fraud detection scenario such as this one, the effect of systematic error can be serious.
+Duplicate entity representations, could reduce the correlation between these entities and impropriety.
+
+\vspace{0.25em}
+
+\noindent\textbf{Cleaning With a Budget: }  Let us suppose our analyst wants evaluate whether the problems affect her model, and she wants to do this without having to manually validate every record. 
+The first solution to this problem is to clean a sample of data, write this sample back, and then retrain the model on the partially cleaned data.
 However, this solution can give unreliable results since we are mixing dirty and clean data.
 In Figure \ref{update-arch1}, we illustrate the dangers of this approach on a very simple dirty dataset and model.
 Suppose, we are trying to find a best fit line for two variables. 
@@ -176,14 +185,14 @@ Crowd based techiques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{
 
 \noindent Here is an example application of \sys with our running example:
 \begin{example}
-The analyst first trains her linear model on the dirty data ignoring the effects of the errors returning a model $\theta^{(d)}$.
-She decides that she has a budget of cleaning $40$ records, and decides to clean the 40 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
+The analyst first trains her SVM model on the dirty data ignoring the effects of the errors returning a model $\theta^{(d)}$.
+She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
 She initializes \sys with $\theta^{(d)}$.
 \sys samples an intial batch of 10 records.
 She manually cleans those records by using the medical record source data.
 After each batch, the model is updated with the most recent cleaning results $\theta^{(t)}$.
 The model improves after each iteration.
-After $t=4$ of cleaning, the analyst has an accurate model trained with 40 cleaned records but still utilizes the entire dirty data.
+After $t=10$ of cleaning, the analyst has an accurate model trained with 100 cleaned records but still utilizes the entire dirty data.
 \end{example}
 
 \iffalse

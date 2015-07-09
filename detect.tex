@@ -37,9 +37,9 @@ In the detection step, we select a subset of records $\mathcal{R}_{dirty} \subse
 The set $e_r$ is the set of columns for each record which have a constraint violation. 
 
 \begin{example}
-Consider our EEG data running example, for an example of constraint-based cleaning.
-We can add a constraint that one of the electrical signals cannot be greater than 4V.
-For all records whose value is above 4V, we would select them in the error detection step.
+An example of a constraint for our running example dataset is that the \texttt{status} of
+a contribution can be only ``covered" or ``non-covered".
+Any other value for \texttt{status} is an error.
 \end{example}
 
 \vspace{0.5em}
@@ -61,8 +61,8 @@ In the detection step, $R_{dirty}$ is the set of records that have at least one 
 The set $e_r$ is the attributes of $r$ that have entity resolution problems.
 
 \begin{example}
-An example of an Entity Resolution problem is where the patient's gender is inconsistently represented (e.g., ``Male", ``M", ``Man"). 
-We can define a similarity relationship $(\text{first char =} 'M')$ and select all records that satisfy this condition.
+An example of an Entity Resolution problem is seen in our earlier example about corporation names e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".. 
+We can define a similarity relationship $WeightedJaccard(r1,r2)>0.8$ and select all records that satisfy this condition (their Weighted Jaccard Similarity is greater than 0.8).
 \end{example}
 
 \subsection{Adaptive Detection}
@@ -90,16 +90,18 @@ So the result is:
 
 We highlight an example of adaptive detection using an interative data cleaning tool such as OpenRefine \cite{openrefine}.
 
+\vspace{0.25em}
+
 \noindent\textbf{Interactive Data Cleaning.}
 \begin{example}
 OpenRefine is a spreadsheet-based tool that allows users to explore and transform data.
 However, it is limited to clean data that can fit in memory on a single personal computer.
-Thus, it is beneficial to sample data.
 Since the cleaning operations are coupled with data exploration, we do not know what is dirty in advance (the analyst may discover new errors as she cleans).
 
-Suppose our analyst wants to use OpenRefine to clean a very large dataset with \sys.
-She takes a sample of data from the entire dataset.
-Every time she makes a batch data transformation, we find the set of records that have changed.
-Using the set of distinct transformations, we can infer the corruption classes. 
-These records become positive training examples for a classifier to guide future samples.
+Suppose our analyst wants to use OpenRefine to clean our running example dataset with \sys.
+She takes a sample of data from the entire dataset and uses the tool to discover errors.
+For example, she finds that some drugs are incorrectly classified as both drugs and devices.
+She then clears the device attribute for all records that have the drug name in question.
+Every time she makes a batch data transformation (i.e., clearning the device attribute), we can list the set of records that have changed.
+Each transformation becomes and error class, and the records that have changed records become positive training examples for a classifier to guide future samples.
 \end{example}
