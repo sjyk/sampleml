@@ -62,6 +62,14 @@ We will derive the optimal sampling distribution, and show how the theoretical o
 
 \vspace{0.5em}
 
+\noindent\textbf{Cleaner (Section \ref{dist-samp}). } We take the sample of the records $S_{dirty}$, and apply the analyst-specified data cleaning $C(\cdot)$. In this paper, we focus on a record-by-record cleaning model where the function $C$ is applied to a record and produces the clean record:
+\[
+S_{clean} = \{C(r) : \forall r \in S_{dirty}\}
+\]
+The record-by-record cleaning model is not a fundemental restriction of our approach, and in our extensions (Section \ref{set-of-r}) , we discuss a compatible ``set of records" cleaning model. Consider the case where an analyst finds a dirty record, and is able to fix all records with same error throughout the dataset efficiently.
+
+\vspace{0.5em}
+
 \noindent\textbf{Updater (Section \ref{model-update}). } We update the model $\theta^{(t)}$ based on the newly cleaned data $F(S_{clean})$ resulting in $\theta^{(t+1)}$. Analyzing the model update procedure as a stochastic gradient descent algorithm will help us derive the sampling distribution and estimation.
 
 \vspace{0.5em}
