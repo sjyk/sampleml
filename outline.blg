@@ -35,50 +35,51 @@ Warning--to sort, need author or key in bdas
 Warning--to sort, need author or key in sampleclean
 Warning--to sort, need author or key in fortunearticle
 Warning--to sort, need author or key in dollarsfordocs
+Warning--to sort, need author or key in dollarsfordocsa
 Warning--empty journal in bergman2015query
 Warning--empty year in bertsekas2011incremental
 Warning--empty journal in khayyat2015bigdansing
 Warning--empty publisher in mcbook
 Warning--empty journal in xiaofeature
-You've used 47 entries,
+You've used 48 entries,
             2118 wiz_defined-function locations,
-            748 strings with 12857 characters,
-and the built_in function-call counts, 18719 in all, are:
-= -- 1779
-> -- 1066
+            751 strings with 13008 characters,
+and the built_in function-call counts, 18880 in all, are:
+= -- 1794
+> -- 1067
 < -- 16
-+ -- 431
++ -- 433
 - -- 376
-* -- 1371
-:= -- 3013
-add.period$ -- 140
-call.type$ -- 47
-change.case$ -- 326
+* -- 1376
+:= -- 3030
+add.period$ -- 142
+call.type$ -- 48
+change.case$ -- 329
 chr.to.int$ -- 0
-cite$ -- 56
-duplicate$ -- 679
-empty$ -- 1348
+cite$ -- 58
+duplicate$ -- 686
+empty$ -- 1371
 format.name$ -- 376
-if$ -- 3922
+if$ -- 3962
 int.to.chr$ -- 0
-int.to.str$ -- 47
+int.to.str$ -- 48
 missing$ -- 46
-newline$ -- 234
+newline$ -- 238
 num.names$ -- 86
-pop$ -- 381
+pop$ -- 389
 preamble$ -- 1
-purify$ -- 282
+purify$ -- 284
 quote$ -- 0
-skip$ -- 530
+skip$ -- 538
 stack$ -- 0
-substring$ -- 1066
-swap$ -- 198
+substring$ -- 1072
+swap$ -- 199
 text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 182
-warning$ -- 9
+type$ -- 186
+warning$ -- 10
 while$ -- 154
-width$ -- 49
-write$ -- 492
+width$ -- 50
+write$ -- 499
 (There were 9 error messages)

@@ -134,7 +134,7 @@
 \begin{abstract}
 Data management systems are increasingly supporting advanced analytics such as Machine Learning.
 A perennial challenge is the presence of dirty data -- in the form of missing, duplicate, incorrect or inconsistent values -- which can bias the learning algorithms, leading to incorrect or error-prone predictions. Although, this can be ameliorated by cleaning the input dataset using existing data cleaning techniques, the cost of doing so (e.g., manually finding and cleaning all data) is practically and economically infeasible.  In addition, existing learning algorithms are not suited for training on partially cleaned data, which can lead to dramatically incorrect models. In response, we have developed the ActiveClean system, which integrates incremental data cleaning with machine learning algorithms.  ActiveClean iteratively updates a machine learning model as data records are individually (or in batches) cleaned.  
-We additionally study numerous database and ML-oriented optimizations to speed the end-to-end process. Evaluation on four real-world datasets suggests that our methodology can learn more accurate models by cleaning significantly fewer records than alternatives such as uniform sampling and active learning, thus bridging the gap between the reality of dirty data sources and the quality of predictive models at the end of the pipeline.
+We additionally study numerous database and ML-oriented optimizations to speed the end-to-end process. Evaluation on four real-world datasets suggests that our methodology can learn more accurate models by cleaning significantly fewer records (up-to an order of magnitude) than alternatives such as uniform sampling and active learning, thus bridging the gap between the reality of dirty data sources and the quality of predictive models at the end of the pipeline.
 \end{abstract}
 
 \if{0}
@@ -144,7 +144,7 @@ Increasingly, modern data analysis pipelines involve Machine Learning for predic
 Dirty data is often expensive to repair, and naive sampling solutions are not suited for training high dimensional models.
 In this paper, we propose \sysfull, an anytime framework for training Machine Learning models with budgeted data cleaning.
 Our framework updates a model iteratively as small samples of data are cleaned, and includes numerous optimizations such as importance weighting and dirty data detection.
-We evaluate \sys on 4 real datasets and find that our methodology can return more accurate models for a smaller cost than alternatives such as uniform sampling and active learning.
+We evaluate \sys on 4 real datasets and find that our methodology can return more accurate models for a smaller cost  than alternatives such as uniform sampling and active learning.
 \end{abstract}
 \fi
 
@@ -169,10 +169,10 @@ We evaluate \sys on 4 real datasets and find that our methodology can return mor
 
 %\bibliographystyle{abbrv}
 %\scriptsize
-\fontsize{7.9pt}{8.2pt} \selectfont
+\fontsize{8.2pt}{8.5pt} \selectfont
 \bibliographystyle{abbrv}
 \bibliography{ref} 
-
+\clearpage
 \normalsize \selectfont
 \input{appendix.tex}
 

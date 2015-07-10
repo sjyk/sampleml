@@ -28,7 +28,7 @@ Our main metric for evaluation is a relative measure of trained model with \sys 
 
 \vspace{0.25em}
 
-\noindent\textbf{Handwriting Recognition (MNIST): } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
+\noindent\textbf{Handwriting Recognition (MNIST) \footnote{\scriptsize\url{http://ufldl.stanford.edu/wiki/index.php/Using_the_MNIST_Dataset}}: } In this dataset, our task is to classify 60,000 images of handwritten images into 10 categories. The unique part of this dataset is the featurized data consists of a 784 dimensional vector which includes edge detectors and raw image patches. We use this dataset to explore how we can corrupt the raw data to affect subsequent featurization. The model is an one-to-all multiclass SVM classifier. 
 
 \vspace{0.25em}
 
@@ -99,7 +99,7 @@ The next set of experiments evaluate different approaches to cleaning a sample o
 In this set of experiments, we use the \emph{a priori} case for detection.
 We assume that we know all of the corrupted records in advance but do not know how to repair them. 
 
-\subsubsection{Comparison with Active Learning and SampleClean}
+\subsubsection{Active Learning and SampleClean}
 In our first experiment, we evaluate the samples-to-error tradeoff between three alternative algorithms: \sys (AC), SampleClean, Active Learning, and \sys+Oracle (AC+O).
 In Figure \ref{prio-perf}, we present our results on Adult and EEG. 
 We find that \sys gives its largest benefits for small sample sizes (up-to 12x more accurate than SampleClean).
@@ -127,7 +127,7 @@ We find that in both Adult and EEG, \sys converges to clean test accuracy faster
     \includegraphics[width=0.49\columnwidth]{exp/exp3bb.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp3c.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp3cc.pdf}
- \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. \label{prio-perf}}
+ \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. \label{prio-perf}}\vspace{-1em}
 \end{figure}
 
 \subsubsection{Source of Improvements}
@@ -149,7 +149,7 @@ Not surprisingly, when we remove both these optimizations, \sys is slightly wors
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp8a.png}
  \includegraphics[width=0.49\columnwidth]{exp/exp8b.png}
- \caption{We clean 500 records and plot the relative error of \sys with and without optimizations. -D denotes no detection, and -D-I denotes no detection and no importance sampling. Both optimization significantly help \sys outperform SampleClean and Active Learning. \label{opts}}
+ \caption{ -D denotes no detection, and -D-I denotes no detection and no importance sampling. Both optimization significantly help \sys outperform SampleClean and Active Learning. \label{opts}}
 \end{figure}
 
 \iffalse
@@ -166,7 +166,7 @@ However, as the bias increases, the fact that Active Learning prioritizes w.r.t 
 \end{figure}
 \fi
 
-\subsubsection{Comparison with Partial Cleaning}
+\subsubsection{Partial Cleaning}
 We argue that training a model on partially cleaned is an unreliable methodology lacking the same guarantees as Active Learning or SampleClean even in the simplest of cases.
 It is easy to construct errors for which cleaning more data may counter intuitively increase model error.
 For thoroughness, we include the tradeoff curves in comparison to \sys for the errors that we generated.
@@ -223,8 +223,9 @@ For both datasets, after cleaning 1000 records, \sys is within 10\% of a priori 
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp11a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp11b.pdf}
- \caption{Even with a classifier \sys converges faster than Active Learning and SampleClean. \label{pred-perf}}
+ \caption{Even with a classifier \sys converges faster than Active Learning and SampleClean. \label{pred-perf}}\vspace{-1.0em}
 \end{figure}
+
 
 \subsubsection{Classifiable Errors}
 The adaptive case depends on being able to predict corrupted records.
@@ -275,12 +276,12 @@ We confirmed drug names with company catalogs and used judgement to make the lab
 To run this experiment, we manually cleaned the entire dataset up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data.
 Figure \ref{dfd}a shows that \sys converges faster than Active Learning and SampleClean.
 To achieve a 4\% relative error (i.e., a 75\% error reduction from the dirty model), \sys cleans 40000 fewer records than Active Learning.
-Also, for 10000 records cleaned, \sys has 3.5x smaller error than SampleClean.
+Also, for 10000 records cleaned, \sys has nearly an order of magnitude smaller error than SampleClean.
 
 Figure \ref{dfd}b shows the true positive rate (fractiion of non-covered research contributions identified) of the classifier as a function of the number of records cleaned. 
-We find that on the dirty data, we can only classify 66\% of the positive examples correctly.
-On the cleaned data, this classifier is nearly perfect with a 97\% true positive rate.
-\sys converges to the cleaned accuracy faster than the alternatives.
+We find that on the dirty data, we can only classify 66\% of the positive examples correctly (88\% overall accuracy due to a class imbalance).
+On the cleaned data, this classifier is nearly perfect with a 97\% true positive rate (98\% overall accuracy).
+\sys converges to the cleaned accuracy faster than the alternatives with a classifier of 92\% true positive rate for only 10000 records cleaned.
 
 \vspace{0.25em}
 
@@ -294,11 +295,7 @@ On the cleaned data, this classifier is nearly perfect with a 97\% true positive
 \end{figure}
 
 \subsubsection{Adaptive: Replacing Corrupted Data}
-We consider the following scenario with the MNIST handwritten digit recognition dataset.
-Suppose, our goal is to classify digits into a set of classes.
-However, we suspect that some of our raw images are of low quality.
-Typicaly image processing workflows are long with many different featurization steps.
-As a result, changes to the raw images may have very significant effects on some features.
+We consider the following scenario with the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
 In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
 We devise an ``adaptive detection" \sys scenario for this example.
 
@@ -309,18 +306,7 @@ We constructed these corruptions to mimic the random vs. systematic corruption t
 The 5x5 block removal behaves much more like a systematic corruption. 
 Typical image processing features are based on edges and corrupting edges leads to ambiguities.
 On the other hand, the making the image fuzzy is more like a random corruption.
-We use a 9 class classifier (one for each digit) to detect the corruption.
-
-
-\iffalse
-\begin{figure}[ht]
-\centering
-\includegraphics[scale=0.20]{exp/original.png}
- \includegraphics[scale=0.20]{exp/5x5removal.png}
- \includegraphics[scale=0.20]{exp/fuzzy.png}
- \caption{We experiment with two forms of corruption in the MNIST image datasets: 5x5 block removal and making the images fuzzy. Image (a) shows an uncorrupted ``9", image (b) shows one corrupted with block removal, and image (c) shows one that is corrupted with fuzziness. \label{mnist-corr}}
-\end{figure}
-\fi
+We use a 10 class classifier (one for each digit) to detect the corruption.
 
 Figure \ref{mnist} shows that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
 To achieve a 2\% error for the block removal, we can inspect 2200 fewer images than Active Learning and 2750 fewer images than SampleCLean.

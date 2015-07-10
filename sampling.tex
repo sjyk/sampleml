@@ -40,7 +40,7 @@ We include the proof in the appendix (Section \ref{impsample-deriv})
 Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is where we sample proportionally to the values.
 This insight leads to a direct higher-dimensional generalization, where at iteration $t$ we should sample the records in $R_{dirty}$ with probabilities:
 \[
-p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^t)\| \blacksquare
+p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\| \blacksquare
 \]
 
 However, in our case, it leads to a chicken-and-egg problem.

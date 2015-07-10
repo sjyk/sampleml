@@ -42,9 +42,9 @@ The model is a Support Vector Machine (SVM) that predicts the label $\{1,0\}$ wh
 However, this dataset is very dirty, and the systematic nature of the corruption can result in a misleading model.
 On the ProPublica website \cite{dollarsfordocs}, they list numerous types of corruption that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
 For example, the most significant contributions were made by large companies whose names were also more often inconsistently represented in the data e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
-We found that nearly 30,000 of the 250,000 records had a corporation attribute with at least one other representation in the database.
 In a fraud detection scenario such as this one, the effect of systematic error can be serious.
 Duplicate entity representations, could reduce the correlation between these entities and impropriety.
+We found that nearly 40,000 of the 250,000 records had some form of corruption either with entity resolution issues or other inconsistencies.
 
 \vspace{0.25em}
 
@@ -82,7 +82,7 @@ At two extremes we have no cleaning (just using the dirty data) and full cleanin
 
 \begin{figure}[t]
 \centering
- \includegraphics[width=0.5\columnwidth]{figs/arch2.png}
+ \includegraphics[width=0.4\columnwidth]{figs/arch2.png}
  \caption{\sys is designed to converge to an accurate model with fewer cleaned records than a uniform sampling approach (SampleClean). \label{sys-arch2}}\vspace{-1em}
 \end{figure}
 

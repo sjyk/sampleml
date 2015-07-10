@@ -3,7 +3,7 @@ In this section, we make the sampling result of the previous section practical,
 and estimate the cleaned data.
 
 \subsection{Challenges and Goal}
-The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^t)$.
+The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})$.
 One way to approximate this distribution is to learn a function $e(\cdot)$ via regression based on the data that we have cleaned.
 This is a high-dimensional regression problem which may have to learn a very complicated relationship between dirty and clean data.
 The biggest challenge with such an estimator is the cold start problem, where if we have cleaned a small amount of data, the estimator will be inaccurate.
@@ -41,7 +41,7 @@ Let us formalize this intuition.
 Instead of computing the actual gradient with respect to the 
 true clean values, let us compute the conditional expectation given that a set of features and labels $f_r,l_r$ are corrupted:
 \[
-p_i \propto \mathbb{E}(\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^t) \mid f_r,l_r)
+p_i \propto \mathbb{E}(\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)}) \mid f_r,l_r)
 \]
 What we mean by corrupted features is that:
 \[
