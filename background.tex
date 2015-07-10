@@ -1,14 +1,14 @@
 \section{Problem Setup}\label{background}
 
 \subsection{Motivating Example}
-Dirty data are prevelant \cite{fortunearticle}, and we introduce an example of systematic corruption in publically available data (Dollars for Docs dataset see Experiments, Section \ref{dfd-exp}):
+To motivate this work, we present one of our experimental datasets as a running example (Dollars for Docs dataset see Experiments, Section \ref{dfd-exp}):
 
 \vspace{0.25em}
 
 \noindent\textbf{Dollars for Docs \cite{dollarsfordocs}. }
 ProPublica has collected a dataset of corporate contributions to doctors for analysis of whether these contributions (negatively) affect research. 
 They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses \cite{dollarsfordocsa}.
-ProPublica meticulously curated a dataset from the Centers for Medicare and Medicaid Services listing nearly 250000 research contributions and aggregated these contributions by physician, drug, and pharmaseutical.
+ProPublica meticulously curated a dataset from the Centers for Medicare and Medicaid Services listing nearly 250000 research contributions and aggregated these contributions by physician, drug, and pharmaceutical.
 We explore whether this problem could have been made easier with Machine Learning where we try to learn what features of a contribution predict an improprietous donation. 
 This problem is typical of fraud detection scenarios based on observational data seen in finance, insurance, and medicine.
 
@@ -18,7 +18,7 @@ Contribution(pi_speciality$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm
 corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 \end{lstlisting}
 
-\noindent\texttt{pi\_speciality} is a textual attribute describing the speciality of the doctor recieving the contribution.
+\noindent\texttt{pi\_speciality} is a textual attribute describing the specialty of the doctor receiving the contribution.
 
 \noindent\texttt{drug\_name} is the branded name of the drug in the research study (null if not a drug).
 
@@ -26,7 +26,7 @@ corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 
 \noindent\texttt{amount} is a numerical attribute representing the contribution amount.
 
-\noindent\texttt{dispute} is a boolean attribute describing whether the research was disputed.
+\noindent\texttt{dispute} is a Boolean attribute describing whether the research was disputed.
 
 \noindent\texttt{status} is a string label describing whether the contribution was allowed under the declared research protocol. There are two possible statuses ``Covered" and ``Non-Covered".
 
@@ -61,7 +61,7 @@ This is a well-known phenomenon called Simpsons paradox, where mixtures of diffe
 An alternative solution is to avoid the dirty data altogether, instead of mixing the two populations.
 She can take a random sample of data, apply data cleaning, and train a model only on that sample of data.
 This is similar to SampleClean \cite{wang1999sample}; proposed to approximate the results of aggregate queries by applying them to a clean sample of data.
-However, high-dimensional models are highly senstive to sample size.
+However, high-dimensional models are highly sensitive to sample size.
 The resulting models are not useful (i.e., cannot accurately predict future test data) when the sample size is too small (Figure \ref{update-arch1}c).
 
 \begin{figure}[ht!]
@@ -72,17 +72,17 @@ The resulting models are not useful (i.e., cannot accurately predict future test
 (c) Likewise, small sample sizes can result in similarly incorrect models. \label{update-arch1}}
 \end{figure}
 
-\sys avoids both pitfalls, Simpsons's paradox and sample size dependence.
+\sys avoids both pitfalls, Simpson's paradox and sample size dependence.
 In Section \ref{model-update}, we show how we do this with iterative gradient steps (i.e., incrementally moving the line based on the clean data).
 This takes advantage of the dirty data as well as the clean data, but still have provable properties about the intermediate results.
 The intuition is that it smoothly and iteratively transitions the model from one population (the dirty data) to another (the clean data).
 In Figure \ref{sys-arch2}, we illustrate our ideal tradeoff space of sampling and data cleaning.
 At two extremes we have no cleaning (just using the dirty data) and full cleaning.
-\sys is optimized for convergence for smaller sample sizes than a uniform sampling approach.
+%\sys is optimized for convergence for smaller sample sizes than a uniform sampling approach.
 
 \begin{figure}[t]
 \centering
- \includegraphics[width=0.4\columnwidth]{figs/arch2.png}
+ \includegraphics[width=0.5\columnwidth]{figs/arch2.png}
  \caption{\sys is designed to converge to an accurate model with fewer cleaned records than a uniform sampling approach (SampleClean). \label{sys-arch2}}\vspace{-1em}
 \end{figure}
 
@@ -123,7 +123,7 @@ $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid
 \]
 
 \subsubsection{Types of Errors}
-To judge the accuracy of a model, we use the following metrics:
+We use the following metrics to quantify inaccuracy in a model:
 
 \vspace{0.25em}
 
@@ -147,8 +147,8 @@ To judge the accuracy of a model, we use the following metrics:
 
 \vspace{0.25em}
 
-In this paper, when we use the term \emph{error}, we are refering to \textbf{model error}.
-We will be explicit with other terms when discribing data errors (e.g. ``data corruption").
+In this paper, when we use the term \emph{error}, we are referring to \textbf{model error}.
+We will be explicit with other terms when describing data errors (e.g. ``data corruption").
 
 \subsection{\sys Problem}
 The basic question that we explore in this work is how to update a model trained on dirty data with data cleaning. Formally,
@@ -177,15 +177,13 @@ Increasingly, human effort is seen as valuable in data cleaning \cite{park2014cr
 When humans are involved, per record latencies for data repair are orders of magnitude larger than the CPU time needed for model training.
 We can compare recent results in data cleaning to a model training framework like CoCoA implemented on Spark \cite{jaggi2014communication}.
 Per record, BigDansing, a highly optimized automated Spark-based data cleaning system is 15.5x slower than CoCoA\footnote{For CoCoA to reach a precision of 1e-3}.
-Crowd based techiques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100,000x slower per record.
-
-\noindent Here is an example application of \sys with our running example:
+Crowd based techniques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100,000x slower per record. Here is an example application of \sys with our running example:
 \begin{example}
 The analyst first trains her SVM model on the dirty data ignoring the effects of the errors returning a model $\theta^{(d)}$.
 She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
 She initializes \sys with $\theta^{(d)}$.
-\sys samples an intial batch of 10 records.
-She manually cleans those records by using the medical record source data.
+\sys samples an initial batch of 10 records.
+She manually cleans those records by merging similar drug names, making corporation names consistent, and fixing incorrect labels.
 After each batch, the model is updated with the most recent cleaning results $\theta^{(t)}$.
 The model improves after each iteration.
 After $t=10$ of cleaning, the analyst has an accurate model trained with 100 cleaned records but still utilizes the entire dirty data.

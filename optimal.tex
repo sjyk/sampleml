@@ -38,19 +38,17 @@ This optimal value is a suboptimal point on clean curve.
 \end{figure}
 
 We want to get to the optimal clean model $\theta^{(c)}$ which is visualized as a yellow star.
-The first question is which direction do we move $\theta$.
-We do not know whether we need to move left or right.
+The first question is which direction do we move $\theta$ (i.e., left or right).
+We do not know whether we need to .
 For this class of models, given a suboptimal point, we can find the direction to 
-the global optimum.
-Mathematically, this direction corresponds to gradient of the loss function.
-The gradient is a $d$-dimensional vector function of the current model $\theta$ and the clean data i.e., the direction between the dirty model and the true clean model.
+the global optimum with the gradient of the loss function.
+The gradient is a $d$-dimensional vector function of the current model $\theta$ and the clean data.
 We need to move some distance $\gamma$ along this direction (Figure \ref{update-arch2}b):
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
-In our visualization, this corresponds to whether we should move left or right.
-At the optimal point, the expected gradient will be zero.
-So intuitively, this approach iteratively moves the model downhill to, or corrects, the dirty model until the budget is reached.
+At the optimal point, the magnitude of the gradient will be zero.
+So intuitively, this approach allows us to iteratively move the model downhill, or correct the dirty model until the budget is reached.
 
 However, in reality, we do not have the all of the clean data and have to approximate this gradient from a sample.
 The intuition, which we will formalize in Section \ref{sgd}, is that if we are on average in the right direction the algorithm is guaranteed to converge with bounds on the convergence rate.
@@ -67,17 +65,17 @@ Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p(i
 \[
 g^*(\theta) \approx g_{S}(\theta) = \frac{1}{n\mid S \mid} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
-Then for every batch of data cleaned, we apply the update to the current best model estimate:
+Now if we add in the iteration, for every batch of data cleaned $t$, we apply the update to the current best model estimate:
 \[
 \theta^{(t+1)} \leftarrow \theta^{(t)} - \gamma \cdot g_{S}(\theta^{(t)})
 \]
 
 The detection in the previous step adds a small complication, since the sample $S_{dirty}$ is not representative of all of the data.
-We also have to compensate for this bias by averaging this estimate with the gradient with respect to the clean data:
+We also have to compensate for this bias by averaging this estimate with the gradient of the complement:
 \[
 g_C(\theta) = \frac{1}{\mid R - R_{dirty}\mid}\sum_{i \in R - R_{dirty}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
-Then, for weights $\alpha,\beta$ which we will subsequently discuss how to select (Section \ref{params}):
+Then, for weights $\alpha,\beta$ which we will subsequently discuss how to select (Section \ref{sgd}):
 \[
 g(\theta) = \alpha \cdot g_C(\theta) + \beta \cdot g_S(\theta)
 \]
@@ -87,7 +85,6 @@ Finally, we add in the iteration, and at each iteration $t$, the update becomes:
 \]
 
 \subsection{Model Update Algorithm}
-We propose the iterative model correction algorithm.
 We initialize the algorithm with $\theta^{(1)} = \theta^{(d)}$ which is the dirty model.
 At each iteration $t=\{1,...,T\}$, we clean a batch of data $b$ selected from the set of candidate dirty records $R_{dirty}$.
 Then, starting with $\theta^{(d)}$, we apply an averaged gradient update to get $\theta^{(t)}$.
@@ -103,8 +100,7 @@ We present the model update algorithm here:
 	\]
 \end{enumerate} 
 
-\subsubsection{Parameters}\label{params}
-To summarize the parameters $b$, $\lambda$, $\alpha$, $\beta$.
+\noindent To summarize the meanings of the parameters $b$, $\lambda$, $\alpha$, $\beta$.
 
 \vspace{0.25em}
 
@@ -128,26 +124,24 @@ The key difference is that in traditional SGD there is no notion of dirty and cl
 
 \vspace{0.25em}
 
-\noindent\textbf{ \sys as Lazy SGD: } The update technique is \sys can be formalized as a variant of SGD that lazily materializes the clean value.
-We apply SGD to dirty dataset, as data is sampled at each iteration, data is cleaned.
-To the SGD algorithm it is as if the entire data is clean but we are lazily materializing the clean values.
+\noindent\textbf{ \sys as Lazy SGD: } One way to interpret this update method is a variant of SGD applied to the clean data that lazily materializes the clean value.
+As data is sampled at each iteration, data is cleaned when needed by the optimization.
 It is well known that even for arbitrary initializations SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
 Furthermore in our setting, the dirty model can be much more accurate than an arbitrary initialization.
 This is the property that we exploit to make significant progress by cleaning only a sample of data.
 
 \vspace{0.25em}
 
-\noindent\textbf{Deriving $\alpha$ and $\beta$: } We first want to show how to select $\alpha$ and $\beta$ such that our estimate of the gradient is unbiased. 
+\noindent\textbf{Deriving $\alpha$ and $\beta$: } We first show how to select $\alpha$ and $\beta$ such that our estimate of the gradient is unbiased. 
 We will then show that SGD will converge when the estimate is unbiased and the step-size is chosen appropriately.
-We first select a set of records before starting we select a set of dirty records $R_{dirty} \subseteq R$. 
-We construct batch $S_{dirty}$ only from the dirty records and apply cleaning to this batch.
-Since we know the sizes, we can combine the two estimates $g_C$ and $g_S$ togther:
+We construct batch $S_{dirty}$ only from $R_{dirty}$ and apply cleaning to this batch.
+Since we know the sizes of $R_{dirty}$ and its complement, we can combine the two estimates $g_C$ and $g_S$ together:
 \[
 g(\theta^{t}) = \frac{\mid R_{dirty} \mid \cdot g_S + \mid R_{clean} \mid \cdot g_C  }{\mid R \mid}
 \]
 Therefore,
 \[
-\alpha = \frac{R_{clean}}{R}, \beta = \frac{R_{dirty}}{R}
+\alpha = \frac{\mid R_{clean} \mid}{\mid R \mid}, \beta = \frac{\mid R_{dirty} \mid}{\mid R \mid d}
 \]
 
 \begin{lemma}\label{unbiased1}
@@ -177,7 +171,6 @@ For an appropriately chosen learning rate $\gamma_t$, batch stochastic gradient 
 \vspace{0.25em}
 
 \noindent\textbf{ Convergence Rate: } The convergence rates of SGD are also well analyzed \cite{dekel2012optimal,bertsekas2011incremental,zhao2014stochastic}. 
-Suppose, a user cleans a batch size of $b$ examples at each iteration.
 This allows us to bound the error of intermediate models and understand the expected number of steps before a model within a certain error. 
 
 \begin{proposition}
@@ -191,7 +184,7 @@ $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 \vspace{0.25em}
 
 \noindent\textbf{ Setting the batch size: } The batch size should be set by the analyst to have the desired properties.
-Larger batches will take longer to clean and will make more progress towards the clean model, but will have less fequent model updates.
+Larger batches will take longer to clean and will make more progress towards the clean model, but will have less frequent model updates.
 On the other hand, smaller batches are cleaned faster and have more frequent model updates but make less progress.
 The overheads introduced by our approach are more evident at smaller batch sizes.
 There are diminishing returns to increasing the batch size $O(\frac{1}{\sqrt{b}})$.

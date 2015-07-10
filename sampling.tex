@@ -1,5 +1,5 @@
 \section{Sampling}\label{dist-samp}
-In the previous section, we assumed that our model update recieved a sample with probabilities $p(r)$.
+In the previous section, we assumed that our model update received a sample with probabilities $p(r)$.
 In this section, we derive an optimal sampling problem that directly follows from our analysis of our update rule via SGD.
 It will turn out that the solution to the optimal sampling problem is not realizable in practice (as it depends on knowing the cleaned value), but we can use this to inform the next section where we estimate the cleaned value.
 
@@ -18,7 +18,7 @@ Other sampling distributions, while preserving the sample expected value, may ha
 Thus, we define the optimal sampling problem as a search over sampling distributions to find the minimum variance sampling distribution.
 
 \begin{definition}[Optimal Sampling Problem]
-Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find sampling probabilites $p(r)$ such that over all samples $S$ of size $k$ it minimizes:
+Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find sampling probabilities $p(r)$ such that over all samples $S$ of size $k$ it minimizes:
 \[
 \mathbb{E}(\|g_S - g^*\|^2)
 \]
