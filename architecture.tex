@@ -7,10 +7,9 @@ We revisit the architecture diagram (Figure \ref{sys-arch}) in more detail.
 The first step of the system is \emph{initialization}.
 In this step, the user provides a relation $R$, a data cleaning technique $C(\cdot)$, and a dirty model $\theta^{(d)}$ trained on the dirty dataset. 
 Optionally, the user can provide a dirty data detector $D(\cdot)$ which selects the set of likely corrupted records from $R$.
-This is possible for some types of data errors such as constraint violations and missing values.
 If one is not provided, we start by treating all of the data is dirty and try to learn a detector as we clean more data.
 We are given a \emph{featurization} function $F(\cdot)$ that maps each record in $R$ to a feature vector and a label.
-At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $t = \frac{k}{b}$).
+At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $T = \frac{k}{b}$).
 We discuss how to set $b$ and the tradeoffs in setting a larger or smaller $b$ in Section \label{model-update}.
 
 After initialization, \sys begins the cleaning and model update iterations.
@@ -28,7 +27,7 @@ After all of the iterations are complete, the system returns the updated model.
 To summarize the architecture in pseudocode:
 \begin{enumerate}\scriptsize\sloppy
 \item \texttt{Init(dirty\_data, dirty\_model, batch, iter)}
-\item For each i in $\{1,...,T\}$
+\item For each t in $\{1,...,T\}$
 \begin{enumerate}
 	\item \texttt{dirty\_sample $=$ Sampler(dirty\_data, sample\_prob, detector, batch)}
 	\item \texttt{clean\_sample $=$ Cleaner(dirty\_sample)}
@@ -54,17 +53,16 @@ F(R)\rightarrow (X,Y)
 
 \vspace{0.5em}
 
-\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data detection. This is key part of our sampling framework. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. We will discuss two techniques to do this: (1) an a priori case, and (2) and an adaptive case. In the a priori case, we know which data is dirty in advance. In the adaptive case, we train a classifier based on data that we have already cleaned to select the dirty data.
+\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data detection. In this step, we select a candidate set of dirty records $R_{dirty} \subseteq R$. We will discuss two techniques to do this: (1) an a priori case, and (2) and an adaptive case. In the a priori case, we know which data is dirty in advance. In the adaptive case, we train a classifier based on data that we have already cleaned to select the dirty data.
 
 \vspace{0.5em}
 
 \noindent\textbf{Sampler (Section \ref{dist-samp}). } We take a sample of the records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p_r$.
-We will show that we can derive the optimal sampling distribution theoretically, however, it will depend on knowing the cleaned data before we actually clean. This is why we introduce an estimation step to approximate this cleaned value.
+We will derive the optimal sampling distribution, and show how the theoretical optimal can be approximated by the next estimator.
 
 \vspace{0.5em}
 
-\noindent\textbf{Updater (Section \ref{model-update}). } Then, we update the model $\theta^{(i)}$ based on the newly cleaned data $F(S_{clean})$. The result is the updated model $\theta^{(i+1)}$. We will present the model update before we derive the optimal sampling distribution.
-This is because that distribution will naturally fall out of our update procedure.
+\noindent\textbf{Updater (Section \ref{model-update}). } We update the model $\theta^{(t)}$ based on the newly cleaned data $F(S_{clean})$ resulting in $\theta^{(t+1)}$. Analyzing the model update procedure as a stochastic gradient descent algorithm will help us derive the sampling distribution and estimation.
 
 \vspace{0.5em}
 

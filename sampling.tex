@@ -23,7 +23,8 @@ Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find 
 \mathbb{E}(\|g_S - g^*\|^2)
 \]
 \end{definition}
-In other words, we want to most accurately (in the mean squared error sense) estimate the gradient. To construct these sampling probabilities, we first need the following lemma about importance sampling.
+In other words, we want to most accurately (in the mean squared error sense) estimate the gradient. 
+To construct these sampling probabilities, we first need the following lemma about importance sampling.
 This lemma describes the optimal distribution over a set of scalars:
 \begin{lemma}\label{impsample}
 Given a set of real numbers $A = \{a_1,...,a_n\}$, let $\hat{A}$ be 
@@ -39,11 +40,11 @@ We include the proof in the appendix (Section \ref{impsample-deriv})
 Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is where we sample proportionally to the values.
 This insight leads to a direct higher-dimensional generalization, where at iteration $t$ we should sample the records in $R_{dirty}$ with probabilities:
 \[
-p_i \propto \|\nabla\phi(x^{clean}_i,y^{clean}_i,\theta^t)\| \blacksquare
+p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^t)\| \blacksquare
 \]
 
 However, in our case, it leads to a chicken-and-egg problem.
-The optimal sampling distribution requires knowing $(x^{clean}_i,y^{clean}_i)$, however, we have to sample and clean those points to get those values.
+The optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, however, we have to sample and clean those points to get those values.
 In the next section, we discuss how to inexpensively approximate this optimal distribution.
 As our technique can work with \emph{any} distribution, we are guaranteed convergence no matter how inaccurate this approximation is.
 However, a better approximation will lead to an improved convergence rate.

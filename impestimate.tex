@@ -3,9 +3,8 @@ In this section, we make the sampling result of the previous section practical,
 and estimate the cleaned data.
 
 \subsection{Challenges and Goal}
-The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{clean}_i,y^{clean}_i,\theta^t)$.
-One way to approximate this distribution is to learn a function $e(\cdot)$ mapping $(x^{clean}, y^{clean})$, based on the data that we have cleaned.
-Suppose, we use a regression technique based on the previous data.
+The optimal sampling distribution is dependent on a value that we cannot know without data cleaning $\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^t)$.
+One way to approximate this distribution is to learn a function $e(\cdot)$ via regression based on the data that we have cleaned.
 This is a high-dimensional regression problem which may have to learn a very complicated relationship between dirty and clean data.
 The biggest challenge with such an estimator is the cold start problem, where if we have cleaned a small amount of data, the estimator will be inaccurate.
 In \sys, we want to be able to make as much progress as possible in the early iterations so this technique may not work.
@@ -34,22 +33,22 @@ Even if one of the features is corrupted, all of the gradient components will be
 
 \subsubsection{Error Decoupling}
 We can try to approximate the gradient in a way that the effects of features on the gradient are decoupled.
-Recall, that when we formalized the a priori detection problem, we ensured that associated with each $r \in R_{dirty}$ is a set of errors $f_r$ which is a set that identifies a set of corrupted features.
+Recall, that when we formalized the a priori detection problem, we ensured that associated with each $r \in R_{dirty}$ is a set of errors $f_r,l_r$ which is a set that identifies a set of corrupted features and labels.
 We will show how we can use this property to construct a coarse estimate of the clean value.
 The main idea is that if we can calculate average changes for each feature, then given an uncleaned (but dirty) record, we can add these average changes to correct the gradient.
 
 Let us formalize this intuition.
 Instead of computing the actual gradient with respect to the 
-true clean values, let us compute the conditional expectation given that a set of features and labels $f_r$ are corrupted:
+true clean values, let us compute the conditional expectation given that a set of features and labels $f_r,l_r$ are corrupted:
 \[
-p_i \propto \mathbb{E}(\nabla\phi(x^{clean}_i,y^{clean}_i,\theta^t) \mid e_r)
+p_i \propto \mathbb{E}(\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^t) \mid f_r,l_r)
 \]
 What we mean by corrupted features is that:
 \[
-i \notin f_r \implies x^{clean}[i] - x^{dirty}[i] = 0
+i \notin f_r \implies x^{(c)}[i] - x^{(d)}[i] = 0
 \]
 \[
-i \notin f_r \implies y^{clean}[i] - y^{dirty}[i] = 0
+i \notin l_r \implies y^{(c)}[i] - y^{(d)}[i] = 0
 \]
 
 The needed approximation represents a linearization of the errors.
@@ -58,7 +57,7 @@ We will show that the sampling distribution can be estimated in the form:
 p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|
 \]
 where $M_x$, $M_y$ are matrices and $\Delta_{rx}$ and $\Delta_{ry}$ are average change vectors for the corrupted features in $r$. 
-Without decoupling, if we were to calculate the expected value conditioned on $e_r$, we would have to condition on all the combinatorial possibilities.
+Without this approximation, if we were to calculate the expected value conditioned on $f_r,l_r$, we would have to condition on all the combinatorial possibilities.
 
 \subsubsection{Deriving $M_x$, $M_y$}
 We can take the expected value of the Taylor series expansion around the dirty value.
@@ -67,7 +66,7 @@ If $d$ is the dirty value and $c$ is the clean value, the Taylor series approxim
 f(c) = f(d) + f'(d)\cdot(d-c) + ...
 \]
 If we ignore the higher order terms, we see that the linear term $f'(d)\cdot(d-c)$ is a linear function in each feature and label.
-Then, it follows that:
+Then, taking expected values, it follows that:
 \[
 \approx \nabla\phi(x,y,\theta) + M_x \cdot \mathbb{E}(\Delta x) + M_y \cdot \mathbb{E}(\Delta y)
 \]
@@ -78,7 +77,7 @@ Both of these matrices are computed for each record (see Appendix \ref{example-d
 $\Delta x$ is a $d$ dimensional vector where each component represents a change in that feature and $\Delta y$ is an $l$ dimensional vector that represents the change in each of the labels. 
 
 \subsubsection{More Accurate Early Error Estimates}\label{acc}
-We can give some intuition on why the linearization actually avoids amplifying estimation error.
+We chose to use this linearization over alternatives since it avoids amplifying estimation error.
 If we consider the linear regression gradient:
 \[
 \nabla\phi(x,y,\theta) = (\theta^Tx - y)x
@@ -97,38 +96,44 @@ f(x+\epsilon) = (x+\epsilon)^2 = x^2 + 2x\epsilon + \epsilon^2
 f(x+\epsilon) \approx f(x) + f'(x)(\epsilon) = x^2 + 2x\epsilon
 \]
 The only difference between the two estimates is the quadratic $\epsilon^2$, if $\epsilon$ is highly uncertain random variable then the quadratic dominates.
-Our estimate $\epsilon$ is an average, so at the least, its error is given by the variance in the data.
 If this variance is large, the Taylor estimate avoids amplifying this error.
+Of course, this is at the tradeoff of some additional bias since the true function is non-linear.
 We evaluate our technique in Section \ref{est} against alternatives, and we find that indeed we provide more accurate estimates for a small number of samples cleaned.
-When the number of cleaned samples increases the alternative techniques are comparable.
+When the number of cleaned samples is large the alternative techniques are comparable or even slightly better.
+\sys is optimized for small cleaning budgets.
 
 \subsubsection{Maintaining Decoupled Averages}
 This linearization allows us to maintain per feature (or label) average changes and use these changes to center the optimal sampling distribution around the expected clean value.
 We know how to estimate $\mathbb{E}(\Delta x)$ and $\mathbb{E}(\Delta y)$.
 \begin{lemma}[Single Feature]
-For a feature $i$, we average all records cleaned that have an error for that feature, weighted by their sampling probability:
+For a feature $i$, we average all $j=\{1,...,K\}$ records cleaned that have an error for that feature, weighted by their sampling probability:
 \[
-\bar{\Delta}_i = \frac{1}{NK}\sum_{j=1}^K (x^{dirty}[i]-x^{clean}[i])\times \frac{1}{p_j}
+\bar{\Delta}_{xi} = \frac{1}{NK}\sum_{j=1}^K (x^{(d)}[i]-x^{(c)}[i])\times \frac{1}{p(j)}
 \]
 Similarly, for a label $i$:
 \[
-\bar{\Delta}_i = \frac{1}{NK}\sum_{j=1}^K (y^{dirty}[i]-y^{clean}[i])\times \frac{1}{p_j}
+\bar{\Delta}_{yi} = \frac{1}{NK}\sum_{j=1}^K (y^{(d)}[i]-y^{(c)}[i])\times \frac{1}{p(j)}
 \]
 \end{lemma}
 
 Then, it follows, that we can aggregate the $\bar{\Delta}_i$ into a single vector:
 \begin{lemma}[Delta vector]
-Let $\{1..,i,...,d\}$ index the set of features and labels.
-For a record $r$, the set of corrupted features is $f_r$.
-Then, each record $r$ has a d-dimensional vector $\Delta_r$ which is constructed as follows:
+For a record $r$, the set of corrupted features is $f_r,l_r$.
+Then, each record $r$ has a d-dimensional vector $\Delta_{rx}$ which is constructed as follows:
 \[
- \Delta_r[i] = \begin{cases} 0 & i \notin f_r \\ 
-\bar{\Delta}_i & i \in f_r
+ \Delta_{rx}[i] = \begin{cases} 0 & i \notin f_r \\ 
+\bar{\Delta}_{xi} & i \in f_r
+\end{cases} 
+\]
+Each record $r$ also has an l-dimensional vector $\Delta_{ry}$ which is constructed as follows:
+\[
+ \Delta_{rx}[i] = \begin{cases} 0 & i \notin l_r \\ 
+\bar{\Delta}_{yi} & i \in l_r
 \end{cases} 
 \]
 \end{lemma}
 
-With the above theorem, we finally have an approximation to our sampling weights: 
+We finally have an approximation to our sampling weights: 
 \[p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|
 \blacksquare
 \]

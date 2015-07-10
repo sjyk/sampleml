@@ -1,13 +1,12 @@
 \section{Detection}\label{det}
-An important part of \sys is dirty data detection.
 When we sample data to clean, we want to ensure that the data that we are sampling is actually dirty.
-Therefore, before we can sample, we have to detect whether the record is likely to be dirty.
+Therefore, the first step is to select a set of likely dirty records.
 
 \subsection{Goals}
-The detection component needs to give us two important pieces of information about a record: (1) whether the record is dirty, and (2) if it is dirty what is wrong with the record.
+The detection component needs to give us two important pieces of information about a record: (1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
 From (1), we can select a subset of dirty records to sample at each batch. 
 (2) is important so we can estimate how valuable cleaning will be for this record.
-There are two cases that we explore in \sys: \emph{a priori} and adaptive.
+There are two cases that we explore in \sys: \emph{a priori} and \emph{adaptive}.
 In the a priori case, we recognize that for many data cleaning methodologies, we can efficiently select the set of dirty records without repair.
 In the adaptive case, we relax this assumption, and explore how we can learn which records are dirty and clean with a classifier.
 
@@ -19,7 +18,7 @@ Let $r$ be a record in $R$. An a priori detector is a detector that returns a Bo
 \[
 D(r) = (\{0,1\}, e_r)
 \]
-From the set of columns that are dirty, we can find the corresponding features that are dirty $f_r$.
+From the set of columns that are dirty, we can find the corresponding features that are dirty $f_r$ and labels that are dirty $l_r$.
 \end{definition}
 
 \noindent We highlight example use cases of this definition using data cleaning methodologies proposed in the liteature.
@@ -69,7 +68,6 @@ We can define a similarity relationship $WeightedJaccard(r1,r2)>0.8$ and select 
 Next, we explore how we can handle the case where the detection is not known in advance.
 Based on what we have already cleaned, we can learn a detection classifier (note that this ``learning" is distinct from the ``learning" at the end of the pipeline).
 The challenge in formulating this problem is that we not only need to know whether or not a record is dirty, but also how it is dirty (e.g. $e_r$ in the a priori case).
-We try to formulate a technique that generalizes what we did before.
 Instead of assuming that we know which features are corrupted, let us say that we know that there are $u$ classes of data corruption.
 These classes are corruption categories that do not necessarily align with features, but every records is classified with at most one category.
 For example, suppose we have outliers and missing values, there are three classes of corruption: outliers, missing values, and both.

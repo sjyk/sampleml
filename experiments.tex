@@ -166,6 +166,26 @@ However, as the bias increases, the fact that Active Learning prioritizes w.r.t 
 \end{figure}
 \fi
 
+\subsubsection{Comparison with Partial Cleaning}
+We argue that training a model on partially cleaned is an unreliable methodology lacking the same guarantees as Active Learning or SampleClean even in the simplest of cases.
+It is easy to construct errors for which cleaning more data may counter intuitively increase model error.
+For thoroughness, we include the tradeoff curves in comparison to \sys for the errors that we generated.
+In Figure \ref{pc-perf}, we plot the same curves as the previous experiment comparing \sys, Active Learning, and two partial cleaning algorithms.
+First, we randomly sample data, clean, and write-back the cleaned data (denoted as PC).
+Next, we randomly sample data from our dirty data detector, clean, and write-back the cleaned data (denoted as PC+D).
+We find that for these errors PC and PC+D give reasonable results (not always guaranteed) but \sys converges faster.
+This is because \sys tunes the weighting when averaging dirty and clean data into the gradient.
+
+\begin{figure}[ht!]
+\centering
+ %\includegraphics[scale=0.15]{exp/exp3a.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp14a.pdf}
+    \includegraphics[width=0.49\columnwidth]{exp/exp14b.pdf}
+ \caption{\sys converges with a smaller sample size to the true result in comparison to partial cleaning (PC,PC+D). We show the relative model error as a function of the number of examples cleaned. \label{pc-perf}}
+\end{figure}
+
+\noindent \emph{Summary: \sys converges faster than partial cleaning since it reweights data based on the fraction that is dirty and clean. Partial cleaning is not guaranteed to give sensible results.}
+
 \subsubsection{Corruption Rate}
 Both Active Learning and \sys outperform SampleClean in our experiments.
 In our next experiment (Figure \ref{bias}), we try to understand how much of this performance 
