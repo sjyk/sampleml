@@ -121,6 +121,7 @@ $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
 \]
+In this work, without loss of generality, we will include the regularization as part of the loss function i.e., $\phi(x_{i},y_{i},\theta)$ includes $r(\theta)$.
 
 \subsubsection{Types of Errors}
 We use the following metrics to quantify inaccuracy in a model:

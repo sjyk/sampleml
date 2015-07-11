@@ -33,7 +33,6 @@ Warning--I didn't find a database entry for "DBLP:conf/case/2014"
 Warning--I didn't find a database entry for "DBLP:conf/recsys/2014"
 Warning--to sort, need author or key in bdas
 Warning--to sort, need author or key in sampleclean
-Warning--to sort, need author or key in fortunearticle
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in dollarsfordocsa
 Warning--empty journal in bergman2015query
@@ -41,45 +40,45 @@ Warning--empty year in bertsekas2011incremental
 Warning--empty journal in khayyat2015bigdansing
 Warning--empty publisher in mcbook
 Warning--empty journal in xiaofeature
-You've used 48 entries,
+You've used 47 entries,
             2118 wiz_defined-function locations,
-            751 strings with 13008 characters,
-and the built_in function-call counts, 18880 in all, are:
-= -- 1794
-> -- 1067
+            748 strings with 12911 characters,
+and the built_in function-call counts, 18721 in all, are:
+= -- 1779
+> -- 1066
 < -- 16
-+ -- 433
++ -- 432
 - -- 376
-* -- 1376
-:= -- 3030
-add.period$ -- 142
-call.type$ -- 48
-change.case$ -- 329
+* -- 1371
+:= -- 3013
+add.period$ -- 140
+call.type$ -- 47
+change.case$ -- 326
 chr.to.int$ -- 0
-cite$ -- 58
-duplicate$ -- 686
-empty$ -- 1371
+cite$ -- 56
+duplicate$ -- 679
+empty$ -- 1348
 format.name$ -- 376
-if$ -- 3962
+if$ -- 3922
 int.to.chr$ -- 0
-int.to.str$ -- 48
+int.to.str$ -- 47
 missing$ -- 46
-newline$ -- 238
+newline$ -- 234
 num.names$ -- 86
-pop$ -- 389
+pop$ -- 381
 preamble$ -- 1
-purify$ -- 284
+purify$ -- 282
 quote$ -- 0
-skip$ -- 538
+skip$ -- 530
 stack$ -- 0
-substring$ -- 1072
-swap$ -- 199
+substring$ -- 1067
+swap$ -- 198
 text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 186
-warning$ -- 10
+type$ -- 182
+warning$ -- 9
 while$ -- 154
-width$ -- 50
-write$ -- 499
+width$ -- 49
+write$ -- 492
 (There were 9 error messages)
