@@ -78,6 +78,7 @@ It is important to note the some examples can have multiple corrupted features.
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp2.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp1.pdf}
+ \includegraphics[width=0.5\columnwidth]{exp/legend-1.png}\vspace{-1em}
  \caption{(a) Robust techniques and discarding data work when corrupted data are random and look atypical. (b) Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}
 \end{figure}
 
@@ -121,12 +122,13 @@ We find that in both Adult and EEG, \sys converges to clean test accuracy faster
 \noindent \emph{Summary: \sys with a priori detection converges faster than SampleClean and Active Learning.}
 
 \begin{figure}[ht!]
-\centering
+\centering\vspace{-1em}
  %\includegraphics[scale=0.15]{exp/exp3a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp3b.pdf}
-    \includegraphics[width=0.49\columnwidth]{exp/exp3bb.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp3c.pdf}
+  \includegraphics[width=0.49\columnwidth]{exp/exp3bb.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp3cc.pdf}
+  \includegraphics[width=0.5\columnwidth]{exp/legend-general.png}\vspace{-0.5em}
  \caption{\sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. We show the relative model error as a function of the number of examples cleaned. \label{prio-perf}}\vspace{-1em}
 \end{figure}
 
@@ -149,7 +151,8 @@ Not surprisingly, when we remove both these optimizations, \sys is slightly wors
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp8a.png}
  \includegraphics[width=0.49\columnwidth]{exp/exp8b.png}
- \caption{ -D denotes no detection, and -D-I denotes no detection and no importance sampling. Both optimization significantly help \sys outperform SampleClean and Active Learning. \label{opts}}
+ \includegraphics[width=0.5\columnwidth]{exp/legend-8.png}\vspace{-1em}
+ \caption{ -D denotes no detection, and -D-I denotes no detection and no importance sampling. Both optimization significantly help \sys outperform SampleClean and Active Learning. \label{opts}}\vspace{-1.5em}
 \end{figure}
 
 \iffalse
@@ -181,6 +184,7 @@ This is because \sys tunes the weighting when averaging dirty and clean data int
  %\includegraphics[scale=0.15]{exp/exp3a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp14a.pdf}
     \includegraphics[width=0.49\columnwidth]{exp/exp14b.pdf}
+    \includegraphics[width=0.49\columnwidth]{exp/legend-14.png}\vspace{-0.5em}
  \caption{\sys converges with a smaller sample size to the true result in comparison to partial cleaning (PC,PC+D). We show the relative model error as a function of the number of examples cleaned. \label{pc-perf}}
 \end{figure}
 
@@ -199,7 +203,7 @@ We find that SampleClean outperforms \sys only when corruptions are very severe 
 \noindent \emph{Summary: SampleClean is beneficial in comparison to \sys when corruption rats exceed 45\% in our experiments.}
 
 \begin{figure}[ht!]
-\centering
+\centering\vspace{-2em}
  \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}
  \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization.  \label{bias}}
@@ -220,9 +224,10 @@ For both datasets, after cleaning 1000 records, \sys is within 10\% of a priori 
 \noindent \emph{Summary: \sys with a classifier converges faster than Active Learning and SampleClean.}
 
 \begin{figure}[t]
-\centering
+\centering\vspace{-1em}
  \includegraphics[width=0.49\columnwidth]{exp/exp11a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp11b.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/legend-11.png}\vspace{-0.5em}
  \caption{Even with a classifier \sys converges faster than Active Learning and SampleClean. \label{pred-perf}}\vspace{-1.0em}
 \end{figure}
 
@@ -290,8 +295,8 @@ On the cleaned data, this classifier is nearly perfect with a 97\% true positive
 \begin{figure}[ht!]
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp13a.pdf}
- \includegraphics[width=0.49\columnwidth]{exp/exp13b.pdf}
- \caption{(A) The relative model error as a function of the number of cleaned records. (B) The true positive rate as a function of the number of cleaned records. \label{dfd}}
+ \includegraphics[width=0.49\columnwidth]{exp/exp13b.pdf}\vspace{-1em}
+ \caption{(A) The relative model error as a function of the number of cleaned records. (B) The true positive rate as a function of the number of cleaned records. \label{dfd}}\vspace{-1em}
 \end{figure}
 
 \subsubsection{Adaptive: Replacing Corrupted Data}
@@ -317,8 +322,9 @@ For the fuzzy images, both Active Learning and \sys reach 2\% error after cleani
 \noindent \emph{Summary: In a real adaptive detection scenario, \sys significantly reduces the number of records to clean to train an accurate model. }
 
 \begin{figure}[ht]
-\centering
+\centering\vspace{-0.5em}
  \includegraphics[width=0.49\columnwidth]{exp/exp7a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp7b.pdf}
- \caption{In a real adaptive detection scenario with the MNIST dataset, \sys outperforms Active Learning and SampleClean. We simulate systematic corruptions with image block removal and random corruptions with image fuzzying.  \label{mnist}}
+ \includegraphics[width=0.49\columnwidth]{exp/legend-general.png}\vspace{-0.5em}
+ \caption{In a real adaptive detection scenario with the MNIST dataset, \sys outperforms Active Learning and SampleClean.  \label{mnist}}
 \end{figure}
