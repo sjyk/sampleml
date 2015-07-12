@@ -116,7 +116,10 @@ Similarly, for a label $i$:
 \]
 \end{lemma}
 
-Then, it follows, that we can aggregate the $\bar{\Delta}_i$ into a single vector:
+Each $\bar{\Delta}_{xi}$ and $\bar{\Delta}_{yi}$ represents an average change in a single feature.
+We can now make this a vector to represent changes over all features and labels.
+For those records, that have a corruption in feature or label $i$, we have a non zero entry.
+This leads to the following lemma:
 \begin{lemma}[Delta vector]
 For a record $r$, the set of corrupted features is $f_r,l_r$.
 Then, each record $r$ has a d-dimensional vector $\Delta_{rx}$ which is constructed as follows:
