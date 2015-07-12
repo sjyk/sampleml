@@ -1,5 +1,42 @@
 \section{Appendix}
-\subsection{Set of Records Cleaning Model}\label{set-of-r}
+\subsection{Extensions}
+\subsubsection{Set-of-Records Cleaning Model}\label{set-of-r}
+In paper, we formalized the analyst-specified data cleaning as follows.
+We take the sample of the records $S_{dirty}$, and apply data cleaning $C(\cdot)$.
+$C$ is applied to a record and produces the clean record:
+\[
+S_{clean} = \{C(r) : \forall r \in S_{dirty}\}
+\]
+The record-by-record cleaning model is a formalization of the costs of data cleaning where each record has the same cost to clean and this cost does not change throughout the entire cleaning session.
+There are, however, some cases when cleaning the first record of a certain type of corruption is expensive but all subsequent records are cheaper.
+
+\begin{example}\label{app-ex1}
+In most spell checking systems, when a misspelling is identified, the system gives an option to fix all instances of that misspelling.
+\end{example}
+
+\begin{example}\label{app-ex2}
+In entity resolution problems, when an inconsistent entity is identified all other records with the same inconsistency can be efficiently fixed.
+\end{example}
+
+This model of data cleaning can fit into our framework and we formalize it as the ``Set-of-Records" model as opposed to the ``Record-by-Record" model. 
+In this model, the cleaning function $C(\cdot)$ is not restricted to updating only the records in the sample.
+$C(\cdot)$ takes the entire dirty sample as an argument (that is the cleaning is a function of the sample), the dirty data, and updates the entire dirty data:
+\[
+R'_{dirty} = C(S_{dirty},R_{dirty})
+\]
+we require that for every record $s \in S_{dirty}$, that record is completely cleaned after applying $C(\cdot)$, giving us $S_{clean}$.
+Records outside of $S_{dirty}$ may be cleaned on a subset of dirty attributes by $C(\cdot)$.
+After each iteration, we re-run the detector, and move any $r \in R'_{dirty}$ that are clean to $R_{clean}$.
+Such a model allows us to capture data cleaning operations such as in Example \ref{app-ex1} and Example \ref{app-ex2}.
+
+\subsubsection{Non-convex losses}\label{non-convex}
+We acknowledge that there is an increasing popularity of non-convex losses in the Neural Network and Deep Learning literature. 
+However, even for these losses, gradient descent techniques still apply. 
+Instead of converging to a global optimum they converge to a locally optimal value. 
+Likewise, \sys will converge to the closest locally optimal value to the dirty model. 
+Because of this, it is harder to reason about the results.
+Different initializations will lead to different local optima, and thus, introduces a complex dependence on the initialization with the dirty model.
+This problem is not fundemental to \sys and any gradient technique suffers this challenge for general non-convex losses, and we hope to explore this more in the future.
 
 \subsection{Proof of Lemma \ref{unbiased1}}\label{unbiased1-deriv}
 \begin{lemma}
@@ -58,15 +95,6 @@ Solving the system of equations, we get:
 \[
 p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
 \]
-
-\subsection{Non-convex losses}\label{non-convex}
-We acknowledge that there is an increasing popularity of non-convex losses in the Neural Network and Deep Learning literature. 
-However, even for these losses, gradient descent techniques still apply. 
-Instead of converging to a global optimum they converge to a locally optimal value. 
-Likewise, \sys will converge to the closest locally optimal value to the dirty model. 
-Because of this, it is harder to reason about the results.
-Different initializations will lead to different local optima, and thus, introduces a complex dependence on the initialization with the dirty model.
-This problem is not fundemental to \sys and any gradient technique suffers this challenge for general non-convex losses, and we hope to explore this more in the future.
 
 \subsection{Taylor Approximation}\label{taylor-deriv}
 We can take the expected value of the Taylor series expansion around the dirty value.
@@ -194,8 +222,8 @@ Typical algorithms include uncertainty sampling, where a classifier prioritized 
 However, algorithms such as uncertainty sampling focus on the narrow problem of label acquisition in hyperplane classifiers; a problem too narrow for application in this setting.
 
 \subsection{Dollars For Docs Errors and Constraints}\label{dfd-errors}
-Example errors include: 
-
+We cleaned the entire Dollars for Docs dataset upfront to be able to evaluate how different budgeted data cleaning strategies compare to cleaning the full data.
+To clean the dataset, we loaded the entire data 240089 records into Microsoft Excel. We identified four broad classes of errors:
 \vspace{0.25em}
 
 \noindent \textbf{Corporations are inconsistently represented: } ``Pfizer", ``Pfizer Inc.", ``Pfizer Incorporated".
@@ -214,7 +242,13 @@ Example errors include:
 
 \vspace{0.5em} 
 
-We encoded the problems as with the following constraints as data quality rules.
+To fix these errors, we sorted by each column and merged entities that looked similar and removed inconsistencies as in the status labels. 
+When there were ambiguities, we refered to the drug company's website and whitepapers.
+When possible, we used batch data transformations, like find and replace (i.e. the Set-of-Records model).
+In all, 44234 records had some error and full data cleaning required about 2 days of efforts.
+
+Once cleaned, in our experiment, we encoded the 4 problems as data quality constraints.
+To fix the constraints, we looked up the clean value in the dataset that we cleaned up front.
 
 \vspace{0.25em}
 
@@ -236,6 +270,8 @@ We encoded the problems as with the following constraints as data quality rules.
 
 \subsection{MNIST Errors}
 We include visualization of the errors that we generated for the MNIST experiment.
+We generated these errors in MATLAB by taking the grayscale version of the image (a $64\times 64$ matrix) and corrupting them by block removal and fuzzying.
+
 \begin{figure}[ht]
 \centering
 \includegraphics[scale=0.20]{exp/original.png}
