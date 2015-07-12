@@ -4,8 +4,7 @@ While these libraries significantly reduce the required effort in developing suc
 Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations, and industrial surveys have established that dirty data are prevalent  \cite{Gartner}.
 Data corruption, when systematic \cite{taylor1982introduction} (i.e., correlated with the data), can bias learning algorithms and lead to error-prone predictions \cite{xiaofeature}.
 
-Supervised machine learning is an important class of these new advanced analytics, and it relies on correlating features with labels.
-Systematically corrupted data can lead to confounding correlations between features and labels.
+Supervised machine learning is an important class of these new advanced analytics, and it is particularly sensitive to systematic corruption which can lead to confounding correlations between features and labels.
 Consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
 A recommendation model trained on this data may spuriously ``learn" a correlation relationship between the ``18-24" age group and music liked by European users.
 While there is an extensive literature on robust Machine Learning, this work largely focuses on resilience to atypical outliers (i.e., age ``150") and not spurious correlations.
