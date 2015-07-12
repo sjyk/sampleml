@@ -264,11 +264,8 @@ We evaluate \sys in two real scenarios, one demonstrating the a priori case and 
 
 \subsubsection{A Priori: Constraint Cleaning}\label{dfd-exp}
 In our first real scenario, we explore the Dollars for Docs dataset published by ProPublica that we described throughout the paper.
-We treat this problem as a constraint-based cleaning problem where we encode these problems as data quality constraints (see Appendix \ref{dfd-errors} for constraints and example errors). 
-This provides us with a detector for the corruption. 
-To fix the detected violations, we manually cleaned data.
-We confirmed drug names with company catalogs and used judgement to make the labels consistent.
-To run this experiment, we manually cleaned the entire dataset up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data.
+We treat this problem as a constraint-based cleaning problem where we encode these problems as data quality constraints. 
+To run this experiment, we manually cleaned the entire dataset up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data (see Appendix \ref{dfd-errors} for constraints, errors, and cleaning methodology).
 Figure \ref{dfd}a shows that \sys converges faster than Active Learning and SampleClean.
 To achieve a 4\% relative error (i.e., a 75\% error reduction from the dirty model), \sys cleans 40000 fewer records than Active Learning.
 Also, for 10000 records cleaned, \sys has nearly an order of magnitude smaller error than SampleClean.
