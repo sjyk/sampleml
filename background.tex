@@ -1,16 +1,17 @@
 \section{Problem Setup}\label{background}
+In this section, we introduce the basic problem of progressive data cleaning, why we need to consider data cleaning when training predictive models, and formalizing the class of predictive models (convex-loss) that we explore in this work.
 
-\subsection{Motivating Example}
-To motivate this work, we present one of our experimental datasets as a running example (Dollars for Docs dataset see Experiments, Section \ref{dfd-exp}):
+\subsection{Motivating Scenario}
+As a running example, consider one of the experimental datasets: (see Section \ref{dfd-exp}):
 
 \vspace{0.25em}
 
 \noindent\textbf{Dollars for Docs \cite{dollarsfordocs}. }
-ProPublica has collected a dataset of corporate contributions to doctors for analysis of whether these contributions (negatively) affect research. 
+ProPublica collected a dataset of corporate donations to doctors for analysis of whether these contributions influence research. 
 They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses \cite{dollarsfordocsa}.
-ProPublica meticulously curated a dataset from the Centers for Medicare and Medicaid Services listing nearly 250000 research contributions and aggregated these contributions by physician, drug, and pharmaceutical.
-We explore whether this problem could have been made easier with Machine Learning where we try to learn what features of a contribution predict an improprietous donation. 
-This problem is typical of fraud detection scenarios based on observational data seen in finance, insurance, and medicine.
+ProPublica meticulously curated and cleaned a dataset from the Centers for Medicare and Medicaid Services listing nearly 250,000 research donations and aggregated these donations by physician, drug, and pharmaceutical company.
+We collected the raw unaggregated data and explore whether suspect contributions are predictable.
+This problem is typical of analysis scenarios based on observational data seen in finance, insurance, and medicine.
 
 The dataset has the following schema:
 \begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
