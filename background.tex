@@ -156,8 +156,8 @@ We will be explicit with other terms when describing data errors (e.g. ``data co
 The basic question that we explore in this work is how to update a model trained on dirty data with data cleaning. Formally,
 
 \begin{problem}[ActiveClean Problem]\label{activeclean}\sloppy
-Let $R$ be a dirty relation and each row $r \in R$ is 
-turned into a feature vector and label tuple $F(r) \mapsto (x,y)$.
+Let $R$ be a dirty relation, and $F(r) \mapsto (x,y)$ is a function that maps
+a row $r \in R$ to a feature vector $x$ and label $y$.
 We are given a convex regularized loss model parametrized
 by $\theta$ trained on the set of features and labels $\{(x,y)\}$.
 The user specifies a data repair step which cleans a record 
