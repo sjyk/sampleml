@@ -164,7 +164,7 @@ The tight feedback loop between model training and data cleaning poses several n
 Algorithmically,  we have to reweight data to avoid biases and the population mixtures described previously.
 There are also numerous new opportunities for optimizations such as priotizing data and avoiding data that are expected to be clean.
 
-From a systems perspective, data cleaning and model training happen at very different time scales so integration requires careful batching.
+From a systems perspective, data cleaning and model training happen at very different time scales so integration requires batching.
 When humans are involved, per record latencies for data repair are orders of magnitude larger than the CPU time needed for model training.
 We can compare recent results in data cleaning to a model training framework like CoCoA implemented on Spark \cite{jaggi2014communication}.
 Per record, BigDansing, a highly optimized automated Spark-based data cleaning system is 15.5x slower than CoCoA\footnote{For CoCoA to reach a precision of 1e-3}.
