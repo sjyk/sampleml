@@ -1,17 +1,16 @@
 \section{Introduction}
 Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations \cite{Gartner}.
-Dirty data can lead to inaccurate analysis and cleaning data is a well studied problem \cite{rahm2000data}.
-The growing popularity of predictive models (e.g., fraud detection) in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} adds additional challenges in managing dirty data.
-Preditive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction}, where corruption disproportionately affects certain data, can introduce spurious relationships.
-The high dimensionality of these models can amplify even a small amount of corruption \cite{xiaofeature}.
-%Consequently, predictions from models trained on systematically corrupted data can be error-prone.
+Dirty data can lead to inaccurate analysis, and a variety of data cleaning techniques have been proposed \cite{rahm2000data}.
+The growing popularity of predictive models (e.g., classifiers) in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} adds additional challenges in managing dirty data.
+Preditive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction}, where corruption disproportionately affects certain data, can mask or even introduce new relationships.
+Furthermore, the high dimensionality of these models can amplify small problems \cite{xiaofeature} resulting in error-prone predictions from models trained on mostly clean data.
 
-To make this problem concrete, consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
+To make the systematic corruption problem more concrete, consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
 A recommendation model trained on this data may spuriously learn a correlation relationship between the ``18-24" age group and music liked by European users.
 A bug, which ostensibly affected only the European users, now affects predictions to all users aged ``18-24".
 Systematic corruption prior to featurization is not addressed in the robust Machine Learning literature which focuses on the resilience to outliers (i.e., age ``150").
 
-A variety of data cleaning frameworks have been recently proposed \cite{khayyat2015bigdansing, chu2015katara, sampleclean} to address the problem of corrupted data.
+A number of data cleaning frameworks have been recently proposed \cite{khayyat2015bigdansing, chu2015katara, sampleclean} to address the problem of corrupted data.
 However, data analysts report that data cleaning remains one of the most time consuming steps in the analysis process \cite{nytimes}.
 Data cleaning can require a significant amount of developer effort in writing software or rules to fix the corruption.
 Crowdsourcing is an increasingly popular alternative with recent success in missing value filling and entity resolution \cite{gokhale2014corleone, park2014crowdfill, sampleclean,chu2015katara}.
@@ -35,8 +34,8 @@ The errors introduced by these three problems may dominate any gains from data c
 
 We propose \sys to address the progressive data cleaning problem in a way that avoids the three challenges: mixing, sampling, and sparsity.
 The key insight is that an important class of predictive models, called convex-loss models (e.g., linear regression and SVMs), are trained by iteratively drawing random samples of data and updating a model\cite{bertsekas2011incremental}.
-Data cleaning can be integrated with the sampling and updating training process; preserving provable guarantees such as convergence and error bounds.
-Data are cleaned in small random batches and the model is incrementally updated based on the results.
+Data cleaning can be integrated with the sampling and updating training process; preserving the same provable guarantees such as convergence and error bounds.
+In \sys, data are cleaned in small random batches and the model is incrementally updated based on the results.
 Similar to Active Learning, \sys selects the most valuable records to clean with higher probability, however, it applies a number of optimizations that exploit the data cleaning setting such as avoiding data that is expected to be clean, estimating of the effect of data cleaning for a record, and batching together updates from already cleaned data.
 
 The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{updater}, and \emph{estimator}.
