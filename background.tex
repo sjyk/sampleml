@@ -1,16 +1,16 @@
 \section{Problem Setup}\label{background}
-In this section, we introduce the basic problem of progressive data cleaning, why we need to consider data cleaning when training predictive models, and formalizing the class of predictive models (convex-loss) that we explore in this work.
+In this section, we describe why we need to consider data cleaning when training predictive models, and formalize the class of predictive models (convex loss) that we explore in this work.
 
 \subsection{Motivating Scenario}
-As a running example, consider one of the experimental datasets: (see Section \ref{dfd-exp}):
+As a motivating example, consider one of the experimental datasets (see Section \ref{dfd-exp}):
 
 \vspace{0.25em}
 
 \noindent\textbf{Dollars for Docs \cite{dollarsfordocs}. }
-ProPublica collected a dataset of corporate donations to doctors for analysis of whether these contributions influence research. 
+ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest. 
 They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses \cite{dollarsfordocsa}.
 ProPublica meticulously curated and cleaned a dataset from the Centers for Medicare and Medicaid Services listing nearly 250,000 research donations and aggregated these donations by physician, drug, and pharmaceutical company.
-We collected the raw unaggregated data and explore whether suspect contributions are predictable.
+We collected the raw unaggregated data and explore whether suspected contributions can be predicted from features.
 This problem is typical of analysis scenarios based on observational data seen in finance, insurance, and medicine.
 
 The dataset has the following schema:
@@ -19,51 +19,48 @@ Contribution(pi_speciality$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm
 corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 \end{lstlisting}
 
-\noindent\texttt{pi\_speciality} is a textual attribute describing the specialty of the doctor receiving the contribution.
+\noindent\texttt{pi\_speciality} is a textual attribute describing the specialty of the doctor receiving the donation.
 
 \noindent\texttt{drug\_name} is the branded name of the drug in the research study (null if not a drug).
 
 \noindent\texttt{device\_name} is the branded name of the device in the study (null if not a device).
 
+\noindent\texttt{corporation} is the name of the pharmaceutical providing the donation.
+
 \noindent\texttt{amount} is a numerical attribute representing the contribution amount.
 
 \noindent\texttt{dispute} is a Boolean attribute describing whether the research was disputed.
 
-\noindent\texttt{status} is a string label describing whether the contribution was allowed under the declared research protocol. There are two possible statuses ``Covered" and ``Non-Covered".
+\noindent\texttt{status} is a string label describing whether the contribution was allowed under the declared research protocol. In this example, we are interested in predicting disallowed contributions. 
 
 \vspace{0.5em}
 
-\noindent Using this dataset, consider the following analysis scenario.
-\begin{example}
-We are interested in predicting impropriety in medical research contributions, by exploring what features of a research contribution predict the \texttt{status} attribute.
-We featurize the textual attributes with a bag-of-words model and treat the \texttt{amount} and \texttt{dispute} attributes as numerical features.
-The model is a Support Vector Machine (SVM) that predicts the label $\{1,0\}$ where $1$ indicates a disallowed contribution.
-\end{example}
-
 However, this dataset is very dirty, and the systematic nature of the corruption can result in a misleading model.
-On the ProPublica website \cite{dollarsfordocs}, they list numerous types of corruption that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
-For example, the most significant contributions were made by large companies whose names were also more often inconsistently represented in the data e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
-In a fraud detection scenario such as this one, the effect of systematic error can be serious.
-Duplicate entity representations, could reduce the correlation between these entities and impropriety.
-We found that nearly 40,000 of the 250,000 records had some form of corruption either with entity resolution issues or other inconsistencies.
+On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
+For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data e.g., ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
+In a scenario such as this one, the effect of systematic error can be serious.
+Duplicate entity representations could artificially reduce the correlation between these entities and suspected contributions.
+There were nearly 40,000 of the 250,000 records had either entity resolution issues or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
+With the same Support Vector Machine model, the detection rate of suspect donations was 66\% in the dirty data and 97\% in the clean data (Section \ref{dfd-exp}).
 
 \vspace{0.25em}
 
-\noindent\textbf{Cleaning With a Budget: }  Let us suppose our analyst wants evaluate whether the problems affect her model, and she wants to do this without having to manually validate every record. 
-The natural first solution to is to clean some of the data, and then retrain the model on the partially cleaned data.
-However, this solution can give unreliable results since we are mixing dirty and clean data.
-In Figure \ref{update-arch1}, we illustrate the dangers of this approach on a very simple dirty dataset and model.
-Suppose, we are trying to find a best fit line for two variables. 
+\noindent\textbf{Progressive Data Cleaning: }  Cleaning a dataset of 250,000 records can be very time consuming, and it is important for analysts to be able to evaluate the model before all of the data is cleaned.
+First, suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
+Figure \ref{update-arch1} illustrates the dangers of this approach on a very simple dirty dataset and model.
+The predictive model is a simple linear regression i.e., the best fit line for two variables. 
 One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
-We mark the dirty data in brown and the clean data in orange, and show their respective best fit lines in blue.
-If we clean two of the data points (Figure \ref{update-arch1}b), and then find the best fit line, the partially cleaned model is dramatically incorrect.
+The dirty data is marked in brown and the clean data in orange, and their respective best fit lines are in blue.
+After cleaning only two of the data points (Figure \ref{update-arch1}b), the resulting best fit line is actually in the opposite direction of the true model.
 This is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
+Consequently, training models on a mixture of dirty and clean data can lead to unreliable results where more data cleaning can make a model significantly less accurate.
 
 An alternative solution is to avoid the dirty data altogether, instead of mixing the two populations.
-She can take a random sample of data, apply data cleaning, and train a model only on that sample of data.
-This is similar to SampleClean \cite{wang1999sample}; proposed to approximate the results of aggregate queries by applying them to a clean sample of data.
+Suppose $k$ records are randomly sampled from the dataset and cleaned.
+The model is trained only on the clean sample of data.
+This is similar to SampleClean \cite{wang1999sample}, which was proposed to approximate the results of aggregate queries by applying them to a clean sample of data.
 However, high-dimensional models are highly sensitive to sample size.
-The resulting models are not useful (i.e., cannot accurately predict future test data) when the sample size is too small (Figure \ref{update-arch1}c).
+Figure \ref{update-arch1}c illustrates that, even in two dimensions, models trained from small samples can be as incorrect as the mixing solution described before.
 
 \begin{figure}[ht!]
 \centering
@@ -73,6 +70,13 @@ The resulting models are not useful (i.e., cannot accurately predict future test
 (c) Likewise, small sample sizes can result in similarly incorrect models. \label{update-arch1}}
 \end{figure}
 
+In this work, we propose a new methodology to avoid Simpson's Paradox and the strong dependence on sample size.
+Instead of mixing dirty and clean data, \sys uses a model trained on the dirty data as an initialization, and then iteratively updates this model using samples of clean data.
+The intuition is that this algorithm smoothly transitions the model from one population (the dirty data) to another (the clean data), leading to provable guarantees about intermediate results.
+
+%\sys avoids both pitfalls, Simpson's paradox and sample size dependence.
+
+\iffalse
 \sys avoids both pitfalls, Simpson's paradox and sample size dependence.
 In Section \ref{model-update}, we show how we do this with iterative gradient steps (i.e., incrementally moving the line based on the clean data).
 This takes advantage of the dirty data as well as the clean data, but still have provable properties about the intermediate results.
@@ -87,7 +91,6 @@ At two extremes we have no cleaning (just using the dirty data) and full cleanin
  \caption{\sys is designed to converge to an accurate model with fewer cleaned records than a uniform sampling approach (SampleClean). \label{sys-arch2}}\vspace{-1em}
 \end{figure}
 
-\iffalse
 
 We design \sys to make greater progress at these small sample sizes using the dirty model as an initialization.
 Doing so is not trivial since it requires analysis of both the Machine Learning model and the data cleaning operations.
@@ -97,19 +100,11 @@ Finally, in this line of work, the tradeoff space is enormous, and we have to ca
 \fi
 
 \subsection{Preliminaries}
-\iffalse
-There have been a few proposals of tighter integration of data cleaning and analytics.
-In SampleClean \cite{wang1999sample}, the authors formalize the analytics in terms of a SQL aggregate query.
-Bergman et al. explore the problem of query-oriented data cleaning \cite{bergman2015query}, where a conjunctive query (CQ) guides which records are to be cleaned.
-SQL and CQ formalize a declarative problem specification in database research.
-In a loose analogy to the declative queries in databases, loss functions in serve the same purpose in ERM.
-\fi
-We focus on a class of Supervised Learning problems called convex-loss minimization problems (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
-This class of problems includes all generalized linear models (including linear and logistic regression), and all variants of support vector machines.
+The class of problems amenable to incremental stochastic optimization techniques (incremental sample-based updates) are convex loss minimization problems (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
+This class of Supervised Learning problems which includes all generalized linear models (including linear and logistic regression), and all variants of support vector machines.
 
-Formally, the goal is to learn a vector of model \emph{parameters} $\theta$ from training examples.
-We start with a set of training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$
-on which we minimize a loss function $\phi$ (a penalty for getting the prediction wrong) at each point parametrized by $\theta$.
+The goal is to learn a vector of model \emph{parameters} $\theta$ from training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$.
+$\theta$ is leared by minimizing a loss function $\phi$ (a penalty for getting the prediction wrong) for each training example:
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
 \]
@@ -124,8 +119,8 @@ $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid
 \]
 In this work, without loss of generality, we will include the regularization as part of the loss function i.e., $\phi(x_{i},y_{i},\theta)$ includes $r(\theta)$.
 
-\subsubsection{Types of Errors}
-We use the following metrics to quantify inaccuracy in a model:
+\subsubsection{Types of Error}
+There are two standard metrics to quantify inaccuracy in a model:
 
 \vspace{0.25em}
 
@@ -137,11 +132,11 @@ We use the following metrics to quantify inaccuracy in a model:
 
 \vspace{0.5em}
 
-\noindent The \emph{error} in the model and in testing is caused by two underlying problems:
+\noindent The above \emph{errors} are caused by two underlying problems:
 
 \vspace{0.25em}
 
-\noindent\textbf{Data Error. } Error caused by dirtiness.
+\noindent\textbf{Data Error. } is error introduced by training a model on systematically corrupted data.
 
 \vspace{0.25em}
 
@@ -149,37 +144,34 @@ We use the following metrics to quantify inaccuracy in a model:
 
 \vspace{0.25em}
 
-In this paper, when we use the term \emph{error}, we are referring to \textbf{model error}.
+When we use the term \emph{error}, we are referring to \textbf{model error}.
 We will be explicit with other terms when describing data errors (e.g. ``data corruption").
 
 \subsection{\sys Problem}
-The basic question that we explore in this work is how to update a model trained on dirty data with data cleaning. Formally,
+The core problem addressed by \sys is incremental model update while progressively cleaning data.
 
 \begin{problem}[ActiveClean Problem]\label{activeclean}\sloppy
-Let $R$ be a dirty relation, and $F(r) \mapsto (x,y)$ is a function that maps
-a row $r \in R$ to a feature vector $x$ and label $y$.
-We are given a convex regularized loss model parametrized
-by $\theta$ trained on the set of features and labels $\{(x,y)\}$.
-The user specifies a data repair step which cleans a record 
-$C(r) \mapsto r_{clean}$.
-Optionally, the user can provide a set of dirty data detection conditions that select 
-a set of candidate dirty data $R_{dirty}$.
-With a budget of applying cleaning i.e., $C(\cdot)$, only k times, return an estimate $\hat{\theta}$ of the clean model.
+Let $R$ be a dirty relation, $F(r) \mapsto (x,y)$ be a featurization that maps
+a record $r \in R$ to a feature vector $x$ and label $y$, $\phi$ be a convex regularized loss,
+and $C(r) \mapsto r_{clean}$ be a cleaning technique that maps a record to its cleaned value. 
+Given these inputs, the \sys problem is to return an estimate $\hat{\theta}$ of the clean model for any limit $k$ on the number of times the data cleaning $C(\cdot)$ can be applied.
+This estimate should be bounded by a monotonically descreasing function in $k$ (i.e., the expected result of cleaning more data is a more accurate model).
 \end{problem}
 
-Our goal is to use information from the model to inform data cleaning on samples, and use the information from clean samples to update the model.
-The tight feedback loop between model training and data cleaning poses several new algorithmic challenges. 
-If we are not careful about how we update the model, we can end up with the Simpsons paradox problem described before.
-Data cleaning and model training happen at very different time scales, we have to carefully budget our effort to ensure that optimizations address rate-determining steps in the workflow.
+Addressing this problem requires analysis of the loss function $\phi$ and how $\phi$ is affected by dirty data.
+Our solution is to integrate data cleaning and model training, where $\phi$ is simultaneously minimized while the data is cleaned.
+The tight feedback loop between model training and data cleaning poses several new algorithmic challenges and systems challenges.
+Algorithmically,  we have to reweight data to avoid biases and the population mixtures described previously.
+There are also numerous new opportunities for optimizations such as priotizing data and avoiding data that are expected to be clean.
 
-This framework is optimized around problems with expensive data cleaning.
-As the complexity of dirtiness increases, so does the amount of computation and human-effort needed to resolve them.
-The consequence is that automated repair is either not scalable or relies on greedy repairs that can be unreliable.
-Increasingly, human effort is seen as valuable in data cleaning \cite{park2014crowdfill, wang2012crowder, gokhale2014corleone, wang1999sample}.
+From a systems perspective, data cleaning and model training happen at very different time scales so integration requires careful batching.
 When humans are involved, per record latencies for data repair are orders of magnitude larger than the CPU time needed for model training.
 We can compare recent results in data cleaning to a model training framework like CoCoA implemented on Spark \cite{jaggi2014communication}.
 Per record, BigDansing, a highly optimized automated Spark-based data cleaning system is 15.5x slower than CoCoA\footnote{For CoCoA to reach a precision of 1e-3}.
-Crowd based techniques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100,000x slower per record. Here is an example application of \sys with our running example:
+Crowd based techniques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100,000x slower per record. 
+
+\iffalse
+Here is an example application of \sys with our running example:
 \begin{example}
 The analyst first trains her SVM model on the dirty data ignoring the effects of the errors returning a model $\theta^{(d)}$.
 She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
@@ -191,7 +183,7 @@ The model improves after each iteration.
 After $t=10$ of cleaning, the analyst has an accurate model trained with 100 cleaned records but still utilizes the entire dirty data.
 \end{example}
 
-\iffalse
+
 
 \subsection{Two perspectives on error}
 When faced with such errors there are two contrasting perspectives from the Machine Learning and the Database communities.

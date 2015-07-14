@@ -33,10 +33,11 @@ The errors introduced by these three problems may dominate any gains from data c
 \end{figure}
 
 We propose \sys to address the progressive data cleaning problem in a way that avoids the three challenges: mixing, sampling, and sparsity.
-The key insight is that an important class of predictive models, called convex-loss models (e.g., linear regression and SVMs), are trained by iteratively drawing random samples of data and updating a model\cite{bertsekas2011incremental}.
+The key insight is that an important class of predictive models, called convex loss models (e.g., linear regression and SVMs), are trained by iteratively drawing random samples of data and updating a model\cite{bertsekas2011incremental}.
 Data cleaning can be integrated with the sampling and updating training process; preserving the same provable guarantees such as convergence and error bounds.
 In \sys, data are cleaned in small random batches and the model is incrementally updated based on the results.
 Similar to Active Learning, \sys selects the most valuable records to clean with higher probability, however, it applies a number of optimizations that exploit the data cleaning setting such as avoiding data that is expected to be clean, estimating of the effect of data cleaning for a record, and batching together updates from already cleaned data.
+This framework is optimized for problems requiring expensive data cleaning.
 
 The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{updater}, and \emph{estimator}.
 The cleaner is an existing data cleaning framework (e.g., Entity Resolution), and \sys provides the remaining components to apply this framework progressively.
@@ -46,7 +47,7 @@ To summarize the contributions in each component:
 \item Sampler (Section \ref{dist-samp}). We derive an optimal sampling distribution that minimizes the update variance (i.e., how different would the update be if we drew another sample) which linearly improves an error bound on the convergence rate.
 \item Updater (Section \ref{model-update}). The updater applies a weighted stochastic gradient descent step to the current best model. This update converges if all of the data is cleaned, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
 \item Estimator (Section \ref{sampling}) The estimator applies a Taylor Series linearization to decouple changes in different features using knowledge about what is wrong with the data to better estimate the impact of an error.
-\item We evaluate these components on 4 datasets with real and synthetic corruption (Section \ref{eval}). For a 5\%  systematic corruption, to achieve the same accuracy as a state-of-the-art Active Learning algorithm cleaning 1000 records, \sys cleans 55\% less records on average.
+\item We evaluate these components on 4 datasets with real and synthetic corruption (Section \ref{eval}). Our results suggest that indeed \sys is better suited for cleaning and model training when $k\ll N$. For a 5\%  systematic corruption, to achieve the same accuracy as a state-of-the-art Active Learning algorithm cleaning 1000 records, \sys cleans 55\% less records.
 \end{itemize}
 
 
