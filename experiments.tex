@@ -258,21 +258,20 @@ Linear regression and the average feature change technique do eventually perform
 The next set of experiments evaluate evaluate \sys in two real world scenarios, one demonstrating the \emph{a priori} case and one for the adaptive detection case.
 
 \subsubsection{\emph{A Priori}: Constraint Cleaning}\label{dfd-exp}
-In our first real scenario, we explore the Dollars for Docs dataset published by ProPublica that we described throughout the paper.
-We treat this problem as a constraint-based cleaning problem where we encode these problems as data quality constraints. 
-To run this experiment, we manually cleaned the entire dataset up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data (see Appendix \ref{dfd-errors} for constraints, errors, and cleaning methodology).
+The first scenario explores the Dollars for Docs dataset published by ProPublica described throughout the paper.
+To run this experiment, the entire dataset was cleaned up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data (see Appendix \ref{dfd-errors} for constraints, errors, and cleaning methodology).
 Figure \ref{dfd}a shows that \sys converges faster than Active Learning and SampleClean.
 To achieve a 4\% relative error (i.e., a 75\% error reduction from the dirty model), \sys cleans 40000 fewer records than Active Learning.
 Also, for 10000 records cleaned, \sys has nearly an order of magnitude smaller error than SampleClean.
 
-Figure \ref{dfd}b shows the true positive rate (fraction of non-covered research contributions identified) of the classifier as a function of the number of records cleaned. 
-We find that on the dirty data, we can only classify 66\% of the positive examples correctly (88\% overall accuracy due to a class imbalance).
+Figure \ref{dfd}b shows the detection rate (fraction of disallowed research contributions identified) of the classifier as a function of the number of records cleaned. 
+On the dirty data, we can only correctly classify 66\% of the suspected examples (88\% overall accuracy due to a class imbalance).
 On the cleaned data, this classifier is nearly perfect with a 97\% true positive rate (98\% overall accuracy).
 \sys converges to the cleaned accuracy faster than the alternatives with a classifier of 92\% true positive rate for only 10000 records cleaned.
 
 \vspace{0.25em}
 
-\noindent \emph{Summary: In a real a priori detection scenario, \sys significantly reduces the number of records to clean to train an accurate model. }
+\noindent \emph{Summary: To achieve an 80\% detection rate, \sys cleans nearly 10x less records than Active Learning. }
 
 \begin{figure}[ht!]
 \centering
@@ -282,26 +281,20 @@ On the cleaned data, this classifier is nearly perfect with a 97\% true positive
 \end{figure}
 
 \subsubsection{Adaptive: Replacing Corrupted Data}
-We consider the following scenario with the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
+The next experiment explores the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
 In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
-We devise an ``adaptive detection" \sys scenario for this example.
-
 The MNIST dataset consists of 64x64 grayscale images.
-We run two experiments, in which we have two types of corruptions: (1) 5x5 block removal where take a random 5x5 block from the image and set its pixel values to 0, and (2) Fuzzy where we run a 4x4 moving average over the entire image.
-We applied these corruptions to a random 5\% of the images.
-We constructed these corruptions to mimic the random vs. systematic corruption that we studied before.
-The 5x5 block removal behaves much more like a systematic corruption. 
-Typical image processing features are based on edges and corrupting edges leads to ambiguities.
-On the other hand, the making the image fuzzy is more like a random corruption.
-We use a 10 class classifier (one for each digit) to detect the corruption.
+There are two types of simulated corruptions: (1) 5x5 block removal where a random 5x5 block is removed from the image by setting its pixel values to 0, and (2) Fuzzy where a 4x4 moving average patch is applied over the entire image.
+These corruptions are applied to a random 5\% of the images, and mimic the random (Fuzzy) vs. systematic corruption (5x5 removal) studied in the previous experiments.
+The adaptive detector uses a 10 class classifier (one for each digit) to detect the corruption.
 
 Figure \ref{mnist} shows that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
-To achieve a 2\% error for the block removal, we can inspect 2200 fewer images than Active Learning and 2750 fewer images than SampleClean.
+To achieve a 2\% error for the block removal, \sys can inspect 2200 fewer images than Active Learning and 2750 fewer images than SampleClean.
 For the fuzzy images, both Active Learning and \sys reach 2\% error after cleaning fewer than 100 images, while SampleClean requires 1750.
 
 \vspace{0.25em}
 
-\noindent \emph{Summary: In a real adaptive detection scenario, \sys significantly reduces the number of records to clean to train an accurate model. }
+\noindent \emph{Summary: In the MNIST dataset, \sys significantly reduces (more than 2x) the number of records to clean to train a model with 2\% error. }
 
 \begin{figure}[ht]
 \centering\vspace{-0.5em}

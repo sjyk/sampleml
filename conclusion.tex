@@ -1,14 +1,9 @@
-\vspace{-1em}
+
 \section{Conclusion}
-As analytics frameworks increasingly support Machine Learning, methodologies for optimizing across the entire pipeline from data cleaning to model training are required.
-In this paper, we propose \sysfull, a framework that integrates existing data cleaning solutions with Machine Learning model training.
-\sys information from the model to inform data cleaning on samples, and uses the information from clean samples to update the statistical model.
-Our experimental results are really promising as they suggest that these optimization can significantly reduce data cleaning costs.
-Techniques such as Active Learning and SampleClean are not optimized for this setting, and we are able to achieve sharper cost-accuracy tradeoffs than either technique.
- 
-There are several exciting, new avenues for future work.
-First, the data cleaning models that we explore in this work can be extended to handle non-uniform costs, where different errors have a different cleaning cost.
-Next, the empirical success of Deep Learning has led to increasing industry and research adoption of non-convex losses in many tasks that were traditionally served by convex models.
-We hope to explore how we can integrate with such frameworks and what we can analyze about the performance.
-We will also explore what we can do if the analytics at the end of the pipeline is a black box function.
-Techniques proposed in Reinforcement Learning likely apply as we simultaneously have to learn the properties of the function as we are cleaning.
+The growing popularity of predictive models (e.g., classifiers) in data analytics adds additional challenges in managing dirty data with mixing dirty and clean data, sensitivity to sampling, and sparsity.
+\sys is a framework that utilizes data cleaning to mitigate systematic errors with progressive data cleaning.
+The key insight is that an important class of predictive models, called convex loss models (e.g., linear regression and SVMs), can be simultaneously trained and cleaned.
+Consequently, there are provable guarantees on the convergence and error bounds of \sys.  
+\sys also includes numerous optimizations such as: using the information from the model to inform data cleaning on samples, dirty data detection to avoid sampling clean data, and batching together updates on already clean data.
+The experimental results are promising as they suggest that these optimizations can significantly reduce data cleaning costs when errors are sparse and cleaning budgets are small.
+Techniques such as Active Learning and SampleClean are not optimized for the sparse low-budget setting, and \sys achieves models of similar accuracy for significantly less records cleaned.

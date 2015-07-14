@@ -39,6 +39,18 @@ To summarize the architecture in pseudocode:
 \item \texttt{Output: current\_model}
 \end{enumerate}
 
+Here is an example application of \sys with thr running example:
+\begin{example}
+The analyst first trains an SVM model on the dirty data ignoring the effects of the errors returning a model $\theta^{(d)}$.
+She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
+She initializes \sys with $\theta^{(d)}$.
+\sys samples an initial batch of 10 records.
+She manually cleans those records by merging similar drug names, making corporation names consistent, and fixing incorrect labels.
+After each batch, the model is updated with the most recent cleaning results $\theta^{(t)}$.
+The model improves after each iteration.
+After $t=10$ of cleaning, the analyst has an accurate model trained with 100 cleaned records but still utilizes the entire dirty data.
+\end{example}
+
 \subsection{Challenges and Formalization}
 We highlight the important components and formalize the research questions that we explore in this paper. 
 
