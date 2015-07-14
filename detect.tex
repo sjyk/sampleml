@@ -17,10 +17,10 @@ Let $r$ be a record in $R$. An a priori detector is a detector that returns a Bo
 \[
 D(r) = (\{0,1\}, e_r)
 \]
-From the set of columns that are dirty, we can find the corresponding features that are dirty $f_r$ and labels that are dirty $l_r$.
+From the set of columns that are dirty, find the corresponding features that are dirty $f_r$ and labels that are dirty $l_r$.
 \end{definition}
 
-\noindent We highlight example use cases of this definition using data cleaning methodologies proposed in the liteature.
+\noindent Here are example use cases of this definition using data cleaning methodologies proposed in the liteature.
 
 \vspace{0.5em}
 
@@ -59,7 +59,7 @@ The set $e_r$ is the set of attributes of $r$ that have entity resolution proble
 
 \begin{example}
 An example of an Entity Resolution problem is seen in our earlier example about corporation names e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".. 
-We can define a similarity relationship $WeightedJaccard(r1,r2)>0.8$ and select all records that satisfy this condition (their Weighted Jaccard Similarity is greater than 0.8).
+Given a similarity relationship $WeightedJaccard(r1,r2)>0.8$, the detector selects all records that satisfy this condition (their Weighted Jaccard Similarity is greater than 0.8).
 \end{example}
 
 \subsection{Adaptive Detection}
@@ -79,7 +79,7 @@ This problem can be addressed by any multiclass classifier, and we use an all-ve
 Since this classifier is internal to our system, it does not have to be a convex model (i.e., it can be a Decision Tree or Random Forest).
 
 \begin{definition}[Adaptive Case]
-To select $R_{dirty}$, we select the set of records for which $\kappa$ gives a positive error classification (i.e., one of the $u$ error classes).
+Select the set of records for which $\kappa$ gives a positive error classification (i.e., one of the $u$ error classes).
 After each sample of data is cleaned, the classifier $\kappa$ is retrained.
 So the result is:
 \[D(r) = (\{1,0\},\{1,...,u+1\})\]
@@ -90,13 +90,13 @@ So the result is:
 \noindent\textbf{Adaptive Detection With Open Refine: }
 \begin{example}
 OpenRefine is a spreadsheet-based tool that allows users to explore and transform data.
-However, it is limited to clean data that can fit in memory on a single computer.
-Since the cleaning operations are coupled with data exploration, we do not know what is dirty in advance (the analyst may discover new errors as she cleans).
+However, it is limited to cleaning data that can fit in memory on a single computer.
+Since the cleaning operations are coupled with data exploration, \sys does not know what is dirty in advance (the analyst may discover new errors as she cleans).
 
 Suppose our analyst wants to use OpenRefine to clean our running example dataset with \sys.
 She takes a sample of data from the entire dataset and uses the tool to discover errors.
 For example, she finds that some drugs are incorrectly classified as both drugs and devices.
 She then clears the device attribute for all records that have the drug name in question.
-Every time she makes a batch data transformation (i.e., cleaning the device attribute), we can list the set of records that have changed.
+Every time she makes a batch data transformation (i.e., cleaning the device attribute), \sys can list the set of records that have changed.
 Each transformation becomes and error class, and the records that have changed records become positive training examples for a classifier to guide future samples.
 \end{example}

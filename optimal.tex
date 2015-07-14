@@ -58,7 +58,7 @@ Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p(i
 \[
 g^*(\theta) \approx g_{S}(\theta) = \frac{1}{n\mid S \mid} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
-Now adding in iteration, for every batch of data cleaned $t$, the update to the current best model estimate is:
+Now adding iteration, for every batch of data cleaned $t$, the update to the current best model estimate is:
 \[
 \theta^{(t+1)} \leftarrow \theta^{(t)} - \gamma \cdot g_{S}(\theta^{(t)})
 \]
@@ -96,7 +96,7 @@ Iteration continue until $k = T \cdot b$ records are cleaned.
 
 \vspace{0.25em}
 
-\noindent\textbf{Batch Size $b$ : } The batch size $b$ controls the frequency of iteration. Larger batches provide a more accurate estimate of the gradient at each iteration but analyst gets less frequent model updates. 
+\noindent\textbf{Batch Size $b$ : } The batch size $b$ controls the frequency of iteration. Larger batches provide a more accurate estimate of the gradient at each iteration but has less frequent model updates. 
 
 \vspace{0.25em}
 
@@ -182,7 +182,7 @@ There are diminishing returns to increasing the batch size $O(\frac{1}{\sqrt{b}}
 Empirically, in our experiments, batch sizes of 50 converge the fastest.
 If a data cleaning technique requires a larger batch size than this, i.e., data cleaning is fast enough that the iteration overhead is significant compared to cleaning 50 records, \sys can apply the updates in smaller batches.
 For example, the batch size set by the user might be $b=1000$, but the model updates after every $50$ records are cleaned.
-This dissociates the requirements of SGD and the characteristics of the data cleaning technique.
+This dissociates the batching requirements of SGD and the batching requirements of the data cleaning technique.
 
 \vspace{0.5em}
 

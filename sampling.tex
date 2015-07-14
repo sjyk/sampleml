@@ -1,21 +1,21 @@
 \section{Sampling}\label{dist-samp}
-In the previous section, we assumed that our model update received a sample with probabilities $p(r)$.
+In the previous section, the model update received a sample with probabilities $p(r)$.
 In this section, we derive an optimal sampling problem that directly follows from our analysis of our update rule via SGD.
-It will turn out that the solution to the optimal sampling problem is not realizable in practice (as it depends on knowing the cleaned value), but we can use this to inform the next section where we estimate the cleaned value.
+It will turn out that the solution to the optimal sampling problem is not realizable in practice (as it depends on knowing the cleaned value), and this problem will be addressed with an approximation in the next section.
 
 \subsection{Goals and Challenges}
 In the Machine Learning and Optimization literature, SGD algorithms are optimized to avoid scanning the entire data.
 Uniform sampling is cheap so it is the preferred solution.
 However, data cleaning costs can be many orders of magnitude higher than model training.
 As a result, uniform sampling may not be the most efficient option.
-We can sacrifice computational overhead by precomputing some results over the entire data for savings during the data cleaning phase.
-We formulate this problem as an optimal sampling problem where we want to compute the sampling probabilities $p(r)$ that maximize the accuracy of our updates.
+\sys can sacrifice computational overhead by precomputing some results over the entire data for savings during the data cleaning phase.
+This problem is formulated as an optimal sampling problem to compute the sampling probabilities $p(r)$ that maximize the convergence rate.
 
 \subsection{Optimal Sampling Problem}
 Recall that the convergence rate of an SGD algorithm is bounded by $\sigma^2$ which is the variance of the gradient.
-Intuitively, the variance measures how accurately we estimate the gradient from a uniform sample.
+Intuitively, the variance measures how accurately the gradient is estimated from a uniform sample.
 Other sampling distributions, while preserving the sample expected value, may have a lower variance.
-Thus, we define the optimal sampling problem as a search over sampling distributions to find the minimum variance sampling distribution.
+Thus, the optimal sampling problem is defined as a search over sampling distributions to find the minimum variance sampling distribution.
 
 \begin{definition}[Optimal Sampling Problem]
 Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find sampling probabilities $p(r)$ such that over all samples $S$ of size $k$ it minimizes:
@@ -23,8 +23,8 @@ Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find 
 \mathbb{E}(\|g_S - g^*\|^2)
 \]
 \end{definition}
-In other words, we want to most accurately (in the mean squared error sense) estimate the gradient. 
-To construct these sampling probabilities, we first need the following lemma about importance sampling.
+
+To construct these sampling probabilities, first consider the following lemma about importance sampling.
 This lemma describes the optimal distribution over a set of scalars:
 \begin{lemma}\label{impsample}
 Given a set of real numbers $A = \{a_1,...,a_n\}$, let $\hat{A}$ be 
@@ -37,14 +37,14 @@ This proof follows from \cite{mcbook}, as it is a straight-forward importance sa
 We include the proof in the appendix (Section \ref{impsample-deriv})
 \end{proof}
 
-Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is where we sample proportionally to the values.
-This insight leads to a direct higher-dimensional generalization, where at iteration $t$ we should sample the records in $R_{dirty}$ with probabilities:
+Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is sampling proportionally to the values.
+This insight leads to a direct higher-dimensional generalization, where at iteration $t$ the optimal distribution over records in $R_{dirty}$ is probabilities proportional to:
 \[
 p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\| \blacksquare
 \]
 
-However, in our case, it leads to a chicken-and-egg problem.
-The optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, however, we have to sample and clean those points to get those values.
-In the next section, we discuss how to inexpensively approximate this optimal distribution.
-As our technique can work with \emph{any} distribution, we are guaranteed convergence no matter how inaccurate this approximation is.
+However, in this case, it leads to a chicken-and-egg problem.
+The optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, however, cleaning is required to know those values.
+In the next section, the estimator will approximate this distribution by estimating the cleaned value with previously cleaned data.
+Since the model update can work with \emph{any} distribution, convergence is guaranteed no matter how inaccurate this approximation is.
 However, a better approximation will lead to an improved convergence rate.
