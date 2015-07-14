@@ -222,6 +222,16 @@ Typical algorithms include uncertainty sampling, where a classifier prioritized 
 However, algorithms such as uncertainty sampling focus on the narrow problem of label acquisition in hyperplane classifiers; a problem too narrow for application in this setting.
 
 \subsection{Dollars For Docs Errors and Constraints}\label{dfd-errors}
+The dollars for docs dataset has the following schema:
+\begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
+Contribution(pi_speciality$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
+corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
+\end{lstlisting}
+To flag suspect donations, we used the \texttt{status} attribute.
+When the \texttt{status} was ``covered" that means it was an allowed contribution under the researcher's declared protocol.
+When the \texttt{status} was ``non-covered" that means it was a disallowed contribution under the researcher's declared protocol.
+The rest of the textual attributes were featurized with a bag-of-words model, and the numerical amount and dispute attributes were treated as numbers.
+
 We cleaned the entire Dollars for Docs dataset upfront to be able to evaluate how different budgeted data cleaning strategies compare to cleaning the full data.
 To clean the dataset, we loaded the entire data 240089 records into Microsoft Excel. We identified four broad classes of errors:
 \vspace{0.25em}
