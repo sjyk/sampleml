@@ -8,8 +8,13 @@ Berkeley data analytics stack.
 Dollars for docs.
 \newblock \url{http://projects.propublica.org/open-payments/}.
 
+\bibitem{nytimes}
+For big-data scientists, 'janitor work' is key hurdle to insights.
+\newblock
+  http://www.nytimes.com/2014/08/18/technology/for-big-data-scientists-hurdle-to-insights-is-janitor-work.html.
+
 \bibitem{dollarsfordocsa}
-A pharma payment a day keeps docs’ finances okay.
+A pharma payment a day keeps docs' finances okay.
 \newblock
   \url{https://www.propublica.org/article/a-pharma-payment-a-day-keeps-docs-finances-ok}.
 
@@ -83,11 +88,6 @@ J.~C. Duchi, M.~I. Jordan, and M.~J. Wainwright.
 \newblock In {\em Foundations of Computer Science (FOCS), 2013 IEEE 54th Annual
   Symposium on}, pages 429--438. IEEE, 2013.
 
-\bibitem{DBLP:journals/pvldb/FanLMTY10}
-W.~Fan, J.~Li, S.~Ma, N.~Tang, and W.~Yu.
-\newblock Towards certain fixes with editing rules and master data.
-\newblock {\em PVLDB}, 3(1):173--184, 2010.
-
 \bibitem{feng2014robust}
 J.~Feng, H.~Xu, S.~Mannor, and S.~Yan.
 \newblock Robust logistic regression and classification.
@@ -124,10 +124,10 @@ M.~Jaggi, V.~Smith, M.~Tak{\'a}c, J.~Terhorst, S.~Krishnan, T.~Hofmann, and
 \newblock In {\em Advances in Neural Information Processing Systems}, pages
   3068--3076, 2014.
 
-\bibitem{kandel2012}
-S.~Kandel, A.~Paepcke, J.~M. Hellerstein, and J.~Heer.
-\newblock Enterprise data analysis and visualization: An interview study.
-\newblock {\em {IEEE} Trans. Vis. Comput. Graph.}, 18(12):2917--2926, 2012.
+\bibitem{DBLP:conf/pervasive/JefferyAFHW06}
+S.~R. Jeffery, G.~Alonso, M.~J. Franklin, W.~Hong, and J.~Widom.
+\newblock Declarative support for sensor data cleaning.
+\newblock In {\em Pervasive}, pages 83--100, 2006.
 
 \bibitem{khayyat2015bigdansing}
 Z.~Khayyat, I.~F. Ilyas, A.~Jindal, S.~Madden, M.~Ouzzani, P.~Papotti, J.-A.
@@ -228,11 +228,6 @@ J.~R. Taylor.
   physical measurements, 327 pp.
 \newblock {\em Univ. Sci. Books, Mill Valley, Calif}, 1982.
 
-\bibitem{openrefine}
-R.~Verborgh and M.~De~Wilde.
-\newblock {\em Using OpenRefine}.
-\newblock Packt Publishing Ltd, 2013.
-
 \bibitem{volkovs2014continuous}
 M.~Volkovs, F.~Chiang, J.~Szlichta, and R.~J. Miller.
 \newblock Continuous data cleaning.
@@ -261,11 +256,6 @@ H.~Xiao, T.~DE, B.~Biggio, D.~UNICA, G.~Brown, G.~Fumera, C.~Eckert, I.~TUM,
   and F.~Roli.
 \newblock Is feature selection secure against training data poisoning?
 \newblock 2015.
-
-\bibitem{DBLP:journals/pvldb/YakoutENOI11}
-M.~Yakout, A.~K. Elmagarmid, J.~Neville, M.~Ouzzani, and I.~F. Ilyas.
-\newblock Guided data repair.
-\newblock {\em PVLDB}, 2011.
 
 \bibitem{zhao2014stochastic}
 P.~Zhao and T.~Zhang.

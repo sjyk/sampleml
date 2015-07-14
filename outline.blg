@@ -11,11 +11,15 @@ Repeated entry---line 1846 of file ref.bib
  : @inproceedings{volkovs2014continuous
  :                                     ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 2339 of file ref.bib
+ : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
+ :                                                 ,
+I'm skipping whatever remains of this entry
 A bad cross reference---entry "chu2015katara"
 refers to entry "DBLP:conf/sigmod/2015", which doesn't exist
-A bad cross reference---entry "wang1999sample"
-refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
 A bad cross reference---entry "park2014crowdfill"
+refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
+A bad cross reference---entry "wang1999sample"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
 A bad cross reference---entry "DBLP:conf/case/MahlerKLSMKPWFAG14"
 refers to entry "DBLP:conf/case/2014", which doesn't exist
@@ -33,6 +37,7 @@ Warning--I didn't find a database entry for "DBLP:conf/case/2014"
 Warning--I didn't find a database entry for "DBLP:conf/recsys/2014"
 Warning--to sort, need author or key in bdas
 Warning--to sort, need author or key in sampleclean
+Warning--to sort, need author or key in nytimes
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in dollarsfordocsa
 Warning--empty journal in bergman2015query
@@ -40,45 +45,45 @@ Warning--empty year in bertsekas2011incremental
 Warning--empty journal in khayyat2015bigdansing
 Warning--empty publisher in mcbook
 Warning--empty journal in xiaofeature
-You've used 47 entries,
+You've used 45 entries,
             2118 wiz_defined-function locations,
-            748 strings with 12911 characters,
-and the built_in function-call counts, 18721 in all, are:
-= -- 1779
-> -- 1066
-< -- 16
-+ -- 432
-- -- 376
-* -- 1371
-:= -- 3013
-add.period$ -- 140
-call.type$ -- 47
-change.case$ -- 326
+            738 strings with 12668 characters,
+and the built_in function-call counts, 17972 in all, are:
+= -- 1710
+> -- 1003
+< -- 17
++ -- 408
+- -- 354
+* -- 1299
+:= -- 2858
+add.period$ -- 133
+call.type$ -- 45
+change.case$ -- 310
 chr.to.int$ -- 0
-cite$ -- 56
-duplicate$ -- 679
-empty$ -- 1348
-format.name$ -- 376
-if$ -- 3922
+cite$ -- 55
+duplicate$ -- 663
+empty$ -- 1315
+format.name$ -- 354
+if$ -- 3794
 int.to.chr$ -- 0
-int.to.str$ -- 47
-missing$ -- 46
-newline$ -- 234
-num.names$ -- 86
-pop$ -- 381
+int.to.str$ -- 45
+missing$ -- 42
+newline$ -- 223
+num.names$ -- 80
+pop$ -- 372
 preamble$ -- 1
-purify$ -- 282
+purify$ -- 267
 quote$ -- 0
-skip$ -- 530
+skip$ -- 527
 stack$ -- 0
-substring$ -- 1067
-swap$ -- 198
-text.length$ -- 16
+substring$ -- 1028
+swap$ -- 204
+text.length$ -- 17
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 182
-warning$ -- 9
-while$ -- 154
-width$ -- 49
-write$ -- 492
-(There were 9 error messages)
+type$ -- 176
+warning$ -- 10
+while$ -- 147
+width$ -- 47
+write$ -- 468
+(There were 10 error messages)
