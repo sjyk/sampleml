@@ -1,35 +1,31 @@
 \section{Update}\label{model-update}
-Before we discuss sampling, we will first discuss how to update a model.
-We will assume that our detection step in the previous section has selected 
-a set of candidate records $R_{dirty}$ and our sampling step has sampled from this
+Before discussing sampling, we will first discuss how to update a model and the sampling framework will naturally follow from this update procedures.
+We assume that the detector in the previous section has selected 
+a set of candidate records $R_{dirty}$ and the sampler has sampled from this
 set of candidate records.
 We will show that this model update procedure can be interpreted as a Stochastic 
-Gradient Descent (SGD) algorithm, which gives us a theoretical framework to analyze
+Gradient Descent (SGD) algorithm, which gives a theoretical framework to analyze
 convergence and bound the error at each step.
 
 \subsection{Update Problem}
-The challenge is that we want a model update technique that takes advantage of the entire dirty data and a small sample of cleaned data.
-However, we want to avoid the Simpson's paradox problem discussed previously.
-Let us first describe the abstract problem.
 Suppose we have a random sample of data $S_{dirty} \subseteq R_{dirty}$ from the results of the detection in the previous section.
-We also know the sampling probability of each record $p(r)$.
-We apply our data cleaning technique to the sample and get $S_{clean}$, and then apply our featurization to get clean features and labels $(X^{(c)},Y^{(c)})$. 
-In the model update problem, we update the dirty model $\theta^{(d)}$ based on the clean sample and return $\theta^{new}$.
-Our goal is that these updates should minimize the error of the updated model and the true model $\theta^{(c)}$ (if we cleaned the entire data and trained over the entire data):
+Let $p(r)$ be the sampling probability of each record.
+The cleaner applies the data cleaning technique to the sample resulting in $S_{clean}$ and clean features and labels $(X^{(c)},Y^{(c)})$. 
+In the model update problem, the updater has to update the dirty model $\theta^{(d)}$ based on the clean sample and return $\theta^{new}$.
+The goal is that these updates should minimize the error of the updated model and the true model $\theta^{(c)}$ (if entire data is cleaned):
 \[
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]
 
 \subsection{Geometric Interpretation}
 We will present the update algorithm intuitively by describing it in terms of the convex geometry of the problem.
-Let us consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar value), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
-The consequence of dirty data is that we optimize the wrong loss function.
-We are optimizing the function $l'(\theta)$, when we really want to optimize $l(\theta)$.
-Figure \ref{update-arch2}A, illustrates the consequence of this optimization.
+Consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar value), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
+The consequence of dirty data is that the the wrong loss function is optimized.
+Figure \ref{update-arch2}A illustrates the consequence of this optimization.
 The brown dotted line shows the loss function on the dirty data.
-If we optimize this loss function, we find the $\theta$ that at the minimum point.
+Optimizing this loss function finds $\theta$ that at the minimum point.
 However, the true loss function (w.r.t to the clean data) is in blue.
-This optimal value is a suboptimal point on clean curve.
+This optimal value on the dirty data is a suboptimal point on clean curve.
 
 \begin{figure}[ht!]
 \centering
@@ -37,22 +33,20 @@ This optimal value is a suboptimal point on clean curve.
  \caption{(A) A model trained on dirty data can be thought of as a sub-optimal point w.r.t to the clean data. (B) The gradient gives us the direction in which we need to move the suboptimal model to approach the true optimum. \label{update-arch2}}
 \end{figure}
 
-We want to get to the optimal clean model $\theta^{(c)}$ which is visualized as a yellow star.
-The first question is which direction do we move $\theta$ (i.e., left or right).
-We do not know whether we need to .
-For this class of models, given a suboptimal point, we can find the direction to 
-the global optimum with the gradient of the loss function.
+The optimal clean model $\theta^{(c)}$ is visualized as a yellow star.
+The first question is which direction to update $\theta$ (i.e., left or right).
+For this class of models, given a suboptimal point, the direction to 
+the global optimum is the gradient of the loss function.
 The gradient is a $d$-dimensional vector function of the current model $\theta$ and the clean data.
-We need to move some distance $\gamma$ along this direction (Figure \ref{update-arch2}b):
+Given this direction, the updater needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \ref{update-arch2}b):
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
 At the optimal point, the magnitude of the gradient will be zero.
-So intuitively, this approach allows us to iteratively move the model downhill, or correct the dirty model until the budget is reached.
+So intuitively, this approach iteratively moves the model downhill, or corrects the dirty model until the desired accuracy is reached.
 
-However, in reality, we do not have the all of the clean data and have to approximate this gradient from a sample.
-The intuition, which we will formalize in Section \ref{sgd}, is that if we are on average in the right direction the algorithm is guaranteed to converge with bounds on the convergence rate.
-It turns out that for an appropriately chosen $\gamma$, this convergence will hold for any batch size that we choose.
+However, the gradient depends on all of the clean data which is not avaiabl and the updater will have to approximate this gradient from a sample.
+The intuition, formalized in Section \ref{sgd}, is that if the gradients are on average in the right direction, the algorithm is guaranteed to converge with bounds on the convergence rate.
 
 \subsection{Average Gradient From a Sample}
 To derive a sample-based update rule, the first property that we should recognize is that sums commute with derivatives and gradients.

@@ -1,13 +1,13 @@
 \section{Detection}\label{det}
-To maximize the benefit of data cleaning, when we sample data to clean, we want to ensure that the data that we are sampling is likely to be dirty.
+To maximize the benefit of data cleaning, detection ensures that sampling draws records likely to be dirty.
 
 \subsection{Goals}
-The detection component needs to give us two important pieces of information about a record: (1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
-From (1), we can select a subset of dirty records to sample at each batch. 
-(2) is important so we can estimate how valuable cleaning will be for this record.
-There are two cases that we explore in \sys: \emph{a priori} and \emph{adaptive}.
-In the a priori case, we recognize that for many data cleaning methodologies, we can efficiently select the set of dirty records without repair.
-In the adaptive case, we relax this assumption, and explore how we can learn which records are dirty and clean with a classifier.
+The detector returns two important pieces of information about a record: (1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
+The sampler can use (1) to select a subset of dirty records to sample at each batch. 
+The estimator can use (2) estimate the value of data cleaning based on other records with the same corruption.
+\sys supports two types of detectors \emph{a priori} and \emph{adaptive}.
+In the \emph{a priori} case, there is a way to select the set of dirty records before any cleaning.
+In the adaptive case, detection is learned as data is cleaned.
 
 \subsection{A Priori Case}
 For many types of dirtiness such as missing attribute values and constraint violations, it is possible to efficiently enumerate a set of corrupted records and enumerate what is wrong with these records.
@@ -25,18 +25,17 @@ From the set of columns that are dirty, we can find the corresponding features t
 \vspace{0.5em}
 
 \noindent\textbf{Constraint-based Repair: }
-One model for handling errors in database declaring a set of constraints on a database.
-Data are cleaned iteratively until the constraints are satisfied \cite{DBLP:journals/pvldb/YakoutENOI11, DBLP:journals/pvldb/FanLMTY10, khayyat2015bigdansing}.
+One model for detecting errors involves declaring constraints on the database.
 
 \vspace{0.5em}
 
 \emph{Detection. } Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
-In the detection step, we select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
+In the detection step, the detector select a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
 The set $e_r$ is the set of columns for each record which have a constraint violation. 
 
 \begin{example}
-An example of a constraint for our running example dataset is that the \texttt{status} of
-a contribution can be only ``covered" or ``non-covered".
+An example of a constraint on the running example dataset is the \texttt{status} of
+a contribution can be only ``allowed" or ``disallowed".
 Any other value for \texttt{status} is an error.
 \end{example}
 
@@ -51,12 +50,12 @@ In matching, those coarse groups are resolved to a set of distinct entities.
 
 \vspace{0.5em}
 
-\emph{Detection. } This is the matching step. Let $S$ be a similarity function that takes two records and returns a value in $[0,1]$ (1 most similar and 0 least similar). For some threshold $t$, $S$ defines a similarity relationship between two attributes $r(a)$ and $r'(a)$:
+\emph{Detection. } Detection for entity resolution problems is the matching step. Let $S$ be a similarity function that takes two records and returns a value in $[0,1]$ (1 most similar and 0 least similar). For some threshold $t$, $S$ defines a similarity relationship between two attributes $r(a)$ and $r'(a)$:
 \[
 r(a) \approx r'(a) : S(r(a),r'(a)) \ge t
 \] 
-In the detection step, $R_{dirty}$ is the set of records that have at least one other record in the relation that satisfy $r(a) \approx r(a)'$.
-The set $e_r$ is the attributes of $r$ that have entity resolution problems.
+In the detection step, $R_{dirty}$ is the set of records that have at least one other record in the relation that satisfies $r(a) \approx r(a)'$.
+The set $e_r$ is the set of attributes of $r$ that have entity resolution problems.
 
 \begin{example}
 An example of an Entity Resolution problem is seen in our earlier example about corporation names e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".. 
@@ -64,19 +63,20 @@ We can define a similarity relationship $WeightedJaccard(r1,r2)>0.8$ and select 
 \end{example}
 
 \subsection{Adaptive Detection}
-Next, we explore how we can handle the case where the detection is not known in advance.
-Based on what we have already cleaned, we can learn a detection classifier (note that this ``learning" is distinct from the ``learning" at the end of the pipeline).
-The challenge in formulating this problem is that we not only need to know whether or not a record is dirty, but also how it is dirty (e.g. $e_r$ in the a priori case).
-Instead of assuming that we know which features are corrupted, let us say that we know that there are $u$ classes of data corruption.
+\emph{A priori} detection is not possible in all cases.
+The detector also supports adaptive detection where detection is learned from previously cleaned data.
+Note that this ``learning" is distinct from the ``learning" at the end of the pipeline.
+The challenge in formulating this problem is that detector needs to describe how the data is dirty (e.g. $e_r$ in the \emph{a priori} case).
+The detector achieves this by taxonomizing the corruption into $u$ classes.
 These classes are corruption categories that do not necessarily align with features, but every records is classified with at most one category.
-For example, suppose we have outliers and missing values, there are three classes of corruption: outliers, missing values, and both.
-As the analyst cleans data, she tags dirty data with one of the $u$ classes.
-Then, the detection problem reduces to a multiclass classification problem.
-To address this problem, we can use any multiclass classifier, and we use an all-versus-one SVM in our experiments.
-Since this classifier is internal to our system, it does not have to be a convex model (i.e., it can be a Decision Tree or Random Forest).
+For example, suppose there are records with outliers and missing values, there are three classes of corruption: outliers, missing values, and both.
 
-When an example $(x,y)$ is cleaned, the repair step also has to provide a label to which of the ${\text{clean}, 1,2,...,u}$ classes it belongs. It is possible that $u$ increases each iteration as more types of dirtiness are discovered. 
-Thus, after cleaning $k$ records, we have a dataset of $k$ records labeled with $u+1$ classes (including one for ``not dirty").
+When using adaptive detection, the repair step has to clean the data and report to which of the $u$ classes the corrupted record belongs.
+When an example $(x,y)$ is cleaned, the repair step labels it with one of the ${\text{clean}, 1,2,...,u+1}$ classes (including one for ``not dirty").
+It is possible that $u$ increases each iteration as more types of dirtiness are discovered. 
+Then, the detection problem reduces to a multiclass classification problem.
+This problem can be addressed by any multiclass classifier, and we use an all-versus-one SVM in our experiments.
+Since this classifier is internal to our system, it does not have to be a convex model (i.e., it can be a Decision Tree or Random Forest).
 
 \begin{definition}[Adaptive Case]
 To select $R_{dirty}$, we select the set of records for which $\kappa$ gives a positive error classification (i.e., one of the $u$ error classes).
@@ -85,20 +85,18 @@ So the result is:
 \[D(r) = (\{1,0\},\{1,...,u+1\})\]
 \end{definition}
 
-We highlight an example of adaptive detection using an interative data cleaning tool such as OpenRefine \cite{openrefine}.
+\vspace{0.5em}
 
-\vspace{0.25em}
-
-\noindent\textbf{Interactive Data Cleaning.}
+\noindent\textbf{Adaptive Detection With Open Refine: }
 \begin{example}
 OpenRefine is a spreadsheet-based tool that allows users to explore and transform data.
-However, it is limited to clean data that can fit in memory on a single personal computer.
+However, it is limited to clean data that can fit in memory on a single computer.
 Since the cleaning operations are coupled with data exploration, we do not know what is dirty in advance (the analyst may discover new errors as she cleans).
 
 Suppose our analyst wants to use OpenRefine to clean our running example dataset with \sys.
 She takes a sample of data from the entire dataset and uses the tool to discover errors.
 For example, she finds that some drugs are incorrectly classified as both drugs and devices.
 She then clears the device attribute for all records that have the drug name in question.
-Every time she makes a batch data transformation (i.e., clearning the device attribute), we can list the set of records that have changed.
+Every time she makes a batch data transformation (i.e., cleaning the device attribute), we can list the set of records that have changed.
 Each transformation becomes and error class, and the records that have changed records become positive training examples for a classifier to guide future samples.
 \end{example}
