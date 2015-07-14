@@ -133,9 +133,14 @@
 \maketitle
 
 \begin{abstract}
-Data management systems are increasingly supporting advanced analytics such as Machine Learning.
-A perennial challenge is the presence of dirty data -- in the form of missing, duplicate, incorrect or inconsistent values -- which can bias the learning algorithms, leading to incorrect or error-prone predictions. Although, this can be ameliorated by cleaning the input dataset using existing data cleaning techniques, the cost of doing so (e.g., manually finding and cleaning all data) is practically and economically infeasible.  In addition, existing learning algorithms are not suited for training on partially cleaned data, which can lead to dramatically incorrect models. In response, we have developed the ActiveClean system, which integrates incremental data cleaning with machine learning algorithms.  ActiveClean iteratively updates a machine learning model as data records are individually (or in batches) cleaned.  
-We additionally study numerous database and ML-oriented optimizations to speed the end-to-end process. Evaluation on four real-world datasets suggests that our methodology can learn more accurate models by cleaning significantly fewer records than alternatives such as uniform sampling and active learning, thus bridging the gap between the reality of dirty data sources and the quality of predictive models at the end of the pipeline.
+Predictive models (e.g., classifiers) are sensitive to systematic error caused by dirty data resulting in incorrect or error-prone predictions.
+Although, this can be ameliorated by a variety of cleaning techniques, data cleaning can be very time consuming.
+It is benefical to apply data cleaning in a progressive way, where the user can evaluate the model without cleaning all of the data.
+Existing methodologies can lead to inaccurate or even misleading models when trained on partially clean data.
+The key insight of our framework, \sys, is for convex loss models, data cleaning can be applied while simultaneously training the model with stochastic optimization allowing us to prove convergence and error bounds.
+\sys applies a number of optimizations to improve convergence rates such as importance sampling based on value to the model, avoiding data that is expected to be clean, estimating of the effect of data cleaning, and batching together updates from already cleaned data.
+Evaluation on four real-world datasets suggests \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse. 
+For example, to achieve the same accuracy as a state-of-the-art Active Learning algorithm cleaning 1000 records, \sys cleans 55\% fewer records.
 \end{abstract}
 
 \if{0}

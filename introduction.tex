@@ -44,10 +44,10 @@ The cleaner is an existing data cleaning framework (e.g., Entity Resolution), an
 To summarize the contributions in each component:
 \begin{itemize}[noitemsep]
 \item Detector (Section \ref{det}). The detector can apply rules from data quality constraints or adaptively learn which records are dirty to increase the fraction of dirty records sampled.
-\item Sampler (Section \ref{dist-samp}). We derive an optimal sampling distribution that minimizes the update variance (i.e., how different would the update be if we drew another sample) which linearly improves an error bound on the convergence rate.
+\item Sampler (Section \ref{dist-samp}). We derive an optimal sampling distribution that minimizes the update variance (i.e., how different would the update be if another sample was drawn) which linearly improves an error bound on the convergence rate.
 \item Updater (Section \ref{model-update}). The updater applies a weighted stochastic gradient descent step to the current best model. This update converges if all of the data is cleaned, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
 \item Estimator (Section \ref{sampling}) The estimator applies a Taylor Series linearization to decouple changes in different features using knowledge about what is wrong with the data to better estimate the impact of an error.
-\item We evaluate these components on 4 datasets with real and synthetic corruption (Section \ref{eval}). Our results suggest that indeed \sys is better suited for cleaning and model training when $k\ll N$. For a 5\%  systematic corruption, to achieve the same accuracy as a state-of-the-art Active Learning algorithm cleaning 1000 records, \sys cleans 55\% less records.
+\item We evaluate these components on 4 datasets with real and synthetic corruption (Section \ref{eval}). The results suggest that indeed \sys is better suited for cleaning and model training when $k\ll N$. For a 5\%  systematic corruption, to achieve the same accuracy as a state-of-the-art Active Learning algorithm cleaning 1000 records, \sys cleans 55\% fewer records.
 \end{itemize}
 
 

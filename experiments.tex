@@ -92,7 +92,7 @@ In the remaining experiments, unless otherwise noted, the experiments us systema
 
 \noindent \emph{Summary: A 5\% systematic corruption can introduce a 10\% reduction in test accuracy even when using a robust method.}
 
-\subsection{\sys: \emph{A Priori} Detection}
+\subsection{\sys: A Priori Detection}
 The next set of experiments evaluate different approaches to cleaning a sample of data compared to \sys using \emph{a priori} detection.
 \emph{A priori} detection assumes that all of the corrupted records are known in advance but their clean values are unknown. 
 
@@ -145,7 +145,7 @@ Active Leaning is not always guaranteed to out perform a passive approach and on
 
 \iffalse
 We evaluate Active Learning and \sys to better understand this relationship.
-In Figure \ref{albias}, we vary the biasing effect of our random corruptions.
+In Figure \ref{albias}, we vary the biasing effect of the random corruptions.
 That is, we start with zero mean noise and increase the mean value and variance of the noise.
 Since Active Learning uses the gradient, if there is zero mean noise, in expectation, the dirty data and clean data are the same.
 However, as the bias increases, the fact that Active Learning prioritizes w.r.t to the dirty data matters more and becomes increasingly erroneous w.r.t to \sys.
@@ -187,7 +187,7 @@ When the initialization with the dirty model is inaccurate, \sys does not perfor
 
 \vspace{0.25em}
 
-\noindent \emph{Summary: SampleClean is beneficial in comparison to \sys when corruption rates exceed 45\% in our experiments.}
+\noindent \emph{Summary: SampleClean is beneficial in comparison to \sys when corruption rates exceed 45\%.}
 
 \begin{figure}[ht!]
 \centering\vspace{-2em}

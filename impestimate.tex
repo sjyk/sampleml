@@ -1,5 +1,5 @@
 \section{Estimation}\label{sampling}
-In this section, we make the sampling result of the previous section practical by approximating the cleaned values.
+This section makes the sampling result of the previous section practical by approximating the cleaned values.
 
 \subsection{Challenges and Goal}
 The optimal sampling distribution is dependent on a value that is not known without data cleaning $\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})$.
@@ -9,7 +9,7 @@ The biggest challenge with such an estimator is the cold start problem, where if
 \sys should be optimized to make as much progress as possible in the early iterations so this technique may not work.
 The estimator takes an alternative approach where it exploits information from the detector to produce an estimate for groups of similarly corrupted records.
 
-\subsection{Estimation For \emph{a priori} Detection}
+\subsection{Estimation For A Priori Detection}
 \begin{example}
 Suppose records from running example dataset are corrupted with both entity resolution problems, missing data, and constraint violations. 
 Each training example will have a set of corrupted features (e.g., $\{1,2,6\}$, $\{1,2,15\}$).

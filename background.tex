@@ -1,5 +1,5 @@
 \section{Problem Setup}\label{background}
-In this section, we describe why we need to consider data cleaning when training predictive models, and formalize the class of predictive models (convex loss) that we explore in this work.
+This section describes the need to consider data cleaning when training predictive models, and formalize the class of predictive models (convex loss) that we explore in this work.
 
 \subsection{Motivating Scenario}
 As a motivating example, consider one of the experimental datasets (see Section \ref{dfd-exp}):
@@ -159,7 +159,7 @@ This estimate should be bounded by a monotonically descreasing function in $k$ (
 \end{problem}
 
 Addressing this problem requires analysis of the loss function $\phi$ and how $\phi$ is affected by dirty data.
-Our solution is to integrate data cleaning and model training, where $\phi$ is simultaneously minimized while the data is cleaned.
+The solution is to integrate data cleaning and model training, where $\phi$ is simultaneously minimized while the data is cleaned.
 The tight feedback loop between model training and data cleaning poses several new algorithmic challenges and systems challenges.
 Algorithmically,  we have to reweight data to avoid biases and the population mixtures described previously.
 There are also numerous new opportunities for optimizations such as priotizing data and avoiding data that are expected to be clean.

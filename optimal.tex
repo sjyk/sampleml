@@ -1,9 +1,10 @@
 \section{Update}\label{model-update}
-Before discussing sampling, we will first discuss how to update a model and the sampling framework will naturally follow from this update procedures.
-We assume that the detector in the previous section has selected 
+Before discussing sampling, this section discusses how to update a model.
+The sampling framework will naturally follow from this update procedures.
+This section assumes that the detector in the previous section has selected 
 a set of candidate records $R_{dirty}$ and the sampler has sampled from this
 set of candidate records.
-We will show that this model update procedure can be interpreted as a Stochastic 
+This section show that this model update procedure can be interpreted as a Stochastic 
 Gradient Descent (SGD) algorithm, which gives a theoretical framework to analyze
 convergence and bound the error at each step.
 
@@ -148,7 +149,7 @@ This result follows directly from the linearity of expectation (See Appendix \re
 \vspace{0.25em}
 
 \noindent\textbf{ Setting $\gamma$: } There is extensive literature in machine learning for choosing the step size $\gamma$ appropriately. $\gamma$ can be set either to be a constant or decayed over time. Many machine learning frameworks (e.g., MLLib, Sci-kit Learn, Vowpal Wabbit) automatically set learning rates or provide different learning scheduling frameworks. 
-In our experiments, we use a technique called inverse scaling where there is a parameter $\gamma_0=0.1$, and at each iteration it decays to $\gamma_t = \frac{\gamma_0}{\mid S \mid t}$. 
+In the experiments, we use a technique called inverse scaling where there is a parameter $\gamma_0=0.1$, and at each iteration it decays to $\gamma_t = \frac{\gamma_0}{\mid S \mid t}$. 
 
 \vspace{0.25em}
 
@@ -179,7 +180,7 @@ Larger batches will take longer to clean and will make more progress towards the
 On the other hand, smaller batches are cleaned faster and have more frequent model updates but make less progress.
 The overheads introduced by \sys are more evident at smaller batch sizes.
 There are diminishing returns to increasing the batch size $O(\frac{1}{\sqrt{b}})$.
-Empirically, in our experiments, batch sizes of 50 converge the fastest.
+Empirically, in the experiments, batch sizes of 50 converge the fastest.
 If a data cleaning technique requires a larger batch size than this, i.e., data cleaning is fast enough that the iteration overhead is significant compared to cleaning 50 records, \sys can apply the updates in smaller batches.
 For example, the batch size set by the user might be $b=1000$, but the model updates after every $50$ records are cleaned.
 This dissociates the batching requirements of SGD and the batching requirements of the data cleaning technique.
