@@ -49,31 +49,31 @@ However, the gradient depends on all of the clean data which is not avaiabl and 
 The intuition, formalized in Section \ref{sgd}, is that if the gradients are on average in the right direction, the algorithm is guaranteed to converge with bounds on the convergence rate.
 
 \subsection{Average Gradient From a Sample}
-To derive a sample-based update rule, the first property that we should recognize is that sums commute with derivatives and gradients.
-Our class of models are based on loss minimization, that is they are a sum of losses, so given the current best model $\theta$, the gradient $g^*(\theta)$ is:
+To derive a sample-based update rule, the most important property is that sums commute with derivatives and gradients.
+The convex loss class of models are sums of losses, so given the current best model $\theta$, the gradient $g^*(\theta)$ is:
 \[
 g^*(\theta) = \nabla\phi(\theta) = \frac{1}{N} \sum_i^N \nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
-We estimate this gradient from a sample by averaging over a sample of clean data and reweighting them by their sampling probability.
+Therefore, the gradient can be estimated from a sample by taking the gradient w.r.t each record, and reweighting the average by their respective sampling probabilities.
 Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p(i)$:
 \[
 g^*(\theta) \approx g_{S}(\theta) = \frac{1}{n\mid S \mid} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
-Now if we add in the iteration, for every batch of data cleaned $t$, we apply the update to the current best model estimate:
+Now adding in iteration, for every batch of data cleaned $t$, the update to the current best model estimate is:
 \[
 \theta^{(t+1)} \leftarrow \theta^{(t)} - \gamma \cdot g_{S}(\theta^{(t)})
 \]
 
 The detection in the previous step adds a small complication, since the sample $S_{dirty}$ is not representative of all of the data.
-We also have to compensate for this bias by averaging this estimate with the gradient of the complement:
+This requires a compensation for this bias by averaging this estimate with the gradient of the complement:
 \[
 g_C(\theta) = \frac{1}{\mid R - R_{dirty}\mid}\sum_{i \in R - R_{dirty}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
-Then, for weights $\alpha,\beta$ which we will subsequently discuss how to select (Section \ref{sgd}):
+Then, for weights $\alpha,\beta$ (discussed in Section \ref{sgd}):
 \[
 g(\theta) = \alpha \cdot g_C(\theta) + \beta \cdot g_S(\theta)
 \]
-Finally, we add in the iteration, and at each iteration $t$, the update becomes:
+Finally, adding in the iteration, and at each iteration $t$, the update becomes:
 \[
 \theta^{(t+1)} \leftarrow \theta^{(t)} - \gamma \cdot g(\theta^{(t)}) \blacksquare
 \]
