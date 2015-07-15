@@ -7,7 +7,7 @@ Furthermore, the high dimensionality of these models can amplify small problems 
 
 To make the systematic corruption problem more concrete, consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
 A recommendation model trained on this data may spuriously learn a correlation relationship between the ``18-24" age group and music liked by European users.
-A bug, which ostensibly affected only the European users, can affect predictions to all users aged ``18-24".
+A bug, which ostensibly affected only the European users' record, can affect predictions to all users aged ``18-24".
 Systematic corruption prior to featurization is not addressed in the robust Machine Learning literature which focuses on the resilience to outliers (i.e., age ``150").
 
 A number of data cleaning frameworks have been recently proposed to address the problem of corrupted data \cite{khayyat2015bigdansing, chu2015katara, sampleclean}.
@@ -17,13 +17,13 @@ Crowdsourcing is an increasingly popular alternative with recent success in miss
 However, crowdsourcing comes at the cost of additional latency and the overhead of managing human workers.
 
 Thus, for many corrupted datasets, \emph{progressive data cleaning} is important, in which users can inspect early results with only $k \ll N$ records cleaned.
-Early results allow users to apply as much cleaning as needed to achieve a desired accuracy, and judge the impact of a potentially costly data cleaning operation without cleaning the entire data.
+Early results allow users to apply as much cleaning as needed to achieve a desired accuracy and judge the impact of a potentially costly data cleaning operation without cleaning the entire data.
 However, when applied before predictive modeling, progressive data cleaning poses several methodological problems.
 Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
 An alternative is to clean $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
 While this avoids the mixing problem, accurate model training may require a large amount of training data and $k$ examples may not be enough for a viable model.
-Finally, both problems are compounded by sparsity, where if corrupted records are uncommon, random sampling of the $N$ total records may find relatively few examples of corruptions.
+Finally, both problems are compounded by sparsity, where if corrupted records are uncommon, a random subset of $k$ records may have relatively few examples of corruptions.
 The errors introduced by these three problems may dominate any gains from data cleaning, leading to unreliable or misleading conclusions about data or model quality.
 
 \begin{figure}[t]
@@ -32,7 +32,7 @@ The errors introduced by these three problems may dominate any gains from data c
  \caption{\sysfull is an architecture where data cleaning is integrated with model training in a framework with sampling, model update, and feedback through estimation. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
-We propose \sys to address the progressive data cleaning problem in a way that addresses the three challenges: mixing, sampling, and sparsity.
+We propose \sys, a progressive data cleaning framework, that addresses the three methodological challenges: mixing, sampling, and sparsity.
 The key insight is that an important class of predictive models, called convex loss models (e.g., linear regression and SVMs), are trained by iteratively drawing random samples of data and updating a model\cite{bertsekas2011incremental}.
 Rather than cleaning before model training, data cleaning can be directly integrated with the sampling and updating training process; preserving provable guarantees such as convergence and error bounds.
 In \sys, data are cleaned in small random batches and the model is incrementally updated based on the results.
@@ -40,13 +40,13 @@ Similar to Active Learning, \sys selects the most valuable records to clean with
 This framework is optimized for problems requiring expensive data cleaning.
 
 The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{updater}, and \emph{estimator}.
-The cleaner is an existing data cleaning framework (e.g., Entity Resolution), and \sys provides the remaining components to apply this framework progressively.
+The cleaner is an existing data cleaning technique (e.g., Entity Resolution), and \sys provides the remaining components to apply this technique progressively.
 To summarize the contributions in each component:
 \begin{itemize}[noitemsep]
 \item \textbf{Detector} (Section \ref{det}). The detector can apply rules from data quality constraints or adaptively learn which records are dirty to increase the fraction of dirty records sampled.
 \item \textbf{Sampler} (Section \ref{dist-samp}). We derive an optimal sampling distribution that minimizes the update variance (i.e., how different would the update be if another sample was drawn) which linearly improves an error bound on the convergence rate.
-\item \textbf{Updater} (Section \ref{model-update}). The updater applies a weighted stochastic gradient descent step to the current best model. This update converges if all of the data is cleaned, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
-\item \textbf{Estimator} (Section \ref{sampling}) The estimator applies a Taylor Series linearization to decouple changes in different features using knowledge about what is wrong with the data to better estimate the impact of an error.
+\item \textbf{Updater} (Section \ref{model-update}). The updater applies a weighted stochastic gradient descent step to the current best model. This update is guaranteed to converge, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
+\item \textbf{Estimator} (Section \ref{sampling}) The estimator applies a Taylor Series linearization to decouple changes in different features to use information from error detection to inform estimation.
 \item The experiments evaluate these components on 4 datasets with real and synthetic corruption (Section \ref{eval}). The results suggest that indeed \sys is better suited for cleaning and model training when $k\ll N$. For a 5\%  systematic corruption, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{itemize}
 
