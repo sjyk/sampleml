@@ -18,7 +18,7 @@ However, crowdsourcing comes at the cost of additional latency and the overhead 
 
 Thus, for many corrupted datasets, \emph{progressive data cleaning} is important, in which users can inspect early results with only $k \ll N$ records cleaned.
 Early results allow users to apply as much cleaning as needed to achieve a desired accuracy, and judge the impact of a potentially costly data cleaning operation without cleaning the entire data.
-However, when applied before predictive modeling, progressive data cleaning poses three main methodological problems: mixing, sampling, and corruption sparsity.
+However, when applied before predictive modeling, progressive data cleaning poses several main methodological problems.
 Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
 An alternative is to clean $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
