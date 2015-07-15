@@ -2,7 +2,7 @@
 Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations \cite{Gartner}.
 Dirty data can lead to inaccurate analysis, and a variety of data cleaning techniques have been proposed \cite{rahm2000data}.
 The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} leads to additional challenges in managing dirty data.
-Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., disproportionately affects certain data) can mask or even introduce spurious new relationships.
+Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., corruption that disproportionately affects certain data) can mask or even introduce spurious new relationships.
 Furthermore, the high dimensionality of these models can amplify small problems \cite{xiaofeature} resulting in error-prone predictions even when trained on mostly clean data.
 
 To make the systematic corruption problem more concrete, consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
@@ -16,8 +16,9 @@ Data cleaning can require a significant amount of developer effort in writing so
 Crowdsourcing is an increasingly popular alternative with recent success in missing value filling and entity resolution \cite{gokhale2014corleone, park2014crowdfill, sampleclean,chu2015katara}.
 However, crowdsourcing comes at the cost of additional latency and the overhead of managing human workers.
 
-Thus, for many corrupted datasets, \emph{progressive data cleaning} is important, in which users can inspect early results with only $k \ll N$ records cleaned.
-Early results allow users to apply as much cleaning as needed to achieve a desired accuracy and judge the impact of a potentially costly data cleaning operation without cleaning the entire data.
+When data cleaning is expensive, it is beneficial to apply it \emph{progressively}, where users can inspect early results with only $k \ll N$ records cleaned.
+Progressive data cleaning allows users to specify a cleaning budget and clean until that budget is reached.
+Even without a budget, progressive cleaning is useful as it allows users measure the impact of a potentially costly data cleaning operation without cleaning the entire data
 However, when applied before predictive modeling, progressive data cleaning poses several methodological problems.
 Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
