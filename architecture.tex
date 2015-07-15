@@ -16,7 +16,7 @@ The \emph{sampler} selects a sample of dirty data based on the batch size.
 At this step, \sys can use the detector $D$ to narrow the sample to select only dirty data.
 Once a sample is selected, the \emph{cleaner} applies $C(\cdot)$ to the dirty sample.
 Then, after the sample is cleaned, the current model is updated by the \emph{updater}.
-\sys is initialized with the dirty model, and this model is iteratively updated as more batched are cleaned.
+\sys is initialized with the dirty model, and this model is iteratively updated as more batches are cleaned.
 
 The next two steps in the architecture are feedback steps where the sampling distribution is updated for the next iteration.
 The \emph{estimator} uses previously cleaned data to estimate the value of data cleaning on new records.
@@ -42,7 +42,7 @@ To summarize the architecture in pseudocode:
 
 Here is an example application of \sys:
 \begin{example}
-The analyst first trains an SVM model on the dirty data ignoring the effects of the errors returning a model $\theta^{(d)}$.
+The analyst first trains an SVM model on the dirty data ignoring the effects of the errors resulting in a model $\theta^{(d)}$.
 She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
 She initializes \sys with $\theta^{(d)}$.
 \sys samples an initial batch of 10 records.
@@ -57,7 +57,7 @@ We highlight the important components and formalize the research questions explo
 
 \vspace{0.5em}
 
-\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data detection. In this step, the detector select a candidate set of dirty records $R_{dirty} \subseteq R$. There are two techniques to do this: (1) an \emph{a priori} case, and (2) and an adaptive case. In the \emph{a priori} case, the detector knows which data is dirty in advance. In the adaptive case, the detector learns classifier based on previously cleaned data.
+\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data detection. In this step, the detector select a candidate set of dirty records $R_{dirty} \subseteq R$. There are two techniques to do this: (1) an \emph{a priori} case, and (2) and an adaptive case. In the \emph{a priori} case, the detector knows which data is dirty in advance. In the adaptive case, the detector learns classifier based on previously cleaned data to detect corruption in uncleaned data.
 
 \vspace{0.5em}
 
@@ -70,15 +70,15 @@ We will derive the optimal sampling distribution, and show how the theoretical o
 \[
 S_{clean} = \{C(r) : \forall r \in S_{dirty}\}
 \]
-This allows for uniform measure of the performance of \sys in terms of model error as a function of sample size. The record-by-record cleaning model is not a fundamental restriction of this approach, and in the extensions (Section \ref{set-of-r}), there is a discussion on a compatible ``set of records" cleaning model. Consider the case where an analyst finds a dirty record, and is able to fix all records (possibly outside the sample) with same error throughout the dataset efficiently.
+This allows for uniform measure of the performance of \sys in terms of model error as a function of sample size. The record-by-record cleaning model is not a fundamental restriction of this approach, and in the extensions (Section \ref{set-of-r}), there is a discussion on a compatible ``set of records" cleaning model. Consider the case where an analyst finds a dirty record, and is able to fix all records (possibly outside the sample) the with same error throughout the dataset efficiently.
 
 \vspace{0.5em}
 
-\noindent\textbf{Updater (Section \ref{model-update}). } The updater updates the model $\theta^{(t)}$ based on the newly cleaned data $F(S_{clean})$ resulting in $\theta^{(t+1)}$. Analyzing the model update procedure as a stochastic gradient descent algorithm will help derive the sampling distribution and estimation.
+\noindent\textbf{Updater (Section \ref{model-update}). } The updater updates the model $\theta^{(t)}$ based on the featurized (with $F(\cdot)$) cleaned sample $F(S_{clean})$ resulting in $\theta^{(t+1)}$. Analyzing the model update procedure as a stochastic gradient descent algorithm will help derive the sampling distribution and estimation.
 
 \vspace{0.5em}
 
-\noindent\textbf{Estimator (Section \ref{sampling}): } The estimator approximates the optimal distribution derived in the Sample step. Based on the change between $F(S_{clean})$ and $F(S_{dirty})$, it directs the next iteration of sampling to select points that will have changes most valuable to the next model update.
+\noindent\textbf{Estimator (Section \ref{sampling}): } The estimator approximates the optimal distribution derived in the Sample step. Based on the change in the featurized data $F(S_{clean})$ and $F(S_{dirty})$, it directs the next iteration of sampling to select points that will have changes most valuable to the next model update.
 
 \iffalse
 \subsection{Optimizations}

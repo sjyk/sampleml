@@ -1,14 +1,14 @@
 \section{Introduction}
 Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations \cite{Gartner}.
-Dirty data can lead to inaccurate analysis, and a variety of data cleaning techniques have been proposed \cite{rahm2000data}.
+Dirty data can lead to inaccurate analysis, and techniques for processing dirty data are well studied \cite{rahm2000data}.
 The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} leads to additional challenges in managing dirty data.
 Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., corruption that disproportionately affects certain data) can mask or even introduce spurious new relationships.
 Furthermore, the high dimensionality of these models can amplify small problems \cite{xiaofeature} resulting in error-prone predictions even when trained on mostly clean data.
 
 To make the systematic corruption problem more concrete, consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
-A recommendation model trained on this data may spuriously learn a correlation relationship between the ``18-24" age group and music liked by European users.
-A bug, which ostensibly affected only the European users' record, can affect predictions to all users aged ``18-24".
-Systematic corruption prior to featurization is not addressed in the robust Machine Learning literature which focuses on the resilience to outliers (i.e., age ``150").
+A recommendation model trained on this data may spuriously learn a correlation relationship between age ``18-24" and music liked by European users.
+A bug, which ostensibly affected only the European users' records, can affect predictions to all users aged ``18-24".
+Systematic corruption prior to featurization is not addressed in the robust Machine Learning literature which focuses on the resilience to outliers (e.g., age ``150").
 
 A number of data cleaning frameworks have been recently proposed to address the problem of corrupted data \cite{khayyat2015bigdansing, chu2015katara, sampleclean}.
 However, data analysts report that data cleaning remains one of the most time consuming steps in the analysis process \cite{nytimes}.
@@ -47,8 +47,10 @@ To summarize the contributions in each component:
 \item \textbf{Detector} (Section \ref{det}). The detector can apply rules from data quality constraints or adaptively learn which records are dirty to increase the fraction of dirty records sampled.
 \item \textbf{Sampler} (Section \ref{dist-samp}). We derive an optimal sampling distribution that minimizes the update variance (i.e., how different would the update be if another sample was drawn) which linearly improves an error bound on the convergence rate.
 \item \textbf{Updater} (Section \ref{model-update}). The updater applies a weighted stochastic gradient descent step to the current best model. This update is guaranteed to converge, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
-\item \textbf{Estimator} (Section \ref{sampling}) The estimator applies a Taylor Series linearization to decouple changes in different features to use information from error detection to inform estimation.
-\item The experiments evaluate these components on 4 datasets with real and synthetic corruption (Section \ref{eval}). The results suggest that indeed \sys is better suited for cleaning and model training when $k\ll N$. For a 5\%  systematic corruption, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
+\item \textbf{Estimator} (Section \ref{sampling}). The estimator applies a Taylor Series linearization to decouple changes in different features to use information from error detection to inform estimation.
+\item The experiments evaluate these components on four datasets with real and synthetic corruption (Section \ref{eval}). Results suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse.
+
+%For a 5\%  systematic corruption, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{itemize}
 
 

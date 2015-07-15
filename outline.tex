@@ -140,8 +140,10 @@ Consequently, expensive cleaning is frequently applied progressively; cleaning o
 However, existing model training methodologies can return misleading results when trained on a mix of dirty and clean data.
 The key insight of our framework, \sys, is for convex loss models, data cleaning can be directly integrated with model training via Stochastic Gradient Descent allowing for progressive cleaning while preserving provable properties.
 \sys applies a number of optimizations to improve convergence rates such as importance sampling based on value to the model, avoiding data that is expected to be clean, and batching together updates from already cleaned data.
-Evaluation on four real-world datasets suggests \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse. 
-In one set of experiments with 5\% simulated error, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
+Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse. 
+%In a real-world experiment, \sys achieves the same model accuracy as an Active Learning algorithm but cleans 
+
+%In one set of experiments with 5\% simulated error, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{abstract}
 
 \if{0}

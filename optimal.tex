@@ -1,10 +1,10 @@
 \section{Update}\label{model-update}
 Before discussing sampling, this section discusses how to update a model.
-The sampling framework will naturally follow from this update procedures.
+The sampling framework will naturally follow from this update procedure.
 This section assumes that the detector in the previous section has selected 
 a set of candidate records $R_{dirty}$ and the sampler has sampled from this
 set of candidate records.
-This section show that this model update procedure can be interpreted as a Stochastic 
+This section shows that this model update procedure can be interpreted as a Stochastic 
 Gradient Descent (SGD) algorithm, which gives a theoretical framework to analyze
 convergence and bound the error at each step.
 
@@ -38,7 +38,7 @@ The first question is which direction to update $\theta$ (i.e., left or right).
 For this class of models, given a suboptimal point, the direction to 
 the global optimum is the gradient of the loss function.
 The gradient is a $d$-dimensional vector function of the current model $\theta$ and the clean data.
-Given this direction, the updater needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \ref{update-arch2}b):
+Given this direction, the updater needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \ref{update-arch2}B):
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
@@ -57,7 +57,7 @@ g^*(\theta) = \nabla\phi(\theta) = \frac{1}{N} \sum_i^N \nabla\phi(x_i^{(c)},y_i
 Therefore, the gradient can be estimated from a sample by taking the gradient w.r.t each record, and re-weighting the average by their respective sampling probabilities.
 Let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p(i)$:
 \[
-g^*(\theta) \approx g_{S}(\theta) = \frac{1}{n\mid S \mid} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
+g^*(\theta) \approx g_{S}(\theta) = \frac{1}{N\mid S \mid} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
 Now adding iteration, for every batch of data cleaned $t$, the update to the current best model estimate is:
 \[
@@ -82,7 +82,7 @@ Finally, adding in the iteration, and at each iteration $t$, the update becomes:
 To summarize, the algorithm is initialized with $\theta^{(1)} = \theta^{(d)}$ which is the dirty model.
 At each iteration $t=\{1,...,T\}$, the cleaning is applied to a batch of data $b$ selected from the set of candidate dirty records $R_{dirty}$.
 Then, an average gradient is estimated from the cleaned batch and the model is updated.
-Iteration continue until $k = T \cdot b$ records are cleaned.
+Iterations continue until $k = T \cdot b$ records are cleaned.
 
 \begin{enumerate}[noitemsep]
 	\item Calculate the gradient over the sample of clean data and call the result $g_S(\theta^{(t)})$
@@ -119,7 +119,7 @@ The key difference is that in traditional SGD there is no notion of dirty and cl
 
 \noindent\textbf{ \sys as Lazy SGD: } This update method is a variant of SGD that lazily materializes the clean value.
 As data is sampled at each iteration, data is cleaned when needed by the optimization.
-It is well known that even for arbitrary initialization SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
+It is well known that even for an arbitrary initialization SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
 Furthermore in this setting, the dirty model can be much more accurate than an arbitrary initialization; leading to highly accurate models without cleaning the entire data.
 
 \vspace{0.25em}
@@ -156,7 +156,7 @@ In the experiments, we use a technique called inverse scaling where there is a p
 \noindent\textbf{ Convergence: } Convergence properties of batch SGD formulations have been well studied \cite{dekel2012optimal}. From the preceding analysis, the gradient estimate is unbiased and the step size is appropriately chosen. Following from these two points, convergence is ensured: 
 
 \begin{proposition}
-For an appropriately chosen learning rate $\gamma_t$, batch stochastic gradient descent will converge if $\mathbb{E}(g_S)=g^*$.
+For an appropriately chosen learning rate $\gamma_t$, \sys's updater will converge if $\mathbb{E}(g_S)=g^*$.
 \label{unbiased}
 \end{proposition}
 
@@ -187,6 +187,6 @@ This dissociates the batching requirements of SGD and the batching requirements 
 
 \vspace{0.5em}
 
-\noindent\textbf{ Non-convex losses: } (See Appendix \ref{non-convex} for a note on such losses.)
+\noindent\textbf{ Non-convex losses: } If the loss in non-convex, the updater will converge towards a local minimum rather than the global minimum (See Appendix \ref{non-convex}).
 
 
