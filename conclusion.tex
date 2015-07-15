@@ -1,8 +1,8 @@
 \vspace{-1em}
 \section{Conclusion}
-The growing popularity of predictive models (e.g., classifiers) in data analytics adds additional challenges in managing dirty data with mixing dirty and clean data, sensitivity to sampling, and sparsity.
-\sys is a framework that utilizes data cleaning to mitigate systematic errors with progressive data cleaning.
-The key insight is that an important class of predictive models, called convex loss models (e.g., linear regression and SVMs), can be simultaneously trained and cleaned.
+The growing popularity of predictive models (e.g., classifiers) in data analytics adds additional challenges in managing dirty data.
+Progressive data cleaning in this setting is succeptible to errors due to mixing dirty and clean data, sensitivity to sample size, and the sparsity or errors.
+The key insight of \sys is that an important class of predictive models, called convex loss models (e.g., linear regression and SVMs), can be simultaneously trained and cleaned.
 Consequently, there are provable guarantees on the convergence and error bounds of \sys.  
 \sys also includes numerous optimizations such as: using the information from the model to inform data cleaning on samples, dirty data detection to avoid sampling clean data, and batching together updates on already clean data.
 The experimental results are promising as they suggest that these optimizations can significantly reduce data cleaning costs when errors are sparse and cleaning budgets are small.
