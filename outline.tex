@@ -133,12 +133,13 @@
 \maketitle
 
 \begin{abstract}
-Predictive analytics, such a classification, are sensitive to systematic error caused by dirty data.
-Although errors can be addressed by a variety of cleaning techniques, data cleaning can be very time consuming.
-One way to address this cost is to apply data cleaning progressively; cleaning only as much data as necessary to achieve a desired accuracy.
-However, existing model training methodologies can lead to misleading models when trained on a mix of dirty and clean data.
-The key insight of our framework, \sys, is for convex loss models, data cleaning can be directly integrated into the iterative stochastic optimization that trains the model allowing us to progressively clean while preserving provable properties.
-\sys applies a number of optimizations to improve convergence rates such as importance sampling based on value to the model, avoiding data that is expected to be clean, estimating the effect of data cleaning, and batching together updates from already cleaned data.
+A perennial challenge in data analytics is presence of dirty data in the form of missing, duplicate, incorrect or inconsistent values.
+The growing popularity of predictive models adds additional concerns in managing dirty data as these models are highly sensitive to systematic corruption.
+Although errors mitigated through data cleaning, it is often very time consuming.
+Consequently data cleaning is often applied progressively; cleaning only as much data as necessary to achieve a desired accuracy.
+However, existing model training methodologies can return misleading models when trained on a mix of dirty and clean data.
+The key insight of our framework, \sys, is for convex loss models, data cleaning can be directly integrated into the iterative stochastic optimization that trains the model allowing for progressive cleaning while preserving provable properties.
+\sys applies a number of optimizations to improve convergence rates such as importance sampling based on value to the model, avoiding data that is expected to be clean, and batching together updates from already cleaned data.
 Evaluation on four real-world datasets suggests \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse. 
 In one set of experiments with 5\% simulated error, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{abstract}

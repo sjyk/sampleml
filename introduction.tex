@@ -1,7 +1,7 @@
 \section{Introduction}
 Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations \cite{Gartner}.
 Dirty data can lead to inaccurate analysis, and a variety of data cleaning techniques have been proposed \cite{rahm2000data}.
-The growing popularity of predictive models (e.g., classifiers) in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} adds additional challenges in managing dirty data.
+The growing popularity of predictive models (e.g., classifiers) in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} leads to additional challenges in managing dirty data.
 Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., disproportionately affects certain data) can mask or even introduce spurious new relationships.
 Furthermore, the high dimensionality of these models can amplify small problems \cite{xiaofeature} resulting in error-prone predictions from even when trained on mostly clean data.
 
@@ -18,7 +18,7 @@ However, crowdsourcing comes at the cost of additional latency and the overhead 
 
 Thus, for many corrupted datasets, \emph{progressive data cleaning} is important, in which users can inspect early results with only $k \ll N$ records cleaned.
 Early results allow users to apply as much cleaning as needed to achieve a desired accuracy, and judge the impact of a potentially costly data cleaning operation without cleaning the entire data.
-However, when applied before predictive modeling, progressive data cleaning poses several main methodological problems.
+However, when applied before predictive modeling, progressive data cleaning poses several methodological problems.
 Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
 An alternative is to clean $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
