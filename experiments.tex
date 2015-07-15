@@ -1,6 +1,5 @@
 
 \section{Experiments}\label{eval}
-There are a number of different axes on which to evaluate \sys.
 First, the experiments evaluate how various types corrupted data benefit from data cleaning.
 Next, the experiments explore different prioritization and model update schemes for progressive data cleaning.
 Finally, \sys is evaluated end-to-end in a number of real-world data cleaning scenarios.
@@ -8,7 +7,7 @@ Finally, \sys is evaluated end-to-end in a number of real-world data cleaning sc
 \subsection{Experimental Setup and Notation}
 The main metric for evaluation is a relative measure of the trained model and the model if all of the data is cleaned.
 
-\vspace{0.25em}
+\vspace{0.5em}
 
 \noindent\textbf{Relative Model Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Then the model error is defined as $\frac{\|\theta - \theta^*\|}{\|\theta^*\|}$.
 
@@ -23,7 +22,7 @@ The main metric for evaluation is a relative measure of the trained model and th
 
 \vspace{0.25em}
 
-\noindent\textbf{Seizure Classification (EEG): } In this dataset, the task is to predict the onset of a seizure (binary) from 15 numerical covariates with a thresholded Linear Regression. There are 14980 data points in this dataset. This classification task is inherrently hard with an accuracy on completely clean data of only 65\%.
+\noindent\textbf{Seizure Classification (EEG): } In this dataset, the task is to predict the onset of a seizure (binary) from 15 numerical covariates with a thresholded Linear Regression. There are 14980 data points in this dataset. This classification task is inherently hard with an accuracy on completely clean data of only 65\%.
 
 \vspace{0.25em}
 
@@ -60,7 +59,7 @@ The dataset if featurized with bag-of-words featurization model for the textual 
 \subsection{Does Data Cleaning Matter?}
 The first experiment evaluates the benefits of data cleaning on 2 of the example datasets (EEG and Adult).
 This is done without sampling to understand which types of data corruption are amenable to data cleaning and which are better suited for robust statistical techniques.
-The experiment compares 4 schemes: (1) full data cleaning uncorrupted, (2) baseline of no cleaning, (3) discarding the dirty data, and (4) robust logistic regression,. We corrupted 5\% of the training examples in each dataset in two different ways:
+The experiment compares 4 schemes: (1) full data cleaning  , (2) baseline of no cleaning, (3) discarding the dirty data, and (4) robust logistic regression,. We corrupted 5\% of the training examples in each dataset in two different ways:
 
 \vspace{0.5em}
 
@@ -71,7 +70,7 @@ The experiment compares 4 schemes: (1) full data cleaning uncorrupted, (2) basel
 \noindent\textbf{Systematic Corruption: } Simulated innocuous looking (but still incorrect) systematic corruption. The model is trained on the clean data, and the three most important features (highest weighted) are identified. The examples by each these features and the top examples $\frac{5}{3}\%$ of the examples are corrupted with the mean value for that feature. 
 It is important to note the some examples can have multiple corrupted features.
 
-\begin{figure}[ht!]
+\begin{figure}[t]
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp2.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp1.pdf}
@@ -87,8 +86,6 @@ However, the robust method falters on the systematic corruption with a 9.1\% red
 The problem is that without cleaning, there is now way to know if the corruption is random or systematic and when to trust a robust method.
 While data cleaning requires more effort, it provides benefits in both settings.
 In the remaining experiments, unless otherwise noted, the experiments us systematic corruption.
-
-\vspace{0.25em}
 
 \noindent \emph{Summary: A 5\% systematic corruption can introduce a 10\% reduction in test accuracy even when using a robust method.}
 
@@ -111,7 +108,7 @@ For example, to achieve a test accuracy of 80\% on the Adult dataset, \sys clean
 
 \noindent \emph{Summary: \sys with a priori detection returns results that are more than 6x more accurate than SampleClean and 2x more accurate than Active Learning for cleaning 500 records.}
 
-\begin{figure}[ht!]
+\begin{figure}[t]
 \centering\vspace{-1em}
  %\includegraphics[scale=0.15]{exp/exp3a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp3b.pdf}

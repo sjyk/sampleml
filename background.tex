@@ -1,5 +1,5 @@
 \section{Problem Setup}\label{background}
-This section describes the need to consider data cleaning when training predictive models, and formalizes the class of predictive models (convex loss) that we explore in this work.
+This section describes an example of data cleaning when training predictive models, and formalizes the class of predictive models (convex loss) explored in this work.
 
 \subsection{Motivating Scenario}
 As a motivating example, consider one of the experimental datasets (see Section \ref{dfd-exp}):
@@ -15,11 +15,11 @@ This problem is typical of analysis scenarios based on observational data seen i
 
 The dataset has the following schema:
 \begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
-Contribution(pi_speciality$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
+Contribution(pi_specialty$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
 corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 \end{lstlisting}
 
-\noindent\texttt{pi\_speciality} is a textual attribute describing the specialty of the doctor receiving the donation.
+\noindent\texttt{pi\_specialty} is a textual attribute describing the specialty of the doctor receiving the donation.
 
 \noindent\texttt{drug\_name} is the branded name of the drug in the research study (null if not a drug).
 
@@ -48,10 +48,10 @@ With the same Support Vector Machine model, the detection rate of suspect donati
 \noindent\textbf{Progressive Data Cleaning: }  Cleaning a dataset of 250,000 records can be very time consuming, and it is important for analysts to be able to evaluate the model before all of the data is cleaned.
 First, suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Figure \ref{update-arch1} illustrates the dangers of this approach on a very simple dirty dataset and model.
-The predictive model is a simple linear regression i.e., the best fit line for two variables. 
+The model is a simple linear regression i.e., the best fit line for two variables. 
 One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
 The dirty data is marked in brown and the clean data in orange, and their respective best fit lines are in blue.
-After cleaning only two of the data points (Figure \ref{update-arch1}b), the resulting best fit line is actually in the opposite direction of the true model.
+After cleaning only two of the data points (Figure \ref{update-arch1}b), the resulting best fit line is in the opposite direction of the true model.
 This is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
 Consequently, training models on a mixture of dirty and clean data can lead to unreliable results where more data cleaning can make a model significantly less accurate.
 
@@ -64,9 +64,9 @@ Consequently, training models on a mixture of dirty and clean data can lead to u
 (c) Likewise, small sample sizes can result in similarly incorrect models. \label{update-arch1}}
 \end{figure}
 
-An alternative solution is to avoid the dirty data altogether, instead of mixing the two populations.
+An alternative is to avoid the dirty data altogether, instead of mixing the two populations.
 Suppose $k$ records are randomly sampled from the dataset and cleaned.
-The model is trained only on the clean sample of data.
+The model is trained only on the cleaned sample of data.
 This is similar to SampleClean \cite{wang1999sample}, which was proposed to approximate the results of aggregate queries by applying them to a clean sample of data.
 However, high-dimensional models are highly sensitive to sample size.
 Figure \ref{update-arch1}c illustrates that, even in two dimensions, models trained from small samples can be as incorrect as the mixing solution described before.
@@ -101,11 +101,11 @@ Finally, in this line of work, the tradeoff space is enormous, and we have to ca
 \fi
 
 \subsection{Preliminaries}
-The class of problems amenable to incremental stochastic optimization techniques (incremental sample-based updates) are convex loss minimization problems (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
-This class of Supervised Learning problems which includes all generalized linear models (including linear and logistic regression), and all variants of support vector machines.
+Convex loss minimization problems (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction) are amenable to incremental stochastic optimization techniques (incremental sample-based updates).
+This class of problems includes all generalized linear models (including linear and logistic regression), and all variants of support vector machines.
 
 The goal is to learn a vector of model \emph{parameters} $\theta$ from training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$.
-$\theta$ is leared by minimizing a loss function $\phi$ (a penalty for getting the prediction wrong) for each training example:
+$\theta$ is learned by minimizing a loss function $\phi$ (a penalty for getting the prediction wrong) for each training example:
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
 \]
@@ -156,20 +156,21 @@ Let $R$ be a dirty relation, $F(r) \mapsto (x,y)$ be a featurization that maps
 a record $r \in R$ to a feature vector $x$ and label $y$, $\phi$ be a convex regularized loss,
 and $C(r) \mapsto r_{clean}$ be a cleaning technique that maps a record to its cleaned value. 
 Given these inputs, the \sys problem is to return an estimate $\hat{\theta}$ of the clean model for any limit $k$ on the number of times the data cleaning $C(\cdot)$ can be applied.
-This estimate should be bounded by a monotonically descreasing function in $k$ (i.e., the expected result of cleaning more data is a more accurate model).
+This estimate should be bounded by a monotonically decreasing function in $k$ (i.e., the expected result of cleaning more data is a more accurate model).
 \end{problem}
 
 Addressing this problem requires analysis of the loss function $\phi$ and how $\phi$ is affected by dirty data.
 The solution is to integrate data cleaning and model training, where $\phi$ is simultaneously minimized while the data is cleaned.
 The tight feedback loop between model training and data cleaning poses several new algorithmic challenges and systems challenges.
-Algorithmically,  we have to reweight data to avoid biases and the population mixtures described previously.
-There are also numerous new opportunities for optimizations such as priotizing data and avoiding data that are expected to be clean.
+Algorithmically,  we have to re-weight data to avoid biases and the population mixtures described previously.
+There are also numerous new opportunities for optimizations such as prioritizing data and avoiding data that are expected to be clean.
 
-From a systems perspective, data cleaning and model training happen at very different time scales so integration requires batching.
+From a systems perspective, data cleaning and model training happen at very different time scales.
 When humans are involved, per record latencies for data repair are orders of magnitude larger than the CPU time needed for model training.
 We can compare recent results in data cleaning to a model training framework like CoCoA implemented on Spark \cite{jaggi2014communication}.
 Per record, BigDansing, a highly optimized automated Spark-based data cleaning system is 15.5x slower than CoCoA\footnote{For CoCoA to reach a precision of 1e-3}.
 Crowd based techniques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100,000x slower per record. 
+Consequently, all of the optimizations in \sys are designed to address data cleaning latency (i.e., more progress with fewer cleaned records) rather than optimizing for numerical computation (i.e., process less records).
 
 \iffalse
 Here is an example application of \sys with our running example:
