@@ -38,7 +38,7 @@ Because of this, it is harder to reason about the results.
 Different initializations will lead to different local optima, and thus, introduces a complex dependence on the initialization with the dirty model.
 This problem is not fundemental to \sys and any gradient technique suffers this challenge for general non-convex losses, and we hope to explore this more in the future.
 
-\section{Proof of Lemma \ref{unbiased1}}\label{unbiased1-deriv}
+\section{Proof of Lemma 1}\label{unbiased1-deriv}
 \begin{lemma}
 The gradient estimate $g(\theta)$ is unbiased if $g_S$ is an unbiased estimate of:
 \[
@@ -58,7 +58,15 @@ By symmetry,
 \]
 \end{proof}
 
-\section{Proof of Lemma \ref{impsample}}\label{impsample-deriv}
+\section{Convex vs. Strongly Convex}
+The error bound discussed in Proposition 2 can be tightened for a class of models called strongly convex (see \cite{bertsekas2011incremental} for a defintion). 
+Linear regression, logistic regression, and regularized support vector machines fit into this class.
+
+\begin{proposition}
+For a strongly convex loss, a batch size $b$, and $T$ iterations, the convergence rate is bounded by $O(\frac{\sigma^2}{bT})$. 
+\end{proposition}
+
+\section{Proof of Lemma 2}\label{impsample-deriv}
 The variance of this estimate is given by:
 \[
 Var(\mu) = \mathbb{E}(\mu^2)-\mathbb{E}(\mu)^2
@@ -107,8 +115,8 @@ We only have to know the change in each feature to estimate the change in value.
 In our case the function $f$ is the gradient $\nabla\phi$.
 So, the resulting linearization is:
 \[
-\nabla\phi(x^{(clean)}_i,y^{(clean)}_i,\theta) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot (x - x^{(clean)}) \]
-\[+ \frac{\partial}{\partial Y}\phi(x,y,\theta)\cdot (y - y^{(clean)})
+\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot (x - x^{(c)}) \]
+\[+ \frac{\partial}{\partial Y}\phi(x,y,\theta)\cdot (y - y^{(c)})
 \]
 When we take the expected value:
 \[
@@ -199,6 +207,41 @@ M_x[i,j] = 0
 M_y[i,1] = x[i] 
 \]
 
+\section{Aggregate Queries as Convex Losses}
+\subsection{AVG and SUM queries}
+\avgfunc, \sumfunc queries are a special case of the convex loss minimization discussed in the paper:
+If we define the following loss, it is easy to verify the the optimal $\theta$ is the mean $\mu$:
+\[
+\phi = (x_{i} - \theta)^2
+\]
+with the appropriate scaling it can support $\avgfunc$, $\sumfunc$ queries with and without predicates.
+Taking the gradient of that loss:
+\[
+\nabla\phi = 2(x_{i} - \theta)
+\]
+It is also easy to verify that the bound on errors is $O(\frac{\mathbb{E}((x-\mu)^2}{bT})$, which is essentially the CLT.
+The importance sampling results are inutitive as well.
+Applying the linearization:
+\[
+M_x = 2
+\]
+The importance sampling prioritizes points that it expects to be far away from the mean.
+
+\subsection{MEDIAN}
+Similarly, we can analyze the \medfunc query.
+If we define the following loss, it is easy to verify the the optimal $\theta$ is the median $m$:
+\[
+\phi = \mid x_{i} - \theta\mid
+\]
+Taking the gradient of that loss:
+\[
+\nabla\phi = \text{1 if < m, -1 if > m}
+\]
+Applying the linearization:
+\[
+M_x = 0
+\]
+The intuitive result is that a robust query like a median does not need to consider estimation as the query result is robust to small changes.
 
 \section{Experimental Comparison}
 \subsection{Robust Logistic Regression}\label{rlogit}
@@ -221,7 +264,7 @@ While such Active Learning algorithms have been studied in the Learning Theory c
 Typical algorithms include uncertainty sampling, where a classifier prioritized data closest to the margin.
 However, algorithms such as uncertainty sampling focus on the narrow problem of label acquisition in hyperplane classifiers; a problem too narrow for application in this setting.
 
-\section{Dollars For Docs Errors and Constraints}\label{dfd-errors}
+\section{Dollars For Docs}\label{dfd-errors}
 The dollars for docs dataset has the following schema:
 \begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
 Contribution(pi_speciality$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
