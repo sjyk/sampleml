@@ -2,7 +2,7 @@
 Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations \cite{Gartner}.
 Dirty data can lead to inaccurate analysis, and a variety of data cleaning techniques have been proposed \cite{rahm2000data}.
 The growing popularity of predictive models (e.g., classifiers) in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} adds additional challenges in managing dirty data.
-Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction}, where corruption disproportionately affects certain data, can mask or even introduce new relationships.
+Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., disproportionately affects certain data) can mask or even introduce spurious new relationships.
 Furthermore, the high dimensionality of these models can amplify small problems \cite{xiaofeature} resulting in error-prone predictions from even models trained on mostly clean data.
 
 To make the systematic corruption problem more concrete, consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
