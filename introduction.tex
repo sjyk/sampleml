@@ -40,13 +40,13 @@ In \sys, data are cleaned in small random batches and the model is incrementally
 Similar to Active Learning, \sys selects the most valuable records to clean with higher probability, however, it applies a number of optimizations that exploit the data cleaning setting such as avoiding data that is expected to be clean, estimating of the effect of data cleaning for a record, and batching together updates from already cleaned data.
 This framework is optimized for problems requiring expensive data cleaning.
 
-The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{updater}, and \emph{estimator}.
+The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{update}, and \emph{estimator}.
 The cleaner is an existing data cleaning technique (e.g., Entity Resolution), and \sys provides the remaining components to apply this technique progressively.
 To summarize the contributions in each component:
 \begin{itemize}[noitemsep]
 \item \textbf{Detector} (Section \ref{det}). The detector can apply rules from data quality constraints or adaptively learn which records are dirty to increase the fraction of dirty records sampled.
 \item \textbf{Sampler} (Section \ref{dist-samp}). We derive an optimal sampling distribution that minimizes the update variance (i.e., how different would the update be if another sample was drawn) which linearly improves an error bound on the convergence rate.
-\item \textbf{Updater} (Section \ref{model-update}). The updater applies a weighted stochastic gradient descent step to the current best model. This update is guaranteed to converge, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
+\item \textbf{Update} (Section \ref{model-update}). The update procedure applies a weighted stochastic gradient descent step to the current best model. This update is guaranteed to converge, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
 \item \textbf{Estimator} (Section \ref{sampling}). The estimator applies a Taylor Series linearization to decouple changes in different features to use information from error detection to inform estimation.
 \item The experiments evaluate these components on four datasets with real and synthetic corruption (Section \ref{eval}). Results suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse.
 

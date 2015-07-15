@@ -11,7 +11,7 @@ convergence and bound the error at each step.
 \subsection{Update Problem}
 Let $S_{dirty} \subseteq R_{dirty}$  be a random sample of data from the results of the detection in the previous section, and let $p(r)$ be the sampling probability of each record.
 The cleaner applies the data cleaning technique to the sample resulting in $S_{clean}$ and clean features and labels $(X^{(c)},Y^{(c)})$. 
-In the model update problem, the updater has to update the dirty model $\theta^{(d)}$ based on the clean sample and return $\theta^{new}$.
+In the model update problem, \sys applied the update to the dirty model $\theta^{(d)}$, based on the clean sample, to return $\theta^{new}$.
 The goal is that these updates should minimize the error of the updated model and the true model $\theta^{(c)}$ (if entire data is cleaned):
 \[
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
@@ -38,14 +38,14 @@ The first question is which direction to update $\theta$ (i.e., left or right).
 For this class of models, given a suboptimal point, the direction to 
 the global optimum is the gradient of the loss function.
 The gradient is a $d$-dimensional vector function of the current model $\theta$ and the clean data.
-Given this direction, the updater needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \ref{update-arch2}B):
+Given this direction, \sys needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \ref{update-arch2}B):
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
 At the optimal point, the magnitude of the gradient will be zero.
 So intuitively, this approach iteratively moves the model downhill, or corrects the dirty model until the desired accuracy is reached.
 
-However, the gradient depends on all of the clean data which is not available and the updater will have to approximate this gradient from a sample.
+However, the gradient depends on all of the clean data which is not available and \sys will have to approximate this gradient from a sample.
 The intuition, formalized in Section \ref{sgd}, is that if the gradients are on average in the right direction, the algorithm is guaranteed to converge with bounds on the convergence rate.
 
 \subsection{Average Gradient From a Sample}
@@ -156,7 +156,7 @@ In the experiments, we use a technique called inverse scaling where there is a p
 \noindent\textbf{ Convergence: } Convergence properties of batch SGD formulations have been well studied \cite{dekel2012optimal}. From the preceding analysis, the gradient estimate is unbiased and the step size is appropriately chosen. Following from these two points, convergence is ensured: 
 
 \begin{proposition}
-For an appropriately chosen learning rate $\gamma_t$, \sys's updater will converge if $\mathbb{E}(g_S)=g^*$.
+For an appropriately chosen learning rate $\gamma_t$, \sys will converge if $\mathbb{E}(g_S)=g^*$.
 \label{unbiased}
 \end{proposition}
 
@@ -187,6 +187,6 @@ This dissociates the batching requirements of SGD and the batching requirements 
 
 \vspace{0.5em}
 
-\noindent\textbf{ Non-convex losses: } If the loss in non-convex, the updater will converge towards a local minimum rather than the global minimum (See Appendix \ref{non-convex}).
+\noindent\textbf{ Non-convex losses: } If the loss in non-convex, the update procedure will converge towards a local minimum rather than the global minimum (See Appendix \ref{non-convex}).
 
 

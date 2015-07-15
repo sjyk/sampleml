@@ -15,7 +15,7 @@ After initialization, \sys begins the cleaning and model update iterations.
 The \emph{sampler} selects a sample of dirty data based on the batch size.
 At this step, \sys can use the detector $D$ to narrow the sample to select only dirty data.
 Once a sample is selected, the \emph{cleaner} applies $C(\cdot)$ to the dirty sample.
-Then, after the sample is cleaned, the current model is updated by the \emph{updater}.
+Then, after the sample is cleaned, the current model is updated.
 \sys is initialized with the dirty model, and this model is iteratively updated as more batches are cleaned.
 
 The next two steps in the architecture are feedback steps where the sampling distribution is updated for the next iteration.
@@ -31,7 +31,7 @@ To summarize the architecture in pseudocode:
 \begin{enumerate}
 	\item \texttt{dirty\_sample $=$ Sampler(dirty\_data, sample\_prob, detector, batch)}
 	\item \texttt{clean\_sample $=$ Cleaner(dirty\_sample)}
-	\item \texttt{current\_model $=$ Updater(current\_model, sample\_prob, clean\_sample)}
+	\item \texttt{current\_model $=$ Update(current\_model, sample\_prob, clean\_sample)}
 	\item \texttt{cleaned\_data = cleaned\_data + clean\_sample}
 	\item \texttt{dirty\_data = dirty\_data - clean\_sample}
 	\item \texttt{sample\_prob $=$ Estimator(dirty\_data, cleaned\_data, detector)}
@@ -74,7 +74,7 @@ This allows for uniform measure of the performance of \sys in terms of model err
 
 \vspace{0.5em}
 
-\noindent\textbf{Updater (Section \ref{model-update}). } The updater updates the model $\theta^{(t)}$ based on the featurized (with $F(\cdot)$) cleaned sample $F(S_{clean})$ resulting in $\theta^{(t+1)}$. Analyzing the model update procedure as a stochastic gradient descent algorithm will help derive the sampling distribution and estimation.
+\noindent\textbf{Update (Section \ref{model-update}). } This step updates the model $\theta^{(t)}$ based on the featurized (with featurization $F(\cdot)$) cleaned sample $F(S_{clean})$ resulting in $\theta^{(t+1)}$. Analyzing the model update procedure as a stochastic gradient descent algorithm will help derive the sampling distribution and estimation.
 
 \vspace{0.5em}
 

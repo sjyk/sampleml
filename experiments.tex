@@ -100,7 +100,7 @@ In terms of model error, \sys gives its largest benefits for small sample sizes.
 For 500 cleaned records of the Adult dataset, \sys has 6.1x less error than SampleClean and 2.1x less error than Active Learning.
 For 500 cleaned records of the EEG dataset, \sys has 9.6x less error than SampleClean and 2.4x less error than Active Learning.
 Both Active Learning and \sys benefit from the initialization with the dirty model as they do not retrain their models from scratch, and \sys improves on this performance with detection and error estimation.
-These gains also correlate well to improvements in test accuracy.
+These gains also correlate well to improvements in test error (defined as the test accuracy difference w.r.t cleaning all data).
 For example, to achieve a test error of 1\% on the Adult dataset, \sys cleans 500 fewer records than Active Learning.
 
 
@@ -231,13 +231,13 @@ This is because the classifier is imperfect and misclassifies some data points i
 \noindent \emph{Summary: When errors are increasingly random (50\% random) and cannot be accurately classified, adaptive detection provides no benefit over no detection. }
 
 \begin{figure}[ht!]
-\vspace{-1em}
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp5a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp12.pdf}
  \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}
 \end{figure}
 
+\vspace{1.5em}
 \subsection{Estimation}\label{est}
 The next experiment compares estimation techniques: (1) ``linear regression" trains a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" which does not use the detection to inform how to apply the estimate, (3) ``average feature change" uses detection but no linearization, and (4) the Taylor series linear approximation.
 Figure \ref{tradeoffs2}b measures how accurately each estimation technique estimates the gradient as a function of the number of cleaned records on the EEG dataset.

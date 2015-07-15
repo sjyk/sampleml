@@ -1,4 +1,4 @@
-
+\vspace{-2em}
 \section{Related Work}
 \noindent \textbf{Data Cleaning and Databases: } There are also several recent results in data cleaning that we would like to highlight. 
 Progressive data cleaning methodologies have been proposed, however, these techniques tend to be application agnostic \cite{mayfield2010eracer}.
@@ -6,7 +6,7 @@ Altowim et al. proposed a framework for progressive entity resolution \cite{alto
 Volkovs et al. explored a related topic of maintaining data cleaning rules that change over time \cite{volkovs2014continuous}. 
 Recently, in works such as SampleClean \cite{wang1999sample}, the application (i.e., queries) are used to inform data cleaning methodology.
 When the workload is made up of aggregate queries, cleaning samples of data may suffice. 
-Similarly, Bergman et al. explore the problem of query-oriented data cleaning \cite{bergman2015query}. Given a query they clean data relevant to that query. 
+Similarly, Bergman et al. explore the problem of query-oriented data cleaning \cite{DBLP:conf/sigmod/BergmanMNT15}. Given a query they clean data relevant to that query. 
 Bergman et al. does not explore the Machine Learning applications studied in this work.
 Deshpande et al. studied data acquisition in sensor networks \cite{deshpande2004model}. They explored value of information based prioritization of data acquisition for estimating aggregate queries of sensor readings.
 Similarly, Jeffery et al. \cite{DBLP:conf/pervasive/JefferyAFHW06} explored similar prioritization based on value of information.
@@ -14,14 +14,16 @@ We see this work as pushing prioritization further down the pipeline to the end 
 Finally, incremental optimization methods like SGD have a connection to incremental materialized view maintenance as the argument for incremental maintenance over recomputation is similar (i.e., relatively sparse updates).
 Krishnan et al. explored how samples of materialized views can be maintained similar to how models are updated with a sample of clean data in this work \cite{krishnan2015svc}
 
+\vspace{0.25em}
+
 \noindent \textbf{Stochastic Optimization and Active Learning: } Zhao and Tong recently proposed using importance sampling in conjunction with stochastic gradient descent \cite{zhao2014stochastic}. 
-However, calculating the optimal importance sampling distribution is very expensive and is only justified in this problem because data cleaning is even more expensive. 
-Zhao and Tong use a different approximation to work around this problem. 
-This work is one of many in an emerging consensus in stochastic optimization that not all data are equal (e.g., \cite{qu2014randomized}). 
+The ideas applied in \sys are well rooted in the Machine Learning and Optimization literature, and we apply these ideas to the data cleaning problem. 
 This line of work builds on prior results in linear algebra that show that some matrix columns are more informative than others \cite{drineas2012fast}, and Active Learning which shows that some labels are more informative that others \cite{settles2010active}.
 Active Learning largely studies the problem of label acquisition \cite{settles2010active},
 and recently the links between Active Learning and Stochastic optimization have been studied \cite{guillory2009active}. 
 We use the work in Guillory et al. to evaluate a state-of-the-art Active Learning technique against \sys.
+
+\vspace{0.25em}
 
 \noindent \textbf{Transfer Learning and Bias Mitigation: }  
 \sys has a strong link to a field called Transfer Learning and Domain Adaptation \cite{pan2010survey}. The basic idea of Transfer Learning is that suppose a model is trained on a dataset $D$ but tested on a dataset $D'$. 
@@ -30,7 +32,10 @@ In robotics, Mahler et al. explored a calibration problem in which data was syst
 Other problems in bias mitigation (e.g., Krishnan et al. \cite{DBLP:conf/recsys/KrishnanPFG14}) have the same structure, systematically corrupted data that is feeding into a model.
 In this work, we try to generalize these principles given a general dirty dataset, convex model, and data cleaning procedure.
 
-\noindent \textbf{Secure Learning: } Another relevant line of work is the work in private machine learning  \cite{wainwright2012privacy, duchi2013local}. Learning is performed on a noisy variant of the data which mitigates privacy concerns. The goal is to extrapolate the insights from the noisy data to the hidden real data. \sys is also related to work in adversarial learning \cite{nelson2012query}, where the goal is to make models robust to adversarial data manipulation.
-This line of work has extensively studied methodologies for making models private to external queries and robust to malicious labels \cite{xiaofeature} , but not the data cleaning problem.
+\vspace{0.25em}
+
+\noindent \textbf{Secure Learning: } Another relevant line of work is the work in private machine learning  \cite{wainwright2012privacy, duchi2013local}. Learning is performed on a noisy variant of the data which mitigates privacy concerns, embracing the error rather than correcting for it. \sys is also related to work in adversarial learning \cite{nelson2012query}, where the goal is to make models robust to adversarial data manipulation.
+This line of work has extensively studied methodologies for making models private to external queries and robust to malicious labels \cite{xiaofeature}, but the data cleaning problem explores more general corruptions than just malicious labels.
+One widely applied technique in this field is reject-on-negative impact, which essentially, discards data that reduces the loss function--which will not work when we do not have access to the true loss function (only the ``dirty loss"). 
 
 

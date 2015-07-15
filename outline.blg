@@ -11,7 +11,7 @@ Repeated entry---line 1846 of file ref.bib
  : @inproceedings{volkovs2014continuous
  :                                     ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2339 of file ref.bib
+Repeated entry---line 2352 of file ref.bib
  : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
  :                                                 ,
 I'm skipping whatever remains of this entry
@@ -21,14 +21,16 @@ A bad cross reference---entry "park2014crowdfill"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
 A bad cross reference---entry "wang1999sample"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
+A bad cross reference---entry "mayfield2010eracer"
+refers to entry "DBLP:conf/sigmod/2010", which doesn't exist
+A bad cross reference---entry "DBLP:conf/sigmod/BergmanMNT15"
+refers to entry "DBLP:conf/sigmod/2015", which doesn't exist
+A bad cross reference---entry "deshpande2004model"
+refers to entry "DBLP:conf/vldb/2004", which doesn't exist
 A bad cross reference---entry "DBLP:conf/case/MahlerKLSMKPWFAG14"
 refers to entry "DBLP:conf/case/2014", which doesn't exist
 A bad cross reference---entry "DBLP:conf/recsys/KrishnanPFG14"
 refers to entry "DBLP:conf/recsys/2014", which doesn't exist
-A bad cross reference---entry "mayfield2010eracer"
-refers to entry "DBLP:conf/sigmod/2010", which doesn't exist
-A bad cross reference---entry "deshpande2004model"
-refers to entry "DBLP:conf/vldb/2004", which doesn't exist
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2014"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2015"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2010"
@@ -40,50 +42,49 @@ Warning--to sort, need author or key in sampleclean
 Warning--to sort, need author or key in nytimes
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in dollarsfordocsa
-Warning--empty journal in bergman2015query
 Warning--empty year in bertsekas2011incremental
 Warning--empty journal in khayyat2015bigdansing
 Warning--empty publisher in mcbook
 Warning--empty journal in xiaofeature
-You've used 45 entries,
+You've used 44 entries,
             2118 wiz_defined-function locations,
-            738 strings with 12668 characters,
-and the built_in function-call counts, 17972 in all, are:
-= -- 1710
-> -- 1003
-< -- 17
-+ -- 408
-- -- 354
-* -- 1299
-:= -- 2858
-add.period$ -- 133
-call.type$ -- 45
-change.case$ -- 310
+            736 strings with 12563 characters,
+and the built_in function-call counts, 17951 in all, are:
+= -- 1715
+> -- 985
+< -- 18
++ -- 401
+- -- 348
+* -- 1296
+:= -- 2827
+add.period$ -- 130
+call.type$ -- 44
+change.case$ -- 304
 chr.to.int$ -- 0
-cite$ -- 55
-duplicate$ -- 663
-empty$ -- 1315
-format.name$ -- 354
-if$ -- 3794
+cite$ -- 53
+duplicate$ -- 668
+empty$ -- 1325
+format.name$ -- 348
+if$ -- 3810
 int.to.chr$ -- 0
-int.to.str$ -- 45
-missing$ -- 42
-newline$ -- 223
-num.names$ -- 80
-pop$ -- 372
+int.to.str$ -- 44
+missing$ -- 41
+newline$ -- 218
+num.names$ -- 78
+pop$ -- 367
 preamble$ -- 1
-purify$ -- 267
+purify$ -- 262
 quote$ -- 0
-skip$ -- 527
+skip$ -- 536
 stack$ -- 0
-substring$ -- 1028
-swap$ -- 204
-text.length$ -- 17
+substring$ -- 1063
+swap$ -- 216
+text.length$ -- 18
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 176
-warning$ -- 10
-while$ -- 147
-width$ -- 47
-write$ -- 468
-(There were 10 error messages)
+type$ -- 172
+warning$ -- 9
+while$ -- 148
+width$ -- 46
+write$ -- 460
+(There were 11 error messages)
