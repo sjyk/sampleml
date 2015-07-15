@@ -5,7 +5,7 @@ The growing popularity of predictive models in data analytics \cite{bdas, alexan
 Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., corruption that disproportionately affects certain data) can mask or even introduce spurious new relationships.
 Furthermore, the high dimensionality of these models can amplify small problems \cite{xiaofeature} resulting in error-prone predictions even when trained on mostly clean data.
 
-To make the systematic corruption problem more concrete, consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
+Consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
 A recommendation model trained on this data may spuriously learn a correlation relationship between age ``18-24" and music liked by European users.
 A bug, which ostensibly affected only the European users' records, can affect predictions to all users aged ``18-24".
 Systematic corruption prior to featurization is not addressed in the robust Machine Learning literature which focuses on the resilience to outliers (e.g., age ``150").
@@ -18,7 +18,7 @@ However, crowdsourcing comes at the cost of additional latency and the overhead 
 
 When data cleaning is expensive, it is beneficial to apply it \emph{progressively}, where users can inspect early results with only $k \ll N$ records cleaned.
 Progressive data cleaning allows users to specify a cleaning budget and clean until that budget is reached.
-Even without a budget, progressive cleaning is useful as it allows users measure the impact of a potentially costly data cleaning operation without cleaning the entire data
+Even without a budget, progressive cleaning is useful as it allows users measure the impact of a potentially costly data cleaning operation without cleaning the entire data.
 However, when applied before predictive modeling, progressive data cleaning poses several methodological problems.
 Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
