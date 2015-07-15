@@ -31,11 +31,11 @@ corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 
 \noindent\texttt{dispute} is a Boolean attribute describing whether the research was disputed.
 
-\noindent\texttt{status} is a string label describing whether the contribution was allowed under the declared research protocol. In this example, we are interested in predicting disallowed contributions. 
+\noindent\texttt{status} is a string label describing whether the contribution was allowed under the declared research protocol. The goal is to predict disallowed contributions. 
 
 \vspace{0.5em}
 
-However, this dataset is very dirty, and the systematic nature of the corruption can result in a misleading model.
+However, this dataset is very dirty, and the systematic nature of the corruption can result in an inaccurate model.
 On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
 For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data e.g., ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
 In a scenario such as this one, the effect of systematic error can be serious.
@@ -64,7 +64,7 @@ Training models on a mixture of dirty and clean data can lead to unreliable resu
 (c) Likewise, small sample sizes can result in similarly inaccurate models. \label{update-arch1}}
 \end{figure}
 
-An alternative is to avoid the dirty data altogether, instead of mixing the two populations.
+An alternative is to avoid the dirty data altogether instead of mixing the two populations.
 Suppose $k$ records are randomly sampled from the dataset and cleaned.
 The model is trained only on the cleaned sample of data.
 This is similar to SampleClean \cite{wang1999sample}, which was proposed to approximate the results of aggregate queries by applying them to a clean sample of data.
