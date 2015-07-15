@@ -156,7 +156,7 @@ However, as the bias increases, the fact that Active Learning prioritizes w.r.t 
 
 \subsubsection{Mixing Dirty and Clean Data}
 Training a model on mixed data is an unreliable methodology lacking the same guarantees as Active Learning or SampleClean even in the simplest of cases.
-For thoroughness, the next experiments include the tradeoff curves in comparison to \sys for the generated errors.
+For thoroughness, the next experiments include the model error as a function of records cleaned in comparison to \sys.
 Figure \ref{pc-perf} plots the same curves as the previous experiment comparing \sys, Active Learning, and two mixed data algorithms.
 PC randomly samples data, clean, and writes-back the cleaned data.
 PC+D randomly samples data from using the dirty data detector, cleans, and writes-back the cleaned data.
