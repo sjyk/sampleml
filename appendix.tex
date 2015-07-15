@@ -1,6 +1,6 @@
-\section{Appendix}
-\subsection{Extensions}
-\subsubsection{Set-of-Records Cleaning Model}\label{set-of-r}
+%\section{Appendix}
+\section{Extensions}
+\subsection{Set-of-Records Cleaning Model}\label{set-of-r}
 In paper, we formalized the analyst-specified data cleaning as follows.
 We take the sample of the records $S_{dirty}$, and apply data cleaning $C(\cdot)$.
 $C$ is applied to a record and produces the clean record:
@@ -29,7 +29,7 @@ Records outside of $S_{dirty}$ may be cleaned on a subset of dirty attributes by
 After each iteration, we re-run the detector, and move any $r \in R'_{dirty}$ that are clean to $R_{clean}$.
 Such a model allows us to capture data cleaning operations such as in Example \ref{app-ex1} and Example \ref{app-ex2}.
 
-\subsubsection{Non-convex losses}\label{non-convex}
+\subsection{Non-convex losses}\label{non-convex}
 We acknowledge that there is an increasing popularity of non-convex losses in the Neural Network and Deep Learning literature. 
 However, even for these losses, gradient descent techniques still apply. 
 Instead of converging to a global optimum they converge to a locally optimal value. 
@@ -38,7 +38,7 @@ Because of this, it is harder to reason about the results.
 Different initializations will lead to different local optima, and thus, introduces a complex dependence on the initialization with the dirty model.
 This problem is not fundemental to \sys and any gradient technique suffers this challenge for general non-convex losses, and we hope to explore this more in the future.
 
-\subsection{Proof of Lemma \ref{unbiased1}}\label{unbiased1-deriv}
+\section{Proof of Lemma \ref{unbiased1}}\label{unbiased1-deriv}
 \begin{lemma}
 The gradient estimate $g(\theta)$ is unbiased if $g_S$ is an unbiased estimate of:
 \[
@@ -58,7 +58,7 @@ By symmetry,
 \]
 \end{proof}
 
-\subsection{Proof of Lemma \ref{impsample}}\label{impsample-deriv}
+\section{Proof of Lemma \ref{impsample}}\label{impsample-deriv}
 The variance of this estimate is given by:
 \[
 Var(\mu) = \mathbb{E}(\mu^2)-\mathbb{E}(\mu)^2
@@ -96,7 +96,7 @@ Solving the system of equations, we get:
 p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
 \]
 
-\subsection{Taylor Approximation}\label{taylor-deriv}
+\section{Taylor Approximation}\label{taylor-deriv}
 We can take the expected value of the Taylor series expansion around the dirty value.
 If $d$ is the dirty value and $c$ is the clean value, the Taylor series approximation for a function $f$ is given as follows:
 \[
@@ -124,7 +124,7 @@ Then, $M_x = \frac{\partial}{\partial X}\nabla\phi$ is an $d \times d$ matrix, a
 Both of these matrices are computed with respect to dirty data, and we will present an example.
 $\Delta x$ is a $d$ dimensional vector where each component represents a change in that feature and $\Delta y$ is an $l$ dimensional vector that represents the change in each of the labels.
 
-\subsection{Example $M_x$, $M_y$}\label{example-deriv}
+\section{Example $M_x$, $M_y$}\label{example-deriv}
 \noindent\textbf{Linear Regression: }
 \[
 \nabla\phi(x,y,\theta) = (\theta^Tx - y)x
@@ -200,8 +200,8 @@ M_y[i,1] = x[i]
 \]
 
 
-\subsection{Experimental Comparison}
-\subsubsection{Robust Logistic Regression}\label{rlogit}
+\section{Experimental Comparison}
+\subsection{Robust Logistic Regression}\label{rlogit}
 We use the algorithm from Feng et al. for robust logistic regression.
 \begin{enumerate}
 \item Input: Contaminated training samples $\{(x_1, y_1), . . . ,(x_{n}
@@ -212,7 +212,7 @@ We use the algorithm from Feng et al. for robust logistic regression.
 \item Solve regularized logistic regression problem.
 \end{enumerate}
 
-\subsubsection{Active Learning}\label{al}
+\subsection{Active Learning}\label{al}
 There is a well established link between Active Learning and Online Gradient-based Algorithms \cite{guillory2009active}. 
 To fairly evaluate an Active Learning methodology in these experiments, we run a gradient descent where examples are priortized by expected gradient length (explained in \cite{settles2010active}).
 Ignoring the detection step, there are two differences between this algorithm and the one we propose.
@@ -221,7 +221,7 @@ While such Active Learning algorithms have been studied in the Learning Theory c
 Typical algorithms include uncertainty sampling, where a classifier prioritized data closest to the margin.
 However, algorithms such as uncertainty sampling focus on the narrow problem of label acquisition in hyperplane classifiers; a problem too narrow for application in this setting.
 
-\subsection{Dollars For Docs Errors and Constraints}\label{dfd-errors}
+\section{Dollars For Docs Errors and Constraints}\label{dfd-errors}
 The dollars for docs dataset has the following schema:
 \begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
 Contribution(pi_speciality$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
@@ -278,7 +278,7 @@ To fix the constraints, we looked up the clean value in the dataset that we clea
 
 \vspace{0.5em}
 
-\subsection{MNIST Errors}
+\section{MNIST Errors}
 We include visualization of the errors that we generated for the MNIST experiment.
 We generated these errors in MATLAB by taking the grayscale version of the image (a $64\times 64$ matrix) and corrupting them by block removal and fuzzying.
 
