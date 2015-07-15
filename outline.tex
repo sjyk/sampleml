@@ -133,11 +133,11 @@
 \maketitle
 
 \begin{abstract}
-Predictive models (e.g., classifiers) are sensitive to systematic error caused by dirty data resulting in incorrect or error-prone predictions.
-Although, this can be ameliorated by a variety of cleaning techniques, data cleaning can be very time consuming.
-It is beneficial to apply data cleaning in a progressive way, where the user can evaluate the model without cleaning all of the data.
-Existing methodologies can lead to inaccurate or even misleading models when trained on partially clean data.
-The key insight of our framework, \sys, is for convex loss models, data cleaning can be applied while simultaneously training the model with stochastic optimization allowing us to prove convergence and error bounds.
+Predictive models, such as classifiers, are sensitive to systematic error caused by dirty data.
+Although, errors can be addressed by a variety of cleaning techniques, data cleaning can be very time consuming.
+One way to address the cost of data cleaning is to apply it progressively, cleaning only as much data as necessary to achieve a desired accuracy.
+However, existing model training methodologies can lead to misleading models when trained on a mix of dirty and clean data.
+The key insight of our framework, \sys, is for convex loss models, data cleaning can be directly integrated into the iterative stochastic optimization that trains the model allowing us to prove convergence and error bounds.
 \sys applies a number of optimizations to improve convergence rates such as importance sampling based on value to the model, avoiding data that is expected to be clean, estimating of the effect of data cleaning, and batching together updates from already cleaned data.
 Evaluation on four real-world datasets suggests \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse. 
 For example, to achieve the same accuracy as a state-of-the-art Active Learning algorithm cleaning 1000 records, \sys cleans 55\% fewer records.
