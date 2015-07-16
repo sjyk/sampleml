@@ -100,15 +100,16 @@ Also, data cleaning and model training can happen at very different time scales,
 Finally, in this line of work, the tradeoff space is enormous, and we have to carefully pick a design point and tailor our optimizations to this preferred regime.
 \fi
 
-\subsection{Preliminaries}
-Convex loss minimization problems (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction) are amenable to incremental stochastic optimization techniques (incremental sample-based updates).
-This class of problems includes all generalized linear models (including linear and logistic regression), and all variants of support vector machines.
+\subsection{Preliminaries: Convex Data Analytics}
+To design an algorithm that avoids Simpson's paradox, this work focuses on an initial class of well analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
+Convex loss minimization problems are amenable a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
+Examples includes all generalized linear models (including linear and logistic regression), all variants of support vector machines, and in fact, means and medians are also special cases. 
 
-The goal is to learn a vector of model \emph{parameters} $\theta$ from training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$.
-$\theta$ is learned by minimizing a loss function $\phi$ (a penalty for getting the prediction wrong) for each training example:
+Formally, for labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of \emph{model parameters} $\theta$ by minimizing a loss function $\phi$ over all training examples:
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
 \]
+Where $\phi$ is a convex function in $\theta$.
 For example, in a linear regression $\phi$ is:
 \[
 \phi(x_{i},y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
@@ -119,6 +120,11 @@ $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
 \]
 In this work, without loss of generality, we will include the regularization as part of the loss function i.e., $\phi(x_{i},y_{i},\theta)$ includes $r(\theta)$.
+
+\begin{definition}[Convex Data Analytics]
+A convex data analytics problem is specified by a set of features $X$, corresponding set of labels $Y$, and a parametrized loss function $\phi$ that is convex in its parameter $\theta$.
+The result is a \textbf{model} $\theta$ that minimizes the sum of losses over all features and labels.
+\end{definition}
 
 \subsubsection{Types of Error}
 There are two standard metrics to quantify inaccuracy in a model:
@@ -145,7 +151,7 @@ There are two standard metrics to quantify inaccuracy in a model:
 
 \vspace{0.25em}
 
-When we use the term \emph{error}, we are referring to \textbf{model error}.
+When we use the term \emph{error}, we are referring to model error.
 We will be explicit with other terms when describing data errors (e.g. ``data corruption").
 
 \subsection{\sys Problem}
