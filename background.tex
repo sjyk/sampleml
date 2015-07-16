@@ -5,7 +5,7 @@ This section describes an example of data cleaning when training predictive mode
 ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest. 
 They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses \cite{dollarsfordocsa}.
 ProPublica laboriously curated and cleaned a dataset from the Centers for Medicare and Medicaid Services that listed nearly 250,000 research donations, and aggregated these donations by physician, drug, and pharmaceutical company.
-We collected the raw unaggregated data and explored whether suspect contributions could be predicted from features.
+We collected the raw unaggregated data and explored whether suspect donation could be predicted with a model.
 This problem is typical of analysis scenarios based on observational data seen in finance, insurance, medicine, and investigative journalism.
 
 The dataset has the following schema:
@@ -22,15 +22,15 @@ corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 
 \noindent\texttt{corporation} is the name of the pharmaceutical providing the donation.
 
-\noindent\texttt{amount} is a numerical attribute representing the contribution amount.
+\noindent\texttt{amount} is a numerical attribute representing the donation amount.
 
 \noindent\texttt{dispute} is a Boolean attribute describing whether the research was disputed.
 
-\noindent\texttt{status} is a string label describing whether the contribution was allowed under the declared research protocol. The goal is to predict disallowed contributions. 
+\noindent\texttt{status} is a string label describing whether the  donation was allowed under the declared research protocol. The goal is to predict disallowed  donation. 
 
 \vspace{0.5em}
 
-However, this dataset is very dirty, and the systematic nature of the corruption can result in an inaccurate model.
+However, this dataset is very dirty, and the systematic nature of the data corruption can result in an inaccurate model.
 On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
 For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data e.g., ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
 In a scenario such as this one, the effect of systematic error can be serious.
@@ -38,7 +38,7 @@ Duplicate entity representations could artificially reduce the correlation betwe
 There were nearly 40,000 of the 250,000 records that had either entity resolution issues or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
 With the same Support Vector Machine model, the detection rate of suspect donations was 66\% in the dirty data and 97\% in the clean data (Section \ref{dfd-exp}).
 
-\subsubsection{Progressive Data Cleaning}  
+\subsection{Progressive Data Cleaning}  
 Cleaning a dataset of 250,000 records can be very time consuming, and it is important for analysts to be able to evaluate the model before all of the data is cleaned.
 First, suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Figure \ref{update-arch1} highlights the dangers of this approach on a very simple dirty dataset and a linear regression model i.e., the best fit line for two variables. 
@@ -119,38 +119,6 @@ A convex data analytics problem is specified by a set of features $X$, correspon
 The result is a \textbf{model} $\theta$ that minimizes the sum of losses over all features and labels.
 \end{definition}
 
-\subsubsection{Types of Error}
-In progressive data cleaning setting, there are a number of different sources of errors.
-
-\vspace{0.25em}
-
-\noindent\textbf{Sampling Error. } Error introduced by sampling i.e., the difference between a model trained on $p\%$ of the data and $100\%$ of the data.
-
-\vspace{0.25em}
-
-There are two standard metrics to quantify inaccuracy in a model:
-
-\vspace{0.25em}
-
-\noindent\textbf{Model Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if all of the records were cleaned. Then the model error is defined as $\|\theta - \theta^*\|$.
-
-\vspace{0.25em}
-
-\noindent\textbf{Testing Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if all of the records were cleaned. Let $T(\theta)$ be the out-of-sample testing error when the dirty model is applied to the clean data, and $T(\theta^*)$ be the test error when the clean model is applied to the clean data. The testing error is defined as $T(\theta) - T(\theta^*)$
-
-%\vspace{0.5em}
-
-%\noindent The above \emph{errors} are caused by two underlying problems:
-
-%\vspace{0.25em}
-
-%\noindent\textbf{Data Error. } is error introduced by training a model on systematically corrupted data.
-
-\vspace{0.25em}
-
-When we use the term \emph{error}, we are referring to model error.
-We will be explicit with other terms when describing data errors (e.g. ``data corruption").
-
 \subsection{\sys Problem}
 The core problem addressed by \sys is incremental model update while progressively cleaning data.
 
@@ -158,8 +126,8 @@ The core problem addressed by \sys is incremental model update while progressive
 Let $R$ be a dirty relation, $F(r) \mapsto (x,y)$ be a featurization that maps
 a record $r \in R$ to a feature vector $x$ and label $y$, $\phi$ be a convex regularized loss,
 and $C(r) \mapsto r_{clean}$ be a cleaning technique that maps a record to its cleaned value. 
-Given these inputs, the \sys problem is to return the best estimate $\hat{\theta}$ of the clean model for any limit $k$ on the number of times the data cleaning $C(\cdot)$ can be applied.
-This estimate should be bounded by a monotonically decreasing function in $k$ (i.e., more cleaning results is expected to improve the model).
+Given these inputs, the \sys problem is to return an estimate $\hat{\theta}$ of the clean model for any limit $k$ on the number of times the data cleaning $C(\cdot)$ can be applied.
+The error in this estimate (i.e. L2 difference w.r.t a model trained on a fully cleaned dataset) should be bounded by a monotonically decreasing function in $k$ (i.e., more cleaning results is expected to improve the model).
 \end{problem}
 
 Addressing this problem requires analysis of the loss function $\phi$ and how $\phi$ is affected by dirty data.
@@ -174,6 +142,16 @@ We can compare recent results in data cleaning to a model training framework lik
 Per record, BigDansing, a highly optimized automated Spark-based data cleaning system is 15.5x slower than CoCoA\footnote{For CoCoA to reach a precision of 1e-3}.
 Crowd based techniques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100,000x slower per record. 
 Consequently, all of the optimizations in \sys are designed to address data cleaning latency (i.e., more progress with fewer cleaned records) rather than optimizing for numerical computation (i.e., process fewer records).
+
+There are two standard metrics that we will use to measure the performance of \sys:
+
+\vspace{0.25em}
+
+\noindent\textbf{Model Error. } Let $\theta$ be the model trained with \sys, and let $\theta^*$ be the model trained on the same data if all of the records were cleaned. Then the model error is defined as $\|\theta - \theta^*\|$.
+
+\vspace{0.25em}
+
+\noindent\textbf{Testing Error. } Let $\theta$ be the model trained with \sys, and let $\theta^*$ be the model trained on the same data if all of the records were cleaned. Let $T(\theta)$ be the out-of-sample testing error when the dirty model is applied to the clean data, and $T(\theta^*)$ be the test error when the clean model is applied to the clean data. The testing error is defined as $T(\theta) - T(\theta^*)$
 
 \iffalse
 Here is an example application of \sys with our running example:

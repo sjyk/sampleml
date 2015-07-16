@@ -3,9 +3,9 @@ This section describes the \sys architecture and the basic algorithmic framework
 The individual components will be addressed in the subsequent sections.
 
 \subsection{Overview}
-Figure \ref{sys-arch} in the introduction overviews the entire framework.
+Figure \ref{sys-arch}, in the introduction, overviews the entire framework.
 The first step of \sys is \emph{initialization}.
-In this step, there is a dirty relation $R$, a data cleaning technique $C(\cdot)$, and a dirty model $\theta^{(d)}$ trained on the dirty dataset. 
+In this step, there is a dirty relation $R$, a featurization $F(\cdot)$, a data cleaning technique $C(\cdot)$, and a dirty model $\theta^{(d)}$ trained on the featurized dirty relation. 
 Optionally, \sys integrates with dirty data detection rules $D(\cdot)$ which selects the set of likely corrupted records from $R$.
 If one is not provided, \sys starts by treating all of the data as dirty and tries to learn a detector as data are cleaned.
 At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $T = \frac{k}{b}$).
