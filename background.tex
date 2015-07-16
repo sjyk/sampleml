@@ -1,17 +1,12 @@
 \section{Problem Setup}\label{background}
 This section describes an example of data cleaning when training predictive models, and formalizes the class of predictive models (convex loss) explored in this work.
 
-\subsection{Motivating Scenario}
-As a motivating example, consider one of the experimental datasets (see Section \ref{dfd-exp}):
-
-\vspace{0.25em}
-
-\noindent\textbf{Dollars for Docs \cite{dollarsfordocs}. }
+\subsection{Use Case: Dollars for Docs \cite{dollarsfordocs}}
 ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest. 
 They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses \cite{dollarsfordocsa}.
-ProPublica meticulously curated and cleaned a dataset from the Centers for Medicare and Medicaid Services listing nearly 250,000 research donations and aggregated these donations by physician, drug, and pharmaceutical company.
-We collected the raw unaggregated data and explore whether suspected contributions can be predicted from features.
-This problem is typical of analysis scenarios based on observational data seen in finance, insurance, and medicine.
+ProPublica laboriously curated and cleaned a dataset from the Centers for Medicare and Medicaid Services that listed nearly 250,000 research donations, and aggregated these donations by physician, drug, and pharmaceutical company.
+We collected the raw unaggregated data and explored whether suspect contributions could be predicted from features.
+This problem is typical of analysis scenarios based on observational data seen in finance, insurance, medicine, and investigative journalism.
 
 The dataset has the following schema:
 \begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
@@ -43,14 +38,12 @@ Duplicate entity representations could artificially reduce the correlation betwe
 There were nearly 40,000 of the 250,000 records that had either entity resolution issues or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
 With the same Support Vector Machine model, the detection rate of suspect donations was 66\% in the dirty data and 97\% in the clean data (Section \ref{dfd-exp}).
 
-\vspace{0.25em}
-
-\noindent\textbf{Progressive Data Cleaning: }  Cleaning a dataset of 250,000 records can be very time consuming, and it is important for analysts to be able to evaluate the model before all of the data is cleaned.
+\subsubsection{Progressive Data Cleaning}  
+Cleaning a dataset of 250,000 records can be very time consuming, and it is important for analysts to be able to evaluate the model before all of the data is cleaned.
 First, suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
-Figure \ref{update-arch1} illustrates the dangers of this approach on a very simple dirty dataset and model.
-The model is a simple linear regression i.e., the best fit line for two variables. 
+Figure \ref{update-arch1} highlights the dangers of this approach on a very simple dirty dataset and a linear regression model i.e., the best fit line for two variables. 
 One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
-The dirty data is marked in brown and the clean data in yellow, and their respective best fit lines are in blue.
+The dirty data is marked in brown and the clean data in green, and their respective best fit lines are in blue.
 After cleaning only two of the data points (Figure \ref{update-arch1}b), the resulting best fit line is in the opposite direction of the true model.
 This is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
 Training models on a mixture of dirty and clean data can lead to unreliable results, where artificial trends introduced by the mixture can be confused for the effects of data cleaning.
@@ -59,7 +52,7 @@ Training models on a mixture of dirty and clean data can lead to unreliable resu
 \begin{figure}[ht!]
 \centering
  \includegraphics[width=\columnwidth]{figs/update-arch.png}
- \caption{(a) Systematic corruption (translation) in one variable where the dirty data is in brown, the clean data is in yellow, and their respective best fit lines are in blue. 
+ \caption{(a) Systematic corruption (translation) in one variable where the dirty data is in brown, the clean data is in green, and their respective best fit lines are in blue. 
  (b) Applying the same model to mixed data results in an inaccurate model.
 (c) Likewise, small sample sizes can result in similarly inaccurate models. \label{update-arch1}}
 \end{figure}
@@ -127,6 +120,14 @@ The result is a \textbf{model} $\theta$ that minimizes the sum of losses over al
 \end{definition}
 
 \subsubsection{Types of Error}
+In progressive data cleaning setting, there are a number of different sources of errors.
+
+\vspace{0.25em}
+
+\noindent\textbf{Sampling Error. } Error introduced by sampling i.e., the difference between a model trained on $p\%$ of the data and $100\%$ of the data.
+
+\vspace{0.25em}
+
 There are two standard metrics to quantify inaccuracy in a model:
 
 \vspace{0.25em}
@@ -147,10 +148,6 @@ There are two standard metrics to quantify inaccuracy in a model:
 
 \vspace{0.25em}
 
-\noindent\textbf{Sampling Error. } Error introduced by sampling i.e., the difference between a model trained on $p\%$ of the data and $100\%$ of the data.
-
-\vspace{0.25em}
-
 When we use the term \emph{error}, we are referring to model error.
 We will be explicit with other terms when describing data errors (e.g. ``data corruption").
 
@@ -161,15 +158,15 @@ The core problem addressed by \sys is incremental model update while progressive
 Let $R$ be a dirty relation, $F(r) \mapsto (x,y)$ be a featurization that maps
 a record $r \in R$ to a feature vector $x$ and label $y$, $\phi$ be a convex regularized loss,
 and $C(r) \mapsto r_{clean}$ be a cleaning technique that maps a record to its cleaned value. 
-Given these inputs, the \sys problem is to return an estimate $\hat{\theta}$ of the clean model for any limit $k$ on the number of times the data cleaning $C(\cdot)$ can be applied.
+Given these inputs, the \sys problem is to return the best estimate $\hat{\theta}$ of the clean model for any limit $k$ on the number of times the data cleaning $C(\cdot)$ can be applied.
 This estimate should be bounded by a monotonically decreasing function in $k$ (i.e., more cleaning results is expected to improve the model).
 \end{problem}
 
 Addressing this problem requires analysis of the loss function $\phi$ and how $\phi$ is affected by dirty data.
 The solution is to integrate data cleaning and model training, where $\phi$ is simultaneously minimized while the data is cleaned.
 The tight feedback loop between model training and data cleaning poses several new algorithmic challenges and systems challenges.
-Algorithmically,  we have to re-weight data to avoid biases and the population mixtures described previously.
-There are also numerous new opportunities for optimizations such as prioritizing data and avoiding data that are expected to be clean.
+From an algorithmic perspective,  we have to re-weight data to avoid biases and the population mixtures described previously.
+There are also numerous new opportunities for optimizations such as pragmatically prioritizing data and avoiding data that are expected to be clean.
 
 From a systems perspective, data cleaning and model training happen at very different time scales.
 When humans are involved, per record latencies for data cleaning are orders of magnitude larger than the CPU time needed for model training.

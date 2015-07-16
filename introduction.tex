@@ -16,8 +16,8 @@ Data cleaning can require a significant amount of developer effort in writing so
 Crowdsourcing is an increasingly popular alternative with recent success in missing value filling and entity resolution \cite{gokhale2014corleone, park2014crowdfill, sampleclean,chu2015katara}.
 However, crowdsourcing comes at the cost of additional latency and the overhead of managing human workers.
 
-When data cleaning is expensive, it is beneficial to apply it \emph{progressively}, where users can inspect early results with only $k \ll N$ records cleaned.
-Progressive data cleaning allows users to specify a cleaning budget and clean until that budget is reached.
+When data cleaning is expensive, it is desirable to apply it \textbf{progressively}, where users can inspect early results with only $k \ll N$ records cleaned.
+Progressive data cleaning enables users to specify a cleaning budget and clean until that budget is reached.
 Even without a budget, progressive cleaning is useful as it allows users measure the impact of a potentially costly data cleaning operation without cleaning the entire data.
 However, when applied before predictive modeling, progressive data cleaning poses several methodological problems.
 Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
@@ -35,14 +35,14 @@ The errors introduced by these three problems may dominate any gains from data c
 
 We propose \sys, a progressive data cleaning framework, that addresses the three methodological challenges: mixing, sampling, and sparsity.
 The key insight is that an important class of predictive models, called convex loss models (e.g., linear regression and SVMs), are trained by iteratively drawing random samples of data and updating a model\cite{bertsekas2011incremental}.
-Rather than cleaning before model training, data cleaning can be directly integrated with the sampling and updating training process; preserving provable guarantees such as convergence and error bounds.
+Rather than cleaning before model training, data cleaning can be directly integrated into the training process, so that \sys can ensure provable guarantees such as convergence and error bounds.
 In \sys, data are cleaned in small random batches and the model is incrementally updated based on the results.
 Similar to Active Learning, \sys selects the most valuable records to clean with higher probability, however, it applies a number of optimizations that exploit the data cleaning setting such as avoiding data that is expected to be clean, estimating of the effect of data cleaning for a record, and batching together updates from already cleaned data.
-This framework is optimized for problems requiring expensive data cleaning.
+This framework is optimized for problems that require expensive data cleaning.
 
-The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{update}, and \emph{estimator}.
-The cleaner is an existing data cleaning technique (e.g., Entity Resolution), and \sys provides the remaining components to apply this technique progressively.
-To summarize the contributions in each component:
+The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{update process}, and \emph{estimator}.
+The cleaner is a user provided data cleaning technique (e.g., Entity Resolution), and \sys provides the remaining components to apply the cleaner progressively.
+To summarize the contributions by component:
 \begin{itemize}[noitemsep]
 \item \textbf{Detector} (Section \ref{det}). The detector can apply rules from data quality constraints or adaptively learn which records are dirty to increase the fraction of dirty records sampled.
 \item \textbf{Sampler} (Section \ref{dist-samp}). We derive an optimal sampling distribution that minimizes the update variance (i.e., how different would the update be if another sample was drawn) which linearly improves an error bound on the convergence rate.

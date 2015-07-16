@@ -13,9 +13,9 @@ We discuss how to set $b$ and the tradeoffs in setting a larger or smaller $b$ i
 
 After initialization, \sys begins the cleaning and model update iterations.
 The \emph{sampler} selects a sample of dirty data based on the batch size.
-At this step, \sys can use the detector $D$ to narrow the sample to select only dirty data.
+At this step, \sys can use the detector $D$ to narrow the sample to likely dirty data.
 Once a sample is selected, the \emph{cleaner} applies $C(\cdot)$ to the dirty sample.
-Then, after the sample is cleaned, the current model is updated.
+%Then, after the sample is cleaned, the current model is updated.
 \sys is initialized with the dirty model, and this model is iteratively updated as more batches are cleaned.
 
 The next two steps in the architecture are feedback steps where the sampling distribution is updated for the next iteration.

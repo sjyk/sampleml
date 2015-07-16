@@ -75,7 +75,7 @@ It is important to note that examples can have multiple corrupted features.
  \includegraphics[width=0.49\columnwidth]{exp/exp2.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp1.pdf}
  \includegraphics[width=0.5\columnwidth]{exp/legend-1.png}\vspace{-1em}
- \caption{(a) Robust techniques and discarding data work when corrupted data are random and look atypical. (b) Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}
+ \caption{(a) Robust techniques and discarding data work when corrupted data are random and look atypical. (b) Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}\vspace{-1.5em}
 \end{figure}
 
 Figure \ref{sys-rand} shows the test accuracy for models trained on both types of data with the different techniques.
@@ -127,17 +127,17 @@ Figure \ref{opts} plots the relative error of the alternatives and \sys with and
 Without detection (AC-D), \sys is still more accurate than Active Learning.
 Removing the importance sampling, \sys is slightly worse than Active Learning on the Adult dataset but is comparable on the EEG dataset.
 
-\vspace{0.25em}
-
-\noindent \emph{Summary: Both a priori detection and non-uniform sampling significantly contribute to the gains over Active Learning.}
-
-\begin{figure}[ht!]
+\begin{figure}[t]\vspace{0.5em}
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp8a.png}
  \includegraphics[width=0.49\columnwidth]{exp/exp8b.png}
  \includegraphics[width=0.5\columnwidth]{exp/legend-8.png}\vspace{-1em}
  \caption{ -D denotes no detection, and -D-I denotes no detection and no importance sampling. Both optimizations significantly help \sys outperform SampleClean and Active Learning. \label{opts}}\vspace{-1.5em}
 \end{figure}
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: Both a priori detection and non-uniform sampling significantly contribute to the gains over Active Learning.}
 
 \iffalse
 We evaluate Active Learning and \sys to better understand this relationship.
@@ -181,16 +181,16 @@ SampleClean does not use the dirty data and thus its error is essentially govern
 SampleClean outperforms \sys only when corruptions are very severe (45\% in Adult and nearly 60\% in EEG).
 When the initialization with the dirty model is inaccurate, \sys does not perform as well. 
 
+\begin{figure}[t]
+\centering
+ \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
+  \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}\vspace{-1em}
+ \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization. The error of SampleClean does not depend on the corruption rate so it is a vertical line.  \label{bias}}
+\end{figure}
+
 \vspace{0.25em}
 
 \noindent \emph{Summary: SampleClean is beneficial in comparison to \sys when corruption rates exceed 45\%.}
-
-\begin{figure}[ht!]
-\centering\vspace{-1em}
- \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
-  \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}
- \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization. The error of SampleClean does not depend on the corruption rate so it is a vertical line.  \label{bias}}
-\end{figure}
 
 \subsection{\sys: Adaptive Detection}
 This experiment explores how the results of the previous experiment change when using an adaptive detector instead of the \emph{a priori} detector.
@@ -206,8 +206,8 @@ At 1000 records point on the curve, adaptive \sys has about 10\% higher error.
 
 \noindent \emph{Summary: For 500 records cleaned, adaptive \sys has a 30\% higher model error compared to a priori \sys, but still outperforms Active Learning and SampleClean.}
 
-\begin{figure}[t]
-\centering\vspace{-1em}
+\begin{figure}[ht!]
+\centering
  \includegraphics[width=0.49\columnwidth]{exp/exp11a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp11b.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/legend-11.png}\vspace{-0.5em}
@@ -234,7 +234,7 @@ This is because the classifier is imperfect and misclassifies some data points i
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp5a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp12.pdf}
- \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}
+ \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}\vspace{-2em}
 \end{figure}
 
 \vspace{1.5em}
@@ -269,11 +269,11 @@ On the cleaned data, this classifier is nearly perfect with a 97\% true positive
 
 \noindent \emph{Summary: To achieve an 80\% detection rate, \sys cleans nearly 10x less records than Active Learning. }
 
-\begin{figure}[ht!]
-\centering
+\begin{figure}[t]
+\centering\vspace{-1em}
  \includegraphics[width=0.49\columnwidth]{exp/exp13a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp13b.pdf}\vspace{-1em}
- \caption{(a) The relative model error as a function of the number of cleaned records. (b) The true positive rate as a function of the number of cleaned records. \label{dfd}}\vspace{-1em}
+ \caption{(a) The relative model error as a function of the number of cleaned records. (b) The true positive rate as a function of the number of cleaned records. \label{dfd}}
 \end{figure}
 
 \subsubsection{Adaptive: Replacing Corrupted Data}
@@ -292,10 +292,10 @@ For the fuzzy images, both Active Learning and \sys reach 2\% error after cleani
 
 \noindent \emph{Summary: In the MNIST dataset, \sys significantly reduces (more than 2x) the number of images to clean to train a model with 2\% error. }
 
-\begin{figure}[ht]
-\centering\vspace{-0.5em}
+\begin{figure}[t]
+\centering
  \includegraphics[width=0.49\columnwidth]{exp/exp7a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp7b.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/legend-general.png}\vspace{-0.5em}
- \caption{In a real adaptive detection scenario with the MNIST dataset, \sys outperforms Active Learning and SampleClean.  \label{mnist}}
+ \caption{In a real adaptive detection scenario with the MNIST dataset, \sys outperforms Active Learning and SampleClean.  \label{mnist}}\vspace{-1em}
 \end{figure}
