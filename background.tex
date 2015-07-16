@@ -52,9 +52,9 @@ Training models on a mixture of dirty and clean data can lead to unreliable resu
 \begin{figure}[ht!]
 \centering
  \includegraphics[width=\columnwidth]{figs/update-arch.png}
- \caption{(a) Systematic corruption (translation) in one variable where the dirty data is in brown, the clean data is in green, and their respective best fit lines are in blue. 
- (b) Applying the same model to mixed data results in an inaccurate model.
-(c) Likewise, small sample sizes can result in similarly inaccurate models. \label{update-arch1}}
+ \caption{(a) Systematic corruption in one variable can lead to a shifted model. 
+ (b) Mixed dirty and clean data results in a less accurate model than no cleaning.
+(c) Small samples of only clean data can result in similarly inaccurate models. \label{update-arch1}}
 \end{figure}
 
 An alternative is to avoid the dirty data altogether instead of mixing the two populations.
@@ -126,14 +126,18 @@ The core problem addressed by \sys is incremental model update while progressive
 Let $R$ be a dirty relation, $F(r) \mapsto (x,y)$ be a featurization that maps
 a record $r \in R$ to a feature vector $x$ and label $y$, $\phi$ be a convex regularized loss,
 and $C(r) \mapsto r_{clean}$ be a cleaning technique that maps a record to its cleaned value. 
-Given these inputs, the \sys problem is to return an estimate $\hat{\theta}$ of the clean model for any limit $k$ on the number of times the data cleaning $C(\cdot)$ can be applied.
-The error in this estimate (i.e. L2 difference w.r.t a model trained on a fully cleaned dataset) should be bounded by a monotonically decreasing function in $k$ (i.e., more cleaning results is expected to improve the model).
+Given these inputs, the \sys problem is to return a \textbf{reliable} estimate $\hat{\theta}$ of the clean model for any limit $k$ on the number of times the data cleaning $C(\cdot)$ can be applied.
+
+\vspace{0.5em}
+
+\textbf{Reliable} precisely means that the error in this estimate (i.e., L2 difference w.r.t a model trained on a fully cleaned dataset) is bounded above by a monotonically decreasing function in $k$.
 \end{problem}
 
 Addressing this problem requires analysis of the loss function $\phi$ and how $\phi$ is affected by dirty data.
 The solution is to integrate data cleaning and model training, where $\phi$ is simultaneously minimized while the data is cleaned.
 The tight feedback loop between model training and data cleaning poses several new algorithmic challenges and systems challenges.
-From an algorithmic perspective,  we have to re-weight data to avoid biases and the population mixtures described previously.
+From an algorithmic perspective,  the \emph{reliability} of the estimates differentiate \sys from alternative methodologies.
+We have to re-weight data to avoid biases and the population mixture problems described previously.
 There are also numerous new opportunities for optimizations such as pragmatically prioritizing data and avoiding data that are expected to be clean.
 
 From a systems perspective, data cleaning and model training happen at very different time scales.
