@@ -100,7 +100,9 @@ In terms of model error, \sys gives its largest benefits for small sample sizes.
 For 500 cleaned records of the Adult dataset, \sys has 6.1x less error than SampleClean and 2.1x less error than Active Learning.
 For 500 cleaned records of the EEG dataset, \sys has 9.6x less error than SampleClean and 2.4x less error than Active Learning.
 Both Active Learning and \sys benefit from the initialization with the dirty model as they do not retrain their models from scratch, and \sys improves on this performance with detection and error estimation.
-These gains also correlate well to improvements in test error (defined as the test accuracy difference w.r.t cleaning all data).
+Active Learning has no notion of dirty and clean data, and therefore prioritizes with respect to the dirty data.
+These gains in model error also correlate well to improvements in test error (defined as the test accuracy difference w.r.t cleaning all data).
+The test error converges more quickly than model error, emphasizing the benefits of progressive data cleaning, since it is not neccessary to clean all the data to get a model with essentially the same performance as the clean model.
 For example, to achieve a test error of 1\% on the Adult dataset, \sys cleans 500 fewer records than Active Learning.
 
 
@@ -163,7 +165,7 @@ For these errors PC and PC+D give reasonable results (not always guaranteed), bu
 This is because \sys tunes the weighting when averaging dirty and clean data into the gradient.
 
 \begin{figure}[ht!]
-\centering
+\centering\vspace{-0.5em}
  %\includegraphics[scale=0.15]{exp/exp3a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp14a.pdf}
     \includegraphics[width=0.49\columnwidth]{exp/exp14b.pdf}
@@ -172,6 +174,8 @@ This is because \sys tunes the weighting when averaging dirty and clean data int
 \end{figure}
 
 \noindent \emph{Summary: \sys converges faster than mixing dirty and clean data since it reweights data based on the fraction that is dirty and clean. Partial cleaning is not guaranteed to give sensible results.}
+
+\vspace{1em}
 
 \subsubsection{Corruption Rate}
 The next experiment explores how much of the performance
@@ -185,7 +189,7 @@ When the initialization with the dirty model is inaccurate, \sys does not perfor
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}\vspace{-1em}
- \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization. The error of SampleClean does not depend on the corruption rate so it is a vertical line.  \label{bias}}
+ \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization. The error of SampleClean does not depend on the corruption rate so it is a vertical line.  \label{bias}}\vspace{-1.5em}
 \end{figure}
 
 \vspace{0.25em}
@@ -231,9 +235,9 @@ This is because the classifier is imperfect and misclassifies some data points i
 \noindent \emph{Summary: When errors are increasingly random (50\% random) and cannot be accurately classified, adaptive detection provides no benefit over no detection. }
 
 \begin{figure}[ht!]
-\centering
+\centering \vspace{-1em}
  \includegraphics[width=0.49\columnwidth]{exp/exp5a.pdf}
- \includegraphics[width=0.49\columnwidth]{exp/exp12.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp12.pdf}\vspace{-0.5em}
  \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}\vspace{-2em}
 \end{figure}
 
