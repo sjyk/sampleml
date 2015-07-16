@@ -1,7 +1,7 @@
 \section{Estimation}\label{sampling}
 This section makes the sampling result of the previous section practical by approximating the cleaned values.
 
-\subsection{Challenges and Goal}
+\subsection{Goals and Challenges}
 The optimal sampling distribution is dependent on a value that is not known without data cleaning $\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})$.
 One way to approximate this distribution is to learn a function $e(\cdot)$ via regression based on previously cleaned data.
 This is a high-dimensional regression problem which may have to learn a very complicated relationship between dirty and clean data.
