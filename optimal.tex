@@ -8,15 +8,6 @@ This section shows that this model update procedure can be interpreted as a Stoc
 Gradient Descent (SGD) algorithm, which gives a theoretical framework to analyze
 convergence and bound the error at each step.
 
-\subsection{Update Problem}
-Let $S_{dirty} \subseteq R_{dirty}$  be a random sample of data from the results of the detection in the previous section, and let $p(r)$ be the sampling probability of each record.
-The cleaner applies the data cleaning technique to the sample resulting in $S_{clean}$ and clean features and labels $(X^{(c)},Y^{(c)})$. 
-In the model update problem, \sys applied the update to the dirty model $\theta^{(d)}$, based on the clean sample, to return $\theta^{new}$.
-The goal is that these updates should minimize the error of the updated model and the true model $\theta^{(c)}$ (if entire data is cleaned):
-\[
-error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
-\]
-
 \subsection{Geometric Interpretation}
 The update algorithm intuitively follows from the convex geometry of the problem.
 Consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar value), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.

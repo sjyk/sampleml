@@ -1,30 +1,63 @@
 \section{System Architecture}\label{arch}
-This section describes the \sys architecture and the basic algorithmic framework.
-The individual components will be addressed in the subsequent sections.
+This section presents an overview of the \sys architecture.
+\sys addresses two challenges in model training after progressive cleaning: (1) the methodological problem of reliable analysis or the \emph{Update Problem}, and (2) the algorithmic problem of using information from the model to prioritize data cleaning which we call the \emph{Optimization Problem}.
+The \sys architecture in Figure \ref{sys-arch} describes an end-to-end system implementing our solutions to these two challenges.
 
-\subsection{Overview}
-Figure \ref{sys-arch}, in the introduction, overviews the entire framework.
-The first step of \sys is \emph{initialization}.
-In this step, there is a dirty relation $R$, a featurization $F(\cdot)$, a data cleaning technique $C(\cdot)$, and a dirty model $\theta^{(d)}$ trained on the featurized dirty relation. 
-Optionally, \sys integrates with dirty data detection rules $D(\cdot)$ which selects the set of likely corrupted records from $R$.
-If one is not provided, \sys starts by treating all of the data as dirty and tries to learn a detector as data are cleaned.
-At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $T = \frac{k}{b}$).
+\subsection{User Input}
+\sys provides reliable model estimates when progressive data cleaning and machine learning are applied together.
+Both of these components are user-specified and \sys is an estimation framework that wraps around them.
+To use \sys, the user provides the following:
+
+\noindent\textbf{Convex Model and Initialization. } The user provides a predictive model specified as a convex loss optimization problem, a function $F(\cdot)$ that featurizes the data, and an initial model $\theta^{(d)}$ trained on the dirty data. 
+
+\vspace{0.25em}
+
+\noindent\textbf{Cleaning Function. } The data cleaning is specified as a function $C(\cdot)$ that maps dirty records to clean records. This paper focuses on a record-by-record cleaning model where the function $C$ is applied to a record and produces the clean record:
+\[
+S_{clean} = \{C(r) : \forall r \in S_{dirty}\}
+\]
+This allows for uniform measure of the performance of \sys in terms of model error as a function of sample size. The record-by-record cleaning model is not a fundamental restriction of this approach, and in the extensions (Section \ref{set-of-r}), there is a discussion on a compatible ``set of records" cleaning model. Consider the case where an analyst finds a dirty record, and is able to fix all records (possibly outside the sample) the with same error throughout the dataset efficiently.
+
+\vspace{0.25em}
+
+\noindent\textbf{Specifying a Budget. } At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $T = \frac{k}{b}$).
 We discuss how to set $b$ and the tradeoffs in setting a larger or smaller $b$ in Section \ref{model-update}.
 
-After initialization, \sys begins the cleaning and model update iterations.
-The \emph{sampler} selects a sample of dirty data based on the batch size.
-At this step, \sys can use the detector $D$ to narrow the sample to likely dirty data.
-Once a sample is selected, the \emph{cleaner} applies $C(\cdot)$ to the dirty sample.
-%Then, after the sample is cleaned, the current model is updated.
-\sys is initialized with the dirty model, and this model is iteratively updated as more batches are cleaned.
+\vspace{0.25em}
 
-The next two steps in the architecture are feedback steps where the sampling distribution is updated for the next iteration.
-The \emph{estimator} uses previously cleaned data to estimate the value of data cleaning on new records.
-This information is used to guide sampling towards more valuable records.
-After estimation, the detector $D(\cdot)$ is also updated based on cleaned data.
-After all of the iterations are complete, the system returns the updated model.
+\noindent\textbf{Detector (Optional Section \ref{det}). } Optionally, \sys integrates with dirty data detection rules $D(\cdot)$ which selects the set of likely corrupted records from $R$.
+If one is not provided, \sys starts by treating all of the data as dirty and tries to learn a detector as data are cleaned.
+ The detector select a candidate set of dirty records $R_{dirty} \subseteq R$. There are two techniques to do this: (1) an \emph{a priori} case, and (2) and an adaptive case. 
 
-To summarize the architecture in pseudocode:
+\subsection{Problem 1. Update Problem}
+In the model update problem, \sys applies an update to the dirty model $\theta^{(d)}$, based on some newly cleaned data $S_{clean}$, to return $\theta^{new}$.
+Of course, these updates will have some error between the updated model and the true model $\theta^{(c)}$ (if the entire dataset is cleaned):
+\[
+error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
+\]
+We call the update algorithm ``reliable" if the expected error is upper bounded by a monotonically decreasing function $f$ of the amount of cleaned data:
+\[
+\mathbb{E}(error(\theta^{new})) = O(f(\mid S_{clean} \mid))
+\]
+and is also upper bounded by a monotonically increasing function of the initial error:
+\[
+\mathbb{E}(error(\theta^{new})) = O(g(\| \theta^{(d)} - \theta^{(c)} \|))
+\]
+Intuitively, more cleaning and less initial error should imply more accuracy.
+In Section \ref{model-update}, we describe how we can incrementally maintain the model given some cleaned data $S_{clean}$ using Stochastic Gradient Descent (SGD).
+This procedure will avoid the pitfalls of dimensionality and Simpson's paradox.
+
+\subsection{Problem 2. Optimization Problem}
+\sys optimizes the execution of the updates by carefully selecting $S_{clean}$.
+The optimization problem is to select $S_{clean}$ such that the expected error $\mathbb{E}(error(\theta^{new}))$ is minimized.
+\sys uses previously cleaned data to estimate the value of data cleaning on new records.
+Then it draws a sample of records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p(r)$ based on the estimates.
+We derive the optimal sampling distribution for the SGD updates, and show how the theoretical optimal can be approximated.
+
+\subsection{Overview}
+\sys is a framework that implements solutions to the update and optimization problems.
+Figure \ref{sys-arch} describes the main components of this architecture.
+To summarize in pseudocode:
 \begin{enumerate}[leftmargin=1em]\scriptsize\sloppy
 \item \texttt{Init(dirty\_data, cleaned\_data, dirty\_model, batch, iter)}
 \item For each t in $\{1,...,T\}$
@@ -52,6 +85,7 @@ The model improves after each iteration.
 After $t=10$ of cleaning, the analyst has an accurate model trained with 100 cleaned records but still utilizes the entire dirty data.
 \end{example}
 
+\iffalse
 \subsection{Challenges and Formalization}
 We highlight the important components and formalize the research questions explored in this paper. 
 
@@ -61,16 +95,11 @@ We highlight the important components and formalize the research questions explo
 
 \vspace{0.5em}
 
-\noindent\textbf{Sampler (Section \ref{dist-samp}). } The sampler draws a sample of records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p(r)$.
-We will derive the optimal sampling distribution, and show how the theoretical optimal can be approximated by the next estimator.
+
 
 \vspace{0.5em}
 
-\noindent\textbf{Cleaner (User-Specified). } Given the sample of the records $S_{dirty}$,  the cleaner applies the user-specified data cleaning $C(\cdot)$. This paper focuses on a record-by-record cleaning model where the function $C$ is applied to a record and produces the clean record:
-\[
-S_{clean} = \{C(r) : \forall r \in S_{dirty}\}
-\]
-This allows for uniform measure of the performance of \sys in terms of model error as a function of sample size. The record-by-record cleaning model is not a fundamental restriction of this approach, and in the extensions (Section \ref{set-of-r}), there is a discussion on a compatible ``set of records" cleaning model. Consider the case where an analyst finds a dirty record, and is able to fix all records (possibly outside the sample) the with same error throughout the dataset efficiently.
+
 
 \vspace{0.5em}
 
@@ -80,7 +109,7 @@ This allows for uniform measure of the performance of \sys in terms of model err
 
 \noindent\textbf{Estimator (Section \ref{sampling}): } The estimator approximates the optimal distribution derived in the Sample step. Based on the change in the featurized data $F(S_{clean})$ and $F(S_{dirty})$, it directs the next iteration of sampling to select points that will have changes most valuable to the next model update.
 
-\iffalse
+
 \subsection{Optimizations}
 There are three aspects of \sys, that allow us to achieve this design point: error partitioning, gradient-based model update (Section \ref{model-update}), estimate-driven sampling (Section \ref{sampling}).
 

@@ -74,10 +74,45 @@ In our revision, we have abstracted these two separate problems and describe the
 
 \textbf{In general, the distinction between an ``architecture" and an ``algorithm that fits into the architecture" is quite unclear. The problem with SGD/Active Learning above is one example.}
 
-As mentioned in the previous response, we have addressed this problem by separating the methodological problem and the algorithmic problem. ActiveClean is an architecture which given a downstream predictive model and a record-by-record data cleaning function, applies progressive data cleaning in a way that results in reliable intermediate results.
-We describe the optimizations to the approach such as importance sampling and detection as orthogonal algorithms that fit into the framework.
+As mentioned in the previous response, we have addressed this problem by separating the methodological problem and the algorithmic problem. We have revised the architecture described in Section 3 to make this clear:
 
-\reminder{Add verbatim fixes here}
+\vspace{0.25em}
+
+\emph{\sys addresses two challenges in model training after progressive cleaning: (1) the methodological problem of reliable analysis or the \emph{Update Problem}, and (2) the algorithmic problem of using information from the model to prioritize data cleaning which we call the \emph{Optimization Problem}.
+The \sys architecture in Figure \ref{sys-arch} describes an end-to-end system implementing our solutions to these two challenges.}
+
+\vspace{0.25em}
+
+Section 3.2 describes the update problem:
+\emph{In the model update problem, \sys applies an update to the dirty model $\theta^{(d)}$, based on some newly cleaned data $S_{clean}$, to return $\theta^{new}$.}
+
+We clarify the requirements of the algorithm that addresses this problem:
+\emph{We call the update algorithm ``reliable" if the expected error is upper bounded by a monotonically decreasing function $f$ of the amount of cleaned data:
+\[
+\mathbb{E}(error(\theta^{new})) = O(f(\mid S_{clean} \mid))
+\]
+and is also upper bounded by a monotonically increasing function of the initial error:
+\[
+\mathbb{E}(error(\theta^{new})) = O(g(\| \theta^{(d)} - \theta^{(c)} \|))
+\]
+Intuitively, more cleaning and less initial error should imply more accuracy.
+In Section \ref{model-update}, we describe how we can incrementally maintain the model given some cleaned data $S_{clean}$ using Stochastic Gradient Descent (SGD).
+This procedure will avoid the pitfalls of dimensionality and Simpson's paradox.}
+
+\vspace{0.25em}
+
+Section 3.3 describes the optimization problem:
+\emph{\sys optimizes the execution of the updates by carefully selecting $S_{clean}$.
+The optimization problem is to select $S_{clean}$ such that the expected error $\mathbb{E}(error(\theta^{new}))$ is minimized.
+\sys uses previously cleaned data to estimate the value of data cleaning on new records.
+Then it draws a sample of records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p(r)$ based on the estimates.
+We derive the optimal sampling distribution for the SGD updates, and show how the theoretical optimal can be approximated.
+}
+
+\vspace{0.25em}
+
+The \sys framework is independent of the solutions to the update problem and the optimization problem.
+However, in this work, our solutions to these problems inform each other as we use the theoretical analysis of SGD to inform how to guide sampling. 
 
 \vspace{0.25em}
 
