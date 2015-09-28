@@ -24,6 +24,7 @@ This paper explores progressive data cleaning when there is a single predictive 
 We focus on two problems for a popular class of models called convex loss models (e.g., linear regression and SVMs): (1) the methodological problem of reliable analysis with progressive data cleaning and predictive modeling, and (2) the algorithmic problem of using information from the model to prioritize data cleaning.
 For (1), the key challenge is that predictive model training often implicitly solves an optimization problem and the re-optimization does not commute with progressive data cleaning.
 We show that instead of re-optimizing, the model can be incrementally maintained with gradient descent given newly cleaned data, an technique that is guaranteed to converge under suitable conditions.
+Such guarantees allow analysts to trust early results during the data exploration and cleaning phase and facilitate reliable comparisons between: expensive data cleaning operations, different types of models, and different featurization techniques.
 To address challenge (2), similar to Active Learning, we propose a sampling algorithm that selects the most valuable records to clean with higher probability.
 However, an important distinction with prior work is that this prioritization utilizes information from the downstream model.
 
