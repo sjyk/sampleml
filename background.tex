@@ -93,6 +93,19 @@ Also, data cleaning and model training can happen at very different time scales,
 Finally, in this line of work, the tradeoff space is enormous, and we have to carefully pick a design point and tailor our optimizations to this preferred regime.
 \fi
 
+\subsection{Dirty Data Model}
+This paper explores a model for data error where attributes of records in a relation $R$ are incorrect or missing.
+Formally, there are two relations $R_{dirty}$ and $R_{clean}$ with the same schema and a one-to-one mapping between rows.
+Therefore, for every $r \in R_{dirty}$ there exists an $r' \in R_{clean}$, and a cleaning function $C(\cdot)$, is a function that maps each $r$ to its corresponding $r'$.
+We assume that there is a featurization $F(\cdot)$ which is defined over both $R_{dirty}$ and $R_{clean}$ and maps rows to vectors in $\mathbb{R}^d$.
+So each row corresponds to one training example in the predictive model.
+
+Consider the data corruption in our motivating example where company names were inconsistently entered: ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
+Fixing this error can be represented as a record-by-record mapping.
+The data cleaning function would pick one canonical representation for the company (e.g. ``Pfizer Inc.") and map all records with other values that refer to the same real-world entity to the canonical representation.
+However, there are types of data cleaning that do not satisfy this model such as schema mapping, record deduplication, and data extractions that create additional columns. 
+
+
 \subsection{Preliminaries: Convex Data Analytics}
 To design an algorithm that avoids Simpson's paradox, this work focuses on an initial class of well analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
 Convex loss minimization problems are amenable a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
@@ -114,11 +127,6 @@ $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid
 \]
 In this work, without loss of generality, we will include the regularization as part of the loss function i.e., $\phi(x_{i},y_{i},\theta)$ includes $r(\theta)$.
 
-\begin{definition}[Convex Data Analytics]
-A convex data analytics problem is specified by a set of features $X$, corresponding set of labels $Y$, and a parametrized loss function $\phi$ that is convex in its parameter $\theta$.
-The result is a \textbf{model} $\theta$ that minimizes the sum of losses over all features and labels.
-\end{definition}
-
 \subsection{\sys Problem}
 The core problem addressed by \sys is incremental model update while progressively cleaning data.
 
@@ -130,7 +138,7 @@ Given these inputs, the \sys problem is to return a \textbf{reliable} estimate $
 
 \vspace{0.5em}
 
-\textbf{Reliable} precisely means that the error in this estimate (i.e., L2 difference w.r.t a model trained on a fully cleaned dataset) is bounded above by a monotonically decreasing function in $k$.
+\textbf{Reliable} precisely means that the expected error in this estimate (i.e., L2 difference w.r.t a model trained on a fully cleaned dataset) is bounded above by a monotonically decreasing function in $k$ and the error of the dirty model.
 \end{problem}
 
 Addressing this problem requires analysis of the loss function $\phi$ and how $\phi$ is affected by dirty data.

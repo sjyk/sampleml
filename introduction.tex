@@ -1,25 +1,18 @@
 \section{Introduction}
-Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations \cite{Gartner}.
-Dirty data can lead to inaccurate analysis, and techniques for processing dirty data are well studied \cite{rahm2000data}.
-The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} leads to additional challenges in managing dirty data.
-Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., corruption that disproportionately affects certain data) can mask or even introduce spurious new relationships.
+Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations.
+Data analysts report that data cleaning is one of the most time consuming steps in the analysis process \cite{nytimes}.
+Cleaning can require a significant amount of developer effort in writing software or rules to fix the corruption.
+%Crowdsourcing is an increasingly popular alternative, but comes at the cost of additional latency and the overhead of managing human workers \cite{gokhale2014corleone, park2014crowdfill, sampleclean,chu2015katara}.
+When data cleaning is expensive, it is desirable to apply it \textbf{progressively}, where analysts can inspect early results with only $k \ll N$ records cleaned.
+Progressive data cleaning is a well studied problem especially in the contex of entity resolution \cite{whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
+Increasingly, Active Learning \cite{settles2010active} or other statistical methods are applied to select records or contraint violations to clean in a way that maximizes the information gained \cite{DBLP:journals/pvldb/YakoutENOI11, gokhale2014corleone, yakout2013don}.
+
+However, these frameworks do not consider the requirements of the downstream applications which can give valuable information on when and how to apply data cleaning.
+While using downstream query semantics has been explored in the context of conjuctive queries \cite{DBLP:conf/sigmod/BergmanMNT15} and SQL aggregates \cite{wang1999sample}, it is important to recognize the growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib}.
+Predictive models rely on learning relationships between features and labels, and systematic data corruption \cite{taylor1982introduction} can mask or even introduce spurious new relationships.
 Furthermore, the high dimensionality of these models can amplify small problems \cite{xiaofeature} resulting in error-prone predictions even when trained on mostly clean data.
 
-Consider a music recommender system in which due to a software bug, all users from Europe have an incorrect age attribute defaulted to ``18-24".
-A recommendation model trained on this data may spuriously learn a correlation relationship between age ``18-24" and music liked by European users.
-A bug, which ostensibly affected only the European users' records, can affect predictions to all users aged ``18-24".
-Systematic corruption prior to featurization is not addressed in the robust Machine Learning literature which focuses on the resilience to outliers (e.g., age ``150").
-
-A number of data cleaning frameworks have been recently proposed to address the problem of corrupted data at scale\cite{khayyat2015bigdansing, chu2015katara, sampleclean}.
-However, data analysts report that data cleaning remains one of the most time consuming steps in the analysis process \cite{nytimes}.
-Data cleaning can require a significant amount of developer effort in writing software or rules to fix the corruption.
-Crowdsourcing is an increasingly popular alternative with recent success in missing value filling and entity resolution \cite{gokhale2014corleone, park2014crowdfill, sampleclean,chu2015katara}.
-However, crowdsourcing comes at the cost of additional latency and the overhead of managing human workers.
-
-When data cleaning is expensive, it is desirable to apply it \textbf{progressively}, where users can inspect early results with only $k \ll N$ records cleaned.
-Progressive data cleaning enables users to specify a cleaning budget and clean until that budget is reached.
-Even without a budget, progressive cleaning is useful as it allows users measure the impact of a potentially costly data cleaning operation without applying it to the entire data.
-However, when applied before predictive modeling, progressive data cleaning poses several methodological problems.
+When applied before predictive modeling, straight-forward applications of progressive data cleaning poses several methodological problems.
 Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
 An alternative is to clean $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
@@ -27,21 +20,22 @@ While this avoids the mixing problem, accurate model training may require a larg
 Finally, both problems are compounded by sparsity, where if corrupted records are uncommon, a random subset of $k$ records may have relatively few examples of corruptions.
 The errors and inefficiencies introduced by these three problems may dominate any gains from data cleaning, leading to unreliable or misleading conclusions about data or model quality.
 
+This paper explores progressive data cleaning when there is a single predictive model at the end of the analysis pipeline.
+We focus on two problems for a popular class of models called convex loss models (e.g., linear regression and SVMs): (1) the methodological problem of reliable analysis with progressive data cleaning and predictive modeling, and (2) the algorithmic problem of using information from the model to prioritize data cleaning.
+For (1), the key challenge is that predictive model training often implicitly solves an optimization problem and the re-optimization does not commute with progressive data cleaning.
+We show that instead of re-optimizing, the model can be incrementally maintained with gradient descent given newly cleaned data, an technique that is guaranteed to converge under suitable conditions.
+To address challenge (2), similar to Active Learning, we propose a sampling algorithm that selects the most valuable records to clean with higher probability.
+However, an important distinction with prior work is that this prioritization utilizes information from the downstream model.
+
 \begin{figure}[t]
 \centering
  \includegraphics[width=\columnwidth]{figs/arch.png}
  \caption{\sysfull is an architecture where data cleaning is integrated with model training in a framework with sampling, model update, and feedback through estimation. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
-We propose \sys, a progressive data cleaning framework, that addresses the three methodological challenges: mixing, sampling, and sparsity.
-The key insight is that an important class of predictive models, called convex loss models (e.g., linear regression and SVMs), are trained by iteratively drawing random samples of data and updating a model\cite{bertsekas2011incremental}.
-Rather than cleaning before model training, data cleaning can be directly integrated into the training process, so that \sys can ensure provable guarantees such as convergence and error bounds.
-In \sys, data are cleaned in small random batches and the model is incrementally updated based on the results.
-Similar to Active Learning, \sys selects the most valuable records to clean with higher probability, however, it applies a number of optimizations that exploit the data cleaning setting such as avoiding data that is expected to be clean, estimating of the effect of data cleaning for a record, and batching together updates from already cleaned data.
-This framework is optimized for problems that require expensive data cleaning.
-
 The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{update process}, and \emph{estimator}.
-The cleaner is a user provided data cleaning technique (e.g., Entity Resolution), and \sys provides the remaining components to apply the cleaner progressively.
+The cleaner is a user-provided data cleaning technique, and \sys provides the remaining components to apply the cleaner progressively.
+We analyze a model where the user specifies a cleaning function $C(\cdot)$ where given any record, it returns a cleaned version of the record.
 To summarize the contributions by component:
 \begin{itemize}[noitemsep]
 \item \textbf{Detector} (Section \ref{det}). The detector can apply rules from data quality constraints or adaptively learn which records are dirty to increase the fraction of dirty records sampled.

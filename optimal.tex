@@ -48,6 +48,8 @@ So intuitively, this approach iteratively moves the model downhill, or corrects 
 However, the gradient depends on all of the clean data which is not available and \sys will have to approximate this gradient from a sample.
 The intuition, formalized in Section \ref{sgd}, is that if the gradients are on average in the right direction, the algorithm is guaranteed to converge with bounds on the convergence rate.
 
+\vspace{2em}
+
 \subsection{Average Gradient From a Sample}
 To derive a sample-based update rule, the most important property is that sums commute with derivatives and gradients.
 The convex loss class of models are sums of losses, so given the current best model $\theta$, the gradient $g^*(\theta)$ is:
