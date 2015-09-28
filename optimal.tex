@@ -1,12 +1,6 @@
 \section{Update}\label{model-update}
-Before discussing sampling, this section discusses how to update a model.
-The sampling framework will naturally follow from this update procedure.
-This section assumes that the detector in the previous section has selected 
-a set of candidate records $R_{dirty}$ and the sampler has sampled from this
-set of candidate records.
-This section shows that this model update procedure can be interpreted as a Stochastic 
-Gradient Descent (SGD) algorithm, which gives a theoretical framework to analyze
-convergence and bound the error at each step.
+This section describes how to update a model in a way that avoids the methodological problems described before.
+The updater assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
 
 \subsection{Geometric Interpretation}
 The update algorithm intuitively follows from the convex geometry of the problem.
