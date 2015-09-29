@@ -3,22 +3,32 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: outline.aux
 The style file: abbrv.bst
 Database file #1: ref.bib
-Repeated entry---line 1792 of file ref.bib
+Repeated entry---line 1791 of file ref.bib
  : @inproceedings{wang1999sample
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1846 of file ref.bib
+Repeated entry---line 1843 of file ref.bib
  : @inproceedings{volkovs2014continuous
  :                                     ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2352 of file ref.bib
+Repeated entry---line 2445 of file ref.bib
  : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
  :                                                 ,
 I'm skipping whatever remains of this entry
+A bad cross reference---entry "yakout2013don"
+refers to entry "DBLP:conf/sigmod/2013", which doesn't exist
 A bad cross reference---entry "DBLP:conf/sigmod/BergmanMNT15"
 refers to entry "DBLP:conf/sigmod/2015", which doesn't exist
 A bad cross reference---entry "wang1999sample"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
+A bad cross reference---entry "xiaofeature"
+refers to entry "DBLP:conf/icml/2015", which doesn't exist
+A bad cross reference---entry "bottou2012stochastic"
+refers to entry "DBLP:series/lncs/7700", which doesn't exist
+A bad cross reference---entry "zhao2014stochastic"
+refers to entry "DBLP:conf/icml/2015", which doesn't exist
+A bad cross reference---entry "feng2014robust"
+refers to entry "DBLP:conf/nips/2014", which doesn't exist
 A bad cross reference---entry "mayfield2010eracer"
 refers to entry "DBLP:conf/sigmod/2010", which doesn't exist
 A bad cross reference---entry "deshpande2004model"
@@ -27,57 +37,61 @@ A bad cross reference---entry "DBLP:conf/case/MahlerKLSMKPWFAG14"
 refers to entry "DBLP:conf/case/2014", which doesn't exist
 A bad cross reference---entry "DBLP:conf/recsys/KrishnanPFG14"
 refers to entry "DBLP:conf/recsys/2014", which doesn't exist
+Warning--I didn't find a database entry for "whang2014incremental"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2014"
+Warning--I didn't find a database entry for "DBLP:conf/icml/2015"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2015"
+Warning--I didn't find a database entry for "DBLP:conf/nips/2014"
+Warning--I didn't find a database entry for "DBLP:series/lncs/7700"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2010"
 Warning--I didn't find a database entry for "DBLP:conf/vldb/2004"
 Warning--I didn't find a database entry for "DBLP:conf/case/2014"
 Warning--I didn't find a database entry for "DBLP:conf/recsys/2014"
+Warning--I didn't find a database entry for "DBLP:conf/sigmod/2013"
 Warning--to sort, need author or key in bdas
 Warning--to sort, need author or key in nytimes
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in dollarsfordocsa
-Warning--empty year in bertsekas2011incremental
-Warning--empty journal in xiaofeature
-You've used 39 entries,
+Warning--empty publisher in bottou2012stochastic
+You've used 36 entries,
             2118 wiz_defined-function locations,
-            720 strings with 11980 characters,
-and the built_in function-call counts, 16000 in all, are:
-= -- 1542
-> -- 874
+            710 strings with 10650 characters,
+and the built_in function-call counts, 15061 in all, are:
+= -- 1450
+> -- 810
 < -- 16
-+ -- 356
-- -- 308
-* -- 1164
-:= -- 2528
-add.period$ -- 117
-call.type$ -- 39
-change.case$ -- 270
++ -- 331
+- -- 286
+* -- 1094
+:= -- 2358
+add.period$ -- 106
+call.type$ -- 36
+change.case$ -- 250
 chr.to.int$ -- 0
-cite$ -- 45
-duplicate$ -- 589
-empty$ -- 1176
-format.name$ -- 308
-if$ -- 3389
+cite$ -- 41
+duplicate$ -- 555
+empty$ -- 1122
+format.name$ -- 286
+if$ -- 3200
 int.to.chr$ -- 0
-int.to.str$ -- 39
-missing$ -- 36
-newline$ -- 194
-num.names$ -- 70
-pop$ -- 316
+int.to.str$ -- 36
+missing$ -- 33
+newline$ -- 179
+num.names$ -- 64
+pop$ -- 295
 preamble$ -- 1
-purify$ -- 232
+purify$ -- 215
 quote$ -- 0
-skip$ -- 466
+skip$ -- 442
 stack$ -- 0
-substring$ -- 972
-swap$ -- 188
+substring$ -- 962
+swap$ -- 182
 text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 154
-warning$ -- 6
-while$ -- 136
-width$ -- 41
-write$ -- 412
-(There were 9 error messages)
+type$ -- 142
+warning$ -- 5
+while$ -- 130
+width$ -- 38
+write$ -- 380
+(There were 14 error messages)

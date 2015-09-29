@@ -36,7 +36,7 @@ In this work, we try to generalize these principles given a general dirty datase
 
 \vspace{0.5em}
 
-\noindent \textbf{Secure Learning: } Another relevant line of work is the work in private machine learning  \cite{wainwright2012privacy, duchi2013local}. Learning is performed on a noisy variant of the data which mitigates privacy concerns, embracing the error rather than correcting for it. \sys is also related to work in adversarial learning \cite{nelson2012query}, where the goal is to make models robust to adversarial data manipulation.
+\noindent \textbf{Secure Learning: } \sys is also related to work in adversarial learning \cite{nelson2012query}, where the goal is to make models robust to adversarial data manipulation.
 This line of work has extensively studied methodologies for making models private to external queries and robust to malicious labels \cite{xiaofeature}, but the data cleaning problem explores more general corruptions than just malicious labels.
 One widely applied technique in this field is reject-on-negative impact, which essentially, discards data that reduces the loss function--which will not work when we do not have access to the true loss function (only the ``dirty loss"). 
 

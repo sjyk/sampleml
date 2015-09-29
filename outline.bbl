@@ -28,26 +28,24 @@ A.~Alexandrov, R.~Bergmann, S.~Ewen, J.~Freytag, F.~Hueske, A.~Heise, O.~Kao,
 \bibitem{altowim2014progressive}
 Y.~Altowim, D.~V. Kalashnikov, and S.~Mehrotra.
 \newblock Progressive approach to relational entity resolution.
-\newblock {\em Proceedings of the VLDB Endowment}, 7(11), 2014.
+\newblock {\em {PVLDB}}, 7(11):999--1010, 2014.
 
 \bibitem{DBLP:conf/sigmod/BergmanMNT15}
 M.~Bergman, T.~Milo, S.~Novgorodov, and W.~C. Tan.
 \newblock Query-oriented data cleaning with oracles.
-\newblock In {\em Proceedings of the 2015 {ACM} {SIGMOD} International
-  Conference on Management of Data, Melbourne, Victoria, Australia, May 31 -
-  June 4, 2015}, pages 1199--1214, 2015.
+\newblock In {\em SIGMOD Conference}, pages 1199--1214, 2015.
 
 \bibitem{bertsekas2011incremental}
 D.~P. Bertsekas.
 \newblock Incremental gradient, subgradient, and proximal methods for convex
-  optimization: A survey.
-\newblock {\em Optimization for Machine Learning}, 2010:1--38.
+  optimization: {A} survey.
+\newblock {\em CoRR}, abs/1507.01030, 2015.
 
 \bibitem{bottou2012stochastic}
 L.~Bottou.
 \newblock Stochastic gradient descent tricks.
-\newblock In {\em Neural Networks: Tricks of the Trade}, pages 421--436.
-  Springer, 2012.
+\newblock In {\em Neural Networks: Tricks of the Trade - Second Edition}, pages
+  421--436. 2012.
 
 \bibitem{crotty2014tupleware}
 A.~Crotty, A.~Galakatos, and T.~Kraska.
@@ -55,34 +53,24 @@ A.~Crotty, A.~Galakatos, and T.~Kraska.
 \newblock {\em {IEEE} Data Eng. Bull.}, 37(3):63--76, 2014.
 
 \bibitem{dekel2012optimal}
-O.~Dekel, R.~Gilad-Bachrach, O.~Shamir, and L.~Xiao.
+O.~Dekel, R.~Gilad{-}Bachrach, O.~Shamir, and L.~Xiao.
 \newblock Optimal distributed online prediction using mini-batches.
-\newblock {\em The Journal of Machine Learning Research}, 13(1):165--202, 2012.
+\newblock {\em JMLR}, 13:165--202, 2012.
 
 \bibitem{deshpande2004model}
 A.~Deshpande, C.~Guestrin, S.~Madden, J.~M. Hellerstein, and W.~Hong.
 \newblock Model-driven data acquisition in sensor networks.
-\newblock In {\em (e)Proceedings of the Thirtieth International Conference on
-  Very Large Data Bases, Toronto, Canada, August 31 - September 3 2004}, pages
-  588--599, 2004.
+\newblock In {\em VLDB}, pages 588--599, 2004.
 
 \bibitem{drineas2012fast}
-P.~Drineas, M.~Magdon-Ismail, M.~W. Mahoney, and D.~P. Woodruff.
+P.~Drineas, M.~Magdon{-}Ismail, M.~W. Mahoney, and D.~P. Woodruff.
 \newblock Fast approximation of matrix coherence and statistical leverage.
-\newblock {\em The Journal of Machine Learning Research}, 13(1):3475--3506,
-  2012.
-
-\bibitem{duchi2013local}
-J.~C. Duchi, M.~I. Jordan, and M.~J. Wainwright.
-\newblock Local privacy and statistical minimax rates.
-\newblock In {\em Foundations of Computer Science (FOCS), 2013 IEEE 54th Annual
-  Symposium on}, pages 429--438. IEEE, 2013.
+\newblock {\em JMLR}, 13:3475--3506, 2012.
 
 \bibitem{feng2014robust}
 J.~Feng, H.~Xu, S.~Mannor, and S.~Yan.
 \newblock Robust logistic regression and classification.
-\newblock In {\em Advances in Neural Information Processing Systems}, pages
-  253--261, 2014.
+\newblock In {\em NIPS}, pages 253--261, 2014.
 
 \bibitem{friedman2001elements}
 J.~Friedman, T.~Hastie, and R.~Tibshirani.
@@ -98,7 +86,7 @@ C.~Gokhale, S.~Das, A.~Doan, J.~F. Naughton, N.~Rampalli, J.~Shavlik, and
 \bibitem{gruenheid2014incremental}
 A.~Gruenheid, X.~L. Dong, and D.~Srivastava.
 \newblock Incremental record linkage.
-\newblock {\em Proceedings of the VLDB Endowment}, 7(9):697--708, 2014.
+\newblock {\em {PVLDB}}, 7(9):697--708, 2014.
 
 \bibitem{guillory2009active}
 A.~Guillory, E.~Chastain, and J.~Bilmes.
@@ -115,57 +103,48 @@ J.~M. Hellerstein, C.~R{\'{e}}, F.~Schoppmann, D.~Z. Wang, E.~Fratkin,
 \bibitem{DBLP:conf/pervasive/JefferyAFHW06}
 S.~R. Jeffery, G.~Alonso, M.~J. Franklin, W.~Hong, and J.~Widom.
 \newblock Declarative support for sensor data cleaning.
-\newblock In {\em Pervasive}, pages 83--100, 2006.
+\newblock In {\em Pervasive Computing}, pages 83--100, 2006.
 
 \bibitem{DBLP:conf/recsys/KrishnanPFG14}
 S.~Krishnan, J.~Patel, M.~J. Franklin, and K.~Goldberg.
 \newblock A methodology for learning, analyzing, and mitigating social
   influence bias in recommender systems.
-\newblock In {\em Eighth {ACM} Conference on Recommender Systems, RecSys '14,
-  Foster City, Silicon Valley, CA, {USA} - October 06 - 10, 2014}, pages
-  137--144, 2014.
+\newblock In {\em RecSys}, pages 137--144, 2014.
 
 \bibitem{krishnan2015svc}
 S.~Krishnan, J.~Wang, M.~J. Franklin, K.~Goldberg, and T.~Kraska.
 \newblock Stale view cleaning: Getting fresh answers from stale materialized
   views.
-\newblock {\em Proceedings of the VLDB Endowment}, 8(12), 2015.
+\newblock {\em {PVLDB}}, 8(12):1370--1381, 2015.
 
 \bibitem{DBLP:conf/case/MahlerKLSMKPWFAG14}
 J.~Mahler, S.~Krishnan, M.~Laskey, S.~Sen, A.~Murali, B.~Kehoe, S.~Patil,
   J.~Wang, M.~Franklin, P.~Abbeel, and K.~Y. Goldberg.
 \newblock Learning accurate kinematic control of cable-driven surgical robots
   using data cleaning and gaussian process regression.
-\newblock In {\em 2014 {IEEE} International Conference on Automation Science
-  and Engineering, {CASE} 2014, New Taipei, Taiwan, August 18-22, 2014}, pages
-  532--539, 2014.
+\newblock In {\em CASE}, pages 532--539, 2014.
 
 \bibitem{mayfield2010eracer}
 C.~Mayfield, J.~Neville, and S.~Prabhakar.
 \newblock {ERACER:} a database approach for statistical inference and data
   cleaning.
-\newblock In {\em Proceedings of the {ACM} {SIGMOD} International Conference on
-  Management of Data, {SIGMOD} 2010, Indianapolis, Indiana, USA, June 6-10,
-  2010}, pages 75--86, 2010.
+\newblock In {\em SIGMOD Conference}, pages 75--86, 2010.
 
 \bibitem{nelson2012query}
-B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
-  J.~Tygar.
+B.~Nelson, B.~I.~P. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
+  J.~D. Tygar.
 \newblock Query strategies for evading convex-inducing classifiers.
-\newblock {\em The Journal of Machine Learning Research}, 13(1):1293--1332,
-  2012.
+\newblock {\em JMLR}, 13:1293--1332, 2012.
 
 \bibitem{pan2010survey}
 S.~J. Pan and Q.~Yang.
 \newblock A survey on transfer learning.
-\newblock {\em Knowledge and Data Engineering, IEEE Transactions on},
-  22(10):1345--1359, 2010.
+\newblock {\em TKDE}, 22(10):1345--1359, 2010.
 
 \bibitem{papenbrock2015progressive}
 T.~Papenbrock, A.~Heise, and F.~Naumann.
 \newblock Progressive duplicate detection.
-\newblock {\em Knowledge and Data Engineering, IEEE Transactions on},
-  27(5):1316--1329, 2015.
+\newblock {\em TKDB}, 27(5):1316--1329, 2015.
 
 \bibitem{settles2010active}
 B.~Settles.
@@ -190,36 +169,22 @@ M.~Volkovs, F.~Chiang, J.~Szlichta, and R.~J. Miller.
 \newblock In {\em Data Engineering (ICDE), 2014 IEEE 30th International
   Conference on}, pages 244--255. IEEE, 2014.
 
-\bibitem{wainwright2012privacy}
-M.~J. Wainwright, M.~I. Jordan, and J.~C. Duchi.
-\newblock Privacy aware learning.
-\newblock In {\em Advances in Neural Information Processing Systems}, pages
-  1430--1438, 2012.
-
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.
 \newblock A sample-and-clean framework for fast and accurate query processing
   on dirty data.
 \newblock In {\em SIGMOD Conference}, pages 469--480, 2014.
 
-\bibitem{whang2014incremental}
-S.~E. Whang and H.~Garcia-Molina.
-\newblock Incremental entity resolution on rules and data.
-\newblock {\em The VLDB Journal—The International Journal on Very Large Data
-  Bases}, 23(1):77--102, 2014.
-
 \bibitem{xiaofeature}
-H.~Xiao, T.~DE, B.~Biggio, D.~UNICA, G.~Brown, G.~Fumera, C.~Eckert, I.~TUM,
-  and F.~Roli.
+H.~Xiao, B.~Biggio, G.~Brown, G.~Fumera, C.~Eckert, and F.~Roli.
 \newblock Is feature selection secure against training data poisoning?
-\newblock 2015.
+\newblock In {\em ICML}, pages 1689--1698, 2015.
 
 \bibitem{yakout2013don}
-M.~Yakout, L.~Berti-{\'E}quille, and A.~K. Elmagarmid.
+M.~Yakout, L.~Berti{-}Equille, and A.~K. Elmagarmid.
 \newblock Don't be scared: use scalable automatic repairing with maximal
   likelihood and bounded changes.
-\newblock In {\em Proceedings of the 2013 ACM SIGMOD International Conference
-  on Management of Data}, pages 553--564. ACM, 2013.
+\newblock In {\em SIGMOD Conference}, pages 553--564, 2013.
 
 \bibitem{DBLP:journals/pvldb/YakoutENOI11}
 M.~Yakout, A.~K. Elmagarmid, J.~Neville, M.~Ouzzani, and I.~F. Ilyas.
@@ -228,7 +193,8 @@ M.~Yakout, A.~K. Elmagarmid, J.~Neville, M.~Ouzzani, and I.~F. Ilyas.
 
 \bibitem{zhao2014stochastic}
 P.~Zhao and T.~Zhang.
-\newblock Stochastic optimization with importance sampling.
-\newblock {\em arXiv preprint arXiv:1401.2753}, 2014.
+\newblock Stochastic optimization with importance sampling for regularized loss
+  minimization.
+\newblock In {\em ICML}, pages 1--9, 2015.
 
 \end{thebibliography}
