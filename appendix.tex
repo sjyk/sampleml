@@ -29,6 +29,31 @@ Records outside of $S_{dirty}$ may be cleaned on a subset of dirty attributes by
 After each iteration, we re-run the detector, and move any $r \in R'_{dirty}$ that are clean to $R_{clean}$.
 Such a model allows us to capture data cleaning operations such as in Example \ref{app-ex1} and Example \ref{app-ex2}.
 
+\subsection{Proofs}
+\noindent\textbf{Deriving $\alpha$ and $\beta$: } The first problem is to choose $\alpha$ and $\beta$ such that the estimate of the gradient is unbiased. 
+SGD will converge when the estimate is unbiased and the step-size is chosen appropriately.
+The batch $S_{dirty}$ is drawn only from $R_{dirty}$.
+Since the sizes of $R_{dirty}$ and its complement are known, it follows that the gradient over the already clean data $g_C$ and the recently cleaned data $g_S$ can be combined as follows:
+\[
+g(\theta^{t}) = \frac{\mid R_{dirty} \mid \cdot g_S + \mid R_{clean} \mid \cdot g_C  }{\mid R \mid}
+\]
+Therefore,
+\[
+\alpha = \frac{\mid R_{clean} \mid}{\mid R \mid}, \beta = \frac{\mid R_{dirty} \mid}{\mid R \mid}
+\]
+
+\begin{lemma}\label{unbiased1}
+The gradient estimate $g(\theta)$ is unbiased if $g_S$ is an unbiased estimate of:
+\[
+\frac{1}{\mid R_{dirty} \mid} \sum g_i(\theta)
+\]
+\end{lemma}
+\begin{proof}[Sketch]
+This result follows directly from the linearity of expectation (See Appendix \ref{unbiased1-deriv}).
+\end{proof}
+
+\vspace{0.25em}
+
 \subsection{Non-convex losses}\label{non-convex}
 We acknowledge that there is an increasing popularity of non-convex losses in the Neural Network and Deep Learning literature. 
 However, even for these losses, gradient descent techniques still apply. 
@@ -66,6 +91,15 @@ For a strongly convex loss, a batch size $b$, and $T$ iterations, the convergenc
 \end{proposition}
 
 \section{Proof of Lemma 2}\label{impsample-deriv}
+This lemma describes the optimal distribution over a set of scalars:
+\begin{lemma}\label{impsample}
+Given a set of real numbers $A = \{a_1,...,a_n\}$, let $\hat{A}$ be 
+a sample with replacement of $A$ of size k.
+If $\mu$ is the mean $\hat{A}$, the sampling distribution that minimizes
+ the variance of $\mu$, i.e., the expected square error, is $p(a_i) \propto a_i$.
+\end{lemma}
+Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is sampling proportionally to the values.
+
 The variance of this estimate is given by:
 \[
 Var(\mu) = \mathbb{E}(\mu^2)-\mathbb{E}(\mu)^2
@@ -101,6 +135,52 @@ If, we take the derivative with respect to $\lambda$ and set it equal to zero:
 Solving the system of equations, we get:
 \[
 p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
+\]
+
+\subsection{Linearization}
+If $d$ is the dirty value and $c$ is the clean value, the Taylor series approximation for a function $f$ is given as follows:
+\[
+f(c) = f(d) + f'(d)\cdot(d-c) + ...
+\]
+Ignoring the higher order terms, the linear term $f'(d)\cdot(d-c)$ is a linear function in each feature and label.
+Then, taking expected values, it follows that:
+\[
+\approx \nabla\phi(x,y,\theta) + M_x \cdot \mathbb{E}(\Delta x) + M_y \cdot \mathbb{E}(\Delta y)
+\]
+where $M_x = \frac{\partial}{\partial X}\nabla\phi$ and $M_y = \frac{\partial}{\partial Y}\nabla\phi$ (See Appendix \ref{taylor-deriv} for derivation).
+Recall that the feature space is $d$ dimensional and label space is $l$ dimensional.
+Then, $M_x$ is an $d \times d$ matrix, and $M_y$ is a $d \times l$ matrix.
+Both of these matrices are computed for each record (see Appendix \ref{example-deriv} for an example derivation).
+$\Delta x$ is a $d$ dimensional vector where each component represents a change in that feature and $\Delta y$ is an $l$ dimensional vector that represents the change in each of the labels. 
+
+This linearization allows \sys to maintain per feature (or label) average changes and use these changes to center the optimal sampling distribution around the expected clean value.
+To estimate $\mathbb{E}(\Delta x)$ and $\mathbb{E}(\Delta y)$, consider the following for a single feature $i$:
+If we average all $j=\{1,...,K\}$ records cleaned that have an error for that feature, weighted by their sampling probability:
+\[
+\bar{\Delta}_{xi} = \frac{1}{NK}\sum_{j=1}^K (x^{(d)}[i]-x^{(c)}[i])\times \frac{1}{p(j)}
+\]
+Similarly, for a label $i$:
+\[
+\bar{\Delta}_{yi} = \frac{1}{NK}\sum_{j=1}^K (y^{(d)}[i]-y^{(c)}[i])\times \frac{1}{p(j)}
+\]
+
+Each $\bar{\Delta}_{xi}$ and $\bar{\Delta}_{yi}$ represents an average change in a single feature.
+A single vector can represent the necessary changes to apply to a record $r$:
+For a record $r$, the set of corrupted features is $f_r,l_r$.
+Then, each record $r$ has a d-dimensional vector $\Delta_{rx}$ which is constructed as follows:
+\[
+ \Delta_{rx}[i] = \begin{cases} 0 & i \notin f_r \\ 
+\bar{\Delta}_{xi} & i \in f_r
+\end{cases} 
+\]
+Each record $r$ also has an l-dimensional vector $\Delta_{ry}$ which is constructed as follows:
+\[
+ \Delta_{rx}[i] = \begin{cases} 0 & i \notin l_r \\ 
+\bar{\Delta}_{yi} & i \in l_r
+\end{cases} 
+\]
+Finally, the result is: 
+\[p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|
 \]
 
 \section{Taylor Approximation}\label{taylor-deriv}

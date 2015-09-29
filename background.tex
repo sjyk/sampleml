@@ -161,12 +161,14 @@ From an algorithmic perspective,  the \emph{reliability} of the estimates differ
 We have to re-weight data to avoid biases and the population mixture problems described previously.
 There are also numerous new opportunities for optimizations such as pragmatically prioritizing data and avoiding data that are expected to be clean.
 
+\iffalse
 From a systems perspective, data cleaning and model training happen at very different time scales.
 When humans are involved, per record latencies for data cleaning are orders of magnitude larger than the CPU time needed for model training.
 We can compare recent results in data cleaning to a model training framework like CoCoA implemented on Spark \cite{jaggi2014communication}.
 Per record, BigDansing, a highly optimized automated Spark-based data cleaning system is 15.5x slower than CoCoA\footnote{For CoCoA to reach a precision of 1e-3}.
 Crowd based techniques like CrowdFill \cite{park2014crowdfill} and CrowdER \cite{wang2012crowder} are over 100,000x slower per record. 
 Consequently, all of the optimizations in \sys are designed to address data cleaning latency (i.e., more progress with fewer cleaned records) rather than optimizing for numerical computation (i.e., process fewer records).
+\fi
 
 There are two standard metrics that we will use to measure the performance of \sys:
 

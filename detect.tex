@@ -1,5 +1,6 @@
-\section{Optimization With Detection}\label{det}
-To maximize the benefit of data cleaning, detection ensures that sampling draws records likely to be dirty.
+\section{Partitioning Data With Detection}\label{det}
+\sys improves the progress of each update iteration by intelligently partitioning the data into expected dirty and clean partitions. 
+This ensures that sampling draws data that are likely to be dirty.
 
 \subsection{Goals}
 The detector returns two important aspects of a record: (1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
@@ -38,29 +39,6 @@ The set $e_r$ is the set of columns for each record which have a constraint viol
 An example of a constraint on the running example dataset is that the \texttt{status} of
 a contribution can be only ``allowed" or ``disallowed".
 Any other value for \texttt{status} is an error.
-\end{example}
-
-\vspace{0.5em}
-
-\noindent\textbf{Entity Resolution: }
-Another common data cleaning task is Entity Resolution \cite{gokhale2014corleone, DBLP:journals/pvldb/KopckeTR10, wang2012crowder}.
-Entity Resolution is the problem of standardizing attributes that represent the same real world entity.
-A common pattern in Entity Resolution is to split up the operation into two steps: blocking and matching.
-In blocking, attributes that should be the same are coarsely grouped together.
-In matching, those coarse groups are resolved to a set of distinct entities.
-
-\vspace{0.5em}
-
-\emph{Detection. } Detection for entity resolution problems is the matching step. Let $S$ be a similarity function that takes two records and returns a value in $[0,1]$ (1 most similar and 0 least similar). For some threshold $t$, $S$ defines a similarity relationship between two attributes $r(a)$ and $r'(a)$:
-\[
-r(a) \approx r'(a) : S(r(a),r'(a)) \ge t
-\] 
-In the detection step, $R_{dirty}$ is the set of records that have at least one other record in the relation that satisfies $r(a) \approx r(a)'$.
-The set $e_r$ is the set of attributes of $r$ that have entity resolution problems.
-
-\begin{example}
-An example of an Entity Resolution problem is seen in our earlier example about corporation names e.g. ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".. 
-Given a similarity relationship $WeightedJaccard(r1,r2)>0.8$, the detector selects all records that satisfy this condition (their Weighted Jaccard Similarity is greater than 0.8).
 \end{example}
 
 \subsection{Adaptive Detection}

@@ -7,12 +7,12 @@ When data cleaning is expensive, it is desirable to apply it \textbf{progressive
 Progressive data cleaning is a well studied problem especially in the contex of entity resolution \cite{whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
 Increasingly, Active Learning \cite{settles2010active} or other statistical methods are applied to select records or contraint violations to clean in a way that maximizes the information gained \cite{DBLP:journals/pvldb/YakoutENOI11, gokhale2014corleone, yakout2013don}.
 
-However, these frameworks do not consider the requirements of the downstream applications which can give valuable information on when and how to apply data cleaning.
-While using downstream query semantics has been explored in the context of conjuctive queries \cite{DBLP:conf/sigmod/BergmanMNT15} and SQL aggregates \cite{wang1999sample}, it is important to recognize the growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib}.
+However, these frameworks do not consider the requirements of the downstream applications, which can give valuable information on when and how to apply data cleaning.
+While this has been explored in the context of conjuctive queries \cite{DBLP:conf/sigmod/BergmanMNT15} and SQL aggregates \cite{wang1999sample}, it is important to recognize the growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib}.
 Predictive models rely on learning relationships between features and labels, and systematic data corruption \cite{taylor1982introduction} can mask or even introduce spurious new relationships.
 Furthermore, the high dimensionality of these models can amplify small problems \cite{xiaofeature} resulting in error-prone predictions even when trained on mostly clean data.
 
-When applied before predictive modeling, straight-forward applications of progressive data cleaning poses several methodological problems.
+When applied before predictive modeling, straight-forward applications of progressive data cleaning pose several methodological problems.
 Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
 An alternative is to clean $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
@@ -20,7 +20,7 @@ While this avoids the mixing problem, accurate model training may require a larg
 Finally, both problems are compounded by sparsity, where if corrupted records are uncommon, a random subset of $k$ records may have relatively few examples of corruptions.
 The errors and inefficiencies introduced by these three problems may dominate any gains from data cleaning, leading to unreliable or misleading conclusions about data or model quality.
 
-This paper explores progressive data cleaning when there is a single predictive model at the end of the analysis pipeline.
+This paper explores reliable progressive data cleaning when there is a predictive model at the end of the analysis pipeline.
 We focus on two problems for a popular class of models called convex loss models (e.g., linear regression and SVMs): (1) the methodological problem of reliable analysis with progressive data cleaning and predictive modeling, and (2) the algorithmic problem of using information from the model to prioritize data cleaning.
 For (1), the key challenge is that predictive model training often implicitly solves an optimization problem and the re-optimization does not commute with progressive data cleaning.
 We show that instead of re-optimizing, the model can be incrementally maintained with gradient descent given newly cleaned data, an technique that is guaranteed to converge under suitable conditions.

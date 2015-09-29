@@ -18,10 +18,6 @@ A pharma payment a day keeps docs' finances okay.
 \newblock
   \url{https://www.propublica.org/article/a-pharma-payment-a-day-keeps-docs-finances-ok}.
 
-\bibitem{sampleclean}
-Sampleclean.
-\newblock http://sampleclean.org/, 2015.
-
 \bibitem{alexandrov2014stratosphere}
 A.~Alexandrov, R.~Bergmann, S.~Ewen, J.~Freytag, F.~Hueske, A.~Heise, O.~Kao,
   M.~Leich, U.~Leser, V.~Markl, F.~Naumann, M.~Peters, A.~Rheinl{\"{a}}nder,
@@ -52,14 +48,6 @@ L.~Bottou.
 \newblock Stochastic gradient descent tricks.
 \newblock In {\em Neural Networks: Tricks of the Trade}, pages 421--436.
   Springer, 2012.
-
-\bibitem{chu2015katara}
-X.~Chu, J.~Morcos, I.~F. Ilyas, M.~Ouzzani, P.~Papotti, N.~Tang, and Y.~Ye.
-\newblock {KATARA:} {A} data cleaning system powered by knowledge bases and
-  crowdsourcing.
-\newblock In {\em Proceedings of the 2015 {ACM} {SIGMOD} International
-  Conference on Management of Data, Melbourne, Victoria, Australia, May 31 -
-  June 4, 2015}, pages 1247--1261, 2015.
 
 \bibitem{crotty2014tupleware}
 A.~Crotty, A.~Galakatos, and T.~Kraska.
@@ -107,6 +95,11 @@ C.~Gokhale, S.~Das, A.~Doan, J.~F. Naughton, N.~Rampalli, J.~Shavlik, and
 \newblock Corleone: Hands-off crowdsourcing for entity matching.
 \newblock In {\em SIGMOD}, 2014.
 
+\bibitem{gruenheid2014incremental}
+A.~Gruenheid, X.~L. Dong, and D.~Srivastava.
+\newblock Incremental record linkage.
+\newblock {\em Proceedings of the VLDB Endowment}, 7(9):697--708, 2014.
+
 \bibitem{guillory2009active}
 A.~Guillory, E.~Chastain, and J.~Bilmes.
 \newblock Active learning as non-convex optimization.
@@ -119,29 +112,10 @@ J.~M. Hellerstein, C.~R{\'{e}}, F.~Schoppmann, D.~Z. Wang, E.~Fratkin,
 \newblock The madlib analytics library or {MAD} skills, the {SQL}.
 \newblock {\em {PVLDB}}, 5(12):1700--1711, 2012.
 
-\bibitem{jaggi2014communication}
-M.~Jaggi, V.~Smith, M.~Tak{\'a}c, J.~Terhorst, S.~Krishnan, T.~Hofmann, and
-  M.~I. Jordan.
-\newblock Communication-efficient distributed dual coordinate ascent.
-\newblock In {\em Advances in Neural Information Processing Systems}, pages
-  3068--3076, 2014.
-
 \bibitem{DBLP:conf/pervasive/JefferyAFHW06}
 S.~R. Jeffery, G.~Alonso, M.~J. Franklin, W.~Hong, and J.~Widom.
 \newblock Declarative support for sensor data cleaning.
 \newblock In {\em Pervasive}, pages 83--100, 2006.
-
-\bibitem{khayyat2015bigdansing}
-Z.~Khayyat, I.~F. Ilyas, A.~Jindal, S.~Madden, M.~Ouzzani, P.~Papotti, J.-A.
-  Quian{\'e}-Ruiz, N.~Tang, and S.~Yin.
-\newblock Bigdansing: A system for big data cleansing.
-\newblock 2015.
-
-\bibitem{DBLP:journals/pvldb/KopckeTR10}
-H.~K{\"o}pcke, A.~Thor, and E.~Rahm.
-\newblock Evaluation of entity resolution approaches on real-world match
-  problems.
-\newblock {\em PVLDB}, 3(1):484--493, 2010.
 
 \bibitem{DBLP:conf/recsys/KrishnanPFG14}
 S.~Krishnan, J.~Patel, M.~J. Franklin, and K.~Goldberg.
@@ -181,27 +155,17 @@ B.~Nelson, B.~I. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
 \newblock {\em The Journal of Machine Learning Research}, 13(1):1293--1332,
   2012.
 
-\bibitem{mcbook}
-A.~B. Owen.
-\newblock {\em Monte Carlo theory, methods and examples}.
-\newblock 2013.
-
 \bibitem{pan2010survey}
 S.~J. Pan and Q.~Yang.
 \newblock A survey on transfer learning.
 \newblock {\em Knowledge and Data Engineering, IEEE Transactions on},
   22(10):1345--1359, 2010.
 
-\bibitem{park2014crowdfill}
-H.~Park and J.~Widom.
-\newblock Crowdfill: collecting structured data from the crowd.
-\newblock In {\em International Conference on Management of Data, {SIGMOD}
-  2014, Snowbird, UT, USA, June 22-27, 2014}, pages 577--588, 2014.
-
-\bibitem{rahm2000data}
-E.~Rahm and H.~H. Do.
-\newblock Data cleaning: Problems and current approaches.
-\newblock {\em IEEE Data Eng. Bull.}, 23(4):3--13, 2000.
+\bibitem{papenbrock2015progressive}
+T.~Papenbrock, A.~Heise, and F.~Naumann.
+\newblock Progressive duplicate detection.
+\newblock {\em Knowledge and Data Engineering, IEEE Transactions on},
+  27(5):1316--1329, 2015.
 
 \bibitem{settles2010active}
 B.~Settles.
@@ -213,11 +177,6 @@ E.~H. Simpson.
 \newblock The interpretation of interaction in contingency tables.
 \newblock {\em Journal of the Royal Statistical Society. Series B
   (Methodological)}, pages 238--241, 1951.
-
-\bibitem{Gartner}
-N.~Swartz.
-\newblock Gartner warns firms of 'dirty data'.
-\newblock {\em Information Management Journal}, 41(3), 2007.
 
 \bibitem{taylor1982introduction}
 J.~R. Taylor.
@@ -237,22 +196,35 @@ M.~J. Wainwright, M.~I. Jordan, and J.~C. Duchi.
 \newblock In {\em Advances in Neural Information Processing Systems}, pages
   1430--1438, 2012.
 
-\bibitem{wang2012crowder}
-J.~Wang, T.~Kraska, M.~J. Franklin, and J.~Feng.
-\newblock Crowder: Crowdsourcing entity resolution.
-\newblock {\em {PVLDB}}, 5(11):1483--1494, 2012.
-
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.
 \newblock A sample-and-clean framework for fast and accurate query processing
   on dirty data.
 \newblock In {\em SIGMOD Conference}, pages 469--480, 2014.
 
+\bibitem{whang2014incremental}
+S.~E. Whang and H.~Garcia-Molina.
+\newblock Incremental entity resolution on rules and data.
+\newblock {\em The VLDB Journal—The International Journal on Very Large Data
+  Bases}, 23(1):77--102, 2014.
+
 \bibitem{xiaofeature}
 H.~Xiao, T.~DE, B.~Biggio, D.~UNICA, G.~Brown, G.~Fumera, C.~Eckert, I.~TUM,
   and F.~Roli.
 \newblock Is feature selection secure against training data poisoning?
 \newblock 2015.
+
+\bibitem{yakout2013don}
+M.~Yakout, L.~Berti-{\'E}quille, and A.~K. Elmagarmid.
+\newblock Don't be scared: use scalable automatic repairing with maximal
+  likelihood and bounded changes.
+\newblock In {\em Proceedings of the 2013 ACM SIGMOD International Conference
+  on Management of Data}, pages 553--564. ACM, 2013.
+
+\bibitem{DBLP:journals/pvldb/YakoutENOI11}
+M.~Yakout, A.~K. Elmagarmid, J.~Neville, M.~Ouzzani, and I.~F. Ilyas.
+\newblock Guided data repair.
+\newblock {\em PVLDB}, 2011.
 
 \bibitem{zhao2014stochastic}
 P.~Zhao and T.~Zhang.

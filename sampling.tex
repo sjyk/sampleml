@@ -1,15 +1,7 @@
-\section{Sampling}\label{dist-samp}
-In the previous section, the model update received a sample with probabilities $p(r)$.
-This section provides a derivation for an optimal sampling problem that directly follows from the analysis of the update rule via SGD.
-It will turn out that the solution to the optimal sampling problem is not realizable in practice (as it depends on knowing the cleaned value), and this problem will be addressed with an approximation in the next section.
-
-\subsection{Goals and Challenges}
-In the Machine Learning and Optimization literature, SGD algorithms are optimized to avoid scanning the entire data.
-Uniform sampling is cheap so it is the preferred solution.
-However, data cleaning costs can be many orders of magnitude higher than model training.
-As a result, uniform sampling may not be the most efficient option.
-\sys can sacrifice computational overhead by precomputing some results over the entire data for savings during the data cleaning phase.
-This problem is formulated as an optimal sampling problem to compute the sampling probabilities $p(r)$ that maximize the convergence rate.
+\section{Optimization}\label{dist-samp}
+The model update received a sample with probabilities $p(\cdot)$.
+Similar to Active Learning, we propose a sampling algorithm that selects the most valuable records to clean with higher probability.
+We derive an approximation for the the sampling distribution that achieves the minimum variance update estimates. 
 
 \subsection{Optimal Sampling Problem}
 Recall that the convergence rate of an SGD algorithm is bounded by $\sigma^2$ which is the variance of the gradient.
@@ -23,28 +15,11 @@ Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find 
 \mathbb{E}(\|g_S - g^*\|^2)
 \]
 \end{definition}
-
-To construct these sampling probabilities, first consider the following lemma about importance sampling.
-This lemma describes the optimal distribution over a set of scalars:
-\begin{lemma}\label{impsample}
-Given a set of real numbers $A = \{a_1,...,a_n\}$, let $\hat{A}$ be 
-a sample with replacement of $A$ of size k.
-If $\mu$ is the mean $\hat{A}$, the sampling distribution that minimizes
- the variance of $\mu$, i.e., the expected square error, is $p(a_i) \propto a_i$.
-\end{lemma}
-\begin{proof}[Sketch]
-This proof follows from \cite{mcbook}, as it is a straight-forward importance sampling result.
-We include the proof in the appendix (Section \ref{impsample-deriv})
-\end{proof}
-
-Lemma \ref{impsample} shows that when estimating a mean of numbers with sampling, the distribution with optimal variance is sampling proportionally to the values.
-This insight leads to a direct higher-dimensional generalization, where at iteration $t$ the optimal distribution over records in $R_{dirty}$ is probabilities proportional to:
+It can be shown that the optimal distribution over records in $R_{dirty}$ is probabilities proportional to:
 \[
 p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|
 \]
-
-However, in this case, it leads to a chicken-and-egg problem.
+We provide proofs and theoretical justification in appendix, but intuitively, records with higher gradients should be sampled with higher probability as they affect the update more significantly.
+However, we cannot exclude records with lower gradients as that would induce a bias hurting convergence.
+The problem is that this optimal distribution leads to a chicken-and-egg problem.
 The optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, however, cleaning is required to know those values.
-In the next section, the estimator will approximate this distribution by estimating the cleaned value with previously cleaned data.
-Since the model update can work with \emph{any} distribution, convergence is guaranteed no matter how inaccurate this approximation is.
-However, a better approximation will lead to an improved convergence rate.

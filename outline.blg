@@ -15,16 +15,12 @@ Repeated entry---line 2352 of file ref.bib
  : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
  :                                                 ,
 I'm skipping whatever remains of this entry
-A bad cross reference---entry "chu2015katara"
+A bad cross reference---entry "DBLP:conf/sigmod/BergmanMNT15"
 refers to entry "DBLP:conf/sigmod/2015", which doesn't exist
-A bad cross reference---entry "park2014crowdfill"
-refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
 A bad cross reference---entry "wang1999sample"
 refers to entry "DBLP:conf/sigmod/2014", which doesn't exist
 A bad cross reference---entry "mayfield2010eracer"
 refers to entry "DBLP:conf/sigmod/2010", which doesn't exist
-A bad cross reference---entry "DBLP:conf/sigmod/BergmanMNT15"
-refers to entry "DBLP:conf/sigmod/2015", which doesn't exist
 A bad cross reference---entry "deshpande2004model"
 refers to entry "DBLP:conf/vldb/2004", which doesn't exist
 A bad cross reference---entry "DBLP:conf/case/MahlerKLSMKPWFAG14"
@@ -38,53 +34,50 @@ Warning--I didn't find a database entry for "DBLP:conf/vldb/2004"
 Warning--I didn't find a database entry for "DBLP:conf/case/2014"
 Warning--I didn't find a database entry for "DBLP:conf/recsys/2014"
 Warning--to sort, need author or key in bdas
-Warning--to sort, need author or key in sampleclean
 Warning--to sort, need author or key in nytimes
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in dollarsfordocsa
 Warning--empty year in bertsekas2011incremental
-Warning--empty journal in khayyat2015bigdansing
-Warning--empty publisher in mcbook
 Warning--empty journal in xiaofeature
-You've used 44 entries,
+You've used 39 entries,
             2118 wiz_defined-function locations,
-            736 strings with 12563 characters,
-and the built_in function-call counts, 17951 in all, are:
-= -- 1715
-> -- 985
-< -- 18
-+ -- 401
-- -- 348
-* -- 1296
-:= -- 2827
-add.period$ -- 130
-call.type$ -- 44
-change.case$ -- 304
+            720 strings with 11980 characters,
+and the built_in function-call counts, 16000 in all, are:
+= -- 1542
+> -- 874
+< -- 16
++ -- 356
+- -- 308
+* -- 1164
+:= -- 2528
+add.period$ -- 117
+call.type$ -- 39
+change.case$ -- 270
 chr.to.int$ -- 0
-cite$ -- 53
-duplicate$ -- 668
-empty$ -- 1325
-format.name$ -- 348
-if$ -- 3810
+cite$ -- 45
+duplicate$ -- 589
+empty$ -- 1176
+format.name$ -- 308
+if$ -- 3389
 int.to.chr$ -- 0
-int.to.str$ -- 44
-missing$ -- 41
-newline$ -- 218
-num.names$ -- 78
-pop$ -- 367
+int.to.str$ -- 39
+missing$ -- 36
+newline$ -- 194
+num.names$ -- 70
+pop$ -- 316
 preamble$ -- 1
-purify$ -- 262
+purify$ -- 232
 quote$ -- 0
-skip$ -- 536
+skip$ -- 466
 stack$ -- 0
-substring$ -- 1063
-swap$ -- 216
-text.length$ -- 18
+substring$ -- 972
+swap$ -- 188
+text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 172
-warning$ -- 9
-while$ -- 148
-width$ -- 46
-write$ -- 460
-(There were 11 error messages)
+type$ -- 154
+warning$ -- 6
+while$ -- 136
+width$ -- 41
+write$ -- 412
+(There were 9 error messages)
