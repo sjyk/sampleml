@@ -133,15 +133,14 @@
 \maketitle
 
 \begin{abstract}
-A perennial challenge in data analytics is presence of dirty data in the form of missing, duplicate, incorrect or inconsistent values.
-The growing popularity of predictive models leads to additional concerns as these models are highly sensitive to systematic corruption.
+A perennial challenge in data analytics is presence of dirty data in the form of missing, duplicate, incorrect, or inconsistent values.
 Although errors can be mitigated through data cleaning, it is often very time consuming.
-Consequently, expensive cleaning is frequently applied progressively; cleaning only as much as necessary to achieve a desired accuracy.
-However, existing model training methodologies can return misleading results when trained on a mix of dirty and clean data.
-The key insight of our framework, \sys, is for convex loss models, data cleaning can be applied during model training (i.e., in the Gradient Descent loop) allowing for progressive cleaning while preserving provable properties.
-\sys applies a number of optimizations to improve convergence rates such as importance sampling based on value to the model, avoiding data that is expected to be clean, and batching together updates from already cleaned data.
+One approach to making data cleaning more efficient is to leverage knowledge of the downstream data analysis to prioritize those records that are most likely to affect the model.
+Increasingly, data analytics consist of statistical analysis and predictive modeling which can be highly sensitive to mixtures of dirty and clean data and sample size.
+This paper explores reliable model update procedures for progressive data cleaning.
+We focus on two problems for a popular class of models called convex loss models (e.g., linear regression and SVMs): (1) the methodological problem of updating a model with partially clean data, and (2) the algorithmic problem of using information from the model to prioritize data cleaning.
+The key insight of our framework is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
 Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse. 
-
 %In one set of experiments with 5\% simulated error, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{abstract}
 

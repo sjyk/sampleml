@@ -106,7 +106,7 @@ Also, data cleaning and model training can happen at very different time scales,
 Finally, in this line of work, the tradeoff space is enormous, and we have to carefully pick a design point and tailor our optimizations to this preferred regime.
 \fi
 
-\subsection{Dirty Data Model}
+\subsection{Dirty Data Model}\label{dmodel}
 This paper explores a model for data error where attributes of records in a relation $R$ are incorrect or missing.
 Formally, there are two relations $R_{dirty}$ and $R_{clean}$ with the same schema and a one-to-one mapping between rows.
 Therefore, for every $r \in R_{dirty}$ there exists an $r' \in R_{clean}$, and a cleaning function $C(\cdot)$, is a function that maps each $r$ to its corresponding $r'$.

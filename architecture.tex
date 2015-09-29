@@ -3,7 +3,7 @@ This section presents an overview of the \sys architecture.
 \sys addresses two challenges in model training after progressive cleaning: (1) the methodological problem of reliable analysis or the \emph{Update Problem}, and (2) the algorithmic problem of using information from the model to prioritize data cleaning which we call the \emph{Optimization Problem}.
 The \sys architecture in Figure \ref{sys-arch} describes an end-to-end system implementing our solutions to these two challenges.
 
-\subsection{User Input}
+\subsection{User Input}\label{uinp}
 \sys provides reliable model estimates when progressive data cleaning and machine learning are applied together.
 Both of these components are user-specified and \sys is an estimation framework that wraps around them.
 To use \sys, the user provides the following:
@@ -29,7 +29,7 @@ We discuss how to set $b$ and the tradeoffs in setting a larger or smaller $b$ i
 If one is not provided, \sys starts by treating all of the data as dirty and tries to learn a detector as data are cleaned.
  The detector select a candidate set of dirty records $R_{dirty} \subseteq R$. There are two techniques to do this: (1) an \emph{a priori} case, and (2) and an adaptive case. 
 
-\subsection{Problem 1. Update Problem}
+\subsection{Problem 1. Update Problem}\label{updp}
 Let $R_{dirty} \subseteq R$ be the subset of records that are dirty, and $S_{clean}$ is a cleaned sample (possibly non-uniform) of the records $R_{dirty}$.
 In the model update problem, \sys applies an update to the dirty model $\theta^{(d)}$, based on some newly cleaned data $S_{clean}$, to return $\theta^{new}$.
 Of course, these updates will have some error between the updated model and the true model $\theta^{(c)}$ (if the entire dataset is cleaned):
@@ -48,7 +48,7 @@ Intuitively, more cleaning and less initial error should imply more accuracy.
 In Section \ref{model-update}, we describe how we can incrementally maintain the model given some cleaned data $S_{clean}$ using Stochastic Gradient Descent (SGD).
 This procedure will avoid the pitfalls of dimensionality and Simpson's paradox.
 
-\subsection{Problem 2. Optimization Problem}
+\subsection{Problem 2. Optimization Problem}\label{optp}
 \sys optimizes the execution of the updates by carefully selecting $S_{clean}$.
 The optimization problem is to select $S_{clean}$ such that the expected error $\mathbb{E}(error(\theta^{new}))$ is minimized.
 \sys uses previously cleaned data to estimate the value of data cleaning on new records.
@@ -92,7 +92,7 @@ We highlight the important components and formalize the research questions explo
 
 \vspace{0.5em}
 
-\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data detection. In this step, the detector select a candidate set of dirty records $R_{dirty} \subseteq R$. There are two techniques to do this: (1) an \emph{a priori} case, and (2) and an adaptive case. In the \emph{a priori} case, the detector knows which data is dirty in advance. In the adaptive case, the detector learns classifier based on previously cleaned data to detect corruption in uncleaned data.
+\noindent\textbf{Detector (Section \ref{det}). } The first challenge in \sys is dirty data detection. In this step, the detector selects a candidate set of dirty records $R_{dirty} \subseteq R$. There are two techniques to do this: (1) an \emph{a priori} case, and (2) and an adaptive case. In the \emph{a priori} case, the detector knows which data is dirty in advance. In the adaptive case, the detector learns classifier based on previously cleaned data to detect corruption in uncleaned data.
 
 \vspace{0.5em}
 
