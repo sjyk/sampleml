@@ -15,7 +15,7 @@ In most spell checking systems, when a misspelling is identified, the system giv
 \end{example}
 
 \begin{example}\label{app-ex2}
-In entity resolution problems, when an inconsistent entity is identified all other records with the same inconsistency can be efficiently fixed.
+In inconsistency problems, when an inconsistent value is identified all other records with the same inconsistency can be efficiently fixed.
 \end{example}
 
 This model of data cleaning can fit into our framework and we formalize it as the ``Set-of-Records" model as opposed to the ``Record-by-Record" model. 
@@ -374,7 +374,7 @@ To clean the dataset, we loaded the entire data 240089 records into Microsoft Ex
 
 \vspace{0.5em} 
 
-To fix these errors, we sorted by each column and merged entities that looked similar and removed inconsistencies as in the status labels. 
+To fix these errors, we sorted by each column and merged values that looked similar and removed inconsistencies as in the status labels. 
 When there were ambiguities, we refered to the drug company's website and whitepapers.
 When possible, we used batch data transformations, like find and replace (i.e. the Set-of-Records model).
 In all, 44234 records had some error and full data cleaning required about 2 days of efforts.

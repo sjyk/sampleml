@@ -35,7 +35,7 @@ One model for detecting errors involves declaring constraints on the database.
 In the detection step, the detector selects a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
 The set $e_r$ is the set of columns for each record which have a constraint violation. 
 
-\begin{example}
+\begin{example}\label{detex1}
 An example of a constraint on the running example dataset is that the \texttt{status} of
 a contribution can be only ``allowed" or ``disallowed".
 Any other value for \texttt{status} is an error.
@@ -67,7 +67,7 @@ So the result is:
 \vspace{0.75em}
 
 \noindent\textbf{Adaptive Detection With OpenRefine: }
-\begin{example}
+\begin{example}\label{detex2}
 OpenRefine is a spreadsheet-based tool that allows users to explore and transform data.
 However, it is limited to cleaning data that can fit in memory on a single computer.
 Since the cleaning operations are coupled with data exploration, \sys does not know what is dirty in advance (the analyst may discover new errors as she cleans).

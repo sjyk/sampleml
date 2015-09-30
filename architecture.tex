@@ -75,7 +75,7 @@ To summarize in pseudocode:
 \end{enumerate}
 
 Here is an example application of \sys:
-\begin{example}
+\begin{example}\label{archex}
 The analyst first trains an SVM model on the dirty data ignoring the effects of the errors resulting in a model $\theta^{(d)}$.
 She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
 She initializes \sys with $\theta^{(d)}$.

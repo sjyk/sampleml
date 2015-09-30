@@ -119,7 +119,7 @@ If the loss in non-convex, the update procedure will converge towards a local mi
 
 \subsection{Example}
 This example describes an application of the update algorithm.
-\begin{example}
+\begin{example}\label{upex}
 Recall that the analyst has a dirty SVM model on the dirty data $\theta^{(d)}$.
 She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
 All of the data is initially treated as dirty with $R_{dirty} = R$ and $R_{clean} = \emptyset$.
