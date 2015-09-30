@@ -4,7 +4,7 @@ This section presents an overview of the \sys architecture.
 The \sys architecture in Figure \ref{sys-arch} describes an end-to-end system implementing our solutions to these two challenges.
 
 \subsection{User Input}\label{uinp}
-\sys provides reliable model estimates when progressive data cleaning and machine learning are applied together.
+\sys provides reliable model training when progressive data cleaning and machine learning are applied together.
 Both of these components are user-specified and \sys is an estimation framework that wraps around them.
 To use \sys, the user provides the following:
 
@@ -20,7 +20,7 @@ This allows for uniform measure of the performance of \sys in terms of model err
 
 \vspace{0.25em}
 
-\noindent\textbf{Specifying a Budget. } At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $T = \frac{k}{b}$).
+\noindent\textbf{Budget. } At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $T = \frac{k}{b}$).
 We discuss how to set $b$ and the tradeoffs in setting a larger or smaller $b$ in Section \ref{model-update}.
 
 \vspace{0.25em}
@@ -30,9 +30,13 @@ If one is not provided, \sys starts by treating all of the data as dirty and tri
  The detector select a candidate set of dirty records $R_{dirty} \subseteq R$. There are two techniques to do this: (1) an \emph{a priori} case, and (2) and an adaptive case. 
 
 \subsection{Problem 1. Update Problem}\label{updp}
-Let $R_{dirty} \subseteq R$ be the subset of records that are dirty, and $S_{clean}$ is a cleaned sample (possibly non-uniform) of the records $R_{dirty}$.
-In the model update problem, \sys applies an update to the dirty model $\theta^{(d)}$, based on some newly cleaned data $S_{clean}$, to return $\theta^{new}$.
-Of course, these updates will have some error between the updated model and the true model $\theta^{(c)}$ (if the entire dataset is cleaned):
+Let $R_{dirty} \subseteq R$ be the subset of records that are dirty, and $S$ be a sample (possibly non-uniform) of the records $R_{dirty}$.
+\sys applies the user specified cleaning function to the sample:
+\[
+S_{clean} = C(S)
+\]
+Given newly cleaned data $S_{clean}$ and a dirty model $\theta^{(d)}$, the model update problem is to calculate $\theta^{new}$. 
+Of course, $\theta^{new}$ will have some error between with respect to the true model $\theta^{(c)}$ (if the entire dataset is cleaned):
 \[
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]
