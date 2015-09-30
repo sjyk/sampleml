@@ -5,9 +5,8 @@ This section describes an example of data cleaning when training predictive mode
 ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest. 
 They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses \cite{dollarsfordocsa}.
 ProPublica laboriously curated and cleaned a dataset from the Centers for Medicare and Medicaid Services that listed nearly 250,000 research donations, and aggregated these donations by physician, drug, and pharmaceutical company.
-We collected the raw unaggregated data and explored whether suspect donation could be predicted with a model.
+We collected the raw unaggregated data and explored whether suspect donations could be predicted with a model.
 This problem is typical of analysis scenarios based on observational data seen in finance, insurance, medicine, and investigative journalism.
-
 The dataset has the following schema:
 \begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
 Contribution(pi_specialty$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
@@ -34,13 +33,15 @@ However, this dataset is very dirty, and the systematic nature of the data corru
 On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
 For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data e.g., ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
 In a scenario such as this one, the effect of systematic error can be serious.
-Duplicate entity representations could artificially reduce the correlation between these entities and suspected contributions.
-There were nearly 40,000 of the 250,000 records that had either entity resolution issues or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
-With the same Support Vector Machine model, the detection rate of suspect donations was 66\% in the dirty data and 97\% in the clean data (Section \ref{dfd-exp}).
+Duplicate representations could artificially reduce the correlation between these entities and suspected contributions.
+There were nearly 40,000 of the 250,000 records that had either naming inconsistencies or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
+Without data cleaning and using a Support Vector Machine model, the detection rate of suspect donations was 66\%.
+Applying the data cleaning to the entire dataset improved this rate to 97\% in the clean data (Section \ref{dfd-exp}), and the experiments describe how \sys can achieve an 80\% detection rate for less than 4000 records cleaned.
 
 \subsection{Progressive Data Cleaning}  
 Cleaning a dataset of 250,000 records can be very time consuming, and it is important for analysts to be able to evaluate the model before all of the data is cleaned.
-First, suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
+The straight-forward application of progressive or incremental data cleaning methods proposed in the literature is to fix those errors in place.
+Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Figure \ref{update-arch1} highlights the dangers of this approach on a very simple dirty dataset and a linear regression model i.e., the best fit line for two variables. 
 One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
 The dirty data is marked in brown and the clean data in green, and their respective best fit lines are in blue.
@@ -120,7 +121,7 @@ However, there are types of data cleaning that do not satisfy this model such as
 
 
 \subsection{Preliminaries: Convex Data Analytics}
-To design an algorithm that avoids Simpson's paradox, this work focuses on an initial class of well analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
+This work focuses on an initial class of well analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
 Convex loss minimization problems are amenable a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
 Examples includes all generalized linear models (including linear and logistic regression), all variants of support vector machines, and in fact, means and medians are also special cases. 
 
