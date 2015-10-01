@@ -1,8 +1,9 @@
-\section{Partitioning Data With Detection}\label{det}
+\subsection{The Detector}\label{det}
+% Partitioning Data With Detection}\label{det}
 \sys improves the progress of each update iteration by intelligently partitioning the data into expected dirty and clean partitions. 
 This ensures that sampling draws data that are likely to be dirty.
 
-\subsection{Goals}
+\subsubsection{Goals}
 The detector returns two important aspects of a record: (1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
 The sampler can use (1) to select a subset of dirty records to sample at each batch. 
 The estimator can use (2) estimate the value of data cleaning based on other records with the same corruption.
@@ -11,7 +12,7 @@ In the \emph{a priori} case, there is a way to select the set of dirty records b
 This case is possible for some types of data errors.
 In the adaptive case, detection is learned as data is cleaned.
 
-\subsection{\protect\textit{\large A Priori} Case}
+\subsubsection{\protect\textit{\large A Priori} Case}
 For many types of dirtiness such as missing attribute values and constraint violations, it is possible to efficiently enumerate a set of corrupted records and determine how the records are corrupted.
 
 \begin{definition}[A Priori Detection]
@@ -41,7 +42,7 @@ a contribution can be only ``allowed" or ``disallowed".
 Any other value for \texttt{status} is an error.
 \end{example}
 
-\subsection{Adaptive Detection}
+\subsubsection{Adaptive Detection}
 \emph{A priori} detection is not possible in all cases.
 The detector also supports adaptive detection where detection is learned from previously cleaned data.
 Note that this ``learning" is distinct from the ``learning" at the end of the pipeline.
@@ -78,3 +79,9 @@ For example, she finds that some drugs are incorrectly classified as both drugs 
 She then removes the device attribute for all records that have the drug name in question.
 As she fixes the records, she tags each one with a category tag of which corruption it belongs to.
 \end{example}
+
+
+
+
+
+
