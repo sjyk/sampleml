@@ -28,8 +28,8 @@
 \usepackage{colortbl}
 
 \usepackage{bm}
-\usepackage{times}
-\usepackage[nospace]{cite}
+%\usepackage{times}
+%\usepackage[nospace]{cite}
 \usepackage{csquotes}
 \usepackage{enumitem}
 
@@ -125,7 +125,7 @@
 %\affaddr{\large tim\_kraska@brown.edu}
 %}
 
-%\fontsize{10pt}{12pt}
+%\fontsize{10pt}{11pt}
 %\selectfont
 
 \input{coverletter.tex}
@@ -135,9 +135,9 @@
 \begin{abstract}
 A perennial challenge in data analytics is presence of dirty data in the form of missing, duplicate, incorrect, or inconsistent values.
 Although errors can be mitigated through data cleaning, it is often very time consuming.
-One approach to making data cleaning more efficient is to leverage knowledge of the downstream data analysis to prioritize those records that are most likely to affect the model.
-Increasingly, data analytics consist of statistical analysis and predictive modeling which can be highly sensitive to mixtures of dirty and clean data and sample size.
-This paper explores reliable model update procedures for progressive data cleaning.
+One approach to making data cleaning more efficient is to leverage knowledge of the downstream data analysis to prioritize those records that are most likely to affect the result.
+However, data analytics increasingly consist of statistical analysis and predictive modeling which can be highly sensitive to dirty data which is only partially cleaned.
+This paper explores reliable model update procedures and priotization for progressive data cleaning.
 We focus on two problems for a popular class of models called convex loss models (e.g., linear regression and SVMs): (1) the methodological problem of updating a model with partially clean data, and (2) the algorithmic problem of using information from the model to prioritize data cleaning.
 The key insight of our framework is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
 Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse. 

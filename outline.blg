@@ -3,15 +3,15 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: outline.aux
 The style file: abbrv.bst
 Database file #1: ref.bib
-Repeated entry---line 1791 of file ref.bib
+Repeated entry---line 1804 of file ref.bib
  : @inproceedings{wang1999sample
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1843 of file ref.bib
+Repeated entry---line 1856 of file ref.bib
  : @inproceedings{volkovs2014continuous
  :                                     ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2445 of file ref.bib
+Repeated entry---line 2458 of file ref.bib
  : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
  :                                                 ,
 I'm skipping whatever remains of this entry
@@ -31,6 +31,8 @@ A bad cross reference---entry "feng2014robust"
 refers to entry "DBLP:conf/nips/2014", which doesn't exist
 A bad cross reference---entry "mayfield2010eracer"
 refers to entry "DBLP:conf/sigmod/2010", which doesn't exist
+A bad cross reference---entry "volkovs2014continuous"
+refers to entry "DBLP:conf/icde/2014", which doesn't exist
 A bad cross reference---entry "deshpande2004model"
 refers to entry "DBLP:conf/vldb/2004", which doesn't exist
 A bad cross reference---entry "DBLP:conf/case/MahlerKLSMKPWFAG14"
@@ -39,6 +41,7 @@ A bad cross reference---entry "DBLP:conf/recsys/KrishnanPFG14"
 refers to entry "DBLP:conf/recsys/2014", which doesn't exist
 Warning--I didn't find a database entry for "whang2014incremental"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2014"
+Warning--I didn't find a database entry for "DBLP:conf/icde/2014"
 Warning--I didn't find a database entry for "DBLP:conf/icml/2015"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2015"
 Warning--I didn't find a database entry for "DBLP:conf/nips/2014"
@@ -55,43 +58,43 @@ Warning--to sort, need author or key in dollarsfordocsa
 Warning--empty publisher in bottou2012stochastic
 You've used 36 entries,
             2118 wiz_defined-function locations,
-            710 strings with 10650 characters,
-and the built_in function-call counts, 15061 in all, are:
-= -- 1450
+            712 strings with 10627 characters,
+and the built_in function-call counts, 15140 in all, are:
+= -- 1457
 > -- 810
 < -- 16
 + -- 331
 - -- 286
-* -- 1094
-:= -- 2358
-add.period$ -- 106
+* -- 1107
+:= -- 2365
+add.period$ -- 105
 call.type$ -- 36
 change.case$ -- 250
 chr.to.int$ -- 0
 cite$ -- 41
-duplicate$ -- 555
-empty$ -- 1122
+duplicate$ -- 556
+empty$ -- 1132
 format.name$ -- 286
-if$ -- 3200
+if$ -- 3215
 int.to.chr$ -- 0
 int.to.str$ -- 36
 missing$ -- 33
 newline$ -- 179
 num.names$ -- 64
-pop$ -- 295
+pop$ -- 293
 preamble$ -- 1
 purify$ -- 215
 quote$ -- 0
-skip$ -- 442
+skip$ -- 444
 stack$ -- 0
-substring$ -- 962
+substring$ -- 987
 swap$ -- 182
 text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 142
 warning$ -- 5
-while$ -- 130
+while$ -- 132
 width$ -- 38
 write$ -- 380
-(There were 14 error messages)
+(There were 15 error messages)

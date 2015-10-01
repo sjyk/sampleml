@@ -184,12 +184,12 @@ We revised the abstract to be more accessible:
 
 \emph{A perennial challenge in data analytics is presence of dirty data in the form of missing, duplicate, incorrect, or inconsistent values.
 Although errors can be mitigated through data cleaning, it is often very time consuming.
-One approach to making data cleaning more efficient is to leverage knowledge of the downstream data analysis to prioritize those records that are most likely to affect the results.
-Increasingly, data analytics consist of statistical analysis and predictive modeling which can be highly sensitive to analysis on mixtures of dirty and clean data.
-This paper explores reliable model update procedures for progressive data cleaning where a subset of dirty records have been cleaned.
+One approach to making data cleaning more efficient is to leverage knowledge of the downstream data analysis to prioritize those records that are most likely to affect the result.
+However, data analytics increasingly consist of statistical analysis and predictive modeling which can be highly sensitive to dirty data which is only partially cleaned.
+This paper explores reliable model update procedures and priotization for progressive data cleaning.
 We focus on two problems for a popular class of models called convex loss models (e.g., linear regression and SVMs): (1) the methodological problem of updating a model with partially clean data, and (2) the algorithmic problem of using information from the model to prioritize data cleaning.
 The key insight of our framework is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
-Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning especially when the data corruption is sparse. }
+Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse. }
 
 \vspace{0.5em}
 

@@ -166,8 +166,7 @@ J.~R. Taylor.
 \bibitem{volkovs2014continuous}
 M.~Volkovs, F.~Chiang, J.~Szlichta, and R.~J. Miller.
 \newblock Continuous data cleaning.
-\newblock In {\em Data Engineering (ICDE), 2014 IEEE 30th International
-  Conference on}, pages 244--255. IEEE, 2014.
+\newblock In {\em ICDE}, pages 244--255, 2014.
 
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.
@@ -189,7 +188,7 @@ M.~Yakout, L.~Berti{-}Equille, and A.~K. Elmagarmid.
 \bibitem{DBLP:journals/pvldb/YakoutENOI11}
 M.~Yakout, A.~K. Elmagarmid, J.~Neville, M.~Ouzzani, and I.~F. Ilyas.
 \newblock Guided data repair.
-\newblock {\em PVLDB}, 2011.
+\newblock {\em {PVLDB}}, 4(5):279--289, 2011.
 
 \bibitem{zhao2014stochastic}
 P.~Zhao and T.~Zhang.
