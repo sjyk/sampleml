@@ -8,10 +8,10 @@ The update algorithm intuitively follows from the convex geometry of the problem
 Consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar value), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
 The consequence of dirty data is that the the wrong loss function is optimized.
 Figure \ref{update-arch2}A illustrates the consequence of this optimization.
-The brown dotted line shows the loss function on the dirty data.
-Optimizing this loss function finds $\theta$ that at the minimum point.
-However, the true loss function (w.r.t to the clean data) is in blue.
-This optimal value on the dirty data is a suboptimal point on clean curve.
+The red dotted line shows the loss function on the dirty data.
+Optimizing this loss function finds $\theta$ that at the minimum point (red star).
+However, the true loss function (w.r.t to the clean data) is in blue, thus
+this optimal value on the dirty data is in fact a suboptimal point on clean curve (red circle).
 
 \begin{figure}[ht!]
 \centering
@@ -29,7 +29,7 @@ Given this direction, \sys needs to update $\theta^{(d)}$ some distance $\gamma$
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
 \]
 At the optimal point, the magnitude of the gradient will be zero.
-So intuitively, this approach iteratively moves the model downhill, or corrects the dirty model until the desired accuracy is reached.
+So intuitively, this approach iteratively moves the model downhill (transparent red circle) -- correcting the dirty model until the desired accuracy is reached.
 However, this formulation gradient depends on all of the clean data which is not available and \sys will have to approximate this gradient from a sample.
 The main intuition is that if the gradient steps are on average correct, the model still moves downhill albeit with a reduced convergence rate proportional to the inaccuracy of the sample-based estimate.
 
