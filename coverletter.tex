@@ -31,12 +31,12 @@ In typical applications of active learning, the data cleaning algorithm is posed
 Active learning is the process of prioritizing supervisor input to a machine learning model that maximizes the convergence rate.
 Active learning algorithms use the current best model to acquire the most valuable future data.
 
-The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} presents a new opportunity for active learning principles.
-We explore how similar techniques can be applied to prioritize cleaning records that maximally affect downstream statistical analysis.
+The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} presents a new opportunity to apply active learning for data cleaning.
+We explore how to prioritize cleaning data to maximally improve downstream statistical analysis.
 In other words, this paper explores the problem of model training \emph{after} data cleaning as opposed to using a model \emph{for} data cleaning.
-The problem of prioritizing cleaning by using a user-specified downstream model is subtly different than active learning as currently applied in data cleaning.
-Using a machine learning model to enhance data cleaning means predicting clean data from dirty data.
-In \sys, the machine learning model is the data analysis, and this requires predicting clean data from \emph{clean data}.
+This problem is subtly different than active learning as currently applied in data cleaning.
+Current work uses machine learning models to enhance data cleaning by predicting clean data from dirty data.
+In \sys, the machine learning model is part of the data analysis, and this requires predicting clean data from \emph{clean} data.
 This small change raises a number of challenges in ensuring correctness and prioritization.
 
 
