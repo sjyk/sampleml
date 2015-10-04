@@ -94,6 +94,16 @@ A.~Guillory, E.~Chastain, and J.~Bilmes.
 \newblock In {\em International Conference on Artificial Intelligence and
   Statistics}, pages 201--208, 2009.
 
+\bibitem{DBLP:journals/pvldb/HaasKWF015}
+D.~Haas, S.~Krishnan, J.~Wang, M.~J. Franklin, and E.~Wu.
+\newblock Wisteria: Nurturing scalable data cleaning infrastructure.
+\newblock {\em {PVLDB}}, 8(12):2004--2015, 2015.
+
+\bibitem{heise2014estimating}
+A.~Heise, G.~Kasneci, and F.~Naumann.
+\newblock Estimating the number and sizes of fuzzy-duplicate clusters.
+\newblock In {\em CIKM Conference}, pages 959--968, 2014.
+
 \bibitem{hellerstein2012madlib}
 J.~M. Hellerstein, C.~R{\'{e}}, F.~Schoppmann, D.~Z. Wang, E.~Fratkin,
   A.~Gorajek, K.~S. Ng, C.~Welton, X.~Feng, K.~Li, and A.~Kumar.
@@ -130,6 +140,12 @@ C.~Mayfield, J.~Neville, and S.~Prabhakar.
   cleaning.
 \newblock In {\em SIGMOD Conference}, pages 75--86, 2010.
 
+\bibitem{DBLP:journals/pvldb/MozafariSFJM14}
+B.~Mozafari, P.~Sarkar, M.~J. Franklin, M.~I. Jordan, and S.~Madden.
+\newblock Scaling up crowd-sourcing to very large datasets: {A} case for active
+  learning.
+\newblock {\em {PVLDB}}, 8(2):125--136, 2014.
+
 \bibitem{nelson2012query}
 B.~Nelson, B.~I.~P. Rubinstein, L.~Huang, A.~D. Joseph, S.~J. Lee, S.~Rao, and
   J.~D. Tygar.
@@ -156,17 +172,6 @@ E.~H. Simpson.
 \newblock The interpretation of interaction in contingency tables.
 \newblock {\em Journal of the Royal Statistical Society. Series B
   (Methodological)}, pages 238--241, 1951.
-
-\bibitem{taylor1982introduction}
-J.~R. Taylor.
-\newblock An introduction to error analysis: The study of uncertainties in
-  physical measurements, 327 pp.
-\newblock {\em Univ. Sci. Books, Mill Valley, Calif}, 1982.
-
-\bibitem{volkovs2014continuous}
-M.~Volkovs, F.~Chiang, J.~Szlichta, and R.~J. Miller.
-\newblock Continuous data cleaning.
-\newblock In {\em ICDE}, pages 244--255, 2014.
 
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.

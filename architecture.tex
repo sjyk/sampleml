@@ -1,7 +1,7 @@
 \section{Architecture}\label{arch}
 This section presents the \sys architecture.
 
-\subsection{Overview}
+\subsection{Overview}\label{sysover}
 Figure \ref{sys-arch} illustrates the \sys architecture.
 The dotted boxes describe optional components that the user can supply to improve the efficiency of the system.  
 
@@ -109,7 +109,7 @@ Similarly, in this work, we take the information from a sample of cleaned data a
 \noindent\textbf{Estimate-Driven Sampling: } Repair is the most expensive step in the workflow, so optimizing for scan cost may lead to negligible overall time improvements.
 We can sacrifice a small overhead in pre-computation for each data point to determine its value to the model and select a sampling distribution accordingly.
 Intuitively, while each iteration has an increased cost, it also makes more progress towards the optimum.
-\fi
+
 
 \begin{example}\label{archex1}
 The analyst chooses to use an SVM model, and manually clean records by hand (the $C(\dot)$).  
@@ -118,5 +118,6 @@ She identifies a subset of 15 records that are dirty, fixes them by normalizing 
 The system then uses the cleaned records to update the model parameters and select the next sample.
 The analyst can stop at any time and use the improved model to predict donation likelihoods.
 \end{example}
+\fi
 
 

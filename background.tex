@@ -4,18 +4,14 @@ cleaning and describes concrete example applications.
 
 \subsection{Dirty Data Model}\label{dmodel}
 This paper explores a model for data error where attributes of records in a relation $R$ are incorrect or missing.
-Formally, there exists a record-by-record cleaning operation $C(\cdot)$ can be applied to a record $r \in R$ to recover $r_{clean}$.
-The information in a record $r$ is sufficient to uniquely determine $r_{clean}$. 
-%Following from this model, there are two relations $R_{dirty}$ and $R_{clean}$ with the same schema and a one-to-one mapping between rows.
-Therefore, for every $r \in R_{dirty}$ there exists an $r' \in R_{clean}$, and a cleaning function $C(\cdot)$, is a function that maps each $r$ to its corresponding $r'$.
+Formally, the data is corrupted in a way such that there exists a supervisor (human or algorithm, in either case expensive to query), that given a dirty record can return the unique correct clean record.
+Note that this does not cover errors that simulateously affect multiple records like deduplication or schema transformation problems.
+This is modeled by a record-by-record cleaning operation $C(\cdot)$ can be applied to a record $r \in R$ to recover $r_{clean}$.
+Therefore, for every $r \in R_{dirty}$ there exists a unique $r' \in R_{clean}$, and a cleaning function $C(\cdot)$, is a function that maps each $r$ to its corresponding $r'$.
 We assume that there is a featurization $F(\cdot)$ which is defined over both $R_{dirty}$ and $R_{clean}$ and maps rows to vectors in $\mathbb{R}^d$.
 So each row corresponds to one training example in the predictive model.
 
-A number of common data cleaning techniques can be modeled in this way.
-For example, fixing attributes with inconsistent representations, updating out-of-date data, imputing missing attribute values, and enforcing record-level data quality constraints.
-On the other hand, there a number of techniques that cannot be posed as a row-by-row mapping such as deduplication and schema matching.
-
-\subsection{Active Learning and Data Cleaning}
+\subsection{Active Learning and Data Cleaning}\label{alrw}
 There are a number of recent approaches that apply active learning to reduce number of records that need to be cleaned by a human.
 The main idea is to treat human input as binary labels in a supervised learning problem \cite{DBLP:journals/pvldb/MozafariSFJM14}.
 For example, Gokhale et al. \cite{gokhale2014corleone} applies crowdsourcing to label likely pairs of records as duplicates.
