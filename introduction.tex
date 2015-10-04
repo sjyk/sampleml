@@ -8,7 +8,7 @@ These approaches are effective because they leverage knowledge about how the cle
 For example, sampling may suffice when the downstream queries on the cleaned data are aggregates and active learning applies when cleaned data will be used to train a statistical model.
 Active learning (see survey \cite{settles2010active}) is an increasingly popular technique to maximize the benefit of interactive data cleaning procedures \cite{DBLP:journals/pvldb/YakoutENOI11, gokhale2014corleone, yakout2013don, DBLP:journals/pvldb/HaasKWF015}.
 In typical applications of active learning, the data cleaning algorithm is posed as a supervised learning problem (e.g., classify pairs of records as duplicates~\cite{gokhale2014corleone}) where humans iteratively label a small number of proposed fixes.
-Active learning is a family of algorithms that priotize supervisor input to a machine learning model in a way that maximizes the convergence rate.
+Active learning is a family of algorithms that prioritize supervisor input to a machine learning model in a way that maximizes the convergence rate.
 The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} presents a new application for active learning.
 In principle, similar ideas can be applied to prioritize cleaning records that maximally affect a downstream statistical model.
 In other words, this paper explores the problem of model training \emph{after} data cleaning as opposed to using a model \emph{for} data cleaning.
