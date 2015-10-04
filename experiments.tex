@@ -121,7 +121,7 @@ For example, to achieve a test error of 1\% on the Adult dataset, \sys cleans 50
  \caption{ The relative model error as a function of the number of examples cleaned. \sys converges with a smaller sample size to the true result in comparison to Active Learning and SampleClean. \label{prio-perf}}\vspace{-1em}
 \end{figure}
 
-\subsubsection{Source of Improvements}
+\subsubsection{Source of Improvements}\label{comp}
 The next experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
 This is a vertical slice of the plots in the previous experiments.
 \sys without detection is denoted as (AC-D) (that is at each iteration we sample from the entire dirty data), and \sys without detection and importance sampling is denoted as (AC-D-I).

@@ -1,50 +1,20 @@
-\subsection{The Estimator}\label{dist-samp}
-The model update received a sample with probabilities $p(\cdot)$.
-Similar to Active Learning, we propose a sampling algorithm that selects the most valuable records to clean with higher probability.
-We derive an approximation for the the sampling distribution that achieves the minimum variance update estimates. 
 
-\subsubsection{Oracle Sampling Problem}
-Recall that the convergence rate of an SGD algorithm is bounded by $\sigma^2$ which is the variance of the gradient.
-Intuitively, the variance measures how accurately the gradient is estimated from a uniform sample.
-Other sampling distributions, while preserving the sample expected value, may have a lower variance.
-Thus, the oracle sampling problem is defined as a search over sampling distributions to find the minimum variance sampling distribution.
-
-\begin{definition}[Oracle Sampling Problem]
-Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find sampling probabilities $p(r)$ such that over all samples $S$ of size $k$ it minimizes:
-\[
-\mathbb{E}(\|g_S - g^*\|^2)
-\]
-\end{definition}
-It can be shown that the optimal distribution over records in $R_{dirty}$ is probabilities proportional to:
-\[
-p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|
-\]
-We provide proofs and theoretical justification in appendix, but intuitively, records with higher gradients should be sampled with higher probability as they affect the update more significantly.
-However, we cannot exclude records with lower gradients as that would induce a bias hurting convergence.
-The problem is that this optimal distribution leads to a chicken-and-egg problem:
-the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, however, cleaning is required to know those values.
-In practice, we often do not have an oracle available to us, thus our goal is to approximate the oracle as closely as possible.
-
-
-\subsubsection{Approximating an Oracle Sampler}\label{sampling}
-To get around the problem with optimal sampling, the estimator will approximate this distribution by estimating the cleaned value with previously cleaned data.
-Since the model update can work with \emph{any} distribution, convergence is guaranteed no matter how inaccurate this approximation is.
-However, a better approximation will lead to an improved convergence rate.
+\subsection{The Estimator}\label{sampling}
+%\subsubsection{Approximating an Oracle Sampler}
+To get around the problem with oracle sampling, the estimator will estimate the cleaned value with previously cleaned data.
 The estimator will also take advantage of the detector from the previous section.
-
 There are a number of different approaches, such as regression, that could be used to estimate the cleaned value given the dirty values.
-However, there are a couple of important challenges that this estimator needs account for in this setting. 
-First, there is an important problem of sparsity, where errors may affect a small number of records.
+However, there is a problem of scarcity, where errors may affect a small number of records.
 As a result, the regression approach would have to learn a multivariate function with only a few examples.
 This makes high-dimensional regression ill-suited for the estimator.
-Conversely, we could try a very simple estimator that just calculates an average change and adds this change to all of the gradients.
+Conversely, it could try a very simple estimator that just calculates an average change and adds this change to all of the gradients.
 This estimator can be highly inaccurate as it also applies the change to records that are known to be clean.
 
 \sys leverages the detector for an estimator that is in between these two extremes.
 The estimator calculates average changes feature-by-feature and selectively corrects the gradient when a feature is known to be corrupted based on the detector.
 It also applies a linearization that leads to improved estimates when the sample size is small.
 We evaluate this linearization in Section \ref{est} against alternatives, and find that it provides more accurate estimates for a small number of samples cleaned.
-When the number of cleaned samples is large the alternative techniques are comparable or even slightly better.
+This is a biased estimator, and when the number of cleaned samples is large the alternative techniques are comparable or even slightly better due to the bias.
 
 \paragraph{Estimation For A Priori Detection}
 If most of the features are correct, it would seem like the gradient is only
