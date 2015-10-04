@@ -1,9 +1,9 @@
 \subsection{The Detector}\label{det}
 % Partitioning Data With Detection}\label{det}
-\sys improves the progress of each update iteration by intelligently partitioning the data into expected dirty and clean partitions. 
-This ensures that sampling draws data that are likely to be dirty.
+% \sys improves the progress of each update iteration by intelligently partitioning the data into expected dirty and clean partitions. 
+% This ensures that sampling draws data that are likely to be dirty.
 
-\subsubsection{Goals}
+% \subsubsection{Goals}
 The detector returns two important aspects of a record: (1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
 The sampler can use (1) to select a subset of dirty records to sample at each batch. 
 The estimator can use (2) estimate the value of data cleaning based on other records with the same corruption.
