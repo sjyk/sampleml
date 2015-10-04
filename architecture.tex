@@ -8,16 +8,19 @@ The dotted boxes describe optional components that the user can supply to improv
 \subsubsection{User Input}\label{uinp}
 To use \sys, the user provides the following:
 
-\noindent\textbf{Convex Model and Initialization. } The user provides a predictive model specified as a convex loss optimization problem $L(\cdot)$ and a function $F(\cdot)$ that featurizes the data by mapping a record to a feature vector $x$ and label $y$ pair. 
+\noindent\textbf{Model:} The user provides a predictive model (e.g., SVM) specified as a convex loss optimization problem $L(\cdot)$ and a featurizer $F(\cdot)$ that maps a record to its feature vector $x$ and label $y$.
 
 \vspace{0.25em}
 
-\noindent\textbf{Cleaning Function. } The data cleaning is specified as a function $C(\cdot)$ that maps dirty records to clean records as per our definition in Section \ref{dmodel}. The record-by-record cleaning model is not a fundamental restriction of this approach, and in the extensions (Section \ref{set-of-r}), there is a discussion on a compatible ``set of records" cleaning model. Consider the case where an analyst finds a dirty record, and is able to fix all records (possibly outside the sample) the with same error throughout the dataset efficiently.
+\noindent\textbf{Cleaning Function: } The data cleaning is specified as a function $C(\cdot)$ that maps dirty records to clean records as per our definition in Section \ref{dmodel}\footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.
+Such a model can capture the case where an analyst finds a dirty record, and can fix all records (possibly outside the sample) the with same error throughout the dataset at a lower cost than cleaning them individually.}.
 
 \vspace{0.25em}
 
-\noindent\textbf{Budget. } At initialization, there are two hyperparameters to set, the cleaning budget $k$ and the batch size $b$ (the number of iterations is $T = \frac{k}{b}$).
-We discuss how to set $b$ and the tradeoffs in setting a larger or smaller $b$ in Section \ref{model-update}.
+\noindent\textbf{Optional Knobs: } The user can provide two optional hyperparameters.  
+A cleaning budget $k$ can be used as a stopping criteria once $C(\dot)$ has been called $k$ times.
+A batch size $b$ sets the number of records that are cleaned in each iteration of the ActiveClean algorithm (the number of iterations is $T = \frac{k}{b}$).
+Section~\ref{model-update} discusses the efficiency and convergence trade-offs of different values of $b$.
 
 \subsubsection{Data Flow}
 The system first trains the model $L(\cdot)$ on the dirty dataset to find an initial model $\theta^(d)$ that the system will subsequently improve.
