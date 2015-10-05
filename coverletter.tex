@@ -28,17 +28,47 @@ Below we address each reviewer comment in detail:
 We would first like to clarify an important point about the subject and scope of our paper in relation to related work.
 Active learning (see survey \cite{settles2010active}) is an increasingly popular technique to maximize the benefit of interactive data cleaning procedures \cite{DBLP:journals/pvldb/YakoutENOI11, gokhale2014corleone, yakout2013don, DBLP:journals/pvldb/HaasKWF015}.
 In typical applications of active learning, the data cleaning algorithm is posed as a supervised learning problem (e.g., classify pairs of records as duplicates~\cite{gokhale2014corleone}) where humans iteratively label a small number of proposed fixes.
+In this setting, the data cleaning is progressive in the sense that as more records are labeled, the predictive model's quality is expected to improve.
+However, a key point is that this model is designed from predicting {\it clean labels} from {\it dirty} input data.  
+For example, a move recommender system may train a model on {\it dirty} movie data to deduplicate movie titles.
+
+Our \sys setting focuses on down-stream analytic models (DSM) that expect {\it clean} input data.  
+For example, a netflix recommender relies on clean movie and user preference data to predict additional user preferences.   
+Certainly, data cleaning systems that employ active learning may satisfy this requirement by acquiring a set of labels, training the data cleaning model (DCM), cleaning the rest of the dataset using the DCM,
+and handing the resulting dataset to the DSM.
+The key limitation of this approach is that the DCM may require a very large number of labels before the DCM accuracy is sufficient for the DSM.
+A second limitation, is that if the down-stream system decided to not rely on the results of the active learning model and directly use the manually cleaned data, then
+the DSM will either have high sample error due to the small number of cleaned records (assuming manual cleaning is expensive) or 
+serious methodological problems if the DSM attempted to train on the combination of the cleaned and unclean data.
+A final minor, but practical matter is that active learning rarely converges smoothly, and so labeling more records may not improve, and sometimes even degrade, the model quality.
+
+In contrast to the above approaches, our work {\it extends} active cleaning theory to explicitly make use of the knowledge that the down-stream process is a machine learning model.
+By doing so, we directly address the limitations above by intelligently selecting the most profitable sample of records to clean such that 
+the resulting DSM will {\it provably} converge to the true, clean model, and such that we require significantly fewer data cleaning operations than the above approach.
+In additon, we generalize the active learning problem from one where only the record labels change through manual data cleaning, to one where {\it any} attribute of a record may be cleaned.
+
+
+\iffalse
 Active learning is the process of prioritizing supervisor input to a machine learning model that maximizes the convergence rate.
 Active learning algorithms use the current best model to acquire the most valuable future data.
 
-The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} presents a new opportunity to apply active learning for data cleaning.
-We explore how to prioritize cleaning data to maximally improve downstream statistical analysis.
-In other words, this paper explores the problem of model training \emph{after} data cleaning as opposed to using a model \emph{for} data cleaning.
+In this class of use cases, active learning is used \emph{for} data cleaning, in 
+
+% The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} presents a new opportunity to apply active learning for data cleaning.
+
+traditiona l AL is progressive in sense that more labels --> higher model quality. but these are dirty clean models!
+If we use AL to clean data for downstream analytics, model wouldn't be sufficient quality, in fact, not clear what quality ought to be.
+In contrast, active clean applies novel extensions to AL to generalize and apply to downstream analysitcs.
+
+Our work contrasts in that it studies the problem of model training \emph{after} data cleaning --
+specifically, given that we know that the data cleaning process (as a black box) will be used to train a down-stream model, 
+how can we use that knowledge to prioritize which data is cleaned?
+%In other words, this paper explores the problem of model training \emph{after} data cleaning as opposed to using a model \emph{for} data cleaning.
 This problem is subtly different than active learning as currently applied in data cleaning.
 Current work uses machine learning models to enhance data cleaning by predicting clean data from dirty data.
 In \sys, the machine learning model is part of the data analysis, and this requires predicting clean data from \emph{clean} data.
 This small change raises a number of challenges in ensuring correctness and prioritization.
-
+\fi
 
 \vspace{0.5em}
 
