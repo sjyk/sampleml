@@ -4,16 +4,17 @@
 % This ensures that sampling draws data that are likely to be dirty.
 
 % \subsubsection{Goals}
-The detector returns two important aspects of a record: (1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
-The sampler can use (1) to select a subset of dirty records to sample at each batch. 
-The estimator can use (2) estimate the value of data cleaning based on other records with the same corruption.
+The detector returns two important aspects of a record: 
+(1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
+The sampler can use (1) to select a subset of dirty records to sample at each batch and 
+the estimator can use (2) estimate the value of data cleaning based on other records with the same corruption.
 \sys supports two types of detectors: \emph{a priori} and \emph{adaptive}.
-In the \emph{a priori} case, there is a way to select the set of dirty records before any cleaning.
-This case is possible for some types of data errors.
-In the adaptive case, detection is learned as data is cleaned.
+In former assumes that we know the set of dirty records and how they are dirty \emph{a priori} to \sys,
+while the latter \emph{adaptively} learns characteristics of the dirty data as part of running \sys.
 
-\subsubsection{\protect\textit{\large A Priori} Case}
-For many types of dirtiness such as missing attribute values and constraint violations, it is possible to efficiently enumerate a set of corrupted records and determine how the records are corrupted.
+\subsubsection{\protect\textit{\large A Priori} Detector}
+For many types of dirtiness such as missing attribute values and constraint violations, 
+it is possible to efficiently enumerate a set of corrupted records and determine how the records are corrupted.
 
 \begin{definition}[A Priori Detection]
 Let $r$ be a record in $R$. An a priori detector is a detector that returns a Boolean of whether the record is dirty and a set of columns $e_r$ that are dirty.
@@ -42,7 +43,7 @@ a contribution can be only ``allowed" or ``disallowed".
 Any other value for \texttt{status} is an error.
 \end{example}
 
-\subsubsection{Adaptive Detection}
+\subsubsection{Adaptive Detector}
 \emph{A priori} detection is not possible in all cases.
 The detector also supports adaptive detection where detection is learned from previously cleaned data.
 Note that this ``learning" is distinct from the ``learning" at the end of the pipeline.
