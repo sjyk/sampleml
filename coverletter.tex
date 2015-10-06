@@ -29,7 +29,7 @@ We would first like to clarify an important point about the subject and scope of
 Active learning (see survey \cite{settles2010active}) is an increasingly popular technique to maximize the benefit of interactive data cleaning procedures \cite{DBLP:journals/pvldb/YakoutENOI11, gokhale2014corleone, yakout2013don, DBLP:journals/pvldb/HaasKWF015}.
 In typical applications of active learning, the data cleaning algorithm is posed as a supervised learning problem (e.g., classify pairs of records as duplicates~\cite{gokhale2014corleone}) where humans iteratively label a small number of proposed fixes.
 In this setting, the data cleaning is progressive in the sense that as more records are labeled, the predictive model's quality is expected to improve.
-However, a key point is that this model is designed from predicting {\it clean labels} from {\it dirty} input data.  
+However, a key point is that this model is designed for predicting {\it clean labels} from {\it dirty} input data.  
 For example, a move recommender system may train a model on {\it dirty} movie data to deduplicate movie titles.
 
 Our \sys setting focuses on down-stream analytic models (DSM) that expect {\it clean} input data.  
