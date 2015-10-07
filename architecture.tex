@@ -17,12 +17,12 @@ Such a model can capture the case where an analyst finds a dirty record, and can
 
 \vspace{0.25em}
 
-\noindent\textbf{Optional Knobs: } The user can provide two optional hyperparameters.  
+\noindent\textbf{Optional: } The user can provide two optional hyperparameters.  
 A cleaning budget $k$ can be used as a stopping criteria once $C(\dot)$ has been called $k$ times.
 A batch size $b$ sets the number of records that are cleaned in each iteration of the ActiveClean algorithm (the number of iterations is $T = \frac{k}{b}$).
 Section~\ref{model-update} discusses the efficiency and convergence trade-offs of different values of $b$.
 
-\subsubsection{Data Flow}
+\subsubsection{Data Flow} \label{df}
 The system first trains the model $L(\cdot)$ on the dirty dataset to find an initial model $\theta^(d)$ that the system will subsequently improve.
 The {\it Sampler} selects a sample of size $b$ records from the dataset and passes
 the sample to the {\it cleaner}, which executes $C(\dot)$ for each sample record and outputs their cleaned versions.
@@ -121,7 +121,7 @@ The analyst can stop at any time and use the improved model to predict donation 
   Intuitively, while each iteration has an increased cost, it also makes more progress towards the optimum.
 
 
-  \begin{example}\label{archex1}
+  \begin{example}
 
   The analyst first trains an SVM model on the dirty data ignoring the effects of the errors resulting in a model $\theta^{(d)}$.
   She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
