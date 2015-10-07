@@ -1,6 +1,5 @@
 %\section{Appendix}
-\section{Extensions}
-\subsection{Set-of-Records Cleaning Model}\label{set-of-r}
+\section{Set-of-Records Cleaning Model}\label{set-of-r}
 In paper, we formalized the analyst-specified data cleaning as follows.
 We take the sample of the records $S_{dirty}$, and apply data cleaning $C(\cdot)$.
 $C$ is applied to a record and produces the clean record:
@@ -29,9 +28,11 @@ Records outside of $S_{dirty}$ may be cleaned on a subset of dirty attributes by
 After each iteration, we re-run the detector, and move any $r \in R'_{dirty}$ that are clean to $R_{clean}$.
 Such a model allows us to capture data cleaning operations such as in Example \ref{app-ex1} and Example \ref{app-ex2}.
 
-\subsection{Proofs}
-\noindent\textbf{Deriving $\alpha$ and $\beta$: } The first problem is to choose $\alpha$ and $\beta$ such that the estimate of the gradient is unbiased. 
-SGD will converge when the estimate is unbiased and the step-size is chosen appropriately.
+\section{Stochastic Gradient Descent}\label{appsgd}
+
+Stochastic Gradient Descent converges for a suitably chosen step size if the sample gradients are unbiased estimates of the full gradient. 
+The first problem is to choose weights $\alpha$ and $\beta$ (to average already clean and newly cleaned data) such that the estimate of the gradient is unbiased. 
+%SGD will converge when the estimate is unbiased and the step-size is chosen appropriately.
 The batch $S_{dirty}$ is drawn only from $R_{dirty}$.
 Since the sizes of $R_{dirty}$ and its complement are known, it follows that the gradient over the already clean data $g_C$ and the recently cleaned data $g_S$ can be combined as follows:
 \[
@@ -42,28 +43,6 @@ Therefore,
 \alpha = \frac{\mid R_{clean} \mid}{\mid R \mid}, \beta = \frac{\mid R_{dirty} \mid}{\mid R \mid}
 \]
 
-\begin{lemma}\label{unbiased1}
-The gradient estimate $g(\theta)$ is unbiased if $g_S$ is an unbiased estimate of:
-\[
-\frac{1}{\mid R_{dirty} \mid} \sum g_i(\theta)
-\]
-\end{lemma}
-\begin{proof}[Sketch]
-This result follows directly from the linearity of expectation (See Appendix \ref{unbiased1-deriv}).
-\end{proof}
-
-\vspace{0.25em}
-
-\subsection{Non-convex losses}\label{non-convex}
-We acknowledge that there is an increasing popularity of non-convex losses in the Neural Network and Deep Learning literature. 
-However, even for these losses, gradient descent techniques still apply. 
-Instead of converging to a global optimum they converge to a locally optimal value. 
-Likewise, \sys will converge to the closest locally optimal value to the dirty model. 
-Because of this, it is harder to reason about the results.
-Different initializations will lead to different local optima, and thus, introduces a complex dependence on the initialization with the dirty model.
-This problem is not fundemental to \sys and any gradient technique suffers this challenge for general non-convex losses, and we hope to explore this more in the future.
-
-\section{Proof of Lemma 1}\label{unbiased1-deriv}
 \begin{lemma}
 The gradient estimate $g(\theta)$ is unbiased if $g_S$ is an unbiased estimate of:
 \[
@@ -83,14 +62,22 @@ By symmetry,
 \]
 \end{proof}
 
-\section{Convex vs. Strongly Convex}
 The error bound discussed in Proposition 2 can be tightened for a class of models called strongly convex (see \cite{bertsekas2011incremental} for a defintion). 
 
 \begin{proposition}
 For a strongly convex loss, a batch size $b$, and $T$ iterations, the convergence rate is bounded by $O(\frac{\sigma^2}{bT})$. 
 \end{proposition}
 
-\section{Proof of Lemma 2}\label{impsample-deriv}
+\section{Non-convex losses}\label{non-convex}
+We acknowledge that there is an increasing popularity of non-convex losses in the Neural Network and Deep Learning literature. 
+However, even for these losses, gradient descent techniques still apply. 
+Instead of converging to a global optimum they converge to a locally optimal value. 
+Likewise, \sys will converge to the closest locally optimal value to the dirty model. 
+Because of this, it is harder to reason about the results.
+Different initializations will lead to different local optima, and thus, introduces a complex dependence on the initialization with the dirty model.
+This problem is not fundemental to \sys and any gradient technique suffers this challenge for general non-convex losses, and we hope to explore this more in the future.
+
+\section{Importance Sampling}\label{impsample-deriv}
 This lemma describes the optimal distribution over a set of scalars:
 \begin{lemma}\label{impsample}
 Given a set of real numbers $A = \{a_1,...,a_n\}$, let $\hat{A}$ be 
@@ -137,20 +124,32 @@ Solving the system of equations, we get:
 p_i = \frac{\mid a_i \mid }{\sum_i \mid a_i \mid}
 \]
 
-\subsection{Linearization}
+\section{Linearization}\label{apptaylor}
 If $d$ is the dirty value and $c$ is the clean value, the Taylor series approximation for a function $f$ is given as follows:
 \[
 f(c) = f(d) + f'(d)\cdot(d-c) + ...
 \]
 Ignoring the higher order terms, the linear term $f'(d)\cdot(d-c)$ is a linear function in each feature and label.
-Then, taking expected values, it follows that:
+We only have to know the change in each feature to estimate the change in value.
+In our case the function $f$ is the gradient $\nabla\phi$.
+So, the resulting linearization is:
+\[
+\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot (x - x^{(c)}) \]
+\[+ \frac{\partial}{\partial Y}\phi(x,y,\theta)\cdot (y - y^{(c)})
+\]
+When we take the expected value:
+\[
+\mathbb{E}(\nabla\phi(x_{clean},y_{clean},\theta)) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot \mathbb{E}(\Delta x) \]
+\[+ \frac{\partial}{\partial Y}\nabla\phi(x,y,\theta)\cdot \mathbb{E}(\Delta y)
+\]
+It follows that:
 \[
 \approx \nabla\phi(x,y,\theta) + M_x \cdot \mathbb{E}(\Delta x) + M_y \cdot \mathbb{E}(\Delta y)
 \]
-where $M_x = \frac{\partial}{\partial X}\nabla\phi$ and $M_y = \frac{\partial}{\partial Y}\nabla\phi$ (See Appendix \ref{taylor-deriv} for derivation).
+where $M_x = \frac{\partial}{\partial X}\nabla\phi$ and $M_y = \frac{\partial}{\partial Y}\nabla\phi$.
 Recall that the feature space is $d$ dimensional and label space is $l$ dimensional.
 Then, $M_x$ is an $d \times d$ matrix, and $M_y$ is a $d \times l$ matrix.
-Both of these matrices are computed for each record (see Appendix \ref{example-deriv} for an example derivation).
+Both of these matrices are computed for each record.
 $\Delta x$ is a $d$ dimensional vector where each component represents a change in that feature and $\Delta y$ is an $l$ dimensional vector that represents the change in each of the labels. 
 
 This linearization allows \sys to maintain per feature (or label) average changes and use these changes to center the optimal sampling distribution around the expected clean value.
@@ -182,34 +181,6 @@ Each record $r$ also has an l-dimensional vector $\Delta_{ry}$ which is construc
 Finally, the result is: 
 \[p_{r}\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|
 \]
-
-\section{Taylor Approximation}\label{taylor-deriv}
-We can take the expected value of the Taylor series expansion around the dirty value.
-If $d$ is the dirty value and $c$ is the clean value, the Taylor series approximation for a function $f$ is given as follows:
-\[
-f(c) = f(d) + f'(d)\cdot(d-c) + ...
-\]
-If we ignore the higher order terms, we see that the linear term $f'(d)\cdot(d-c)$ decouples the features.
-We only have to know the change in each feature to estimate the change in value.
-In our case the function $f$ is the gradient $\nabla\phi$.
-So, the resulting linearization is:
-\[
-\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot (x - x^{(c)}) \]
-\[+ \frac{\partial}{\partial Y}\phi(x,y,\theta)\cdot (y - y^{(c)})
-\]
-When we take the expected value:
-\[
-\mathbb{E}(\nabla\phi(x_{clean},y_{clean},\theta)) \approx \nabla\phi(x,y,\theta) + \frac{\partial}{\partial X}\nabla\phi(x,y,\theta)\cdot \mathbb{E}(\Delta x) \]
-\[+ \frac{\partial}{\partial Y}\nabla\phi(x,y,\theta)\cdot \mathbb{E}(\Delta y)
-\]
-So the resulting estimation formula takes the following form:
-\[
-\approx \nabla\phi(x,y,\theta) + M_x \cdot \mathbb{E}(\Delta x) + M_y \cdot \mathbb{E}(\Delta y)
-\]
-Recall that we have a $d$ dimensional feature space and $l$ dimensional label space.
-Then, $M_x = \frac{\partial}{\partial X}\nabla\phi$ is an $d \times d$ matrix, and $M_y = \frac{\partial}{\partial Y}\nabla\phi$ is a $d \times l$ matrix.
-Both of these matrices are computed with respect to dirty data, and we will present an example.
-$\Delta x$ is a $d$ dimensional vector where each component represents a change in that feature and $\Delta y$ is an $l$ dimensional vector that represents the change in each of the labels.
 
 \section{Example $M_x$, $M_y$}\label{example-deriv}
 \noindent\textbf{Linear Regression: }

@@ -19,7 +19,7 @@ It can be shown that the optimal distribution over records in $R_{dirty}$ is pro
 \[
 p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|
 \]
-We provide proofs and theoretical justification in appendix, but intuitively, records with higher gradients should be sampled with higher probability as they affect the update more significantly.
+This is an established result, for thoroughness, we provide a proof in the appendix (Section \ref{impsample-deriv}), but intuitively, records with higher gradients should be sampled with higher probability as they affect the update more significantly.
 However, this cannot exclude records with lower gradients as that would induce a bias hurting convergence.
 The problem is that this optimal distribution leads to a chicken-and-egg problem:
 the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, however, cleaning is required to know those values.
