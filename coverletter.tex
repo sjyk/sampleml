@@ -7,15 +7,15 @@ We have addressed all of the concerns and included references to the revised tex
 To summarize the major changes:
 
 \begin{enumerate}
-\item Sections 1 and 2 clarify the relationship between \sys and a number of related data cleaning projects that apply machine learning (e.g., \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}).
+\item Sections 1 and 2 clarify the relationship between \sys and related work in data cleaning that applies machine learning (e.g., \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}).
 
-\item We formalize our definition of dirty data and data cleaning model in Section \ref{dmodel}.
+\item In Section \ref{dmodel}, we formalize the definition of dirty data and the data cleaning model used in this work.
 
-\item In Section \ref{statements}, we formalize the two subproblems addressed in this work: model correctness with data cleaning and training efficiency with data cleaning.
+\item In Section \ref{statements}, we provide problem statements for the two subproblems addressed in this work.
 
-\item Section \ref{arch} presents a revised system architecture by emphasizing the essential components for correctness and highlighting optional optimizations. 
+\item Section \ref{arch} presents a revised system architecture that first emphasizes the essential components for correctness, and then highlights optional optimizations. 
 
-\item Section \ref{s:usecase} presents a running example which is referenced in each technical section (Examples \ref{archex}, \ref{upex},\ref{detex1},\ref{detex2},\ref{estex}).
+\item Section \ref{s:usecase} presents a running example that is referenced in each technical section (Examples \ref{archex}, \ref{upex},\ref{detex1},\ref{detex2},\ref{estex}).
 
 \item We included references to the related work suggested by the reviewing committee \cite{whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, DBLP:journals/pvldb/YakoutENOI11, yakout2013don, heise2014estimating}.
 
@@ -25,16 +25,16 @@ Below we address each reviewer comment in detail:
 \vspace{0.5em}
 
 \subsection*{Meta Review Details} 
-Recent work that explores machine learning and data cleaning (e.g., \cite{yakout2013don,gokhale2014corleone}) uses machine learning as a technique to improve efficiency and/or reliability.
-For example, Yakout et al. trains a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
+Machine learning can be used as a technique to improve the efficiency and/or reliability of data cleaning\cite{yakout2013don,gokhale2014corleone}.
+For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
 %This use case leverages clean data to estimate the accuracy of a future repair on dirty data.
-Other work, such as Gokhale et al. \cite{gokhale2014corleone}, uses machine learning to extrapolate rules from a small set of examples cleaned with crowdsourcing to uncleaned data.
-Human input is often expensive and impractical to apply to entire large datasets. 
-Machine learning facilitates progressive cleaning by gradually learning a model that predicts the results of an expensive cleaning operation.
-This approach can be coupled with active learning to query a human only when the statistical model indicates uncertainty.
+Gokhale et al. \cite{gokhale2014corleone} use machine learning to extrapolate rules from a small set of examples cleaned with crowdsourcing to apply on uncleaned data.
+Crowdsourcing is often expensive and impractical for large datasets. 
+In these cases, machine learning facilitates progressive cleaning by gradually learning a model that predicts the results of an expensive cleaning operation.
+When a human is involved, this approach can be coupled with active learning to query the human only when the statistical model indicates uncertainty.
 A common thread in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 
-In contrast, \sys addresses the problem of an analyst who wants to perform statistical analysis (in the form of Machine Learning) on clean data.
+In contrast, \sys addresses the problem of statistical analysis on clean data after data cleaning.
 We call such models Downstream Statistical Models (DSMs) to contrast with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
 The DSM is independent of the errors manifest in the data.
