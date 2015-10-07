@@ -120,11 +120,9 @@ We highlight related work in the background section (Section \ref{alrw}):
 
 \emph{Recent work that explores machine learning and data cleaning uses machine learning as a technique to improve efficiency and/or reliability.
 For example, Yakout et al. trains a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
-Another application of machine learning in data cleaning is value imputation, where a missing value in a record is predicted based on a statistical model trained on those records without missing values.
-These two applications of machine learning facilitate automated data repairs, which can sometimes be unreliable. 
-One approach to make automated repairs more reliable is human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
-However, human input is often expensive and impractical to apply to entire large datasets.
-Machine learning can allow for progressive cleaning by gradually learning a model that predicts the results of an expensive cleaning operation.
+Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
+Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
+Human input is often expensive and impractical to apply to entire large datasets.
 The model can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples, and intuitively, this means
 query a human only when the statistical model indicates uncertainty.\\
@@ -133,11 +131,11 @@ In contrast, \sys addresses the problem of an analyst who wants to perform stati
 We call such models Downstream Statistical Models (DSMs) to contrast with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
 The DSM is independent of the errors manifest in the data and is specified by the user.
-The DSM problem is more general than the DCM problem with a broader class of allowed statistical models, that is not just value-prediction for data cleaning operations.
+The DSM problem is more general than the DCM problem with a broader class of allowed statistical models, that is not just record value-prediction for data cleaning operations.
 For example, a ``label" in a DSM may be a function of multiple dirty and clean attributes.
 There are two key challenges in applying data cleaning before a DSM: (1) statistical validity, and (2) efficiency. 
-\sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data that maximally benefit a DSM.
-It turns out that our method for active learning with DSM includes many types of DCMs.\\
+\sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data that maximally benefit a DSM.\\
+It turns out that our method for active learning with DSM includes many types of DCMs.
 Consider the deduplication problem with active learning as studied in Gokhale et al. \cite{gokhale2014corleone}.
 In this problem, humans label pairs of records as entity matches or not.
 We could create a relation $R \times R$ with all pairs of records and an extra missing attribute corresponding to the label. 

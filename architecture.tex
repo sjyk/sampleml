@@ -3,7 +3,7 @@ This section presents the \sys architecture.
 
 \subsection{Overview}\label{sysover}
 Figure \ref{sys-arch} illustrates the \sys architecture.
-The dotted boxes describe optional components that the user can supply to improve the efficiency of the system.  
+The dotted boxes describe optional components that the user can provide to improve the efficiency of the system.  
 
 \subsubsection{User Input}\label{uinp}
 To use \sys, the user provides the following:
@@ -36,14 +36,12 @@ These components can be used separately (if only one is supplied) or together to
 Sections \ref{opti} describes several instantiations of these components for different data cleaning problems.
 
 \subsection{Example}
-
-The following illustrates how a user would use \sys in the context of the use case in Section~\ref{s:usecase}:
+The following example illustrates how an analyst would use apply \sys to address the use case in Section~\ref{s:usecase}:
 \begin{example}\label{archex}
-\reminder{make story consistent with use case}
-The analyst chooses to use an SVM model, and manually clean records by hand (the $C(\dot)$).  
-This is enough information for ActiveClean to select a sample of $50$ (the default) records to show the analyst.
-She identifies a subset of 15 records that are dirty, fixes them by normalizing the drug and corporation names with the help of a search engine, and improving labels with typographical or incorrect values.
-The system then uses the cleaned records to update the model parameters and select the next sample.
+The analyst chooses to use an SVM model, and manually cleans records by hand (the $C(\dot)$).  
+\sys initially selects a sample of $50$ records (the default)  to show the analyst.
+She identifies a subset of 15 records that are dirty, fixes them by normalizing the drug and corporation names with the help of a search engine, and corrects the labels with typographical or incorrect values.
+The system then uses the cleaned records to update the model parameters and select the next sample of $50$.
 The analyst can stop at any time and use the improved model to predict donation likelihoods.
 \end{example}
 

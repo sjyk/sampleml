@@ -24,10 +24,7 @@ In this work, without loss of generality, we will include the regularization as 
 
 \subsection{Problem 1. Correct Update Problem}\label{updp}
 Let $R_{dirty} \subseteq R$ be the subset of records that are dirty, and $S$ be a sample (possibly non-uniform but with known probabilities) of the records $R_{dirty}$.
-\sys applies the user specified cleaning function $C(\cdot)$ to the sample:
-\[
-S_{clean} = C(S)
-\]
+\sys applies the user specified cleaning function $C(\cdot)$ to the sample $S_{clean} = C(S)$.
 Given newly cleaned data $S_{clean}$ and a dirty model $\theta^{(d)}$, the model update problem is to calculate $\theta^{new}$. 
 $\theta^{new}$ will have some error between with respect to the true model $\theta^{(c)}$ (if the entire dataset is cleaned):
 \[
