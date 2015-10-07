@@ -168,13 +168,13 @@ As mentioned above, the abstract is (to me) overly technical and did not make me
 \noindent We revised the abstract to be more accessible:
 
 \emph{Dirty data, including missing, incorrect, or inconsistent values, is an important challenge in data analytics.
-Statistical analysis and predictive modeling are increasingly popular forms of data analytics and can be highly sensitive to dirty data.
+Predictive models, such as regression and classification, are increasingly popular forms of data analytics and can be highly sensitive to dirty data.
 Although error can be mitigated through data cleaning, it is often very time consuming.
 This paper explores algorithms to leverage knowledge about downstream statistical models to prioritize cleaning those records likely to affect the results.
 The challenge is that models trained on partially cleaned data can be arbitrarily incorrect requiring a new algorithms for incrementally updating results given newly cleaned data.
 We focus on a popular class of models called convex loss models (e.g., linear regression and SVMs).
 The key insight of our framework is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
-Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when corruption is systematic and sparse.  }
+Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when corruption is systematic and sparse.}
 
 \vspace{0.5em}
 
