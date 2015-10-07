@@ -25,16 +25,16 @@ Below we address each reviewer comment in detail:
 \vspace{0.5em}
 
 \subsection*{Meta Review Details} 
-Machine learning can be used as a technique to improve the efficiency and/or reliability of data cleaning\cite{yakout2013don,gokhale2014corleone}.
+Machine learning has been studied as a technique to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
 For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
 %This use case leverages clean data to estimate the accuracy of a future repair on dirty data.
 Gokhale et al. \cite{gokhale2014corleone} use machine learning to extrapolate rules from a small set of examples cleaned with crowdsourcing to apply on uncleaned data.
-Crowdsourcing is often expensive and impractical for large datasets. 
-In these cases, machine learning facilitates progressive cleaning by gradually learning a model that predicts the results of an expensive cleaning operation.
-When a human is involved, this approach can be coupled with active learning to query the human only when the statistical model indicates uncertainty.
-A common thread in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
+%Crowdsourcing is often expensive and impractical for large datasets. 
+In crowdsourced data cleaning, machine learning facilitates progressive cleaning by gradually learning a model that predicts the results of the expensive human queries.
+%This approach can be coupled with active learning to query a human (or humans) only when the statistical model indicates uncertainty.
+A common thread in the existing literature, crowdsourced or otherwise, is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 
-In contrast, \sys addresses the problem of statistical analysis on clean data after data cleaning.
+In contrast, \sys addresses the problem of statistical analysis after data cleaning.
 We call such models Downstream Statistical Models (DSMs) to contrast with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
 The DSM is independent of the errors manifest in the data.
@@ -51,9 +51,9 @@ Response \textbf{M5} addresses each of the differences in more detail.
 
 \vspace{0.5em}
 
-We thank the reviewers for this important feedback and clarified that our system applies to data cleaning operations that can be represented as record-by-record mappings between two relations with the same schema.
+We thank the reviewers for this important feedback and clarified that our system applies to data cleaning operations that can be represented as record-by-record mappings.
 %This model is sufficiently expressive for our experiments and a number of real-world dirty data scenarios such as making attribute values consistent and missing value filling.
-We hope to explore additional data cleaning models that include record deduplication or schema transformation in future work.
+We hope to explore additional data cleaning models that include record deduplication or schema transformations in future work.
 We added the following clarification to Section \ref{dmodel}:
 
 \emph{\sys supports data cleaning algorithms that can be represented as record-by-record transformations.
