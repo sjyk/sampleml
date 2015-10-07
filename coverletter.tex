@@ -56,7 +56,7 @@ We thank the reviewers for this important feedback and clarified that our system
 We hope to explore additional data cleaning models that include record deduplication or schema transformations in future work.
 We added the following clarification to Section \ref{dmodel}:
 
-\emph{\sys supports data cleaning algorithms that can be represented as record-by-record transformations.
+\emph{\sys supports data cleaning operations that can be represented as record-by-record transformations.
 Formally, there exists a function (implemented via human or algorithm) that when given a dirty record, it will return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r_{clean} = C(r)$.
@@ -170,8 +170,9 @@ As mentioned above, the abstract is (to me) overly technical and did not make me
 \emph{Dirty data, including missing, incorrect, or inconsistent values, is an important challenge in data analytics.
 Predictive models, such as regression and classification, are increasingly popular forms of data analytics and can be highly sensitive to dirty data.
 Although error can be mitigated through data cleaning, it is often very time consuming.
-This paper explores algorithms to leverage knowledge about downstream statistical models to prioritize cleaning those records likely to affect the results.
+This paper explores techniques to train accurate models without having to clean the entire dataset.
 The challenge is that models trained on partially cleaned data can be arbitrarily incorrect requiring a new algorithms for incrementally updating results given newly cleaned data.
+We also design sampling algorithms that leverage knowledge about downstream statistical models to prioritize cleaning those records likely to affect the results.
 We focus on a popular class of models called convex loss models (e.g., linear regression and SVMs).
 The key insight of our framework is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
 Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when corruption is systematic and sparse.}

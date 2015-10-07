@@ -28,7 +28,7 @@ The errors and inefficiencies introduced by these three problems may dominate an
  \caption{\sysfull allows users to train predictive models while progressively cleaning data. The framework adaptively selects the best data to clean and can optionally (denoted with dotted lines) integrate with pre-defined detection rules and estimation algorithms for improved conference. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
-We present a system called \sys which applies progressive data cleaning actively with accuracy guarantees on downstream models.
+We present a system called \sys which applies progressive data cleaning with accuracy guarantees on downstream models.
 We focus on two subproblems for a popular class of models called convex loss models (e.g., includes linear regression and SVMs): (1) the correctness problem of estimating and bounding the error in a model trained from dirty and clean data, and (2) the efficiency problem of actively selecting data to clean while preserving correctness.
 We show that instead of re-training the model, the model should be incrementally maintained with gradient descent given newly cleaned data, an technique that is guaranteed to converge under suitable conditions.
 Such guarantees allow analysts to trust early results during the data exploration and cleaning phase.
