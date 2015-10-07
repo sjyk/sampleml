@@ -1,22 +1,20 @@
 \section{Introduction}
-Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent representations.
-Data analysts report that data cleaning is one of the most time consuming steps in the analysis process \cite{nytimes}.
+Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent values.
+Predictive models are increasingly popular in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib}, and these models can be highly sensitive to dirty data.
+Predictive models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., corruption that disproportionately affects certain data) can mask or even introduce spurious new relationships.
+Furthermore, the high dimensionality of these models can amplify small problems resulting in error-prone predictions even when trained on mostly clean data \cite{xiaofeature}.
+
+The challenge is that cleaning dirty data can be expensive, and analysts report it is one of the most time consuming steps in the analysis process \cite{nytimes}.
 Cleaning can require a significant amount of developer effort in writing software or rules to fix the corruption.
-Due to this expense, there are a number of techniques to avoid cleaning entire datasets such as sampling \cite{wang1999sample}, identifying the most relevant records to queries of interest \cite{DBLP:conf/sigmod/BergmanMNT15}, and active learning \cite{gokhale2014corleone}.
+Furthermore, for data cleaning techniques that employ human validation or crowdsourcing, the actualy cleaning operations can be costly for large datasets.
+The analyst who wants to train a statistical model faces a choice of either discarding the dirty data, inducing some unknown systematic bias, or paying the price of data cleaning.
 
-These approaches are effective because they leverage knowledge about how the cleaned data will be used. 
-For example, sampling may suffice when the downstream queries on the cleaned data are aggregates and active learning applies when cleaned data will be used to train a statistical model.
-Active learning (see survey \cite{settles2010active}) is an increasingly popular technique to maximize the benefit of interactive data cleaning procedures \cite{DBLP:journals/pvldb/YakoutENOI11, gokhale2014corleone, yakout2013don, DBLP:journals/pvldb/HaasKWF015}.
-In typical applications of active learning, the data cleaning algorithm is posed as a supervised learning problem (e.g., classify pairs of records as duplicates~\cite{gokhale2014corleone}) where humans iteratively label a small number of proposed fixes.
-Active learning is a family of algorithms that prioritize supervisor input to a machine learning model in a way that maximizes the convergence rate.
-The growing popularity of predictive models in data analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} presents a new application for active learning.
-In principle, similar ideas can be applied to prioritize cleaning records that maximally affect a downstream statistical model.
-In other words, this paper explores the problem of model training \emph{after} data cleaning as opposed to using a model \emph{for} data cleaning.
-
-In broadening interactive data cleaning to also include the downstream data analysis, the key new question is statistical validity.
-The analyst may query and evaluate the model \textbf{progressively} with $k \ll N$ records cleaned, and clear semantics about the accuracy of the intermediate results are needed.
-Unfortunately, training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
-An alternative is to clean $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
+This paper explores how data cleaning before statistical modeling can be applied progressively, where an analyst cleans $k \ll N$ records and can evaluate the accuracy of a model trained on partially cleaned data.
+There are a number of applications for such a framework including: early stopping when the model accuracy no longer improves, evaluating costly data cleaning without cleaning the entire dataset, and allowing for interactive data cleaning and feature selection.
+These applications are only possible if the intermediate state of the model (based on $k$ clean records) is an accurate estimate of the true model.
+Unfortunately, straight-forward implementations of progressive data cleaning can result in highly inaccurate models.
+Training a model on a mixture of dirty and clean data can lead to misleading relationships in even simple scenarios (Figure \ref{update-arch1}).
+An alternative is to restrict training to the $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
 While this avoids the mixing problem, accurate model training may require a large amount of training data and $k$ examples may not be enough for a viable model.
 Furthermore, if the $k$ records are not selected uniformly at random, the trained model might be highly biased.
 The errors and inefficiencies introduced by these three problems may dominate any gains from data cleaning, leading to unreliable or misleading conclusions about data or model quality.
@@ -30,7 +28,12 @@ The errors and inefficiencies introduced by these three problems may dominate an
 We present a system called \sys which applies progressive data cleaning actively while preserving the statistical validity of downstream predictive analysis.
 We focus on two subproblems for a popular class of models called convex loss models (e.g., includes linear regression and SVMs): (1) the correctness problem of estimating and bounding the error in a model trained from dirty and clean data, and (2) the efficiency problem of actively selecting data to clean while preserving correctness.
 We show that instead of re-training the model, the model can be incrementally maintained with gradient descent given newly cleaned data, an technique that is guaranteed to converge under suitable conditions.
-Such guarantees allow analysts to trust early results during the data exploration and cleaning phase and facilitate reliable comparisons between: expensive data cleaning operations, different types of models, and different featurization techniques.
+Such guarantees allow analysts to trust early results during the data exploration and cleaning phase.
+
+Prior work in data cleaning \emph{uses} machine learning to improve efficiency and/or reliability \cite{DBLP:journals/pvldb/YakoutENOI11, gokhale2014corleone, yakout2013don, DBLP:journals/pvldb/HaasKWF015}.
+In contrast, \sys addresses the problem of an analyst who wants to perform statistical analysis (in the form of convex models) on clean data.
+This problem is more general and requires an explicit solution to the correctness of intermediate results.
+We present several novel extensions to traditional Active Learning methods that maximize the benefit of data cleaning to a downstream statistical model.
 
 %High-dimensional predictive models are highly sensitive to dirty data.
 %They rely on learning relationships between features and labels, and systematic data corruption \cite{taylor1982introduction} can mask or even introduce spurious new relationships.

@@ -127,8 +127,7 @@ However, human input is often expensive and impractical to apply to entire large
 Machine learning can allow for progressive cleaning by gradually learning a model that predicts the results of an expensive cleaning operation.
 The model can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples, and intuitively, this means
-query a human only when the statistical model indicates uncertainty.
-
+query a human only when the statistical model indicates uncertainty.\\
 A common thread in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 In contrast, \sys addresses the problem of an analyst who wants to perform statistical analysis (in the form of Machine Learning) on clean data.
 We call such models Downstream Statistical Models (DSMs) to contrast with the DCMs in prior work.
@@ -138,8 +137,7 @@ The DSM problem is more general than the DCM problem with a broader class of all
 For example, a ``label" in a DSM may be a function of multiple dirty and clean attributes.
 There are two key challenges in applying data cleaning before a DSM: (1) statistical validity, and (2) efficiency. 
 \sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data that maximally benefit a DSM.
-
-It turns out that our method for active learning with DSM includes many types of DCMs.
+It turns out that our method for active learning with DSM includes many types of DCMs.\\
 Consider the deduplication problem with active learning as studied in Gokhale et al. \cite{gokhale2014corleone}.
 In this problem, humans label pairs of records as entity matches or not.
 We could create a relation $R \times R$ with all pairs of records and an extra missing attribute corresponding to the label. 
@@ -147,7 +145,7 @@ Our DSM could be a classifier that predicts whether the pair is a match or not.
 All of the optimizations in \sys would apply, however, it is likely that Gokhale et al. would be more efficient exploiting problem specific structure such as transitivity.}
 
 \vspace{0.5em}
-Our related work section~\reminder{(Section \ref{rw})} highlights the suggested references to progressive data cleaning:
+Our related work section~(Section \ref{rw}) highlights the suggested references to progressive data cleaning:
 
 \emph{When data cleaning is expensive, it is desirable to apply it \textbf{progressively}, where analysts can inspect early results with only $k \ll N$ records cleaned.
 Progressive data cleaning is a well studied problem especially in the context of entity resolution \cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
