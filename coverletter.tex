@@ -52,41 +52,42 @@ Response \textbf{M5} addresses each of the differences in more detail.
 \vspace{0.5em}
 
 We thank the reviewers for this important feedback and clarified that our system applies to data cleaning operations that can be represented as record-by-record mappings between two relations with the same schema.
-This model is sufficiently expressive for our experiments and a number of real-world dirty data scenarios such as making attribute values consistent and missing value filling.
+%This model is sufficiently expressive for our experiments and a number of real-world dirty data scenarios such as making attribute values consistent and missing value filling.
 We hope to explore additional data cleaning models that include record deduplication or schema transformation in future work.
 We added the following clarification to Section \ref{dmodel}:
 
 \emph{\sys supports data cleaning algorithms that can be represented as record-by-record transformations.
-Formally, there exists a function (human or algorithm) that given a dirty record can return a unique clean record.
+Formally, there exists a function (implemented via human or algorithm) that when given a dirty record, it will return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r_{clean} = C(r)$.
 Therefore, for every $r \in R_{dirty}$ there exists a unique $r' \in R_{clean}$.
-We assume that there is a featurization $F(\cdot)$ which is defined over both $R_{dirty}$ and $R_{clean}$ and maps records to vectors in $\mathbb{R}^d$.
+We assume that there is a featurization $F(\cdot)$ which is defined over both $R_{dirty}$ and $R_{clean}$ and maps records to tuple of vectors in $(\mathbb{R}^d, \mathbb{R}^l)$ corresponding to features and labels.
 So each record corresponds to one training example in the downstream model.}
 
 \vspace{0.5em}
 
 \noindent\textbf{M2. Sections 5-7 are the technical core of the paper, and appear formal at the expense of aiding understanding. They appear to implement something that resembles active learning or bootstrapping, except inside the gradient descent loop. The motivation of some of this is not clear; is it necessary to integrate with the gradient descent? This is not how most active learning methods are implemented. Is it possible to implement these approaches in a way that is orthogonal to the SGD algorithm? The current writeup entangles some of these design choices.} 
 
-\sys addresses two problems with training statistical models with progressive data cleaning: (1) the correctness problem of how to update a dirty model after cleaning and (2) the efficiency problem of how to prioritize cleaning based on the current best model.
-Section \ref{statements} independently formalizes these two problems and abstracts the key challenges from the Stochastic Gradient Descent solution that we propose.
+We have revised the technical sections of the paper to improve readability.
+In particular, we separate two subproblems: (1) the correctness problem of how to update a dirty model after cleaning and (2) the efficiency problem of how to prioritize cleaning based on the current best model.
+Section \ref{statements} independently formalizes these two problems without reference to Stochastic Gradient Descent.
 
 We re-organized the paper to first describe a solution to problem (1).
 Without incremental optimization, the straight-forward application of machine learning and model training can result in error-prone models (Section \ref{correctness}).
 Section \ref{model-update} describes one approach to address this problem by applying Stochastic Gradient Descent (SGD).
-SGD converges to the true optimum, with monotonically decreasing expected error, if the gradient steps are unbiased.
+SGD converges to the true optimum with monotonically decreasing expected error if the gradient steps are unbiased.
 We design an update that ensures that the gradient steps are unbiased for any sampling distribution w.r.t to the clean gradient (i.e., all the data are clean).
-In principle, any incremental optimization technique with similar guarantees could be applied here such as an incremental proximal method or in simple cases there may exist a closed form solution.
+In principle, any incremental optimization technique with similar guarantees could be applied here such as an incremental proximal method or closed forms in simple cases.
 
-Next, in Section \ref{dist-samp}, the paper describes a basic solution to problem (2).
+In Section \ref{dist-samp}, the paper describes a basic solution to problem (2).
 The problem is to find a sampling distribution that maximally reduces the expected error
 at each iteration.
-While, the solution is derived using optimality w.r.t SGD, this sampling distribution is likely beneficial to techniques other than SGD.
+While, the solution is derived using optimality w.r.t SGD, this sampling distribution is still beneficial to techniques other than SGD.
 The derived optimal distribution is not realizable in practice since it requires knowing the cleaned record value.
 Section \ref{dist-samp} describes an initial heuristic solution which uses the dirty record value instead.
 Together, Section \ref{model-update} and Section  \ref{dist-samp} present a complete solution to problems (1) and (2).
 
-Section \ref{opti} of the paper describes optimizations that are data setting specific.
+Section \ref{opti} of the paper describes optimizations that are instance specific.
 We describe a number of cases when these optimizations are possible.
 Section \ref{det} describes using dirty data detection, which avoids cleaning data expected to be clean.
 Section \ref{sampling} describes using estimation to improve the approximation of the optimal distribution derived in Section \ref{dist-samp}.
@@ -95,13 +96,13 @@ Section \ref{sampling} describes using estimation to improve the approximation o
 
 \noindent\textbf{M3. In general, the distinction between an ``architecture" and an ``algorithm that fits into the architecture" is quite unclear. The problem with SGD/Active Learning above is one example.}
 
-We have revised the paper to separate problem statements (Section \ref{statements}) and system architecture (Section \ref{arch}).
-Section \ref{sysover} describes how each the components fit together and the essential data flows of the system.
-We describe these components independent of our algorithmic solutions with Stochastic Gradient Descent and Active Learning.
+We have revised the paper to separate problem statements (Section \ref{statements}) and system architecture (Section \ref{arch}), which was part of the confusion in the initial submission.
+The architecture in Section \ref{sysover} describes how each the components fit together and the data flows of the system.
+We describe these components in a way that is independent of our algorithmic solutions with Stochastic Gradient Descent and Active Learning.
 The new architecture would apply even if the model update problem was addressed with a different algorithm.
-We clarify essential components of the architecture, which are the components needed for a minimum viable solution to problem (1) and (2), 
+We first clarify essential components of the architecture that are needed for a minimum viable solution to problem (1) and (2), 
 Then, we highlight the optional components which optimize the execution.
-We also clearly identify the user inputs in Section \ref{uinp}.
+%We also clearly identify the user inputs in Section \ref{uinp}.
 
 \vspace{0.5em}
 
@@ -118,24 +119,24 @@ Section 7.2 (Estimation) ends with an example summarizing how linearization coul
 
 We highlight related work in the background section (Section \ref{alrw}):
 
-\emph{Recent work that explores machine learning and data cleaning uses machine learning as a technique to improve efficiency and/or reliability.
-For example, Yakout et al. trains a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
+\emph{Machine learning can be used as a technique to improve the efficiency and/or reliability of data cleaning\cite{yakout2013don,gokhale2014corleone}.
+For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
 Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
 Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
 Human input is often expensive and impractical to apply to entire large datasets.
-The model can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
+Machine learning can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples, and intuitively, this means
 query a human only when the statistical model indicates uncertainty.\\
 A common thread in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
-In contrast, \sys addresses the problem of an analyst who wants to perform statistical analysis (in the form of Machine Learning) on clean data.
-We call such models Downstream Statistical Models (DSMs) to contrast with the DCMs in prior work.
+In contrast, \sys addresses the problem of statistical analysis, in the form of Machine Learning, on clean data.
+We call such models Downstream Statistical Models (DSMs) to contrast them with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
 The DSM is independent of the errors manifest in the data and is specified by the user.
 The DSM problem is more general than the DCM problem with a broader class of allowed statistical models, that is not just record value-prediction for data cleaning operations.
 For example, a ``label" in a DSM may be a function of multiple dirty and clean attributes.
 There are two key challenges in applying data cleaning before a DSM: (1) statistical validity, and (2) efficiency. 
 \sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data that maximally benefit a DSM.\\
-It turns out that our method for active learning with DSM includes many types of DCMs.
+It turns out that our method for model update and active learning with DSMs includes many types of DCMs.
 Consider the deduplication problem with active learning as studied in Gokhale et al. \cite{gokhale2014corleone}.
 In this problem, humans label pairs of records as entity matches or not.
 We could create a relation $R \times R$ with all pairs of records and an extra missing attribute corresponding to the label. 
@@ -149,7 +150,7 @@ Our related work section~(Section \ref{rw}) highlights the suggested references 
 Progressive data cleaning is a well studied problem especially in the context of entity resolution \cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
 Prior work has focused the problem of designing data structures and algorithms to apply data cleaning progressively.
 This is challenging because many data cleaning algorithms require information from entire relations, and designing incremental models is a challenging problem.
-However, over the last 5 years a number of new results have expanded progressive data cleaning\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
+However, over the last 5 years a number of new results have expanded the scope of progressive data cleaning~\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
 \sys explores the statistical implications of using progressive data cleaning before high-dimensional predictive modeling.}
 
 \vspace{0.5em}
@@ -164,7 +165,7 @@ Existing work does not explore cleaning driven by the downstream machine learnin
 \noindent\textbf{R1.1: At first, the problem seems a bit too specialized. The abstract is too loaded with technical terms and a turn-off. This is then mitigated in the introduction. \\
 As mentioned above, the abstract is (to me) overly technical and did not make me curious. I did not know off the bat what a convex loss model is, what importance sampling is, etc.}
 
-We revised the abstract to be more accessible:
+\noindent We revised the abstract to be more accessible:
 
 \emph{Dirty data, including missing, incorrect, or inconsistent values, is an important challenge in data analytics.
 Statistical analysis and predictive modeling are increasingly popular forms of data analytics and can be highly sensitive to dirty data.
@@ -181,7 +182,7 @@ Evaluation on four real-world datasets suggests that for a fixed cleaning budget
 
 We apologize for the confusing terminology and have revised our paper to clarify that we do not address record-level deduplication.
 We intended to bring attention to the fact that some types of attribute level inconsistencies are addressed in similar ways to record deduplication.
-For example, in our experimental dataset, the inconsistencies ``Pfizer Inc.", ``Pfizer Incorporated", and ``Pfizer" can be addressed using a blocking and matching procedure similar to that used in record deduplication but over a projection.
+For example, in our experimental dataset, the inconsistencies ``Pfizer Inc.", ``Pfizer Incorporated", and ``Pfizer" can be addressed using a blocking and matching procedure similar to that used in record deduplication.
 That said, we have removed references to entity resolution and described our data cleaning model in more precise terms.
 
 \vspace{0.5em}
@@ -193,7 +194,7 @@ That said, we have removed references to entity resolution and described our dat
 - QED symbols on page 8 are ugly when placed directly after formula. 
 - References need a clean up. Just as an example: Venue is missing for [24], year is mentioned 3 times for [8], [11], etc. Page numbers appear sporadically.}
 
-We have addressed all of the formatting and copy editing issues.
+\noindent We have addressed all of the formatting and copy editing issues.
 
 \vspace{0.5em}
 
@@ -204,14 +205,7 @@ We have addressed all of the formatting and copy editing issues.
 \\- Incremental record linkage, Gruenheid et al., PVLDB 2014
 \\- Another work that is related is ``Estimating the Number and Sizes of Fuzzy-Duplicate Clusters" by Heise et al. CIKM 2014, which also incrementally cleans samples of data to predict in this case the number of record matches.}
 
-Thank you for highlighting these references, and we have included them in our related work~(Section \ref{rw}).
-
-\emph{When data cleaning is expensive, it is desirable to apply it \textbf{progressively}, where analysts can inspect early results with only $k \ll N$ records cleaned.
-Progressive data cleaning is a well studied problem especially in the context of entity resolution \cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
-Prior work has focused the problem of designing data structures and algorithms to apply data cleaning progressively.
-This is challenging because many data cleaning algorithms require information from entire relations, and designing incremental models is a challenging problem.
-However, over the last 5 years a number of new results have expanded progressive data cleaning\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
-\sys explores the statistical implications of using progressive data cleaning before high-dimensional predictive modeling.}
+Thank you for highlighting these references, and we have included them in our related work~(see response \textbf{M5}).
 
 \vspace{0.5em}
 
@@ -219,20 +213,20 @@ However, over the last 5 years a number of new results have expanded progressive
 - I did not quite understand the short paragraph on crowd-sourcing. Why is this even relevant?
  I believe it would suffice to simply state that cleansing is expensive...}
 
-We appreciate the thorough feedback and have tightened up the writing in the introduction. In particular, we have consolidated the motivation to a single paragraph describing the expense of data cleaning.
+We appreciate the thorough feedback and have tightened up the writing in the introduction. In particular, we have consolidated the motivation to a single paragraph describing the expense of data cleaning. We include a single sentence reference to related work on crowdsourcing/human-guided data cleaning which we believe is relevant due to the use of active learning.
 
 
 \subsection*{Review 2 Details}
 
 \noindent\textbf{R2.1: The definition of ``clean data" is imprecise and not clear. It appears that ``cleaning" in this system refers to entity resolution, cleaning w.r.t. dependencies, and possibly other actions as needed by the application. This makes it difficult to gauge overall accuracy when there are different interpretations of cleanliness. It is not clear how entity resolution and cleaning w.r.t. dependencies can be done holistically.}
 
-We addressed this point in response \textbf{M1}.
+We addressed this concern in response \textbf{M1}.
 
 \vspace{0.5em}
 
 \noindent\textbf{R2.2: The paper describes a problem setting focused on modelling the iterative cleaning process rather than actual data management problems. The paper may be better suited at an ML venue.}
 
-Over the last 5 years a number of new results have expanded the scope of progressive and interactive data cleaning\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don, altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
+Over the last 5 years a number of new results have expanded the scope of progressive and interactive data cleaning~\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don, altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
 However, we noticed a key problem when these approaches are applied before statistical model training (Section \ref{correctness}).
 It turns out that the straight-forward application of existing progressive data cleaning methods
 can lead to error-prone and misleading results.
@@ -249,11 +243,11 @@ Guided data repair. PVLDB 4(5): 279-289 (2011).
 
 In Section \ref{alrw}, we contrast two applications of machine learning in data cleaning: Data Cleaning Models (DCMs) and Downstream Statistical Models (DSMs).
 A Data Cleaning Model (DCM) is a model that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
-DCMs are used to improve the efficiency or reliability of data cleaning by extrapolating rules from a small number of cleaned examples, estimating likelihoods that a repair is accurate, or numerical value imputation.
+DCMs are used to improve the efficiency or reliability of data cleaning by: extrapolating rules from a small number of cleaned examples, estimating likelihoods that a repair is accurate, or numerical value imputation.
 In contrast, the DSM problem is an analyst-specified model to be trained after data cleaning.
 The DSM problem is more general, and as a result, a number of the optimizations used in the DCM literature do not apply.
 Furthermore, the DSM problem requires an explicit solution to the problem of model accuracy, correctness, and semantics. 
-\sys is an estimation framework for existing data cleaning methods and not a new data cleaning algorithm.
+\sys is an estimation framework for DSMs using existing data cleaning methods and not a new data cleaning algorithm.
 In our experiments (Section \ref{comp}), we illustrate the relative contribution of different components in \sys, which benchmarks the entire framework against a minimal solution that still provides correct results.
 
 

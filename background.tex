@@ -3,18 +3,18 @@ This section describes the challenges in predictive modeling after progressive d
 cleaning and describes concrete example applications.
 
 \subsection{Machine Learning and Data Cleaning}\label{alrw}
-Recent work that explores machine learning and data cleaning uses machine learning as a technique to improve efficiency and/or reliability.
-For example, Yakout et al. trains a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
+Machine learning can be used as a technique to improve the efficiency and/or reliability of data cleaning\cite{yakout2013don,gokhale2014corleone}.
+For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
 Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
 Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
 Human input is often expensive and impractical to apply to entire large datasets.
-The model can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
+Machine learning can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples, and intuitively, this means
 query a human only when the statistical model indicates uncertainty.
 
 A common thread in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
-In contrast, \sys addresses the problem of an analyst who wants to perform statistical analysis (in the form of Machine Learning) on clean data.
-We call such models Downstream Statistical Models (DSMs) to contrast with the DCMs in prior work.
+In contrast, \sys addresses the problem of statistical analysis, in the form of Machine Learning, on clean data.
+We call such models Downstream Statistical Models (DSMs) to contrast them with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
 The DSM is independent of the errors manifest in the data and is specified by the user.
 The DSM problem is more general than the DCM problem with a broader class of allowed statistical models, that is not just record value-prediction for data cleaning operations.
@@ -22,7 +22,7 @@ For example, a ``label" in a DSM may be a function of multiple dirty and clean a
 There are two key challenges in applying data cleaning before a DSM: (1) statistical validity, and (2) efficiency. 
 \sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data that maximally benefit a DSM.
 
-It turns out that our method for active learning with DSM includes many types of DCMs.
+It turns out that our method for model update and active learning with DSMs includes many types of DCMs.
 Consider the deduplication problem with active learning as studied in Gokhale et al. \cite{gokhale2014corleone}.
 In this problem, humans label pairs of records as entity matches or not.
 We could create a relation $R \times R$ with all pairs of records and an extra missing attribute corresponding to the label. 
@@ -31,7 +31,7 @@ All of the optimizations in \sys would apply, however, it is likely that Gokhale
 
 \subsection{Dirty Data Model}\label{dmodel}
 \sys supports data cleaning algorithms that can be represented as record-by-record transformations.
-Formally, there exists a function (human or algorithm) that given a dirty record can return a unique clean record.
+Formally, there exists a function (implemented via human or algorithm) that when given a dirty record, it will return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r_{clean} = C(r)$.
 Therefore, for every $r \in R_{dirty}$ there exists a unique $r' \in R_{clean}$.
@@ -39,7 +39,7 @@ We assume that there is a featurization $F(\cdot)$ which is defined over both $R
 So each record corresponds to one training example in the downstream model.
 
 \subsection{Correctness}\label{correctness}  
-The key challenge in \sys is correctness of the statistical model.
+%The key challenge in \sys is correctness of the statistical model.
 The straight-forward application of progressive data cleaning methods is to fix those errors in place.
 Suppose $k \ll N$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Figure \ref{update-arch1} highlights the dangers of this approach on a very simple dirty dataset and a linear regression model i.e., the best fit line for two variables. 
@@ -69,7 +69,6 @@ Our first goal is to find an update algorithm that avoids Simpson's Paradox and 
 Instead of mixing dirty and clean data, \sys uses a model trained on the dirty data as an initialization, and then iteratively updates this model using samples of clean data.
 The intuition is that this algorithm smoothly transitions the model from one population (the dirty data) to another (the clean data), leading to provable guarantees about intermediate results.
 Our next goal is to prioritize which data to clean based on information from the model.
-We design \sys to make greater progress at these small sample sizes using the dirty model as an initialization.
 Doing so is not trivial since data may look unimportant to a dirty model but when cleaned are very important.
 Also, data cleaning and model training can happen at very different time scales, we have to carefully budget our effort to ensure that any optimizations actually address rate-determining steps in the workflow.
 

@@ -1,5 +1,5 @@
 \section{Updates With Correctness}\label{model-update}
-This section describes one approach for reliable model updates.
+This section describes an algorithm for reliable model updates.
 The updater assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
 The following sections show how to optimize $p(i)$ and the analysis in this section applies for any sampling distribution $p(\cdot)$.
 
@@ -66,8 +66,8 @@ Then, an average gradient is estimated from the cleaned batch and the model is u
 Iterations continue until $k = T \cdot b$ records are cleaned.
 
 \begin{enumerate}[noitemsep]
-	\item Calculate the gradient over the sample of clean data and call the result $g_S(\theta^{(t)})$
-	\item Calculate the average gradient over all the data in $R_{clean}=R-R_{dirty}$, and call the result $g_C(\theta^{(t)})$
+	\item Calculate the gradient over the sample of newly clean data and call the result $g_S(\theta^{(t)})$
+	\item Calculate the average gradient over all of the already clean data in $R_{clean}=R-R_{dirty}$, and call the result $g_C(\theta^{(t)})$
 	\item Apply the following update rule:
 	\[
 	\theta^{(t+1)} \leftarrow \theta^{(t)} - \gamma \cdot(\frac{\mid R_{dirty} \mid}{\mid R \mid} \cdot g_S(\theta^{(t)}) + \frac{\mid R_{clean} \mid}{\mid R \mid} \cdot  g_C(\theta^{(t)}))

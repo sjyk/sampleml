@@ -1,12 +1,13 @@
 \section{Problem Formalization}\label{statements}
-This section formalizes the problem addressed in the paper.
+\noindent This section formalizes the problems addressed in the paper.
 
 \subsection{Convex Models}
 This work focuses on an initial class of well analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
 Convex loss minimization problems are amenable a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
 Examples includes all generalized linear models (including linear and logistic regression), all variants of support vector machines, and in fact, means and medians are also special cases. 
 
-Formally, for labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of \emph{model parameters} $\theta$ by minimizing a loss function $\phi$ over all training examples:
+We assume that the user provides a featurizer $F(\cdot)$ that maps every record to a feature vector $x$ and label $y$.
+For labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of \emph{model parameters} $\theta$ by minimizing a loss function $\phi$ over all training examples:
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
 \]
@@ -26,7 +27,8 @@ In this work, without loss of generality, we will include the regularization as 
 Let $R_{dirty} \subseteq R$ be the subset of records that are dirty, and $S$ be a sample (possibly non-uniform but with known probabilities) of the records $R_{dirty}$.
 \sys applies the user specified cleaning function $C(\cdot)$ to the sample $S_{clean} = C(S)$.
 Given newly cleaned data $S_{clean}$ and a dirty model $\theta^{(d)}$, the model update problem is to calculate $\theta^{new}$. 
-$\theta^{new}$ will have some error between with respect to the true model $\theta^{(c)}$ (if the entire dataset is cleaned):
+
+$\theta^{new}$ will have some error with respect to the true model $\theta^{(c)}$ (the model if the entire dataset is clean):
 \[
 error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
 \]

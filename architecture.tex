@@ -1,12 +1,12 @@
 \section{Architecture}\label{arch}
-This section presents the \sys architecture.
+\noindent This section presents the \sys architecture.
 
 \subsection{Overview}\label{sysover}
 Figure \ref{sys-arch} illustrates the \sys architecture.
 The dotted boxes describe optional components that the user can provide to improve the efficiency of the system.  
 
 \subsubsection{User Input}\label{uinp}
-To use \sys, the user provides the following:
+%To use \sys, the user provides the following:
 
 \noindent\textbf{Model:} The user provides a predictive model (e.g., SVM) specified as a convex loss optimization problem $L(\cdot)$ and a featurizer $F(\cdot)$ that maps a record to its feature vector $x$ and label $y$.
 
@@ -23,7 +23,7 @@ A batch size $b$ sets the number of records that are cleaned in each iteration o
 Section~\ref{model-update} discusses the efficiency and convergence trade-offs of different values of $b$.
 
 \subsubsection{Data Flow} \label{df}
-The system first trains the model $L(\cdot)$ on the dirty dataset to find an initial model $\theta^(d)$ that the system will subsequently improve.
+The system first trains the model $L(\cdot)$ on the dirty dataset to find an initial model $\theta^{(d)}$ that the system will subsequently improve.
 The {\it Sampler} selects a sample of size $b$ records from the dataset and passes
 the sample to the {\it cleaner}, which executes $C(\dot)$ for each sample record and outputs their cleaned versions.
 The updater uses the cleaned sample to update the weights of the model, thus moving the model closer to the true cleaned model (in expectation).
