@@ -30,8 +30,8 @@ Our DSM could be a classifier that predicts whether the pair is a match or not.
 All of the optimizations in \sys would apply, however, it is likely that Gokhale et al. would be more efficient exploiting problem specific structure such as transitivity.
 
 \subsection{Dirty Data Model}\label{dmodel}
-\sys supports data cleaning algorithms that can be modeled as record-by-record transformations.
-Formally, there exists a supervisor (human or algorithm) that given a dirty record can return a unique clean record.
+\sys supports data cleaning algorithms that can be represented as record-by-record transformations.
+Formally, there exists a function (human or algorithm) that given a dirty record can return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r_{clean} = C(r)$.
 Therefore, for every $r \in R_{dirty}$ there exists a unique $r' \in R_{clean}$.

@@ -51,13 +51,13 @@ Response \textbf{M5} addresses each of the differences in more detail.
 
 \vspace{0.5em}
 
-We thank the reviewers for this important feedback and clarified that our system applies to data cleaning operations that can be modeled as record-by-record mappings between two relations with the same schema.
+We thank the reviewers for this important feedback and clarified that our system applies to data cleaning operations that can be represented as record-by-record mappings between two relations with the same schema.
 This model is sufficiently expressive for our experiments and a number of real-world dirty data scenarios such as making attribute values consistent and missing value filling.
 We hope to explore additional data cleaning models that include record deduplication or schema transformation in future work.
 We added the following clarification to Section \ref{dmodel}:
 
-\emph{\sys supports data cleaning algorithms that can be modeled as record-by-record transformations.
-Formally, there exists a supervisor (human or algorithm) that given a dirty record can return a unique clean record.
+\emph{\sys supports data cleaning algorithms that can be represented as record-by-record transformations.
+Formally, there exists a function (human or algorithm) that given a dirty record can return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r_{clean} = C(r)$.
 Therefore, for every $r \in R_{dirty}$ there exists a unique $r' \in R_{clean}$.
@@ -74,7 +74,7 @@ Section \ref{statements} independently formalizes these two problems and abstrac
 We re-organized the paper to first describe a solution to problem (1).
 Without incremental optimization, the straight-forward application of machine learning and model training can result in error-prone models (Section \ref{correctness}).
 Section \ref{model-update} describes one approach to address this problem by applying Stochastic Gradient Descent (SGD).
-SGD converges to the true optimum, with monotonically descreasing expected error, if the gradient steps are unbiased.
+SGD converges to the true optimum, with monotonically decreasing expected error, if the gradient steps are unbiased.
 We design an update that ensures that the gradient steps are unbiased for any sampling distribution w.r.t to the clean gradient (i.e., all the data are clean).
 In principle, any incremental optimization technique with similar guarantees could be applied here such as an incremental proximal method or in simple cases there may exist a closed form solution.
 
@@ -95,7 +95,7 @@ Section \ref{sampling} describes using estimation to improve the approximation o
 
 \noindent\textbf{M3. In general, the distinction between an ``architecture" and an ``algorithm that fits into the architecture" is quite unclear. The problem with SGD/Active Learning above is one example.}
 
-We have revised the paper to seperate problem statements (Section \ref{statements}) and system architecture (Section \ref{arch}).
+We have revised the paper to separate problem statements (Section \ref{statements}) and system architecture (Section \ref{arch}).
 Section \ref{sysover} describes how each the components fit together and the essential data flows of the system.
 We describe these components independent of our algorithmic solutions with Stochastic Gradient Descent and Active Learning.
 The new architecture would apply even if the model update problem was addressed with a different algorithm.
@@ -284,7 +284,7 @@ We addressed this point with a number of examples see response \textbf{M4}.
 \subsection*{Review 3 Details}
 \noindent\textbf{R3.1: The authors do not distinguish between the system architecture and the individual issues that they are presenting.}
 
-Response \textbf{M3} describes several revisions to the architecture including: seperating problem formalization and architecture, discussing the data flow rather than the algorithms, and highlight essential components for correctness versus optimizations.
+Response \textbf{M3} describes several revisions to the architecture including: separating problem formalization and architecture, discussing the data flow rather than the algorithms, and highlight essential components for correctness versus optimizations.
 
 \vspace{0.5em}
 

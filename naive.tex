@@ -86,7 +86,7 @@ Therefore, \sys iterations can take multiple passes over the clean data but at m
 This update method can be thought of as a variant of SGD that lazily materializes the clean value.
 As data is sampled at each iteration, data is cleaned when needed by the optimization.
 It is well known that even for an arbitrary initialization SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
-In practice, the dirty model can be much more accurate than an arbitrary initialization as corruption may only affect a few features and combined with the full gradient step on the clean data the updates coverge very quickly.
+In practice, the dirty model can be much more accurate than an arbitrary initialization as corruption may only affect a few features and combined with the full gradient step on the clean data the updates converge very quickly.
 
 \vspace{0.25em}
 

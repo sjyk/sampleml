@@ -160,7 +160,7 @@ S.~J. Pan and Q.~Yang.
 \bibitem{papenbrock2015progressive}
 T.~Papenbrock, A.~Heise, and F.~Naumann.
 \newblock Progressive duplicate detection.
-\newblock {\em TKDB}, 27(5):1316--1329, 2015.
+\newblock {\em {IEEE} Trans. Knowl. Data Eng.}, 27(5):1316--1329, 2015.
 
 \bibitem{settles2010active}
 B.~Settles.
@@ -173,11 +173,22 @@ E.~H. Simpson.
 \newblock {\em Journal of the Royal Statistical Society. Series B
   (Methodological)}, pages 238--241, 1951.
 
+\bibitem{taylor1982introduction}
+J.~R. Taylor.
+\newblock An introduction to error analysis: The study of uncertainties in
+  physical measurements, 327 pp.
+\newblock {\em Univ. Sci. Books, Mill Valley, Calif}, 1982.
+
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.
 \newblock A sample-and-clean framework for fast and accurate query processing
   on dirty data.
 \newblock In {\em SIGMOD Conference}, pages 469--480, 2014.
+
+\bibitem{whang2014incremental}
+S.~E. Whang and H.~Garcia{-}Molina.
+\newblock Incremental entity resolution on rules and data.
+\newblock {\em {VLDB} J.}, 23(1):77--102, 2014.
 
 \bibitem{xiaofeature}
 H.~Xiao, B.~Biggio, G.~Brown, G.~Fumera, C.~Eckert, and F.~Roli.
