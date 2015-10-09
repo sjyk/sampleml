@@ -46,8 +46,11 @@ Figure \ref{update-arch1} highlights the dangers of this approach on a very simp
 One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
 The dirty data is marked in brown and the clean data in green, and their respective best fit lines are in blue.
 After cleaning only two of the data points (Figure \ref{update-arch1}b), the resulting best fit line is in the opposite direction of the true model.
-This is a well-known phenomenon called Simpsons paradox, where mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
-Training models on a mixture of dirty and clean data can lead to unreliable results, where artificial trends introduced by the mixture can be confused for the effects of data cleaning.
+
+This is a well-known phenomenon called Simpsons paradox, where aggregates over mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
+Simpson's paradox is by no means a corner case, and it has affected the validity of a number of high-profile studies\cite{simpsonsparadox}; even in the simple case of taking an average over a dataset.
+Models can be viewed as high-dimensional generalizations of these aggregates without closed form techniques to compensate for these biases.
+Thus, training models on a mixture of dirty and clean data can lead to unreliable results, where artificial trends introduced by the mixture can be confused for the effects of data cleaning.
 
 \begin{figure}[ht!]
 \centering
