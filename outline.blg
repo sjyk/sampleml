@@ -3,15 +3,15 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: outline.aux
 The style file: abbrv.bst
 Database file #1: ref.bib
-Repeated entry---line 1804 of file ref.bib
+Repeated entry---line 1810 of file ref.bib
  : @inproceedings{wang1999sample
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2458 of file ref.bib
+Repeated entry---line 2464 of file ref.bib
  : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
  :                                                 ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2543 of file ref.bib
+Repeated entry---line 2549 of file ref.bib
  : @article{DBLP:journals/pvldb/MozafariSFJM14
  :                                            ,
 I'm skipping whatever remains of this entry
@@ -55,45 +55,45 @@ Warning--to sort, need author or key in nytimes
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in dollarsfordocsa
 Warning--empty publisher in bottou2012stochastic
-You've used 39 entries,
+You've used 40 entries,
             2118 wiz_defined-function locations,
-            725 strings with 11234 characters,
-and the built_in function-call counts, 16303 in all, are:
-= -- 1573
-> -- 874
+            729 strings with 11374 characters,
+and the built_in function-call counts, 16507 in all, are:
+= -- 1592
+> -- 881
 < -- 16
-+ -- 356
-- -- 308
-* -- 1208
-:= -- 2561
-add.period$ -- 114
-call.type$ -- 39
-change.case$ -- 270
++ -- 359
+- -- 310
+* -- 1213
+:= -- 2595
+add.period$ -- 117
+call.type$ -- 40
+change.case$ -- 274
 chr.to.int$ -- 0
-cite$ -- 44
-duplicate$ -- 589
-empty$ -- 1214
-format.name$ -- 308
-if$ -- 3446
+cite$ -- 45
+duplicate$ -- 596
+empty$ -- 1236
+format.name$ -- 310
+if$ -- 3491
 int.to.chr$ -- 0
-int.to.str$ -- 39
+int.to.str$ -- 40
 missing$ -- 36
-newline$ -- 194
-num.names$ -- 70
-pop$ -- 307
+newline$ -- 199
+num.names$ -- 72
+pop$ -- 315
 preamble$ -- 1
-purify$ -- 232
+purify$ -- 235
 quote$ -- 0
-skip$ -- 466
+skip$ -- 474
 stack$ -- 0
-substring$ -- 1080
-swap$ -- 185
+substring$ -- 1085
+swap$ -- 186
 text.length$ -- 16
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 154
+type$ -- 158
 warning$ -- 5
-while$ -- 144
-width$ -- 41
-write$ -- 413
+while$ -- 146
+width$ -- 42
+write$ -- 422
 (There were 15 error messages)

@@ -190,6 +190,12 @@ S.~E. Whang and H.~Garcia{-}Molina.
 \newblock Incremental entity resolution on rules and data.
 \newblock {\em {VLDB} J.}, 23(1):77--102, 2014.
 
+\bibitem{simpsonsparadox}
+C.~Woolston.
+\newblock Gender-disparity study faces attack.
+\newblock
+  \url{http://www.nature.com/news/gender-disparity-study-faces-attack-1.18428}.
+
 \bibitem{xiaofeature}
 H.~Xiao, B.~Biggio, G.~Brown, G.~Fumera, C.~Eckert, and F.~Roli.
 \newblock Is feature selection secure against training data poisoning?
