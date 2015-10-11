@@ -3,7 +3,7 @@
 \vspace{.5em}
 
 We thank the reviewers and chair for the very helpful feedback on our paper. 
-We have addressed all of the concerns and included references to the revised text in this cover letter. 
+We addressed all of the concerns and included references to the revised text. 
 To summarize the major changes:
 
 \begin{enumerate}
@@ -25,16 +25,18 @@ Below we address each reviewer comment in detail:
 \vspace{0.5em}
 
 \subsection*{Meta Review Details} 
-Machine learning has been studied as a technique to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
+Machine learning has been studied as a technique to improve the efficiency and reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
+In these approaches, machine learning is used to train a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
-%This use case leverages clean data to estimate the accuracy of a future repair on dirty data.
-Gokhale et al. \cite{gokhale2014corleone} use machine learning to extrapolate rules from a small set of examples cleaned with crowdsourcing to apply on uncleaned data.
-%Crowdsourcing is often expensive and impractical for large datasets. 
-In crowdsourced data cleaning, machine learning facilitates progressive cleaning by gradually learning a model that predicts the results of the expensive human queries.
-%This approach can be coupled with active learning to query a human (or humans) only when the statistical model indicates uncertainty.
-A common thread in the existing literature, crowdsourced or otherwise, is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
+When humans are involved, machine learning can facilitate progressive cleaning by gradually learning a model that predicts the results of the expensive human queries \cite{gokhale2014corleone, DBLP:journals/pvldb/MozafariSFJM14, DBLP:journals/pvldb/YakoutENOI11}.
 
-In contrast, \sys addresses the problem of statistical analysis after data cleaning.
+%This use case leverages clean data to estimate the accuracy of a future repair on dirty data.
+%On the other hand, Gokhale et al. \cite{gokhale2014corleone} use machine learning to
+%scale crowdsourced data cleaning by learning rules from a small set of examples.
+%Crowdsourcing is often expensive and impractical for large datasets. 
+%This approach can be coupled with active learning to query a human (or humans) only when the statistical model indicates uncertainty.
+
+\sys addresses the problem of statistical analysis after data cleaning.
 We call such models Downstream Statistical Models (DSMs) to contrast with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
 The DSM is independent of the errors manifest in the data.
@@ -127,7 +129,7 @@ Human input is often expensive and impractical to apply to entire large datasets
 Machine learning can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples, and intuitively, this means
 query a human only when the statistical model indicates uncertainty.\\
-A common thread in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
+The common feature of these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 In contrast, \sys addresses the problem of statistical analysis, in the form of Machine Learning, on clean data.
 We call such models Downstream Statistical Models (DSMs) to contrast them with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
