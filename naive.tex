@@ -1,7 +1,7 @@
 \section{Updates With Correctness}\label{model-update}
 This section describes an algorithm for reliable model updates.
 The updater assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
-Sections \ref{dist-samp} and \ref{opti} show how to optimize $p(i)$ and the analysis in this section applies for any sampling distribution $p(\cdot)$.
+Sections \ref{dist-samp} and \ref{opti} show how to optimize $p(\cdot)$ and the analysis in this section applies for any sampling distribution $p(\cdot) > 0$.
 
 \subsection{Geometric Derivation}
 The update algorithm intuitively follows from the convex geometry of the problem.
@@ -30,11 +30,11 @@ Given this direction, \sys needs to update $\theta^{(d)}$ some distance $\gamma$
 \]
 At the optimal point, the magnitude of the gradient will be zero.
 So intuitively, this approach iteratively moves the model downhill (transparent red circle) -- correcting the dirty model until the desired accuracy is reached.
-However, this formulation gradient depends on all of the clean data which is not available and \sys will have to approximate this gradient from a sample.
+However, the gradient depends on all of the clean data which is not available and \sys will have to approximate this gradient from a sample of cleaned data.
 The main intuition is that if the gradient steps are on average correct, the model still moves downhill albeit with a reduced convergence rate proportional to the inaccuracy of the sample-based estimate.
 
 To derive a sample-based update rule, the most important property is that sums commute with derivatives and gradients.
-The convex loss class of models are sums of losses, so given the current best model $\theta$, the gradient $g^*(\theta)$ is:
+The convex loss class of models are sums of losses, so given the current best model $\theta$, the true gradient $g^*(\theta)$ is:
 \[
 g^*(\theta) = \nabla\phi(\theta) = \frac{1}{N} \sum_i^N \nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
@@ -59,7 +59,7 @@ Then, at each iteration $t$, the update becomes:
 \]
 
 \subsection{Model Update Algorithm}
-To summarize, the algorithm is initialized with $\theta^{(1)} = \theta^{(d)}$ which is the dirty model.
+To summarize, the algorithm is initialized with $\theta^{(0)} = \theta^{(d)}$ which is the dirty model.
 There are three user set parameters the budget $k$, batch size $b$, and the step size $\gamma$.
 In the following section, we will provide references from the convex optimization literature that allow the user to appropriately select these values.
 At each iteration $t=\{1,...,T\}$, the cleaning is applied to a batch of data $b$ selected from the set of candidate dirty records $R_{dirty}$.

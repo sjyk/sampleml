@@ -16,7 +16,7 @@ The dotted boxes describe optional components that the user can provide to impro
 
 \vspace{0.25em}
 
-\noindent\textbf{Batches: } Data are cleaned in batches of size $b$ and the user can change these settings if he or she desire more frequent or less frequent model updates.
+\noindent\textbf{Batches: } Data are cleaned in batches of size $b$ and the user can change these settings if she desires more or less frequent model updates.
 The choice of $b$ does affect the convergence rate.
 Section~\ref{model-update} discusses the efficiency and convergence trade-offs of different values of $b$.
 We empirically find that a batch size of $50$ performs well across different datasets and use that as a default.
@@ -25,11 +25,11 @@ Alternatively, the user can clean data until the model is of sufficient accuracy
 
 \subsubsection{Basic Data Flow} \label{df}
 The system first trains the model $\phi(\cdot)$ on the dirty dataset to find an initial model $\theta^{(d)}$ that the system will subsequently improve.
-The {\it Sampler} selects a sample of size $b$ records from the dataset and passes
+The {\it sampler} selects a sample of size $b$ records from the dataset and passes
 the sample to the {\it cleaner}, which executes $C(\cdot)$ for each sample record and outputs their cleaned versions.
-The updater uses the cleaned sample to update the weights of the model, thus moving the model closer to the true cleaned model (in expectation).
+The \emph{updater} uses the cleaned sample to update the weights of the model, thus moving the model closer to the true cleaned model (in expectation).
 Finally, the system either terminates due to a stopping condition (e.g., $C(\cdot)$ has been called a maximum number of times $k$, or training error convergence),
-or passes control to the {\it Sampler} for the next iteration.
+or passes control to the {\it sampler} for the next iteration.
 
 \subsubsection{Optimizations}
 In many cases, such as missing values, errors can be efficiently detected.
@@ -60,7 +60,7 @@ The analyst can stop at any time and use the improved model to predict donation 
   \item \texttt{Init(dirty\_data, cleaned\_data, dirty\_model, batch, iter)}
   \item For each t in $\{1,...,T\}$
   \begin{enumerate}
-    \item \texttt{dirty\_sample $=$ Sampler(dirty\_data, sample\_prob, detector, batch)}
+    \item \texttt{dirty\_sample $=$ sampler(dirty\_data, sample\_prob, detector, batch)}
     \item \texttt{clean\_sample $=$ Cleaner(dirty\_sample)}
     \item \texttt{current\_model $=$ Update(current\_model, sample\_prob, clean\_sample)}
     \item \texttt{cleaned\_data = cleaned\_data + clean\_sample}

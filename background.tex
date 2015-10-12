@@ -4,22 +4,22 @@ cleaning and describes concrete example applications.
 
 \subsection{Machine Learning and Data Cleaning}\label{alrw}
 Machine learning can be used to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
-For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
+For example, Yakout et al. train a model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
 Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
 Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
 Human input is often expensive and impractical to apply to entire large datasets.
 Machine learning can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
-This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples, and intuitively, this means
-query a human only when the statistical model indicates uncertainty.
+This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples.
+Intuitively, this means that the system queries a human only when the model indicates uncertainty.
 
 The common aspect in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 In contrast, \sys addresses the problem of statistical analysis, in the form of Machine Learning, on clean data.
-We call such models Downstream Statistical Models (DSMs) to contrast them with the DCMs in prior work.
+We call such models Downstream Models (DSMs) to contrast them with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
-The DSM is independent of the errors manifest in the data and is specified by the user.
+The DSM is independent of the errors present in the dataset and the method used to clean those errors.
 The DSM problem is more general than the DCM problem with a broader class of allowed statistical models.
 There are two key challenges in applying data cleaning before a DSM: (1) statistical validity, and (2) efficiency. 
-\sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data that maximally benefit a DSM.
+\sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data to maximally benefit a DSM.
 
 \subsection{Dirty Data Model}\label{dmodel}
 \sys supports data cleaning algorithms that can be represented as record-by-record transformations \footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.
@@ -65,7 +65,7 @@ Our first goal is to find an update algorithm that avoids Simpson's Paradox and 
 Instead of mixing dirty and clean data, \sys uses a model trained on the dirty data as an initialization, and then iteratively updates this model using samples of clean data.
 The intuition is that this algorithm smoothly transitions the model from one population (the dirty data) to another (the clean data), leading to provable guarantees about intermediate results.
 Our next goal is to prioritize which data to clean based on information from the model.
-Doing so is not trivial since data may look unimportant to a dirty model but when cleaned are very important.
+Doing so is not trivial since imporatnt data may look unimportant to a dirty model.
 Also, data cleaning and model training can happen at very different time scales, we have to carefully budget our effort to ensure that any optimizations actually address rate-determining steps in the workflow.
 
 \subsection{Use Case: Dollars for Docs \cite{dollarsfordocs}}\label{s:usecase}
@@ -102,7 +102,7 @@ For example, the most significant donations were made by large companies whose n
 In a scenario such as this one, the effect of systematic error can be serious.
 Duplicate representations could artificially reduce the correlation between these entities and suspected contributions.
 There were nearly 40,000 of the 250,000 records that had either naming inconsistencies or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
-Without data cleaning and using a Support Vector Machine model, the detection rate of suspect donations was 66\%.
+Without data cleaning, the detection rate using a Support Vector Machine was 66\%.
 Applying the data cleaning to the entire dataset improved this rate to 97\% in the clean data (Section \ref{dfd-exp}), and the experiments describe how \sys can achieve an 80\% detection rate for less than 1.6\% of the records cleaned.
 
 
