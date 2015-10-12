@@ -7,17 +7,17 @@ We addressed all of the concerns and included references to the revised text.
 To summarize the major changes:
 
 \begin{enumerate}
-\item Sections 1 and 2 clarify the relationship between \sys and related work in data cleaning that applies machine learning (e.g., \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}).
+\item Sections 1 and 2 clarify the contributions of \sys and its relationship with related work (e.g., \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}).
 
-\item In Section \ref{dmodel}, we formalize the definition of dirty data and the data cleaning model used in this work.
-
-\item In Section \ref{statements}, we provide problem statements for the two subproblems addressed in this work.
-
-\item Section \ref{arch} presents a revised system architecture that first emphasizes the essential components for correctness, and then highlights optional optimizations. 
+\item In Section \ref{dmodel}, we formalize the definition of dirty data and the data cleaning model used.
 
 \item Section \ref{s:usecase} presents a running example that is referenced in each technical section (Examples \ref{archex}, \ref{upex},\ref{detex1},\ref{detex2},\ref{estex}).
 
-\item We include references to the related work suggested by the reviewing committee \cite{whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, DBLP:journals/pvldb/YakoutENOI11, yakout2013don, heise2014estimating}.
+\item In Section \ref{statements}, we provide problem statements for the two subproblems addressed by \sys.
+
+\item Section \ref{arch} presents a revised system architecture that first emphasizes the essential components for correctness, and then highlights optional optimizations. 
+
+\item We include references to all of the related work suggested by the reviewing committee \cite{whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, DBLP:journals/pvldb/YakoutENOI11, yakout2013don, heise2014estimating}.
 
 \end{enumerate}
 Below we address each reviewer comment in detail:
@@ -25,10 +25,10 @@ Below we address each reviewer comment in detail:
 \vspace{0.5em}
 
 \subsection*{Meta Review Details} 
-Machine learning has been studied as a technique to improve the efficiency and reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
-In these approaches, machine learning is used to train a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
+In prior work, Machine learning has been proposed as a technique to improve the efficiency and reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
+The salient feature of these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
-When humans are involved, machine learning can facilitate progressive cleaning by gradually learning a model that predicts the results of the expensive human queries \cite{gokhale2014corleone, DBLP:journals/pvldb/MozafariSFJM14, DBLP:journals/pvldb/YakoutENOI11}.
+When humans are involved, DCMs can facilitate progressive cleaning by gradually learning a model that predicts the results of the expensive human queries \cite{gokhale2014corleone, DBLP:journals/pvldb/MozafariSFJM14, DBLP:journals/pvldb/YakoutENOI11}.
 
 %This use case leverages clean data to estimate the accuracy of a future repair on dirty data.
 %On the other hand, Gokhale et al. \cite{gokhale2014corleone} use machine learning to
@@ -36,14 +36,14 @@ When humans are involved, machine learning can facilitate progressive cleaning b
 %Crowdsourcing is often expensive and impractical for large datasets. 
 %This approach can be coupled with active learning to query a human (or humans) only when the statistical model indicates uncertainty.
 
-\sys addresses the problem of statistical analysis after data cleaning.
+In contrast, \sys addresses the problem of statistical modeling after data cleaning.
 We call such models Downstream Statistical Models (DSMs) to contrast with the DCMs in prior work.
-An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
-The DSM is independent of the errors manifest in the data.
+An example of a DSM is a movie recommender system that is trained on dirty user preference data resulting in error-prone predictions.
+The DSM is independent of the errors present in the dataset and the method used to clean those errors.
 The DSM problem is more general than the DCM problem with a broader class of allowed statistical models.
 Furthermore, training a DSM on a mix of dirty and clean data can lead to arbitrarily incorrect results (Figure \ref{update-arch1}), and this requires a new algorithm to allow for progressive cleaning while preserving correctness.
 %Due to the generality of a DSM, small samples of clean data may not result in a meaningful model.
-Finally, we propose several novel extensions to active learning, including dirty data detection and estimation, to clean data that maximally benefit a DSM.
+We propose several novel extensions to active learning, including dirty data detection and estimation, to clean data to maximally benefit a DSM.
 Response \textbf{M5} addresses each of the differences in more detail.
 
 
@@ -68,19 +68,21 @@ So each record corresponds to one training example in the downstream model.}
 
 \vspace{0.5em}
 
+In Appendix \ref{set-of-r}, we describe an extension to this model called the ``Set-of-Records" model.
+This model covers the cases when cleaning the first record of a certain type of corruption is expensive but all subsequent cleaning operations are cheaper and can be applied throughout the dataset.
+
 \noindent\textbf{M2. Sections 5-7 are the technical core of the paper, and appear formal at the expense of aiding understanding. They appear to implement something that resembles active learning or bootstrapping, except inside the gradient descent loop. The motivation of some of this is not clear; is it necessary to integrate with the gradient descent? This is not how most active learning methods are implemented. Is it possible to implement these approaches in a way that is orthogonal to the SGD algorithm? The current writeup entangles some of these design choices.} 
 
 We have revised the technical sections of the paper to improve readability.
-In Section \ref{correctness}, we present two straight-forward integrations of progressive data cleaning and predictive modeling. 
-We explain their limitations and describe how these solutions can result in error-prone models.
-To address these limitations, we describe two subproblems: (1) the correctness problem of how to update a dirty model after cleaning and (2) the efficiency problem of how to prioritize cleaning using the downstream model. 
-Section \ref{statements} independently formalizes the two problems without reference to Stochastic Gradient Descent.
+Section \ref{correctness} describes two straight-forward integrations of progressive data cleaning and predictive modeling, and how these approaches can lead to error-prone models.
+To address this problem, we describe two subproblems: (1) the correctness problem of how to update a dirty model after cleaning and (2) the efficiency problem of how to prioritize cleaning using the downstream model. 
+Section \ref{statements} now formalizes the two problems without reference to Stochastic Gradient Descent.
 
-In Section \ref{model-update}, we propose one solution to problem (1) which updates the model with newly cleaned data using a gradient step.
+In Section \ref{model-update}, we propose a solution to problem (1) which updates the model with newly cleaned data using a gradient step.
 This can be analyzed as a Stochastic Gradient Descent algorithm, which converges to the true optimum with monotonically decreasing expected error if the gradient steps are unbiased.
 We revised the presentation of this section to be independent of the sampling distribution used to select which data to clean.
 
-In Section \ref{dist-samp}, we describes a basic solution to problem (2).
+In Section \ref{dist-samp}, we describes a solution to problem (2).
 The problem is to find a sampling distribution that maximally reduces the expected error
 at each iteration.
 While, the solution is derived using optimality w.r.t SGD, this sampling distribution is still beneficial to techniques other than SGD.
@@ -90,18 +92,17 @@ Together Section \ref{model-update} and \ref{dist-samp}, provide a minimum viabl
 
 Section \ref{opti} describes optimizations that improve the convergence rate of the system.
 We describe a number of cases when these optimizations are possible.
-Our experiments (Section \ref{eval}) evalaute all of these design decisions.
+Our experiments evalaute all of these design decisions (Section \ref{eval}).
 
 \vspace{0.5em}
 
 \noindent\textbf{M3. In general, the distinction between an ``architecture" and an ``algorithm that fits into the architecture" is quite unclear. The problem with SGD/Active Learning above is one example.}
 
-We have revised the paper to separate problem statements (Section \ref{statements}) and system architecture (Section \ref{arch}), which was part of the confusion in the initial submission.
+The revision presents the problem statements (Section \ref{statements}) and system architecture (Section \ref{arch}) separately.
 The architecture in Section \ref{sysover} describes how each of the components fit together and the data flows of the system.
 We describe these components in a way that is independent of our algorithmic solutions with Stochastic Gradient Descent and Active Learning.
 The new architecture would apply even if the model update problem was addressed with a different algorithm.
-We first clarify essential components of the architecture that are needed for a minimum viable solution to problem (1) and (2), 
-Then, we highlight the optional components which optimize the execution.
+We first clarify essential components of the architecture that are needed for a minimum viable solution, and then highlight the optional optimizations.
 %We also clearly identify the user inputs in Section \ref{uinp}.
 
 \vspace{0.5em}

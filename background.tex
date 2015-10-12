@@ -3,7 +3,7 @@ This section describes the challenges in predictive modeling after progressive d
 cleaning and describes concrete example applications.
 
 \subsection{Machine Learning and Data Cleaning}\label{alrw}
-Machine learning can be used as a technique to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
+Machine learning can be used to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
 For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
 Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
 Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
@@ -12,7 +12,7 @@ Machine learning can extrapolate rules from a small set of examples cleaned by a
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples, and intuitively, this means
 query a human only when the statistical model indicates uncertainty.
 
-A common aspect of these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
+The common aspect in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 In contrast, \sys addresses the problem of statistical analysis, in the form of Machine Learning, on clean data.
 We call such models Downstream Statistical Models (DSMs) to contrast them with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
