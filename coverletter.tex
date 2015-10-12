@@ -74,7 +74,7 @@ This model covers the cases when cleaning the first record of a certain type of 
 \noindent\textbf{M2. Sections 5-7 are the technical core of the paper, and appear formal at the expense of aiding understanding. They appear to implement something that resembles active learning or bootstrapping, except inside the gradient descent loop. The motivation of some of this is not clear; is it necessary to integrate with the gradient descent? This is not how most active learning methods are implemented. Is it possible to implement these approaches in a way that is orthogonal to the SGD algorithm? The current writeup entangles some of these design choices.} 
 
 We have revised the technical sections of the paper to improve readability.
-Section \ref{correctness} describes two straight-forward integrations of progressive data cleaning and predictive modeling, and how these approaches can lead to error-prone models.
+Section \ref{correctness} describes two straight-forward ways to integrate progressive data cleaning and predictive modeling, and how these approaches can lead to error-prone models.
 \sys addresses two subproblems: (1) the correctness problem of how to update a dirty model after cleaning and (2) the efficiency problem of how to prioritize cleaning using the downstream model. 
 Section \ref{statements} now formalizes the two problems without reference to Stochastic Gradient Descent.
 
@@ -91,7 +91,7 @@ Together Section \ref{model-update} and \ref{dist-samp}, provide a minimum viabl
 
 Section \ref{opti} describes optimizations that improve the convergence rate of the system.
 We describe a number of cases when these optimizations are possible.
-Our experiments evalaute all of these design decisions (Section \ref{eval}).
+Our experiments evaluate all of these design decisions (Section \ref{eval}).
 
 \vspace{0.5em}
 
