@@ -30,7 +30,7 @@ Given this direction, \sys needs to update $\theta^{(d)}$ some distance $\gamma$
 \]
 At the optimal point, the magnitude of the gradient will be zero.
 So intuitively, this approach iteratively moves the model downhill (transparent red circle) -- correcting the dirty model until the desired accuracy is reached.
-However, the gradient depends on all of the clean data which is not available and \sys will have to approximate this gradient from a sample of cleaned data.
+However, the gradient depends on all of the clean data which is not available and \sys will have to approximate this gradient from a sample of newly cleaned data.
 The main intuition is that if the gradient steps are on average correct, the model still moves downhill albeit with a reduced convergence rate proportional to the inaccuracy of the sample-based estimate.
 
 To derive a sample-based update rule, the most important property is that sums commute with derivatives and gradients.

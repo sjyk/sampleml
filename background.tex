@@ -17,18 +17,17 @@ In contrast, \sys addresses the problem of statistical analysis, in the form of 
 We call such models Downstream Models (DSMs) to contrast them with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
 The DSM is independent of the errors present in the dataset and the method used to clean those errors.
-The DSM problem is more general than the DCM problem with a broader class of allowed statistical models.
+The DSM problem is more general than the DCM problem with a broader class of allowed models.
 There are two key challenges in applying data cleaning before a DSM: (1) statistical validity, and (2) efficiency. 
 \sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data to maximally benefit a DSM.
 
 \subsection{Dirty Data Model}\label{dmodel}
-\sys supports data cleaning algorithms that can be represented as record-by-record transformations \footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.
-Such a model can capture the case where an analyst finds a dirty record, and can fix all records (possibly outside the sample) with the same error throughout the dataset at a lower cost than cleaning them individually.}.
-Formally, there exists a function (implemented via human or algorithm) that when given a dirty record, it will return a unique clean record.
+\sys supports data cleaning operations that can be represented as record-by-record transformations.\footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.}
+Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
-We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r_{clean} = C(r)$.
-Therefore, for every $r \in R_{dirty}$ there exists a unique $r' \in R_{clean}$.
-We assume that there is a featurization $F(\cdot)$ which is defined over both $R_{dirty}$ and $R_{clean}$ and maps records to tuple of vectors in $(\mathbb{R}^d, \mathbb{R}^l)$ corresponding to features and labels.
+We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r' = C(r)$.
+Therefore, for every $r \in R$ there exists a unique $r' \in R^*$ where $R^*$ is the hypothetical fully cleaned relation.
+We assume that there is a featurization $F(\cdot)$ which is defined over records of both $R$ and $R^*$ and maps records to tuple of vectors in $(x, y)$ corresponding to a feature vector $x$ and a label vector $y$.
 So each record corresponds to one training example in the downstream model.
 
 \subsection{Correctness}\label{correctness}  

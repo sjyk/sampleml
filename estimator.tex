@@ -51,7 +51,7 @@ p(r)\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \
 \]
 where $M_x$, $M_y$ are matrices and $\Delta_{rx}$ and $\Delta_{ry}$ are vectors with one component for each feature and label where each value is the average change for those features that are corrupted and 0 otherwise.
 Essentially, it the gradient with respect to the dirty data plus some linear correction factor.
-In the appendix, we present a derivation using a Taylor series expansion and a number of $M_x$ and $M_y$ matrices for common convex losses (Section \ref{apptaylor}).
+In the appendix, we present a derivation using a Taylor series expansion and a number of $M_x$ and $M_y$ matrices for common convex losses (Appendix \ref{apptaylor} and \ref{example-deriv}).
 The appendix also describes how to maintain $\Delta_{rx}$ and $\Delta_{ry}$ as cleaning progresses.
 
 \iffalse
