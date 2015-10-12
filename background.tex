@@ -3,7 +3,7 @@ This section describes the challenges in predictive modeling after progressive d
 cleaning and describes concrete example applications.
 
 \subsection{Machine Learning and Data Cleaning}\label{alrw}
-Machine learning can be used as a technique to improve the efficiency and/or reliability of data cleaning\cite{yakout2013don,gokhale2014corleone}.
+Machine learning can be used as a technique to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
 For example, Yakout et al. train a statistical model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
 Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
 Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
@@ -12,25 +12,18 @@ Machine learning can extrapolate rules from a small set of examples cleaned by a
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples, and intuitively, this means
 query a human only when the statistical model indicates uncertainty.
 
-A common thread in these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
+A common aspect of these approaches is a Data Cleaning Model (DCM) that learns to predict the value of an incorrect or missing attribute given data that are previously cleaned or known to be clean.
 In contrast, \sys addresses the problem of statistical analysis, in the form of Machine Learning, on clean data.
 We call such models Downstream Statistical Models (DSMs) to contrast them with the DCMs in prior work.
 An example of a DSM is a movie recommender system that collects dirty user preference data resulting in error-prone predictions.
 The DSM is independent of the errors manifest in the data and is specified by the user.
-The DSM problem is more general than the DCM problem with a broader class of allowed statistical models, that is not just record value-prediction for data cleaning operations.
-For example, a ``label" in a DSM may be a function of multiple dirty and clean attributes.
+The DSM problem is more general than the DCM problem with a broader class of allowed statistical models.
 There are two key challenges in applying data cleaning before a DSM: (1) statistical validity, and (2) efficiency. 
 \sys addresses both of these challenges using an incremental update framework that ensures correctness of intermediate results and several novel extensions to active learning, including dirty data detection and estimation, to clean data that maximally benefit a DSM.
 
-It turns out that our method for model update and active learning with DSMs includes many types of DCMs.
-Consider the deduplication problem with active learning as studied in Gokhale et al. \cite{gokhale2014corleone}.
-In this problem, humans label pairs of records as entity matches or not.
-We could create a relation $R \times R$ with all pairs of records and an extra missing attribute corresponding to the label. 
-Our DSM could be a classifier that predicts whether the pair is a match or not.
-All of the optimizations in \sys would apply, however, it is likely that Gokhale et al. would be more efficient exploiting problem specific structure such as transitivity.
-
 \subsection{Dirty Data Model}\label{dmodel}
-\sys supports data cleaning algorithms that can be represented as record-by-record transformations.
+\sys supports data cleaning algorithms that can be represented as record-by-record transformations \footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.
+Such a model can capture the case where an analyst finds a dirty record, and can fix all records (possibly outside the sample) with the same error throughout the dataset at a lower cost than cleaning them individually.}.
 Formally, there exists a function (implemented via human or algorithm) that when given a dirty record, it will return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r_{clean} = C(r)$.
@@ -44,11 +37,11 @@ The straight-forward application of progressive data cleaning methods is to fix 
 Suppose $k \ll N$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Figure \ref{update-arch1} highlights the dangers of this approach on a very simple dirty dataset and a linear regression model i.e., the best fit line for two variables. 
 One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
-The dirty data is marked in brown and the clean data in green, and their respective best fit lines are in blue.
+The dirty data is marked in red and the clean data in blue, and they are shown with their respective best fit lines.
 After cleaning only two of the data points (Figure \ref{update-arch1}b), the resulting best fit line is in the opposite direction of the true model.
 
 This is a well-known phenomenon called Simpsons paradox, where aggregates over mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
-Simpson's paradox is by no means a corner case, and it has affected the validity of a number of high-profile studies\cite{simpsonsparadox}; even in the simple case of taking an average over a dataset.
+Simpson's paradox is by no means a corner case, and it has affected the validity of a number of high-profile studies~\cite{simpsonsparadox}; even in the simple case of taking an average over a dataset.
 Models can be viewed as high-dimensional generalizations of these aggregates without closed form techniques to compensate for these biases.
 Thus, training models on a mixture of dirty and clean data can lead to unreliable results, where artificial trends introduced by the mixture can be confused for the effects of data cleaning.
 
@@ -105,12 +98,12 @@ corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 
 However, this dataset is very dirty, and the systematic nature of the data corruption can result in an inaccurate model.
 On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
-For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data e.g., ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
+For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data, e.g., ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
 In a scenario such as this one, the effect of systematic error can be serious.
 Duplicate representations could artificially reduce the correlation between these entities and suspected contributions.
 There were nearly 40,000 of the 250,000 records that had either naming inconsistencies or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
 Without data cleaning and using a Support Vector Machine model, the detection rate of suspect donations was 66\%.
-Applying the data cleaning to the entire dataset improved this rate to 97\% in the clean data (Section \ref{dfd-exp}), and the experiments describe how \sys can achieve an 80\% detection rate for less than 4000 records cleaned.
+Applying the data cleaning to the entire dataset improved this rate to 97\% in the clean data (Section \ref{dfd-exp}), and the experiments describe how \sys can achieve an 80\% detection rate for less than 1.6\% of the records cleaned.
 
 
 %\sys avoids both pitfalls, Simpson's paradox and sample size dependence.

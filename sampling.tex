@@ -24,7 +24,7 @@ However, this cannot exclude records with lower gradients as that would induce a
 The problem is that this optimal distribution leads to a chicken-and-egg problem:
 the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, however, cleaning is required to know those values.
 
-\subsection{Dirty Gradient Solution}
+\subsection{Dirty Gradient Solution}\label{dgsample}
 Such an oracle does not exist, and one solution is to use the gradient w.r.t to the dirty data:
 \[
 p_i \propto \|\nabla\phi(x^{(d)}_i,y^{(d)}_i,\theta^{(t)})\|

@@ -28,13 +28,13 @@ The errors and inefficiencies introduced by these three problems may dominate an
  \caption{\sysfull allows users to train predictive models while progressively cleaning data. The framework adaptively selects the best data to clean and can optionally (denoted with dotted lines) integrate with pre-defined detection rules and estimation algorithms for improved conference. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
-We present a system called \sys which applies progressive data cleaning with accuracy guarantees on downstream models.
+We present a system called \sys which applies progressive data cleaning with accuracy guarantees on predictive models trained after data cleaning.
 We focus on two subproblems for a popular class of models called convex loss models (e.g., includes linear regression and SVMs): (1) the correctness problem of estimating and bounding the error in a model trained from dirty and clean data, and (2) the efficiency problem of actively selecting data to clean while preserving correctness.
 We show that instead of re-training the model, the model should be incrementally maintained with gradient descent given newly cleaned data, an technique that is guaranteed to converge under suitable conditions.
 Such guarantees allow analysts to trust early results during the data exploration and cleaning phase.
 
 Prior work in data cleaning \emph{uses} machine learning to improve efficiency and/or reliability \cite{DBLP:journals/pvldb/YakoutENOI11, gokhale2014corleone, yakout2013don, DBLP:journals/pvldb/HaasKWF015}.
-In contrast, \sys of statistical analysis after progressive data cleaning.
+In contrast, \sys studies the problem of statistical analysis after progressive data cleaning.
 This problem is more general and requires an explicit solution to the correctness of intermediate results.
 We also present several novel extensions to traditional Active Learning methods that maximize the benefit of data cleaning to a downstream statistical model.
 
@@ -67,7 +67,7 @@ We analyze a model where the user specifies a cleaning function $C(\cdot)$ where
 \begin{itemize}[noitemsep]
 \item \textbf{Correctness} (Section \ref{model-update}). We show how data cleaning can be integrated with stochastic gradient descent to ensure convergence even with non-uniform samples. This update is guaranteed to converge, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
 \item \textbf{Efficiency} (Section \ref{dist-samp}). We derive a theoretical optimal sampling distribution that minimizes the update error and an approximation algorithm to estimate the theoretical optimum.
-\item \textbf{Detection} (Section \ref{det}). We show how \sys can be integrated with optional dirty data detection to guide data cleaning towards records expected to be dirty.
+\item \textbf{Detection and Estimation} (Section \ref{opti}). We show how \sys can be integrated with optional dirty data detection to guide data cleaning towards records expected to be dirty.
 \item The experiments evaluate these components on four datasets with real and synthetic corruption (Section \ref{eval}). Results suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse.
 
 %For a 5\%  systematic corruption, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.

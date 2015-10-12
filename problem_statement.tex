@@ -3,8 +3,8 @@
 
 \subsection{Convex Models}
 This work focuses on an initial class of well analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
-Convex loss minimization problems are amenable a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
-Examples includes all generalized linear models (including linear and logistic regression), all variants of support vector machines, and in fact, means and medians are also special cases. 
+Convex loss minimization problems are amenable to a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
+Examples include generalized linear models (including linear and logistic regression), support vector machines, and in fact, means and medians are also special cases. 
 
 We assume that the user provides a featurizer $F(\cdot)$ that maps every record to a feature vector $x$ and label $y$.
 For labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of \emph{model parameters} $\theta$ by minimizing a loss function $\phi$ over all training examples:
@@ -23,53 +23,56 @@ $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid
 \]
 In this work, without loss of generality, we will include the regularization as part of the loss function i.e., $\phi(x_{i},y_{i},\theta)$ includes $r(\theta)$.
 
-\subsection{Problem 1. Correct Update Problem}\label{updp}
-Let $R_{dirty} \subseteq R$ be the subset of records that are dirty, and $S$ be a sample (possibly non-uniform but with known probabilities) of the records $R_{dirty}$.
-\sys applies the user specified cleaning function $C(\cdot)$ to the sample $S_{clean} = C(S)$.
-Given newly cleaned data $S_{clean}$ and a dirty model $\theta^{(d)}$, the model update problem is to calculate $\theta^{new}$. 
+\subsection{Notation and Setup}
+The user provides a relation $R$, a cleaner $C(\cdot)$, a featurizer $F(\cdot)$, and a convex loss problem defined by the loss $\phi(\cdot)$.
+A total of $k$ records will be cleaned in batches of size $b$, so there will be $\frac{k}{b}$ iterations. 
+We use the following notation to represent relevant intermediate states:
+\begin{itemize}[noitemsep]
+\item \textbf{Dirty Model: } $\theta^{(d)}$ is the model trained on $R$ (without cleaning) with the featurizer $F(\cdot)$ and loss $\phi(\cdot)$. This serves as an initialization to \sys.
+\item \textbf{Dirty Records: } $R_{dirty} \subseteq R$ is the subset of records that are still dirty. As more data are cleaned $R_{dirty} \rightarrow \{\}$.
+\item \textbf{Clean Records: } $R_{clean} \subseteq R$ is the subset of records that are clean, i.e., the complement of $R_{dirty}$.
+\item \textbf{Samples: } $S$ is a sample (possibly non-uniform but with known probabilities) of the records $R_{dirty}$. The clean sample is denoted by $S_{clean} = C(S)$.
+\item \textbf{Clean Model: } $\theta^{(c)}$ is the optimal clean model, i.e., the model trained on a fully cleaned relation.
+\item \textbf{Current Model: } $\theta^{(t)}$ is the current best model at iteration $t \in \{1,...,\frac{k}{b}\}$, and $\theta^{(0)} = \theta^{(d)}$. 
+\end{itemize}
 
-$\theta^{new}$ will have some error with respect to the true model $\theta^{(c)}$ (the model if the entire dataset is clean):
+There are two metrics that we will use to measure the performance of \sys:
+
+\vspace{0.25em}
+
+\noindent\textbf{Model Error. } The model error is defined as $\|\theta^{(t)} - \theta^{(c)}\|$.
+
+\vspace{0.25em}
+
+\noindent\textbf{Testing Error. } Let $T(\theta^{(t)})$ be the out-of-sample testing error when the current best model is applied to the clean data, and $T(\theta^{(c)})$ be the test error when the clean model is applied to the clean data. The testing error is defined as $T(\theta^{(t)}) - T(\theta^{(c)})$
+
+\subsection{Problem 1. Correct Update Problem}\label{updp}
+Given newly cleaned data $S_{clean}$ and the current best model $\theta^{(t)}$, the model update problem is to calculate $\theta^{(t+1)}$. 
+$\theta^{(t+1)}$ will have some error with respect to the true model $\theta^{(c)}$, which we denote as:
 \[
-error(\theta^{new}) = \| \theta^{new} - \theta^{(c)} \|
+error(\theta^{(t+1)}) = \| \theta^{(t+1)} - \theta^{(c)} \|
 \]
-We call the update algorithm ``reliable" if the expected error is upper bounded by a monotonically decreasing function $f$ of the amount of cleaned data:
+Since a sample of data are cleaned, it is only meaningful to talk about expected errors.
+We call the update algorithm ``reliable" if the expected error is upper bounded by a monotonically decreasing function $\mu$ of the amount of cleaned data:
 \[
-\mathbb{E}(error(\theta^{new})) = O(f(\mid S_{clean} \mid))
+\mathbb{E}(error(\theta^{new})) = O(\mu(\mid S_{clean} \mid))
 \]
-and is also upper bounded by a monotonically increasing function of the initial error:
-\[
-\mathbb{E}(error(\theta^{new})) = O(g(\| \theta^{(d)} - \theta^{(c)} \|))
-\]
-Intuitively, reliable means that more cleaning and less initial error should imply more accuracy; avoiding the pitfalls of dimensionality and Simpson's paradox.
+Intuitively, ``reliable" means that more cleaning should imply more accuracy.
 
 \vspace{0.5em}
 
-\emph{The Correct Update Problem is to reliably update the model $\theta^{(d)}$ with a sample of cleaned data.}
+\emph{The Correct Update Problem is to reliably update the model $\theta^{(t)}$ with a sample of cleaned data.}
 
 \subsection{Problem 2. Efficiency Problem}\label{optp}
-The efficiency problem is to select $S_{clean}$ such that the expected error $\mathbb{E}(error(\theta^{new}))$ is minimized.
+The efficiency problem is to select $S_{clean}$ such that the expected error $\mathbb{E}(error(\theta^{(t)}))$ is minimized.
 \sys uses previously cleaned data to estimate the value of data cleaning on new records.
-Then it draws a sample of records $S_{dirty} \subseteq R_{dirty}$. This is a non-uniform sample where each record $r$ has a sampling probability $p(r)$ based on the estimates.
-We derive the optimal sampling distribution for the SGD updates, and show how the theoretical optimal can be approximated.
+Then it draws a sample of records $S \subseteq R_{dirty}$. 
+This is a non-uniform sample where each record $r$ has a sampling probability $p(r)$ based on the estimates.
+We derive the optimal sampling distribution for the SGD updates, and show how the theoretical optimum can be approximated.
 
 \vspace{0.5em}
 
 \emph{The Efficiency Problem is to select a sampling distribution $p(\cdot)$ over all records such that the expected error w.r.t to the model if trained on fully clean data is minimized.}
-
-\subsection{Metrics}
-There are two standard metrics that we will use to measure the performance of \sys:
-
-\vspace{0.25em}
-
-\noindent\textbf{Model Error. } Let $\theta$ be the model trained with \sys, and let $\theta^*$ be the model trained on the same data if all of the records were cleaned. Then the model error is defined as $\|\theta - \theta^*\|$.
-
-\vspace{0.25em}
-
-\noindent\textbf{Testing Error. } Let $\theta$ be the model trained with \sys, and let $\theta^*$ be the model trained on the same data if all of the records were cleaned. Let $T(\theta)$ be the out-of-sample testing error when the dirty model is applied to the clean data, and $T(\theta^*)$ be the test error when the clean model is applied to the clean data. The testing error is defined as $T(\theta) - T(\theta^*)$
-
-
-
-
 
 \iffalse
 \subsection{\sys Problem}

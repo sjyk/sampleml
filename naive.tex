@@ -1,15 +1,15 @@
 \section{Updates With Correctness}\label{model-update}
 This section describes an algorithm for reliable model updates.
 The updater assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
-The following sections show how to optimize $p(i)$ and the analysis in this section applies for any sampling distribution $p(\cdot)$.
+Sections \ref{dist-samp} and \ref{opti} show how to optimize $p(i)$ and the analysis in this section applies for any sampling distribution $p(\cdot)$.
 
 \subsection{Geometric Derivation}
 The update algorithm intuitively follows from the convex geometry of the problem.
 Consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar value), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
-The consequence of dirty data is that the the wrong loss function is optimized.
+The consequence of dirty data is that the wrong loss function is optimized.
 Figure \ref{update-arch2}A illustrates the consequence of this optimization.
 The red dotted line shows the loss function on the dirty data.
-Optimizing this loss function finds $\theta$ that at the minimum point (red star).
+Optimizing this loss function finds $\theta^{(d)}$ that at the minimum point (red star).
 However, the true loss function (w.r.t to the clean data) is in blue, thus
 this optimal value on the dirty data is in fact a suboptimal point on clean curve (red circle).
 
@@ -20,10 +20,10 @@ this optimal value on the dirty data is in fact a suboptimal point on clean curv
 \end{figure}
 
 The optimal clean model $\theta^{(c)}$ is visualized as a yellow star.
-The first question is which direction to update $\theta$ (i.e., left or right).
+The first question is which direction to update $\theta^{(d)}$ (i.e., left or right).
 For this class of models, given a suboptimal point, the direction to 
 the global optimum is the gradient of the loss function.
-The gradient is a $d$-dimensional vector function of the current model $\theta$ and the clean data.
+The gradient is a $d$-dimensional vector function of the current model $\theta^{(d)}$ and the clean data.
 Given this direction, \sys needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \ref{update-arch2}B):
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
@@ -38,13 +38,14 @@ The convex loss class of models are sums of losses, so given the current best mo
 \[
 g^*(\theta) = \nabla\phi(\theta) = \frac{1}{N} \sum_i^N \nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
-\sys needs to estimate $g^*(\theta)$ from a sample $S$ is drawn from the dirty data $R_{dirty}$ so this sum has two components the gradient on the already clean data $g_C$ which can be computed without cleaning and $g_S$ the gradient estimate from a sample of dirty data to be cleaned:
+\sys needs to estimate $g^*(\theta)$ from a sample $S$, which is drawn from the dirty data $R_{dirty}$.
+ Therefore, this sum has two components the gradient on the already clean data $g_C$ which can be computed without cleaning and $g_S$ the gradient estimate from a sample of dirty data to be cleaned:
 \[
 g(\theta) = \frac{\mid R_{clean} \mid}{\mid R \mid} \cdot g_C(\theta) + \frac{\mid R_{dirty} \mid}{\mid R \mid} \cdot g_S(\theta)
 \]
 $g_C$ can be calculated by applying the gradient to all of the already cleaned records:
 \[
-g_C(\theta) = \frac{1}{\mid R - R_{dirty}\mid}\sum_{i \in R - R_{dirty}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
+g_C(\theta) = \frac{1}{\mid R_{clean}\mid}\sum_{i \in R_{clean}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
 $g_S$ can be estimated from a sample by taking the gradient w.r.t each record, and re-weighting the average by their respective sampling probabilities.
 Before taking the gradient the cleaning function $C(\cdot)$ is applied to each sampled record.
@@ -95,7 +96,7 @@ In the experiments, we use a technique called inverse scaling where there is a p
 
 \vspace{0.25em}
 
-\noindent\textbf{ Setting the batch size: } The batch size should be set by the user to have the desired properties.
+\noindent\textbf{ Setting the batch size $b$: } The batch size should be set by the user to have the desired properties.
 Larger batches will take longer to clean and will make more progress towards the clean model, but will have less frequent model updates.
 On the other hand, smaller batches are cleaned faster and have more frequent model updates but make less progress.
 The overheads introduced by \sys are more evident at smaller batch sizes.
@@ -106,15 +107,17 @@ For example, the batch size set by the user might be $b=1000$, but the model upd
 This dissociates the batching requirements of SGD and the batching requirements of the data cleaning technique.
 
 \subsubsection{Convergence Conditions and Properties}
-Convergence properties of batch SGD formulations have been well studied \cite{dekel2012optimal}.Essentially, if the gradient estimate is unbiased and the step size is appropriately chosen, the algorithm is guaranteed to converge. 
-In the appendix, we show that the gradient estimate from \sys is indeed unbiased and our choice of step size is one that is established to converge.
+Convergence properties of batch SGD formulations have been well studied \cite{dekel2012optimal}. Essentially, if the gradient estimate is unbiased and the step size is appropriately chosen, the algorithm is guaranteed to converge. 
+In Appendix \ref{appsgd}, we show that the gradient estimate from \sys is indeed unbiased and our choice of step size is one that is established to converge.
 The convergence rates of SGD are also well analyzed \cite{dekel2012optimal,bertsekas2011incremental,zhao2014stochastic}. 
 This gives a bound on the error of intermediate models and the expected number of steps before achieving a model within a certain error. 
 For a general convex loss, a batch size $b$, and $T$ iterations, the convergence rate is bounded by $O(\frac{\sigma^2}{\sqrt{bT}})$. 
 $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 \[
-\mathbb{E}(\|g_S - g^*\|^2)
+\mathbb{E}(\|g - g^*\|^2)
 \]
+where $g^*$ is the gradient computed over the full data if it were fully cleaned.
+This property of SGD allows us to bound the model error with a monotonically decreasing function of the number of records cleaned, thus satisfying the reliability condition in the problem statement.
 If the loss in non-convex, the update procedure will converge towards a local minimum rather than the global minimum (See Appendix \ref{non-convex}).
 
 \subsection{Example}
@@ -128,7 +131,7 @@ The gradient of a basic SVM is given by the following function:
 \nabla\phi(x,y,\theta) =
 \begin{cases}      
 -y\cdot\boldsymbol{x} \text{ if } y\cdot\boldsymbol{x}\cdot\theta \le 1 \\
-0\ \text{ if } y\ \boldsymbol{x}\cdot\theta \geq 1      
+~~~~~~~0\ \text{ if } y\ \boldsymbol{x}\cdot\theta \geq 1      
 \end{cases}
 \]
 
@@ -143,7 +146,7 @@ g_{S}(\theta) = \frac{1}{10} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_
 \]
 \sys also applies this gradient to the already clean data (initially non-existent):
 \[
-g_C(\theta) = \frac{1}{\mid R_{clean}\mid}\sum_{i \in R - R_{dirty}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
+g_C(\theta) = \frac{1}{\mid R_{clean}\mid}\sum_{i \in R_{clean}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
 Then, it calculates the update rule:
 \[
