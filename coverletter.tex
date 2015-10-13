@@ -79,9 +79,9 @@ This model covers the cases when cleaning the first record of a certain type of 
 \noindent\textbf{M2. Sections 5-7 are the technical core of the paper, and appear formal at the expense of aiding understanding. They appear to implement something that resembles active learning or bootstrapping, except inside the gradient descent loop. The motivation of some of this is not clear; is it necessary to integrate with the gradient descent? This is not how most active learning methods are implemented. Is it possible to implement these approaches in a way that is orthogonal to the SGD algorithm? The current writeup entangles some of these design choices.} 
 
 We have revised the technical sections of the paper to improve readability.
-Section \ref{correctness} describes two straight-forward ways to integrate progressive data cleaning and predictive modeling, and how these approaches can lead to error-prone models.
-\sys addresses two subproblems: (1) the correctness problem of how to update a dirty model after cleaning and (2) the efficiency problem of how to prioritize cleaning using the downstream model. 
-Section \ref{statements} now formalizes the two problems without reference to Stochastic Gradient Descent.
+Section \ref{correctness} describes existing ways to integrate progressive data cleaning and predictive modeling and how these approaches can lead to error-prone models.
+In response, \sys addresses two subproblems: (1) the correctness problem of how to update a dirty model after cleaning, and (2) the efficiency problem of how to prioritize cleaning using the downstream model. 
+Section \ref{statements} formalizes the two problems without reference to Stochastic Gradient Descent.
 
 In Section \ref{model-update}, we propose a solution to problem (1) which updates the model with newly cleaned data using a gradient update.
 This can be analyzed as a Stochastic Gradient Descent algorithm, which converges to the true optimum with monotonically decreasing expected error if the gradient steps are unbiased.
@@ -91,29 +91,30 @@ In Section \ref{dist-samp}, we describe a solution to problem (2).
 The problem is to find a sampling distribution that maximally reduces the expected error
 at each iteration.
 While, the solution is derived using SGD optimality, this sampling distribution is still beneficial to techniques other than SGD.
-The derived optimal distribution is not realizable in practice since it requires knowing the cleaned record value, and Section \ref{dgsample} proposes a solution where the dirty value of the record can be used instead.
+The derived optimal distribution is not realizable in practice since it requires knowing the cleaned record value.
+Section \ref{dgsample} proposes a solution where the dirty value of the record can be used instead.
 Together Section \ref{model-update} and \ref{dist-samp}, provide a minimum viable system that addresses problem (1) and (2).
 
 Section \ref{opti} describes optimizations that improve the convergence rate of the system.
 We describe a number of cases when these optimizations are possible.
-Our experiments evaluate all of these design decisions (Section \ref{eval}).
+Finally, our experiments evaluate all of these design decisions (Section \ref{eval}).
 
 \vspace{0.5em}
 
 \noindent\textbf{M3. In general, the distinction between an ``architecture" and an ``algorithm that fits into the architecture" is quite unclear. The problem with SGD/Active Learning above is one example.}
 
-We now present the problem statements (Section \ref{statements}) and system architecture (Section \ref{arch}) separately.
+The revised paper presents the problem statements (Section \ref{statements}) and system architecture (Section \ref{arch}) separately.
 The architecture in Section \ref{sysover} describes how each of the components fit together and the data flows of the system.
 We describe these components in a way that is independent of our algorithmic solutions with Stochastic Gradient Descent and Active Learning.
-The new architecture would apply even if the model update problem was addressed with a different algorithm.
 We first clarify essential components of the architecture that are needed for a minimum viable solution, and then highlight the optional optimizations.
+The new architecture would apply even if the model update problem was addressed with a different algorithm.
 %We also clearly identify the user inputs in Section \ref{uinp}.
 
 \vspace{0.5em}
 
 \noindent\textbf{M4. The paper, and especially the technical sections, would benefit enormously from a detailed running example showing how the algorithm works}
 
-We have added a number of examples at the end of each of the technical sections. Section 4 (Architecture) ends with an intuitive end-to-end running example without technical details (Example \ref{archex}).
+We have added a number of examples in each of the technical sections. Section 4 (Architecture) ends with an intuitive end-to-end running example without technical details (Example \ref{archex}).
 Section 5 (Update Problem) ends with an SVM example of how updates are propagated and calculated (Example \ref{upex}).
 Section 7.1 (Detection) contains two examples for how the two different types of detectors can be used (Examples \ref{detex1} and \ref{detex2}).
 Section 7.2 (Estimation) ends with an example summarizing how linearization could be applied to SVM estimation.
