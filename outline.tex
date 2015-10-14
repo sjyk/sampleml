@@ -138,10 +138,12 @@ Predictive models, such as regression and classification, are increasingly popul
 Although error can be mitigated through data cleaning, it is often very time consuming.
 This paper explores techniques to train accurate models without having to clean the entire dataset.
 The challenge is that models trained on partially cleaned data can be arbitrarily incorrect requiring a new algorithm for incrementally updating results given newly cleaned data.
-We also design sampling algorithms that leverage the structure of downstream models to prioritize cleaning those records likely to affect the results.
-We focus on a popular class of models called convex loss models (e.g., linear regression and SVMs).
 The key insight of \sys is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
+This algorithm supports a popular class of models called convex loss models (e.g., linear regression and SVMs).
+We also propose a sampling algorithm that leverages the structure of downstream models to prioritize cleaning those records likely to affect the results.
 Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when corruption is systematic and sparse. 
+%The key insight of \sys is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
+
 %In one set of experiments with 5\% simulated error, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{abstract}
 

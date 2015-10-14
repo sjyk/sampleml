@@ -25,10 +25,10 @@ There are two key challenges in applying data cleaning before a DSM: (1) statist
 \sys supports data cleaning operations that can be represented as record-by-record transformations.\footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.}
 Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
-We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover $r' = C(r)$.
+We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover the clean record $r' = C(r)$.
 Therefore, for every $r \in R$ there exists a unique $r' \in R^*$ where $R^*$ is the hypothetical fully cleaned relation.
-We assume that there is a featurization $F(\cdot)$ which is defined over records of both $R$ and $R^*$ and maps records to tuple of vectors in $(x, y)$ corresponding to a feature vector $x$ and a label vector $y$.
-So each record corresponds to one training example in the downstream model.
+We assume that there is a featurizer $F(\cdot)$ that maps a record to a feature vector $x$ and a label vector $y$.
+So each record corresponds to one training example for the downstream model.
 
 \subsection{Correctness}\label{correctness}  
 %The key challenge in \sys is correctness of the statistical model.

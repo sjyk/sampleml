@@ -39,8 +39,9 @@ To improve reliability, a DCM trained on previously cleaned data can be used to 
 
 \sys addresses the problem of training user-specified models after data cleaning.
 We call such models Downstream Models (DSMs) to contrast with the DCMs in prior work.
-An example of a DSM is a movie recommender system that is trained on dirty user preference data resulting in error-prone predictions.
-The DSM is independent of the errors present in the dataset and the method used to clean those errors.
+Unlike DCMs which predict the effect of a data cleaning operations, DSMs model relationships in the clean data.
+An example of a DSM is a movie recommender system that is trained on dirty user preference data resulting in error-prone predictions after data cleaning.
+A DSM is independent of the errors present in the dataset and the method used to clean those errors.
 The DSM problem is more general than the DCM problem with a broader class of allowed models.
 DSMs have additional correctness concerns and naive progressive cleaning solutions can lead to arbitrarily incorrect results (Figure \ref{update-arch1}).
 This requires a new algorithm to allow for progressive model updates while preserving correctness.
