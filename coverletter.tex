@@ -18,6 +18,7 @@ To summarize the major changes:
 \item Section \ref{arch} presents a revised system architecture that first emphasizes the essential components for correctness, and then highlights optional optimizations. 
 
 \item We include references to all of the related work suggested by the reviewing committee \cite{whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, DBLP:journals/pvldb/YakoutENOI11, yakout2013don, heise2014estimating}.
+\end{enumerate}
 
 
 \subsection*{Overview} 
@@ -25,14 +26,13 @@ Data cleaning is often applied before featurization and predictive modeling to p
 Errors in the training data can degrade model quality by masking or introducing spurious relationships between features.
 Unfortunately, data cleaning is often a manual and time consuming process, and may be impractical for very large datasets.
 \sys is a framework that allows users to train accurate models without cleaning the entire dataset. 
-\sys couples data cleaning with model training to leverage information from the model to identify records that maximally improve a user's model.
-The paper shows that naive integration of data cleaning and model training can lead to inaccuracy, and presents several novel techniques for model training on partially clean data.
-Specifically, \sys applies: (1) a gradient-based update derived from small batches of cleaned data, (2) weighted sampling to carefully select these batches while avoiding biases, (3) optimizations to select records that are most likely to be dirty.
+\sys couples data cleaning with model training to leverage information from the model to identify records that maximally improve accuracy.
+The paper shows that naive integration of data cleaning and model training can lead to convergence problems, and presents a novel framework for training on partially clean data.
+Specifically, it applies: (1) a gradient-based update derived from small batches of cleaned data, (2) weighted sampling to carefully select these batches while avoiding biases, (3) optimizations to select records that are most likely to be dirty.
 
 \sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning.
-Consequently, the reviewers asked whether traditional active learning could be applied to address the problem of prioritizing data cleaning for user-specified modeling tasks. 
-%There are two major limitations for active learning: correctness and efficiency. 
-Firstly, in terms of correctness, active learning is not designed for application on mixtures of clean data and not-yet-cleaned dirty data.
+Consequently, the reviewers asked whether existing active learning approaches could be applied to the problem of prioritizing data cleaning for user-specified modeling tasks. 
+In terms of correctness, active learning is not designed for this problem setting where training happens on mixtures of clean data and not-yet-cleaned dirty data.
 Due to the well-studied Simpson's paradox, this can lead to severe inaccuracy (Section \ref{correctness}).
 Even if the correctness problem is addressed, the new problem setting leads to several new opportunities for optimizations, which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).
 
@@ -47,6 +47,7 @@ Even if the correctness problem is addressed, the new problem setting leads to s
 We added a section that clarifies that our system supports data cleaning operations that can be represented as record-by-record mappings (Section \ref{dmodel}).
 Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
 This does not include errors that simultaneously affect multiple rows such as duplication or schema transformation problems.
+%Details are provided in Response \textbf{R2.1}.
 
 \vspace{0.5em}
 
@@ -59,19 +60,19 @@ We have revised the technical sections of the paper to improve readability by mo
 \noindent \textbf{M2b. They appear to implement something that resembles active learning or bootstrapping, except inside the gradient descent loop. The motivation of some of this is not clear; is it necessary to integrate with the gradient descent?} 
 
 Yes, the integration with gradient descent is necessary as it allows for provable guarantees on the model's convergence.
-We have revised the paper to intuitively motivate this problem in Section \ref{intuit}, formally describe the problem in Section \ref{updp}, and simplified the presentation of the gradient-based update in Section \ref{geod}.
+We have revised the paper to intuitively motivate this problem in Section \ref{intuit}, formally describe the problem in Section \ref{updp}, and simplified the presentation of the gradient-based update solution in Section \ref{geod}.
 
 \vspace{0.5em}
 
 \noindent\textbf{M2c. This is not how most active learning methods are implemented. Is it possible to implement these approaches in a way that is orthogonal to the SGD algorithm? The current writeup entangles some of these design choices.} 
 
-We have revised the paper to decouple two subproblems: (1) the correctness problem of how to update a dirty model after cleaning, and (2) the efficiency problem of how to prioritize cleaning using the downstream model. 
-Problem (1) is addressed with the gradient-based update.
+We have revised the paper to decouple two subproblems: (1) the correctness problem of how to update a model after cleaning, and (2) the efficiency problem of how to prioritize cleaning using the model. 
+Problem (1) is addressed with the SGD.
 The solution to problem (2) is presented orthogonal to the update problem.
 We clarify that any sampling algorithm that ensures that all dirty records have a non-zero sampling probability can be applied.
 We also have re-organized the paper to isolate optimizations from the essential components of \sys.
-Section \ref{opti} describes optimizations that improve the convergence rate of the system.
-We describe a number of cases when these optimizations are possible.
+In the revision, Section \ref{opti} describes optimizations that improve the convergence rate of the system.
+%We describe a number of cases when these optimizations are possible.
 
 \vspace{0.5em}
 
@@ -79,27 +80,29 @@ We describe a number of cases when these optimizations are possible.
 
 We have significantly revised the architecture section of the paper.
 We first separate the formal problem statement (Section \ref{statements}) and system architecture (Section \ref{arch}).
-The architecture section now only describes the essential data flows of the system and is orthogonal to the solutions problems described in Section \ref{statements}.
-We also clarify essential components of the architecture that are needed for a minimum viable solution, and then highlight the optional optimizations.
-The new architecture would apply even if the model update problem was addressed with a different algorithm.
+The architecture section now describes the essential data flows of the system and is orthogonal to the solutions of the problems described in Section \ref{statements}.
+We also differentiate the essential components of the architecture and the optional instance-specific optimizations.
+The new architecture would apply even if the model update problem was addressed with a different algorithm (i.e., not SGD).
 %We also clearly identify the user inputs in Section \ref{uinp}.
 
 \vspace{0.5em}
 
 \noindent\textbf{M4. The paper, and especially the technical sections, would benefit enormously from a detailed running example showing how the algorithm works}
 
-We have added examples to each of the technical sections. Section 4 (Architecture) ends with an intuitive end-to-end running example without technical details (Example \ref{archex}).
-Section 5 (Update Problem) ends with an SVM example of how updates are propagated and calculated (Example \ref{upex}).
+We have added examples to each of the technical sections based on our running example of an analyst using an SVM for fraud detection. 
+Section 4 (Architecture) describes an intuitive end-to-end application without technical details (Example \ref{archex}).
+Section 5 (Update Problem) describes how updates are propagated and calculated (Example \ref{upex}).
 %Section 7.1 (Detection) contains two examples for how the two different types of detectors can be used (Examples \ref{detex1} and \ref{detex2}).
-Section 7.2 (Estimation) ends with an example summarizing how linearization could be applied to SVM estimation.
+Section 7.2 describes how to apply the optimizations to this example.
 
 \vspace{0.5em}
 
 \noindent\textbf{M5. Some connections to related work that combines machine learning and data cleaning should be made. See the other reviewers' comments.}
 
 We have added Section \ref{alrw} to connect \sys to related work that applies machine learning to data cleaning.
-This was a source of significant confusion in the initial submission, and we have clarified the differences.
+This was a source of significant confusion in the initial submission, and we have clarified the key differences.
 We have also revised our related work section to highlight the suggested references to progressive data cleaning and entity resolution~(Section \ref{rw}).
+%Details are provided in Response \textbf{R1.4} and Response \textbf{R2.2}.
 
 \subsection*{Review 1 Details} 
 
@@ -150,7 +153,7 @@ Thank you for highlighting these references, and we have included them in our re
 Progressive data cleaning is a well studied problem especially in the context of entity resolution \cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
 Prior work has focused on the problem of designing data structures and algorithms to apply data cleaning progressively.
 This is challenging because many data cleaning algorithms require information from entire relations.
-However, over the last 5 years a number of new results have expanded the scope of progressive data cleaning~\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
+Over the last 5 years a number of new results have expanded the scope and practicality of progressive data cleaning~\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
 \sys explores the statistical implications of using progressive data cleaning before high-dimensional predictive modeling.
 \\
 SampleClean~\cite{wang1999sample} applies data cleaning to a sample of data, and estimates the results of aggregate queries.
@@ -164,7 +167,7 @@ Existing work does not explore cleaning driven by the downstream machine learnin
 - I did not quite understand the short paragraph on crowd-sourcing. Why is this even relevant?
  I believe it would suffice to simply state that cleansing is expensive...}
 
-We appreciate the thorough feedback and have tightened up the writing in the introduction. In particular, we have consolidated the motivation to a single paragraph describing the expense of data cleaning. We include a single sentence reference to related work on crowdsourcing/human-guided data cleaning which we believe is relevant due to the use of active learning.
+We appreciate the thorough feedback and have tightened up the writing in the introduction. In particular, we have consolidated the motivation to a single paragraph describing the expense of data cleaning. We include a single sentence referencing related work on crowdsourcing/human-guided data cleaning.
 
 
 \subsection*{Review 2 Details}
@@ -177,7 +180,7 @@ We added Section \ref{dmodel} to the paper which clarifies the supported data cl
 Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover the clean record $r' = C(r)$.
-Therefore, for every $r \in R$ there exists a unique $r' \in R^*$ where $R^*$ is the hypothetical fully cleaned relation.
+Therefore, for every $r \in R$ there exists a unique $r' \in R^*$, where $R^*$ is the hypothetical fully cleaned relation.
 We assume that there is a featurizer $F(\cdot)$ that maps a record to a feature vector $x$ and a label vector $y$.
 So each record corresponds to one training example for the downstream model.}
 
@@ -203,8 +206,8 @@ Guided data repair. PVLDB 4(5): 279-289 (2011).
 }
 
 %\sys explores a different problem than the referenced related work.
-In contrast to the referenced related work, we address the problem of corrupted training data affecting predictive models not using machine learning to facilitate data cleaning. 
-\sys allows a user to train predictive models that approximate the true variable relationships in the clean data without cleaning the entire dataset.
+The referenced related work applies machine learning to improve the efficiency and/or reliability of data cleaning.
+In contrast, we address the problem of corrupted training data affecting user-specified predictive models. 
 The natural question is if the frameworks proposed in prior work can apply to this new problem setting, and we added Section \ref{alrw} to answer this:
 
 \emph{Machine learning can be used to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
@@ -218,8 +221,8 @@ Intuitively, this means that the system queries a human only when the model indi
 In spirit, \sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning by carefully selecting samples.
 The natural question is whether existing active learning approaches can be applied to the problem of estimating models downstream from the data cleaning.
 There are two key challenges that limit the applicability of existing frameworks: (1) correctness, and (2) efficiency. 
-For (1), existing approaches are designed training on homogeneous data, i.e., that are previously cleaned or known to be clean.
-However, training on a mixture of yet-to-be cleaned dirty data and clean data is unavoidable in the progressive cleaning setting, and without proper care, this can result in severe inaccuracies. 
+For (1), existing approaches are designed for training on homogeneous data, i.e., that are previously cleaned or known to be clean.
+However, training on a mixture of clean data and yet-to-be cleaned dirty data can result in severe inaccuracies. 
 One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
 Even if the correctness problem is addressed, the downstream model problem leads to several new opportunities for optimizations (challenge (2)), which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).}
 
@@ -244,7 +247,7 @@ We addressed this point with a number of examples (see response \textbf{M4}).
 \subsection*{Review 3 Details}
 \noindent\textbf{R3.1: The authors do not distinguish between the system architecture and the individual issues that they are presenting.}
 
-Response \textbf{M3} describes several revisions to the architecture including: separating problem formalization and architecture, discussing the data flow rather than the algorithms, and highlight essential components for correctness versus optimizations.
+Response \textbf{M3} describes several revisions to the architecture including: separating problem formalization and architecture, discussing the data flow rather than the algorithms, and differentiating the essential components for correctness from optimizations.
 
 \vspace{0.5em}
 
@@ -255,8 +258,9 @@ I would prefer to have a more focused paper on one of these aspects that has con
 We have discussed a number of specific textual revisions in response \textbf{M2} and \textbf{M3}. Here are a list of other revisions to improve the readability:
 
 \begin{enumerate}
+\item We have revised the entire paper to be more accessible and readable.
+
 \item We have expanded the background section to provide a more detailed setup and context to the problem.
-\item Our problem formulation is now divided into two subproblems: (1) correctness, and (2) efficiency.
 \item We revised the technical sections to first present a minimum viable solution that addresses the two subproblems (Section \ref{model-update} and Section  \ref{dist-samp}).
 \item The next section (Section \ref{opti}) describes optional optimizations that can be applied in a number of practical cases.
 \item Detailed derivations are now in the appendix, and the additional space has been used for three new examples in the technical sections (Sections \ref{model-update}-\ref{opti}).

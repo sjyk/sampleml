@@ -7,7 +7,7 @@ cleaning and describes concrete example applications.
 Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
 This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover the clean record $r' = C(r)$.
-Therefore, for every $r \in R$ there exists a unique $r' \in R^*$ where $R^*$ is the hypothetical fully cleaned relation.
+Therefore, for every $r \in R$ there exists a unique $r' \in R^*$, where $R^*$ is the hypothetical fully cleaned relation.
 We assume that there is a featurizer $F(\cdot)$ that maps a record to a feature vector $x$ and a label vector $y$.
 So each record corresponds to one training example for the downstream model.
 
@@ -24,8 +24,8 @@ Intuitively, this means that the system queries a human only when the model indi
 In spirit, \sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning by carefully selecting samples.
 The natural question is whether existing active learning approaches can be applied to the problem of estimating models downstream from the data cleaning.
 There are two key challenges that limit the applicability of existing frameworks: (1) correctness, and (2) efficiency. 
-For (1), existing approaches are designed training on homogeneous data, i.e., that are previously cleaned or known to be clean.
-However, training on a mixture of yet-to-be cleaned dirty data and clean data is unavoidable in the progressive cleaning setting, and without proper care, this can result in severe inaccuracies. 
+For (1), existing approaches are designed for training on homogeneous data, i.e., that are previously cleaned or known to be clean.
+However, training on a mixture of clean data and yet-to-be cleaned dirty data can result in severe inaccuracies. 
 One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
 Even if the correctness problem is addressed, the downstream model problem leads to several new opportunities for optimizations (challenge (2)), which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).
 
