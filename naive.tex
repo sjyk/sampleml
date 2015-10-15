@@ -3,7 +3,7 @@ This section describes an algorithm for reliable model updates.
 The updater assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
 Sections \ref{dist-samp} and \ref{opti} show how to optimize $p(\cdot)$ and the analysis in this section applies for any sampling distribution $p(\cdot) > 0$.
 
-\subsection{Geometric Derivation}
+\subsection{Geometric Derivation}\label{geod}
 The update algorithm intuitively follows from the convex geometry of the problem.
 Consider this problem in one dimension (i.e., the parameter $\theta$ is a scalar value), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
 The consequence of dirty data is that the wrong loss function is optimized.
