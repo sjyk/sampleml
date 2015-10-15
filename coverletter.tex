@@ -25,31 +25,21 @@ Below we address each reviewer comment in detail:
 \vspace{0.5em}
 
 \subsection*{Meta Review Details} 
-Machine learning has been proposed to improve the efficiency and reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
-The salient feature of existing approaches is a Data Cleaning Model (DCM) that learns the effect of a data cleaning operation.
-DCMs can improve the efficiency of expensive manual or crowdsourced cleaning by avoiding 
-records where the cleaning can be predicted with high certainty~\cite{gokhale2014corleone, DBLP:journals/pvldb/MozafariSFJM14, DBLP:journals/pvldb/YakoutENOI11}.
-To improve reliability, a DCM trained on previously cleaned data can be used to evaluate the likelihood of a proposed replacement value \cite{yakout2013don}.
+Predictive models trained on dirty data can be unreliable and error-prone.
+Unfortunately, data cleaning can be expensive making it infeasible to clean large datasets.
+\sys uses sampling to train models that approximate the true relationships without having to clean the entire dataset.
+However, it is important for \sys to guarantee statistically rigorous analysis.
+To ensure that the models trained with samples are accurate, \sys samples records that are likely to be dirty and to affect the user's model with higher probability.
+Furthermore, naive applications of sampling and data cleaning can lead to biases, high error, and even arbitrarily incorrect results (Figure \ref{update-arch1}).
+Addressing this problem requires a new algorithm to allow for progressive model updates using small samples of cleaned data.
 
-%This use case leverages clean data to estimate the accuracy of a future repair on dirty data.
-%On the other hand, Gokhale et al. \cite{gokhale2014corleone} use machine learning to
-%scale crowdsourced data cleaning by learning rules from a small set of examples.
-%Crowdsourcing is often expensive and impractical for large datasets. 
-%This approach can be coupled with active learning to query a human (or humans) only when the statistical model indicates uncertainty.
-
-\sys addresses the problem of training user-specified models after data cleaning.
-We call such models Downstream Models (DSMs) to contrast with the DCMs in prior work.
-Unlike DCMs which predict the effect of a data cleaning operations, DSMs model relationships in the clean data.
-An example of a DSM is a movie recommender system that is trained on dirty user preference data resulting in error-prone predictions after data cleaning.
-A DSM is independent of the errors present in the dataset and the method used to clean those errors.
-The DSM problem is more general than the DCM problem with a broader class of allowed models.
-DSMs have additional correctness concerns and naive progressive cleaning solutions can lead to arbitrarily incorrect results (Figure \ref{update-arch1}).
-This requires a new algorithm to allow for progressive model updates while preserving correctness.
-%Furthermore, training a DSM on a mix of dirty and clean data can lead to arbitrarily incorrect results (Figure \ref{update-arch1}), and this requires a new algorithm to allow for progressive cleaning while preserving correctness.
-%Due to the generality of a DSM, small samples of clean data may not result in a meaningful model.
-We propose several novel extensions to active learning, including dirty data detection and estimation.
+%\sys addresses the problem of training user-specified models accurately after data cleaning .
+This is similar to active learning, which can improve the efficiency of expensive manual or crowdsourced cleaning~\cite{gokhale2014corleone, DBLP:journals/pvldb/MozafariSFJM14, DBLP:journals/pvldb/YakoutENOI11}.
+The goal of active learning in data cleaning is to query a human (or humans) as infrequently as possible while maximally learning how to clean the data.
+While this also budgets data cleaning effort, existing approaches are decoupled from the subsequent analytics.
+The data that are cleaned are important to learning a cleaning model, but this does not necessarily imply that they are the best records to clean for user's desired analytics.
+In all of our experiments (Section \ref{eval}), we compare to active learning and find that in many cases, \sys trains more accurate models.
 Response \textbf{M5} addresses each of the differences in more detail.
-
 
 \vspace{0.5em}
 
