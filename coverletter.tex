@@ -36,7 +36,7 @@ Addressing this problem requires a new algorithm to allow for progressive model 
 %\sys addresses the problem of training user-specified models accurately after data cleaning .
 This is similar to active learning, which can improve the efficiency of expensive manual or crowdsourced cleaning~\cite{gokhale2014corleone, DBLP:journals/pvldb/MozafariSFJM14, DBLP:journals/pvldb/YakoutENOI11}.
 The goal of active learning in data cleaning is to query a human (or humans) as infrequently as possible while maximally learning how to clean the data.
-While this also budgets data cleaning effort, existing approaches are decoupled from the subsequent analytics.
+While this also budgets manual data cleaning effort, existing approaches are decoupled from the subsequent analytics.
 The data that are cleaned are important to learning a cleaning model, but this does not necessarily imply that they are the best records to clean for user's desired analytics.
 In all of our experiments (Section \ref{eval}), we compare to active learning and find that in many cases, \sys trains more accurate models.
 Response \textbf{M5} addresses each of the differences in more detail.
