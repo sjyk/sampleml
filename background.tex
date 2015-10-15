@@ -24,10 +24,10 @@ Intuitively, this means that the system queries a human only when the model indi
 In spirit, \sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning by carefully selecting samples.
 The natural question is whether existing active learning approaches can be applied to the problem of estimating models downstream from the data cleaning.
 There are two key challenges that limit the applicability of existing frameworks: (1) correctness, and (2) efficiency. 
-For (1), existing approaches are designed training on homogenous data, i.e., that are previously cleaned or known to be clean.
+For (1), existing approaches are designed training on homogeneous data, i.e., that are previously cleaned or known to be clean.
 However, training on a mixture of yet-to-be cleaned dirty data and clean data is unavoidable in the progressive cleaning setting, and without proper care, this can result in severe inaccuracies. 
 One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
-Even if the correctness problem is addressed, the downstream model problem leads to several new opportunties for optimizations (challenge (2)), which empirically improve on typical active learning critera by up to an order of magnitude (Section \ref{eval}).
+Even if the correctness problem is addressed, the downstream model problem leads to several new opportunities for optimizations (challenge (2)), which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).
 
 \subsection{More About Correctness}\label{correctness}  
 %The key challenge in \sys is correctness of the statistical model.

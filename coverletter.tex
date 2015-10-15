@@ -38,7 +38,7 @@ Consequently, the reviewers asked whether traditional active learning could be a
 %There are two major limitations for active learning: correctness and efficiency. 
 Firstly, in terms of correctness, active learning is not designed for application on mixtures of clean data and not-yet-cleaned dirty data.
 Due to the well-studied Simpson's paradox, this can lead to severe inaccuracy (Section \ref{correctness}).
-Even if the correctness problem is addressed, in terms of efficiency, the new problem setting leads to several new opportunties for optimizations, which empirically improve on typical active learning critera by up to an order of magnitude (Section \ref{eval}).
+Even if the correctness problem is addressed, in terms of efficiency, the new problem setting leads to several new opportunities for optimizations, which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).
 
 \vspace{0.5em}
 
@@ -99,7 +99,7 @@ Section 7.2 (Estimation) ends with an example summarizing how linearization coul
 
 \noindent\textbf{M5. Some connections to related work that combines machine learning and data cleaning should be made. See the other reviewers' comments.}
 
-We have added Section \ref{alrw} to connect \sys to relaed work that applies machine learning to data cleaning.
+We have added Section \ref{alrw} to connect \sys to related work that applies machine learning to data cleaning.
 This was a source of significant confusion in the initial submission so we have clarified the differences between using machine learning for data cleaning, and training models after data cleaning.
 We have also revised our related work section to highlight the suggested references to progressive data cleaning and entity resolution~(Section \ref{rw}).
 
@@ -215,10 +215,10 @@ Intuitively, this means that the system queries a human only when the model indi
 In spirit, \sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning by carefully selecting samples.
 The natural question is whether existing active learning approaches can be applied to the problem of estimating models downstream from the data cleaning.
 There are two key challenges that limit the applicability of existing frameworks: (1) correctness, and (2) efficiency. 
-For (1), existing approaches are designed training on homogenous data, i.e., that are previously cleaned or known to be clean.
+For (1), existing approaches are designed training on homogeneous data, i.e., that are previously cleaned or known to be clean.
 However, training on a mixture of yet-to-be cleaned dirty data and clean data is unavoidable in the progressive cleaning setting, and without proper care, this can result in severe inaccuracies. 
 One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
-Even if the correctness problem is addressed, the downstream model problem leads to several new opportunties for optimizations (challenge (2)), which empirically improve on typical active learning critera by up to an order of magnitude (Section \ref{eval}).}
+Even if the correctness problem is addressed, the downstream model problem leads to several new opportunities for optimizations (challenge (2)), which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).}
 
 
 \vspace{0.5em}
