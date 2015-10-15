@@ -28,9 +28,9 @@ Below we address each reviewer comment in detail:
 Predictive models trained on dirty data can be unreliable and error-prone.
 Unfortunately, data cleaning can be expensive making it infeasible to clean large datasets.
 \sys uses sampling to train models that approximate the true relationships without having to clean the entire dataset.
-However, it is important for \sys to guarantee statistically rigorous analysis.
 To maximize the benefit of this approach, \sys samples records that are likely to be dirty and to affect the user's model with higher probability.
-Furthermore, naive applications of sampling and data cleaning can lead to biases, high error, and even arbitrarily incorrect results (Figure \ref{update-arch1}).
+However, it is important for \sys to guarantee statistically rigorous analysis.
+Naive applications of sampling and data cleaning can lead to biases, high error, and even arbitrarily incorrect results (Figure \ref{update-arch1}).
 Addressing this problem requires a new algorithm to allow for progressive model updates using small samples of cleaned data.
 
 %\sys addresses the problem of training user-specified models accurately after data cleaning .
