@@ -28,7 +28,7 @@ Unfortunately, data cleaning is often a manual and time consuming process, and m
 \sys is a framework that allows users to train accurate models without cleaning the entire dataset. 
 \sys couples data cleaning with model training to leverage information from the model to identify records that maximally improve accuracy.
 The paper shows that naive integration of data cleaning and model training can lead to convergence problems, and presents a novel framework for training on partially clean data.
-Specifically, it applies: (1) a gradient-based update derived from small batches of cleaned data, (2) weighted sampling to carefully select these batches while avoiding biases, (3) optimizations to select records that are most likely to be dirty.
+Specifically, it applies: (1) a gradient-based update derived from small batches of cleaned data, (2) weighted sampling to carefully select these batches, (3) optimizations to select records that are most likely to be dirty.
 
 \sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning.
 Consequently, the reviewers asked whether existing active learning approaches could be applied to the problem of prioritizing data cleaning for user-specified modeling tasks. 
