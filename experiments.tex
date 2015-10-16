@@ -42,7 +42,7 @@ The dataset is featurized with bag-of-words featurization model for the textual 
 
 \vspace{0.25em}
 
-\noindent\textbf{Discarding Dirty Data. } As a baseline, dirty data is discarded.
+\noindent\textbf{Discarding Dirty Data. } As a baseline, dirty data are discarded.
 
 \vspace{0.25em}
 
@@ -50,11 +50,13 @@ The dataset is featurized with bag-of-words featurization model for the textual 
 
 \vspace{0.25em}
 
-\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } An Active Learning algorithm that integrates with stochastic optimization (See details in Appendix \ref{al}). 
+\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } To fairly evaluate Active Learning, we first apply our gradient update to ensure correctness.
+Within each iteration, examples are priortized by distance to the decision boundary deterministically without sampling (called Uncertainty Sampling in \cite{settles2010active}).
+This does not include our optimizations such as detection and estimation.
 
 \vspace{0.25em}
 
-\noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, instead of an estimation step, the true clean value is used to evaluate the theoretical ideal performance of \sys.
+\noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, instead of an estimation and detection step, the true clean value is used to evaluate the theoretical ideal performance of \sys.
 
 \subsection{Does Data Cleaning Matter?}
 The first experiment evaluates the benefits of data cleaning on two of the example datasets (EEG and Adult).
@@ -241,7 +243,6 @@ This is because the classifier is imperfect and misclassifies some data points i
  \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}\vspace{-2em}
 \end{figure}
 
-\vspace{1.5em}
 \subsection{Estimation}\label{est}
 The next experiment compares estimation techniques: (1) ``linear regression" trains a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" which does not use the detection to inform how to apply the estimate, (3) ``average feature change" uses detection but no linearization, and (4) the Taylor series linear approximation.
 Figure \ref{tradeoffs2}b measures how accurately each estimation technique estimates the gradient as a function of the number of cleaned records on the EEG dataset.

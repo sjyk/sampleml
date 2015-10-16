@@ -305,15 +305,6 @@ We use the algorithm from Feng et al. for robust logistic regression.
 \item Solve regularized logistic regression problem.
 \end{enumerate}
 
-\subsection{Active Learning}\label{al}
-There is a well established link between Active Learning and Online Gradient-based Algorithms \cite{guillory2009active}. 
-To fairly evaluate an Active Learning methodology in these experiments, we run a gradient descent where examples are priortized by expected gradient length (explained in \cite{settles2010active}).
-Ignoring the detection step, there are two differences between this algorithm and the one we propose.
-First, we calculate the gradient with respect to the an estimate of the clean data, and second we sample rather than using a deterministic ordering.
-While such Active Learning algorithms have been studied in the Learning Theory community, they have not been adopted in data cleaning or crowdsourcing research.
-Typical algorithms include uncertainty sampling, where a classifier prioritized data closest to the margin.
-However, algorithms such as uncertainty sampling focus on the narrow problem of label acquisition in hyperplane classifiers; a problem too narrow for application in this setting.
-
 \section{Dollars For Docs Setup}\label{dfd-errors}
 The dollars for docs dataset has the following schema:
 \begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
