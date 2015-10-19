@@ -1,8 +1,8 @@
 \section{Introduction}
 Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent values.
 Predictive modeling, such as regression and classification, is an increasingly popular form of analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib} and can be highly sensitive to dirty data.
-These models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., corruption that disproportionately affects certain data) can mask or even introduce spurious new relationships.
-Furthermore, the high dimensionality can amplify small problems resulting in error-prone predictions even when trained on mostly clean data \cite{xiaofeature}.
+These models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} (i.e., corruption that disproportionately affects certain data) can affect these relationships.
+Furthermore, high dimensionality can amplify small problems resulting in error-prone predictions even when trained on mostly clean data \cite{xiaofeature}.
 
 Cleaning dirty data can be expensive, and analysts report that it is one of the most time consuming steps in the analysis process \cite{nytimes}.
 Cleaning can require a significant amount of developer effort in writing software or rules to fix the corruption.
@@ -11,12 +11,12 @@ Analysts who want to train models on dirty data face a difficult choice between 
 
 This paper explores techniques to train accurate models without having to clean the entire dataset.
 In particular, we explore the problem of progressive data cleaning~\cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}, and formulate algorithms to incrementally update models given newly cleaned data.
-Progressive data cleaning and model training can facilitate a number of important applications in exploratory data analytics: rapid comparison of different data cleaning techniques, early stopping when cleaning no longer improves results, and interactive data cleaning procedures.
+Progressive data cleaning and model training can facilitate a number of important applications in exploratory data analytics including: rapid comparison of different data cleaning techniques, early stopping when cleaning no longer improves results, and interactive data cleaning procedures.
 These applications are only possible if the intermediate state of the model (based on $k \ll N$ clean records) is an accurate approximation of the true model.
 
-Unfortunately, straight-forward implementations of progressive data cleaning can result in highly inaccurate models.
+Unfortunately, straight-forward integrations of progressive data cleaning and model training can result in highly inaccurate models.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships even in simple scenarios (Figure \ref{update-arch1}).
-An alternative is to restrict training to the $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
+An alternative is to restrict training to the $k$ clean records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
 While this approach avoids the mixing problem, accurate model training may require a large amount of training data and $k$ examples may not be enough for a viable model.
 Furthermore, if the $k$ records are not selected uniformly at random, the trained model might be highly biased.
 The errors and inefficiencies introduced by these three problems may dominate any gains from data cleaning, leading to unreliable or misleading conclusions about data or model quality.
@@ -29,9 +29,9 @@ The errors and inefficiencies introduced by these three problems may dominate an
 
 We present a system called \sys which trains predictive models with progressive data cleaning and has accuracy guarantees.
 We focus on a popular class of models called convex loss models (e.g., includes linear regression and SVMs).
-We show that instead of re-training the model, the model should be incrementally maintained with gradient descent given newly cleaned data, an technique that is guaranteed to converge under suitable conditions.
-Such guarantees allow analysts to trust early results during the data exploration and cleaning phase.
-We also propose several novel optimizations that leverage information from the model to guide data cleaning towards the records most likely to be dirty and most likely to affect the result.
+We show that instead of re-training the model, the model should be incrementally maintained with gradient descent given newly cleaned data, a technique that is guaranteed to converge under suitable conditions.
+Such guarantees allow analysts to trust early results and make predictions using the model.
+We also propose several novel optimizations that leverage information from the model to guide data cleaning towards the records most likely to be dirty and most likely to affect the results.
 
 %High-dimensional predictive models are highly sensitive to dirty data.
 %They rely on learning relationships between features and labels, and systematic data corruption \cite{taylor1982introduction} can mask or even introduce spurious new relationships.
@@ -55,14 +55,15 @@ We also propose several novel optimizations that leverage information from the m
 %Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 
 The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{updater}, and \emph{estimator}.
-The cleaner is a user-provided data cleaning technique, and \sys provides the remaining components to apply the cleaner progressively.
-\sys supports cleaners that can be represented as record-by-record mappings, and which does not include errors that simultaneously affect multiple records such as duplication or schema transformation problems.
+The cleaner is a user-provided data cleaning technique, and \sys provides the remaining components to apply the cleaner progressively using the \emph{sampler} and the \emph{updater}.
+\sys supports cleaners that can be represented as record-by-record mappings, which does not include errors that simultaneously affect multiple records such as duplication or schema transformation problems.
+The \emph{detector} and the \emph{estimator} are optional components that leverage knowledge about the data corruption to improve the convergence rate of \sys.
 
 \noindent To summarize the contributions:
 \begin{itemize}[noitemsep]
-\item \textbf{Correctness} (Section \ref{model-update}). We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation, and for batch size $b$ and iterations $T$, converges with rate $O(\frac{1}{\sqrt{bT}})$. 
+\item \textbf{Correctness} (Section \ref{model-update}). We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation. For a batch size $b$ and iterations $T$, it converges with rate $O(\frac{1}{\sqrt{bT}})$. 
 \item \textbf{Efficiency} (Section \ref{dist-samp}). We derive a theoretical optimal sampling distribution that minimizes the update error and an approximation to estimate the theoretical optimum.
-\item \textbf{Detection and Estimation} (Section \ref{opti}). We show how \sys can be integrated with optional dirty data detection to guide data cleaning towards records expected to be dirty.
+\item \textbf{Detection and Estimation} (Section \ref{opti}). We show how \sys can be integrated with data detection to guide data cleaning towards records expected to be dirty.
 \item The experiments evaluate these components on four datasets with real and synthetic corruption (Section \ref{eval}). Results suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse.
 
 %For a 5\%  systematic corruption, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.

@@ -1,6 +1,6 @@
 \section{Background and Problem Setup}\label{background}
 This section describes the challenges in predictive modeling after progressive data 
-cleaning and describes concrete example applications.
+cleaning and describes a concrete example application.
 
 \subsection{Dirty Data}\label{dmodel}
 \sys supports data cleaning operations that can be represented as record-by-record transformations.\footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.}
@@ -15,9 +15,8 @@ So each record corresponds to one training example for the downstream model.
 Next, we contrast \sys and existing data cleaning approaches.
 Machine learning, specifically active learning, has been applied in prior work to improve the efficiency of data cleaning~\cite{yakout2013don,DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
 Human input, either for cleaning or validation of automated cleaning, is often expensive and impractical for large datasets.
-A model can learn generalizable rules from a small set of examples cleaned by a human (or humans) to uncleaned data.
-Active learning is a technique to carefully select the set of examples to learn the most accurate model.
-The model can be used to extrapolate repairs to not-yet-cleaned data, and the goal of these approaches is to provide the cleanest possible dataset--independent of the subsequent analytics or query processing.
+A model can learn rules from a small set of examples cleaned (or validated) by a human, and active learning is a technique to carefully select the set of examples to learn the most accurate model.
+This model can be used to extrapolate repairs to not-yet-cleaned data, and the goal of these approaches is to provide the cleanest possible dataset--independent of the subsequent analytics or query processing.
 
 As the name implies, \sys is inspired from active learning as both seek to improve the efficiency of expensive data cleaning.
 In contrast, \sys addresses a very different problem, namely, how information about a user's subsequent data analysis can inform which data to clean.
@@ -26,12 +25,12 @@ The key new challenge is correctness.
 Models trained on partially clean data can have severe inaccuracies.
 Thus, existing approaches, which are designed for homogeneous data, cannot be applied.
 One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
-An active learning-like algorithm can be applied in conjunction with the proposed model update algorithm while preserving.
-However, the new problem setting has several additional opportunities for optimizations, which empirically can significantly improve the convergence rate of typical active learning criteria (Section \ref{eval}).
+An active learning-like algorithm can be applied in conjunction with the proposed model update algorithm while preserving correctness.
+However, the new problem setting also has several additional opportunities for optimizations, which empirically can significantly improve the convergence rate of typical active learning criteria (Section \ref{eval}).
 
 \subsection{More About Correctness}\label{correctness}  
 %The key challenge in \sys is correctness of the statistical model.
-The straight-forward application of progressive data cleaning methods is to fix those errors in place.
+The straight-forward application of progressive data cleaning is to repair the corruption in place, and re-train the model after each repair.
 Suppose $k \ll N$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Figure \ref{update-arch1} highlights the dangers of this approach on a very simple dirty dataset and a linear regression model i.e., the best fit line for two variables. 
 One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
@@ -40,7 +39,7 @@ After cleaning only two of the data points (Figure \ref{update-arch1}b), the res
 
 Aggregates over mixtures of different populations of data can result in spurious relationships due to the well-known phenomenon called Simpson's paradox \cite{simpson1951interpretation}.
 Simpson's paradox is by no means a corner case, and it has affected the validity of a number of high-profile studies~\cite{simpsonsparadox}; even in the simple case of taking an average over a dataset.
-Models can be viewed as high-dimensional generalizations of these aggregates without closed form techniques to compensate for these biases.
+Predictive models are high-dimensional generalizations of these aggregates without closed form techniques to compensate for these biases.
 Thus, training models on a mixture of dirty and clean data can lead to unreliable results, where artificial trends introduced by the mixture can be confused for the effects of data cleaning.
 
 \begin{figure}[ht!]
@@ -120,8 +119,6 @@ Data may look unimportant to a dirty model but when cleaned are very important.
 Also, data cleaning and model training can happen at very different time scales, we have to carefully budget our effort to ensure that any optimizations actually address rate-determining steps in the workflow.
 Finally, in this line of work, the tradeoff space is enormous, and we have to carefully pick a design point and tailor our optimizations to this preferred regime.
 \fi
-
-\vspace{1em}
 
 %Consider the data corruption in our motivating example where company names were inconsistently entered: ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
 %Fixing this error can be represented as a record-by-record mapping.

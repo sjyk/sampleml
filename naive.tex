@@ -97,14 +97,13 @@ In the experiments, we use a technique called inverse scaling where there is a p
 \vspace{0.25em}
 
 \noindent\textbf{ Setting the batch size $b$: } The batch size should be set by the user to have the desired properties.
-Larger batches will take longer to clean and will make more progress towards the clean model, but will have less frequent model updates.
-On the other hand, smaller batches are cleaned faster and have more frequent model updates but make less progress.
-The overheads introduced by \sys are more evident at smaller batch sizes.
+Larger batches will take longer to clean and will make more progress towards the clean model but will have less frequent model updates.
+On the other hand, smaller batches are cleaned faster and have more frequent model updates.
 There are diminishing returns to increasing the batch size $O(\frac{1}{\sqrt{b}})$.
-Empirically, in the experiments, batch sizes of 50 converge the fastest.
+In the experiments, we use a batch size of 50 which converges fast but allows for frequent model updates.
 If a data cleaning technique requires a larger batch size than 50, i.e., data cleaning is fast enough that the iteration overhead is significant compared to cleaning 50 records, \sys can apply the updates in smaller batches.
 For example, the batch size set by the user might be $b=1000$, but the model updates after every $50$ records are cleaned.
-We can dissociate the batching requirements of SGD and the batching requirements of the data cleaning technique.
+We can disassociate the batching requirements of SGD and the batching requirements of the data cleaning technique.
 
 \subsubsection{Convergence Conditions and Properties}
 Convergence properties of batch SGD formulations have been well studied \cite{dekel2012optimal}. Essentially, if the gradient estimate is unbiased and the step size is appropriately chosen, the algorithm is guaranteed to converge. 
