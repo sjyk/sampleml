@@ -33,10 +33,10 @@ The paper shows that naive integration of data cleaning and model training can l
 Specifically, it applies: (1) a gradient-based update derived from small batches of cleaned data, (2) weighted sampling to carefully select these batches, (3) optimizations to select records that are most likely to be dirty.
 
 As the name implies, \sys is inspired by active learning and both seek to improve the efficiency of expensive manual or crowdsourced data cleaning.
-However, prior work in data cleaning applies active learning to most efficiently clean an entire dataset--independent of the user's desired analysis after data cleaning.
-In contrast, for an important class of analytics defined by convex-loss models, \sys cleans records that maximally affect the results of the subsequent analytics.
-The key new challenge is that model training with a mixture of clean data and not-yet-cleaned dirty data, can lead to severe inaccuracy due to a well studied phenomenon called Simpson's paradox (Section \ref{correctness}).
-Consequently, we propose a gradient descent model update technique that provably avoids this problem.
+Prior work applies active learning to most efficiently clean an entire dataset--independent of the user's desired analysis after data cleaning.
+In contrast, for a large class of predictive models, \sys prioritizes data cleaning by identifying records, which if cleaned, are likely to change the model's predictions.
+The key new challenge is that model training on a mixture of clean data and not-yet-cleaned dirty data, can lead to severe inaccuracy due to a well-studied phenomenon called Simpson's paradox (Section \ref{correctness}).
+Consequently, we propose a new model update algorithm that provably avoids this problem, and integrate the prioritization with this algorithm.
 
 \vspace{0.5em}
 

@@ -10,13 +10,15 @@ Furthermore, it can be very costly to apply data cleaning techniques that employ
 Analysts who want to train models on dirty data face a difficult choice between discarding the dirty data and inducing an unknown bias, or paying the price of data cleaning.
 
 This paper explores techniques to train accurate models without having to clean the entire dataset.
-In particular, we explore the problem of progressive data cleaning~\cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}, and formulate algorithms to incrementally update models given newly cleaned data.
-Progressive data cleaning and model training can facilitate a number of important applications in exploratory data analytics including: rapid comparison of different data cleaning techniques, early stopping when cleaning no longer improves results, and interactive data cleaning procedures.
-These applications are only possible if the intermediate state of the model (based on $k \ll N$ clean records) is an accurate approximation of the true model.
+In particular, we explore the problem of progressive data cleaning where a user can gradually clean more data until the desired model accuracy is reached~\cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
+The challenge is to efficiently and correctly update a model based on the newly cleaned data, and we formulate an algorithm for estimation when $k \ll N$ records are cleaned.
+This integration of progressive data cleaning and model training can facilitate a number of important applications in exploratory data analytics including: rapid comparison of different data cleaning techniques, early stopping when cleaning no longer improves results, and interactive data cleaning procedures.
+These applications are only possible if the intermediate state of the model (based on $k$ clean records) is an accurate approximation of the true model.
 
-Unfortunately, straight-forward integrations of progressive data cleaning and model training can result in highly inaccurate models.
-Training a model on a mixture of dirty and clean data can lead to misleading relationships even in simple scenarios (Figure \ref{update-arch1}).
-An alternative is to restrict training to the $k$ clean records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
+This problem is challenging because straight-forward integrations of data cleaning and model training can result in highly inaccurate models.
+For example, one could repair the first $k$ dirty records in place, and re-train the user's model after each repair.
+While intuitive, we show that mixing dirty and clean training data can lead to misleading results even in simple scenarios (Figure \ref{update-arch1}).
+An alternative is to restrict training to just the $k$ clean records (e.g., sampling \cite{wang1999sample}).
 While this approach avoids the mixing problem, accurate model training may require a large amount of training data and $k$ examples may not be enough for a viable model.
 Furthermore, if the $k$ records are not selected uniformly at random, the trained model might be highly biased.
 The errors and inefficiencies introduced by these three problems may dominate any gains from data cleaning, leading to unreliable or misleading conclusions about data or model quality.
@@ -27,10 +29,10 @@ The errors and inefficiencies introduced by these three problems may dominate an
  \caption{\sysfull allows users to train predictive models while progressively cleaning data. The framework adaptively selects the best data to clean and can optionally (denoted with dotted lines) integrate with pre-defined detection rules and estimation algorithms for improved conference. \label{sys-arch}}\vspace{-2em}
 \end{figure}
 
-We present a system called \sys which trains predictive models with progressive data cleaning and has accuracy guarantees.
+To address these challenges, we present a system called \sys which trains predictive models with progressive data cleaning and has accuracy guarantees.
 We focus on a popular class of models called convex loss models (e.g., includes linear regression and SVMs).
-We show that instead of re-training the model, the model should be incrementally maintained with gradient descent given newly cleaned data, a technique that is guaranteed to converge under suitable conditions.
-Such guarantees allow analysts to trust early results and make predictions using the model.
+We show that instead of re-training the model, the model can be initialized by training on the dirty data and then iteratively corrected as more data are cleaned.
+The iterative corrections, which use gradient descent, provide guarantees that allow analysts to trust early results and make predictions using the model.
 We also propose several novel optimizations that leverage information from the model to guide data cleaning towards the records most likely to be dirty and most likely to affect the results.
 
 %High-dimensional predictive models are highly sensitive to dirty data.
