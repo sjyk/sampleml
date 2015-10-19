@@ -7,15 +7,17 @@ We addressed all of the concerns and included references to the revised text.
 To summarize the major changes:
 
 \begin{enumerate}
-\item Sections 1 and 2 clarify the contributions of \sys and its relationship to related work (e.g., \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}).
+\item Sections 1 and 2 clarify the contributions of \sys and its relationship to related work.
 
 \item In Section \ref{dmodel}, we formalize the definition of dirty data and the data cleaning model.
 
 \item Section \ref{s:usecase} presents a running example that is referenced in each technical section (Examples \ref{archex}, \ref{upex},\ref{detex1},\ref{detex2},\ref{estex}).
 
-\item In Section \ref{statements}, we provide problem statements for the two subproblems addressed by \sys.
+\item In Section \ref{statements}, we revised the problem statement to be independent of our solution method. The section highlights two subproblems, correctness and efficiency, which are used to organize the technical sections.
 
 \item Section \ref{arch} presents a revised system architecture that first emphasizes the essential components for correctness, and then highlights optional optimizations. 
+
+\item We have re-organized and re-written the technical sections to improve readability (Sections \ref{model-update}-\ref{opti}).
 
 \item We include references to all of the related work suggested by the reviewing committee \cite{whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, DBLP:journals/pvldb/YakoutENOI11, yakout2013don, heise2014estimating}.
 \end{enumerate}
@@ -23,18 +25,19 @@ To summarize the major changes:
 
 \subsection*{Overview} 
 Data cleaning is often applied before featurization and predictive modeling to provide clean training data.
-Errors in the training data can degrade model quality by masking or introducing spurious relationships between features.
+Corruption of the training data can degrade model quality, and high-dimensional models can amplify small errors.
 Unfortunately, data cleaning is often a manual and time consuming process, and may be impractical for very large datasets.
-\sys is a framework that allows users to train accurate models without cleaning the entire dataset. 
+\sys is a framework that allows users to train accurate models without having to clean the entire dataset. 
 \sys couples data cleaning with model training to leverage information from the model to identify records that maximally improve accuracy.
 The paper shows that naive integration of data cleaning and model training can lead to convergence problems, and we present a novel framework for training on partially clean data.
 Specifically, it applies: (1) a gradient-based update derived from small batches of cleaned data, (2) weighted sampling to carefully select these batches, (3) optimizations to select records that are most likely to be dirty.
 
-\sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning.
-Consequently, the reviewers asked whether existing active learning approaches could be applied to the problem of prioritizing data cleaning for user-specified modeling tasks. 
-In terms of correctness, active learning is not designed for this problem setting where training happens on mixtures of clean data and not-yet-cleaned dirty data.
-Due to the well-studied Simpson's paradox, this can lead to severe inaccuracy (Section \ref{correctness}).
-Even if the correctness problem is addressed, the new problem setting leads to several new opportunities for optimizations, which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).
+As the name implies, \sys is inspired by active learning as both seek to improve the efficiency of expensive manual or crowdsourced data cleaning.
+However, \sys addresses a different problem from prior work, namely, how information about a user's subsequent data analysis can inform which data to clean.
+For an important class of modeling tasks called convex-loss models, \sys presents an algorithm for prioritizing records to clean that maximally affect the model. 
+Existing data cleaning approaches are not designed for this problem setting where model training happens on mixtures of clean data and not-yet-cleaned dirty data.
+Training on mixtures can lead to severe inaccuracy due to a well studied phenomenon called Simpson's paradox(Section \ref{correctness}).
+Consequently, \sys uses an incremental model update technique that provably avoids this problem.
 
 \vspace{0.5em}
 
@@ -46,7 +49,9 @@ Even if the correctness problem is addressed, the new problem setting leads to s
 
 We added a section that clarifies that our system supports data cleaning operations that can be represented as record-by-record mappings (Section \ref{dmodel}).
 Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
-This does not include errors that simultaneously affect multiple rows such as duplication or schema transformation problems.
+This definition does not include errors that simultaneously affect multiple records such as duplication or schema transformation problems.
+We emphasize this limitation in the introduction (Section 1), background (Section 2), and architecture sections (Section 4).
+
 %Details are provided in Response \textbf{R2.1}.
 
 \vspace{0.5em}
@@ -109,7 +114,7 @@ We have also revised our related work section to highlight the suggested referen
 \noindent\textbf{R1.1: At first, the problem seems a bit too specialized. The abstract is too loaded with technical terms and a turn-off. This is then mitigated in the introduction. \\
 As mentioned above, the abstract is (to me) overly technical and did not make me curious. I did not know off the bat what a convex loss model is, what importance sampling is, etc.}
 
-\noindent We revised the abstract to be more accessible:
+\noindent We revised the abstract to better motivate our problem and solutions:
 
 \emph{Dirty data, including missing, incorrect, or inconsistent values, is an important challenge in data analytics.
 Predictive models, such as regression and classification, are increasingly popular and can be highly sensitive to dirty data.
@@ -151,15 +156,14 @@ Thank you for highlighting these references, and we have included them in our re
 
 \emph{When data cleaning is expensive, it is desirable to apply it \textbf{progressively}, where analysts can inspect early results with only $k \ll N$ records cleaned.
 Progressive data cleaning is a well studied problem especially in the context of entity resolution \cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
-Prior work has focused on the problem of designing data structures and algorithms to apply data cleaning progressively.
-This is challenging because many data cleaning algorithms require information from entire relations.
+Prior work has focused on the problem of designing data structures and algorithms to apply data cleaning progressively. which is challenging because many data cleaning algorithms require information from the entire relation.
 Over the last 5 years a number of new results have expanded the scope and practicality of progressive data cleaning~\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
-\sys explores the statistical implications of using progressive data cleaning before high-dimensional predictive modeling.
-\\
+We study the problem of prioritizing progressive cleaning by leveraging information about a user's subsequent use for the data.
+For convex-loss modeling tasks, \sys presents an algorithm to prioritize records to clean that likely to affect the downstream model.\\
 SampleClean~\cite{wang1999sample} applies data cleaning to a sample of data, and estimates the results of aggregate queries.
 Sampling has also been applied to estimate the number of duplicates in a relation \cite{heise2014estimating}. 
 Similarly, Bergman et al. explore the problem of query-oriented data cleaning \cite{DBLP:conf/sigmod/BergmanMNT15}, where given a query, they clean data relevant to that query. 
-Existing work does not explore cleaning driven by the downstream machine learning models studied in this work.}
+Existing work does not explore cleaning driven by the downstream machine learning ``queries" studied in this work.}
 
 \vspace{0.5em}
 
@@ -178,7 +182,7 @@ We added Section \ref{dmodel} to the paper which clarifies the supported data cl
 
 \emph{\sys supports data cleaning operations that can be represented as record-by-record transformations.
 Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
-This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
+This definition does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover the clean record $r' = C(r)$.
 Therefore, for every $r \in R$ there exists a unique $r' \in R^*$, where $R^*$ is the hypothetical fully cleaned relation.
 We assume that there is a featurizer $F(\cdot)$ that maps a record to a feature vector $x$ and a label vector $y$.
@@ -193,7 +197,7 @@ Our appendix (Section \ref{set-of-r}) also describes an extension to this model 
 \noindent\textbf{R2.2: The paper describes a problem setting focused on modelling the iterative cleaning process rather than actual data management problems. The paper may be better suited at an ML venue.}
 
 Over the last 5 years a number of new results have expanded the scope of progressive and interactive data cleaning~\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don, altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
-However,  it turns out that the straight-forward integration of existing progressive data cleaning methods with model training can lead to error-prone and misleading results (Section \ref{correctness}).
+However,  it turns out that the straight-forward integration of existing progressive data cleaning methods with model training can lead to error-prone and misleading results (Section \ref{correctness}) due to the well studied Simpson's paradox.
 Recognizing that data analytics is increasingly moving towards predictive modeling, \sys presents an initial exploration of this problem.  
 
 \vspace{0.5em}
@@ -205,29 +209,41 @@ ii) Mohamed Yakout, Ahmed K. Elmagarmid, Jennifer Neville, Mourad Ouzzani, Ihab 
 Guided data repair. PVLDB 4(5): 279-289 (2011).
 }
 
-%\sys explores a different problem than the referenced related work.
-The referenced works apply machine learning to improve the efficiency and/or reliability of data cleaning.
-In contrast, we address the problem of corrupted training data affecting user-specified predictive models. 
-The natural question is if the frameworks proposed in prior work can apply to this new problem setting, and we added Section \ref{alrw} to answer this:
+At a high level, \sys explores the problem of how information about a user's subsequent data analysis can inform which data to clean.
+For analysis in the form of convex-loss modeling, \sys presents two algorithms: (1) prioritizing records to clean that maximally affect a model, and (2) incremental model update given newly cleaned data with provable guarantees. 
+In contrast, the referenced works do not consider the subsequent analysis or query processing on the data.
+These works apply machine learning to improve the efficiency and/or reliability of data cleaning when cleaning an entire dataset.
+We added Section \ref{alrw} to clarify this distinction:
 
-\emph{Machine learning can be used to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
+\emph{Next, we contrast \sys and existing data cleaning approaches.
+Machine learning, specifically active learning, has been applied in prior work to improve the efficiency of data cleaning~\cite{yakout2013don,DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
+Human input, either for cleaning or validation of automated cleaning, is often expensive and impractical for large datasets.
+A model can learn generalizable rules from a small set of examples cleaned by a human (or humans) to uncleaned data.
+This model can be used to extrapolate repairs to not-yet-cleaned data, and the goal of these approaches is to provide the cleanest possible dataset--independent of the subsequent analytics or query processing.
+Active learning is a technique to carefully select the set of examples to learn the most accurate model.\\
+As the name implies, \sys is inspired from active learning as both seek to improve the efficiency of expensive data cleaning.
+In contrast, \sys addresses a very different problem, namely, how information about a user's subsequent data analysis can inform which data to clean.
+If the cleaned data will ultimately be used as training data in a predictive model, \sys presents an algorithm to prioritize those data that are most likely to change the result.
+The key new challenge is correctness.
+Models trained on partially clean data can have severe inaccuracies.
+Thus, existing approaches, which are designed for homogeneous data, cannot be applied.
+One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
+An active learning-like algorithm can be applied in conjunction with the proposed model update algorithm while preserving correctness.
+However, the new problem setting has several additional opportunities for optimizations, which empirically can significantly improve the convergence rate of typical active learning criteria (Section \ref{eval}).}
+
+\vspace{0.5em}
+
+We also included additional details in the related work section (Section \ref{rw}):
+
+\emph{There are a number of other works that use machine learning to improve the efficiency and/or reliability of data cleaning~\cite{DBLP:journals/pvldb/YakoutENOI11,yakout2013don,gokhale2014corleone}.
 For example, Yakout et al. train a model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
 Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
 Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
 Human input is often expensive and impractical to apply to entire large datasets.
 Machine learning can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples.
-Intuitively, this means that the system queries a human only when the model indicates uncertainty.\\
-In spirit, \sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning by carefully selecting samples.
-The natural question is whether existing active learning approaches can be applied to the problem of estimating models downstream from the data cleaning.
-There are two key challenges that limit the applicability of existing frameworks: (1) correctness, and (2) efficiency. 
-For (1), existing approaches are designed for training on homogeneous data, i.e., that are previously cleaned or known to be clean.
-However, training on a mixture of clean data and yet-to-be cleaned dirty data can result in severe inaccuracies. 
-One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
-Even if the correctness problem is addressed, the downstream model problem leads to several new opportunities for optimizations (challenge (2)), which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).}
-
-
-\vspace{0.5em}
+While, in spirit, \sys is similar to these approaches, it addresses a very different problem of data cleaning before user-specified modeling.
+The key new challenge in this problem is ensuring the correctness of the user's model after partial data cleaning.}
 
 \textbf{R2.4: Sampling is an important part of the framework and influences the accuracy of the cleaning. Yet, there is little discussion on sampling rate, or how a sample is chosen.}
 
@@ -238,7 +254,7 @@ Section 7 has been revised to describe optimizations to this algorithm.
 
 \textbf{R2.5: An end-to-end running example in Section 5 is needed to highlight the intuition of the cleaning process.}
 
-We addressed this point with a number of examples (see response \textbf{M4}).
+We included a running example of fraud detection on dirty data. Each of the technical sections ends with a reference to this running example (see response \textbf{M4}).
 
 
 \vspace{0.5em}
@@ -258,8 +274,7 @@ I would prefer to have a more focused paper on one of these aspects that has con
 We have discussed a number of specific textual revisions in response \textbf{M2} and \textbf{M3}. Here are a list of other revisions to improve the readability:
 
 \begin{enumerate}
-\item We have revised the entire paper to be more accessible and readable.
-
+\item We have significantly revised the paper to make it more accessible and readable. Where possible, we have simplified, or even removed, notation and definitions. We also included Section \ref{notation} to summarize all of the important notation before the technical sections.
 \item We have expanded the background section to provide a more detailed setup and context to the problem.
 \item We revised the technical sections to first present a minimum viable solution that addresses the two subproblems (Section \ref{model-update} and Section  \ref{dist-samp}).
 \item The next section (Section \ref{opti}) describes optional optimizations that can be applied in a number of practical cases.

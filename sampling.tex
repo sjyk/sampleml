@@ -20,8 +20,8 @@ It can be shown that the optimal distribution over records in $R_{dirty}$ is pro
 p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|
 \]
 This is an established result, for thoroughness, we provide a proof in the appendix (Section \ref{impsample-deriv}), but intuitively, records with higher gradients should be sampled with higher probability as they affect the update more significantly.
-However, this cannot exclude records with lower gradients as that would induce a bias hurting convergence.
-The problem is that this optimal distribution leads to a chicken-and-egg problem:
+However, \sys cannot exclude records with lower gradients as that would induce a bias hurting convergence.
+The problem is that the optimal distribution leads to a chicken-and-egg problem:
 the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, however, cleaning is required to know those values.
 
 \subsection{Dirty Gradient Solution}\label{dgsample}
@@ -29,8 +29,8 @@ Such an oracle does not exist, and one solution is to use the gradient w.r.t to 
 \[
 p_i \propto \|\nabla\phi(x^{(d)}_i,y^{(d)}_i,\theta^{(t)})\|
 \]
-It turns out that this solution works reasonably well in practice on our experimental datasets and has been studied in Machine Learning as the Expected Gradient Length heuristic \cite{settles2010active}.
-The contribution in this work is integrating this heuristic with statistically valid updates.
+It turns out that the solution works reasonably well in practice on our experimental datasets and has been studied in Machine Learning as the Expected Gradient Length heuristic \cite{settles2010active}.
+The contribution in this work is integrating this heuristic with statistically correct updates.
 However, intuitively, approximating the oracle as closely as possible can result in improved prioritization.
-The subsequent section describes two components, the detector and estimator, that can be used to achieve this.
+The subsequent section describes two components, the detector and estimator, that can be used to improve the convergence rate.
 Our experiments suggest up-to a 2x improvement in convergence when using these optional optimizations (Section \ref{comp}).

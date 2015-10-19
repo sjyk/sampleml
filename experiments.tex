@@ -51,8 +51,8 @@ The dataset is featurized with bag-of-words featurization model for the textual 
 \vspace{0.25em}
 
 \noindent\textbf{Active Learning (AL) \cite{guillory2009active}. } To fairly evaluate Active Learning, we first apply our gradient update to ensure correctness.
-Within each iteration, examples are priortized by distance to the decision boundary deterministically without sampling (called Uncertainty Sampling in \cite{settles2010active}).
-This does not include our optimizations such as detection and estimation.
+Within each iteration, examples are prioritized by distance to the decision boundary (called Uncertainty Sampling in \cite{settles2010active}).
+However, we do not include our optimizations such as detection and estimation.
 
 \vspace{0.25em}
 
@@ -60,7 +60,7 @@ This does not include our optimizations such as detection and estimation.
 
 \subsection{Does Data Cleaning Matter?}
 The first experiment evaluates the benefits of data cleaning on two of the example datasets (EEG and Adult).
-This is done without sampling to understand which types of data corruption are amenable to data cleaning and which are better suited for robust statistical techniques.
+Our goal is to understand which types of data corruption are amenable to data cleaning and which are better suited for robust statistical techniques.
 The experiment compares four schemes: (1) full data cleaning  , (2) baseline of no cleaning, (3) discarding the dirty data, and (4) robust logistic regression,. We corrupted 5\% of the training examples in each dataset in two different ways:
 
 \vspace{0.5em}
@@ -125,7 +125,6 @@ For example, to achieve a test error of 1\% on the Adult dataset, \sys cleans 50
 
 \subsubsection{Source of Improvements}\label{comp}
 The next experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
-This is a vertical slice of the plots in the previous experiments.
 \sys without detection is denoted as (AC-D) (that is at each iteration we sample from the entire dirty data), and \sys without detection and importance sampling is denoted as (AC-D-I).
 Figure \ref{opts} plots the relative error of the alternatives and \sys with and without the optimizations.
 Without detection (AC-D), \sys is still more accurate than Active Learning.
@@ -164,7 +163,7 @@ Figure \ref{pc-perf} plots the same curves as the previous experiment comparing 
 PC randomly samples data, clean, and writes-back the cleaned data.
 PC+D randomly samples data from using the dirty data detector, cleans, and writes-back the cleaned data.
 For these errors PC and PC+D give reasonable results (not always guaranteed), but \sys converges faster.
-This is because \sys tunes the weighting when averaging dirty and clean data into the gradient.
+\sys tunes the weighting when averaging dirty and clean data into the gradient.
 
 \begin{figure}[ht!]
 \centering\vspace{-0.5em}
@@ -230,7 +229,7 @@ Instead of selecting the highest valued records for the most valuable features, 
 We compare these results to AC-D where we do not have a detector at all at one vertical slice of the previous plot (cleaning 1000 records).
 Figure \ref{tradeoffs2}a plots the relative error reduction using a classifier.
 When the corruption is about 50\% random then there is a break even point where no detection is better.
-This is because the classifier is imperfect and misclassifies some data points incorrectly as cleaned.
+The classifier is imperfect and misclassifies some data points incorrectly as cleaned.
 
 \vspace{0.25em}
 

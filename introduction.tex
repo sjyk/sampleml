@@ -11,13 +11,13 @@ Analysts who want to train models on dirty data face a difficult choice between 
 
 This paper explores techniques to train accurate models without having to clean the entire dataset.
 In particular, we explore the problem of progressive data cleaning~\cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}, and formulate algorithms to incrementally update models given newly cleaned data.
-This can facilitate a number of important applications in exploratory data analytics: rapid comparison of different data cleaning techniques, early stopping when cleaning no longer improves results, and interactive data cleaning procedures.
+Progressive data cleaning and model training can facilitate a number of important applications in exploratory data analytics: rapid comparison of different data cleaning techniques, early stopping when cleaning no longer improves results, and interactive data cleaning procedures.
 These applications are only possible if the intermediate state of the model (based on $k \ll N$ clean records) is an accurate approximation of the true model.
 
 Unfortunately, straight-forward implementations of progressive data cleaning can result in highly inaccurate models.
 Training a model on a mixture of dirty and clean data can lead to misleading relationships even in simple scenarios (Figure \ref{update-arch1}).
 An alternative is to restrict training to the $k$ records and to disregard all of the remaining dirty records (e.g., sampling \cite{wang1999sample}).
-While this avoids the mixing problem, accurate model training may require a large amount of training data and $k$ examples may not be enough for a viable model.
+While this approach avoids the mixing problem, accurate model training may require a large amount of training data and $k$ examples may not be enough for a viable model.
 Furthermore, if the $k$ records are not selected uniformly at random, the trained model might be highly biased.
 The errors and inefficiencies introduced by these three problems may dominate any gains from data cleaning, leading to unreliable or misleading conclusions about data or model quality.
 
@@ -56,7 +56,7 @@ We also propose several novel optimizations that leverage information from the m
 
 The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{updater}, and \emph{estimator}.
 The cleaner is a user-provided data cleaning technique, and \sys provides the remaining components to apply the cleaner progressively.
-We analyze a model where the user specifies a cleaning function $C(\cdot)$ where given any record, it returns a cleaned version of the record.
+\sys supports cleaners that can be represented as record-by-record mappings, and which does not include errors that simultaneously affect multiple records such as duplication or schema transformation problems.
 
 \noindent To summarize the contributions:
 \begin{itemize}[noitemsep]

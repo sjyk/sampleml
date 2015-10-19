@@ -20,7 +20,7 @@ The dotted boxes describe optional components that the user can provide to impro
 The choice of $b$ does affect the convergence rate.
 Section~\ref{model-update} discusses the efficiency and convergence trade-offs of different values of $b$.
 We empirically find that a batch size of $50$ performs well across different datasets and use that as a default.
-A cleaning budget $k$ can be used as a stopping criterion once $C(\dot)$ has been called $k$ times, and this means that the number of iterations is $T = \frac{k}{b}$.
+A cleaning budget $k$ can be used as a stopping criterion once $C(\dot)$ has been called $k$ times, and so the number of iterations of \sys is $T = \frac{k}{b}$.
 Alternatively, the user can clean data until the model is of sufficient accuracy to make a decision.
 
 \subsubsection{Basic Data Flow} \label{df}

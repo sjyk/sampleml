@@ -1,12 +1,22 @@
 \vspace{-1em}
 \section{Related Work}\label{rw}
-\noindent \textbf{Data Cleaning and Databases: } 
+\noindent \textbf{Data Cleaning: } 
 When data cleaning is expensive, it is desirable to apply it \textbf{progressively}, where analysts can inspect early results with only $k \ll N$ records cleaned.
 Progressive data cleaning is a well studied problem especially in the context of entity resolution \cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
-Prior work has focused on the problem of designing data structures and algorithms to apply data cleaning progressively.
-This is challenging because many data cleaning algorithms require information from entire relations.
+Prior work has focused on the problem of designing data structures and algorithms to apply data cleaning progressively. which is challenging because many data cleaning algorithms require information from the entire relation.
 Over the last 5 years a number of new results have expanded the scope and practicality of progressive data cleaning~\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
-\sys explores the statistical implications of using progressive data cleaning before high-dimensional predictive modeling.
+\sys studies the problem of prioritizing progressive cleaning by leveraging information about a user's subsequent use for the data.
+Certain records, if cleaned, may be more likely to affect the downstream analysis.
+
+There are a number of other works that use machine learning to improve the efficiency and/or reliability of data cleaning~\cite{DBLP:journals/pvldb/YakoutENOI11,yakout2013don,gokhale2014corleone}.
+For example, Yakout et al. train a model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
+Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
+Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
+Human input is often expensive and impractical to apply to entire large datasets.
+Machine learning can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
+This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples.
+While, in spirit, \sys is similar to these approaches, it addresses a very different problem of data cleaning before user-specified modeling.
+The key new challenge in this problem is ensuring the correctness of the user's model after partial data cleaning.
 
 SampleClean~\cite{wang1999sample} applies data cleaning to a sample of data, and estimates the results of aggregate queries.
 Sampling has also been applied to estimate the number of duplicates in a relation \cite{heise2014estimating}. 
@@ -16,7 +26,7 @@ Deshpande et al. studied data acquisition in sensor networks \cite{deshpande2004
 Similarly, Jeffery et al. \cite{DBLP:conf/pervasive/JefferyAFHW06} explored similar prioritization based on value of information.
 We see this work as pushing prioritization further down the pipeline to the end analytics.
 Finally, incremental optimization methods like SGD have a connection to incremental materialized view maintenance as the argument for incremental maintenance over recomputation is similar (i.e., relatively sparse updates).
-Krishnan et al. explored how samples of materialized views can be maintained similar to how models are updated with a sample of clean data in this work \cite{krishnan2015svc}
+Krishnan et al. explored how samples of materialized views can be maintained similar to how models are updated with a sample of clean data in this work \cite{krishnan2015svc}.
 
 \vspace{0.5em}
 

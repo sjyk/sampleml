@@ -5,29 +5,29 @@ cleaning and describes concrete example applications.
 \subsection{Dirty Data}\label{dmodel}
 \sys supports data cleaning operations that can be represented as record-by-record transformations.\footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.}
 Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
-This does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
+This definition does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
 We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover the clean record $r' = C(r)$.
 Therefore, for every $r \in R$ there exists a unique $r' \in R^*$, where $R^*$ is the hypothetical fully cleaned relation.
 We assume that there is a featurizer $F(\cdot)$ that maps a record to a feature vector $x$ and a label vector $y$.
 So each record corresponds to one training example for the downstream model.
 
 \subsection{Machine Learning and Data Cleaning}\label{alrw}
-Machine learning can be used to improve the efficiency and/or reliability of data cleaning~\cite{yakout2013don,gokhale2014corleone}.
-For example, Yakout et al. train a model that evaluates the likelihood of a proposed replacement value \cite{yakout2013don}.
-Another application of machine learning is value imputation, where a missing value is predicted based on those records without missing values.
-Machine learning is also increasingly applied to make automated repairs more reliable with human validation \cite{DBLP:journals/pvldb/YakoutENOI11}.
-Human input is often expensive and impractical to apply to entire large datasets.
-Machine learning can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
-This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples.
-Intuitively, this means that the system queries a human only when the model indicates uncertainty.
+Next, we contrast \sys and existing data cleaning approaches.
+Machine learning, specifically active learning, has been applied in prior work to improve the efficiency of data cleaning~\cite{yakout2013don,DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
+Human input, either for cleaning or validation of automated cleaning, is often expensive and impractical for large datasets.
+A model can learn generalizable rules from a small set of examples cleaned by a human (or humans) to uncleaned data.
+Active learning is a technique to carefully select the set of examples to learn the most accurate model.
+The model can be used to extrapolate repairs to not-yet-cleaned data, and the goal of these approaches is to provide the cleanest possible dataset--independent of the subsequent analytics or query processing.
 
-In spirit, \sys is similar to active learning as both techniques seek to improve the efficiency of expensive manual or crowdsourced data cleaning by carefully selecting samples.
-The natural question is whether existing active learning approaches can be applied to the problem of estimating models downstream from the data cleaning.
-There are two key challenges that limit the applicability of existing frameworks: (1) correctness, and (2) efficiency. 
-For (1), existing approaches are designed for training on homogeneous data, i.e., that are previously cleaned or known to be clean.
-However, training on a mixture of clean data and yet-to-be cleaned dirty data can result in severe inaccuracies. 
+As the name implies, \sys is inspired from active learning as both seek to improve the efficiency of expensive data cleaning.
+In contrast, \sys addresses a very different problem, namely, how information about a user's subsequent data analysis can inform which data to clean.
+If the cleaned data will ultimately be used as training data in a predictive model, \sys presents an algorithm to prioritize those data that are most likely to change the result.
+The key new challenge is correctness.
+Models trained on partially clean data can have severe inaccuracies.
+Thus, existing approaches, which are designed for homogeneous data, cannot be applied.
 One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
-Even if the correctness problem is addressed, the downstream model problem leads to several new opportunities for optimizations (challenge (2)), which empirically improve on typical active learning criteria by up to an order of magnitude (Section \ref{eval}).
+An active learning-like algorithm can be applied in conjunction with the proposed model update algorithm while preserving.
+However, the new problem setting has several additional opportunities for optimizations, which empirically can significantly improve the convergence rate of typical active learning criteria (Section \ref{eval}).
 
 \subsection{More About Correctness}\label{correctness}  
 %The key challenge in \sys is correctness of the statistical model.
@@ -38,7 +38,7 @@ One of the variables is systematically corrupted with a translation in the x-axi
 The dirty data is marked in red and the clean data in blue, and they are shown with their respective best fit lines.
 After cleaning only two of the data points (Figure \ref{update-arch1}b), the resulting best fit line is in the opposite direction of the true model.
 
-This is a well-known phenomenon called Simpsons paradox, where aggregates over mixtures of different populations of data can result in spurious relationships \cite{simpson1951interpretation}.
+Aggregates over mixtures of different populations of data can result in spurious relationships due to the well-known phenomenon called Simpson's paradox \cite{simpson1951interpretation}.
 Simpson's paradox is by no means a corner case, and it has affected the validity of a number of high-profile studies~\cite{simpsonsparadox}; even in the simple case of taking an average over a dataset.
 Models can be viewed as high-dimensional generalizations of these aggregates without closed form techniques to compensate for these biases.
 Thus, training models on a mixture of dirty and clean data can lead to unreliable results, where artificial trends introduced by the mixture can be confused for the effects of data cleaning.
@@ -54,7 +54,7 @@ Thus, training models on a mixture of dirty and clean data can lead to unreliabl
 An alternative is to avoid the dirty data altogether instead of mixing the two populations.
 Suppose $k$ records are randomly sampled from the dataset and cleaned.
 The model is trained only on the cleaned sample of data.
-This is similar to SampleClean \cite{wang1999sample}, which was proposed to approximate the results of aggregate queries by applying them to a clean sample of data.
+This approach is similar to SampleClean \cite{wang1999sample}, which was proposed to approximate the results of aggregate queries by applying them to a clean sample of data.
 However, high-dimensional models are highly sensitive to sample size.
 Figure \ref{update-arch1}c illustrates that, even in two dimensions, models trained from small samples can be as incorrect as the mixing solution described before.
 
@@ -97,7 +97,7 @@ corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 However, this dataset is very dirty, and the systematic nature of the data corruption can result in an inaccurate model.
 On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
 For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data, e.g., ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
-In a scenario such as this one, the effect of systematic error can be serious.
+In such scenarios, the effect of systematic error can be serious.
 Duplicate representations could artificially reduce the correlation between these entities and suspected contributions.
 There were nearly 40,000 of the 250,000 records that had either naming inconsistencies or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
 Without data cleaning, the detection rate using a Support Vector Machine was 66\%.
