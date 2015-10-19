@@ -58,14 +58,6 @@ This approach is similar to SampleClean \cite{wang1999sample}, which was propose
 However, high-dimensional models are highly sensitive to sample size.
 Figure \ref{update-arch1}c illustrates that, even in two dimensions, models trained from small samples can be as incorrect as the mixing solution described before.
 
-\subsection{Intuitive Solution}\label{intuit}
-Our first goal is to find an update algorithm that avoids Simpson's Paradox and the strong dependence on sample size.
-Instead of mixing dirty and clean data, \sys uses a model trained on the dirty data as an initialization, and then iteratively updates this model using samples of clean data.
-The intuition is that this algorithm smoothly transitions the model from one population (the dirty data) to another (the clean data), leading to provable guarantees about intermediate results.
-Our next goal is to prioritize which data to clean based on information from the model.
-Doing so is not trivial since important data may look unimportant to a dirty model.
-Also, data cleaning and model training can happen at very different time scales, we have to carefully budget our effort to ensure that any optimizations actually address rate-determining steps in the workflow.
-
 \subsection{Use Case: Dollars for Docs \cite{dollarsfordocs}}\label{s:usecase}
 ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest. 
 They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses \cite{dollarsfordocsa}.

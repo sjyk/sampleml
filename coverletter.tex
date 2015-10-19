@@ -32,12 +32,11 @@ Unfortunately, data cleaning is often a manual and time consuming process, and m
 The paper shows that naive integration of data cleaning and model training can lead to convergence problems, and we present a novel framework for training on partially clean data.
 Specifically, it applies: (1) a gradient-based update derived from small batches of cleaned data, (2) weighted sampling to carefully select these batches, (3) optimizations to select records that are most likely to be dirty.
 
-As the name implies, \sys is inspired by active learning as both seek to improve the efficiency of expensive manual or crowdsourced data cleaning.
-However, \sys addresses a different problem from prior work, namely, how information about a user's subsequent data analysis can inform which data to clean.
-For an important class of modeling tasks called convex-loss models, \sys presents an algorithm for prioritizing records to clean that maximally affect the model. 
-Existing data cleaning approaches are not designed for this problem setting where model training happens on mixtures of clean data and not-yet-cleaned dirty data.
-Training on mixtures can lead to severe inaccuracy due to a well studied phenomenon called Simpson's paradox(Section \ref{correctness}).
-Consequently, \sys uses an incremental model update technique that provably avoids this problem.
+As the name implies, \sys is inspired by active learning and both seek to improve the efficiency of expensive manual or crowdsourced data cleaning.
+However, prior work in data cleaning applies active learning to most efficiently clean an entire dataset--independent of the user's desired analysis.
+In contrast, for an important class of analytics defined by convex-loss models, \sys presents an algorithm for prioritizing records to clean that maximally change the model.
+The key new challenge is that model training with a mixture of clean data and not-yet-cleaned dirty data, can lead to severe inaccuracy due to a well studied phenomenon called Simpson's paradox (Section \ref{correctness}).
+Consequently, we propose an incremental model update technique that provably avoids this problem.
 
 \vspace{0.5em}
 
@@ -65,7 +64,7 @@ We have revised the technical sections of the paper to improve readability by mo
 \noindent \textbf{M2b. They appear to implement something that resembles active learning or bootstrapping, except inside the gradient descent loop. The motivation of some of this is not clear; is it necessary to integrate with the gradient descent?} 
 
 Yes, the integration with gradient descent is necessary as it allows for provable guarantees about the model's convergence.
-We have revised the paper to intuitively motivate this problem in Section \ref{intuit}, formally describe the problem in Section \ref{updp}, and simplified the presentation of the gradient-based update solution in Section \ref{geod}.
+We have revised the paper to intuitively motivate this problem in Section \ref{background}, formally describe the problem in Section \ref{updp}, and simplified the presentation of the gradient-based update solution in Section \ref{geod}.
 
 \vspace{0.5em}
 

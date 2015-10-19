@@ -236,12 +236,13 @@ The classifier is imperfect and misclassifies some data points incorrectly as cl
 \noindent \emph{Summary: When errors are increasingly random (50\% random) and cannot be accurately classified, adaptive detection provides no benefit over no detection. }
 
 \begin{figure}[ht!]
-\centering \vspace{-1em}
+\centering
  \includegraphics[width=0.49\columnwidth]{exp/exp5a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp12.pdf}\vspace{-0.5em}
- \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}\vspace{-2em}
+ \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}
 \end{figure}
 
+\vspace{2.5em}
 \subsection{Estimation}\label{est}
 The next experiment compares estimation techniques: (1) ``linear regression" trains a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" which does not use the detection to inform how to apply the estimate, (3) ``average feature change" uses detection but no linearization, and (4) the Taylor series linear approximation.
 Figure \ref{tradeoffs2}b measures how accurately each estimation technique estimates the gradient as a function of the number of cleaned records on the EEG dataset.
