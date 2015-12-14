@@ -1,36 +1,72 @@
 \section{Background and Problem Setup}\label{background}
-This section describes the challenges in predictive modeling after progressive data 
-cleaning and describes a concrete example application.
+This section formalizes the iterative data cleaning and training process and highlights several use-cases and examples.
 
-\subsection{Dirty Data}\label{dmodel}
-\sys supports data cleaning operations that can be represented as record-by-record transformations.\footnote{\small The record-by-record cleaning model is not a fundamental restriction of this approach, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.}
-Formally, there exists a function (implemented via human or algorithm) that given a dirty record will return a unique clean record.
-This definition does not cover errors that simultaneously affect multiple records such as record duplication or schema transformation problems.
-We represent this operation as $C(\cdot)$ which can be applied to a record $r$ to recover the clean record $r' = C(r)$.
-Therefore, for every $r \in R$ there exists a unique $r' \in R^*$, where $R^*$ is the hypothetical fully cleaned relation.
-We assume that there is a featurizer $F(\cdot)$ that maps a record to a feature vector $x$ and a label vector $y$.
-So each record corresponds to one training example for the downstream model.
+\subsection{Predictive Modeling}
+The user provides a relation $R$ and wishes to train a model using the data in $R$.
+This work focuses on a class of well-analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
+Convex loss minimization problems are amenable to a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
+Examples include generalized linear models (including linear and logistic regression), support vector machines, and in fact, means and medians are also special cases. 
 
-\subsection{Machine Learning and Data Cleaning}\label{alrw}
-Next, we contrast \sys and existing data cleaning approaches.
-Machine learning, specifically active learning, has been applied in prior work to improve the efficiency of data cleaning~\cite{yakout2013don,DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
-Human input, either for cleaning or validation of automated cleaning, is often expensive and impractical for large datasets.
-A model can learn rules from a small set of examples cleaned (or validated) by a human, and active learning is a technique to carefully select the set of examples to learn the most accurate model.
-This model can be used to extrapolate repairs to not-yet-cleaned data, and the goal of these approaches is to provide the cleanest possible dataset--independent of the subsequent analytics or query processing.
+We assume that the user provides a featurizer $F(\cdot)$ that maps every record $r \in R$ to a feature vector $x$ and label $y$.
+For labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of \emph{model parameters} $\theta$ by minimizing a loss function $\phi$ over all training examples:
+\[
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
+\]
+Where $\phi$ is a convex function in $\theta$.
+For example, in a linear regression $\phi$ is:
+\[
+\phi(x_{i},y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
+\]
+Typically, a \emph{regularization} term $r(\theta)$ is added to this problem.
+$r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid overfitting to noise in the training examples.
+\begin{equation}
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
+ \label{ideal}
+\end{equation}
+In this work, without loss of generality, we will include the regularization as part of the loss function i.e., $\phi(x_{i},y_{i},\theta)$ includes $r(\theta)$.
 
-As the name implies, \sys is inspired from active learning as both seek to improve the efficiency of expensive data cleaning.
-In contrast, \sys addresses a very different problem, namely, how information about a user's subsequent data analysis can inform which data to clean.
-If the cleaned data will ultimately be used as training data in a predictive model, \sys presents an algorithm to prioritize those data that are most likely to change the result.
-The key new challenge is correctness.
-Models trained on partially clean data can have severe inaccuracies.
-Thus, existing approaches, which are designed for homogeneous data, cannot be applied.
-One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
-An active learning-like algorithm can be applied in conjunction with the proposed model update algorithm while preserving correctness.
-However, the new problem setting also has several additional opportunities for optimizations, which empirically can significantly improve the convergence rate of typical active learning criteria (Section \ref{eval}).
+\subsection{Training-Cleaning Iteration}
+We consider corruption that affects the attribute values of records and does not cover errors that simultaneously affect multiple records such as record duplication or structure such as schema transformation.
+Examples of supported cleaning operations include, batch resolving common inconsistencies (e.g., merging ``U.S.A" and ``United States"), filtering outliers (e.g., removing records with values $>1e6$), and standardizing attribute semantics (e.g., ``1.2 miles" and ``1.93 km").
+If there were no data error, $\theta^{*}$ (in Equation \ref{ideal}) would be the optimal model.
+The challenge is that if some subset of the rows in $R$ are incorrect or inconsistent, the optimal model will reflect the dirty data (denoted as $\theta^{d}$).
+If we were hypothetically able to clean the rows of $R$ before training resulting in $R_{clean}$ and then trained the model, this would result in a model $\theta^{*} \ne \theta^{d}$.
 
-\subsection{More About Correctness}\label{correctness}  
-%The key challenge in \sys is correctness of the statistical model.
-The straight-forward application of progressive data cleaning is to repair the corruption in place, and re-train the model after each repair.
+We are particularly interested in those errors that are difficult or time-consuming to clean, and require a human to examine an erroneous record, and determine the appropriate action--possibly leveraging knowledge of the current best model.
+We treat the supervisor as an oracle (implemented via human or algorithm) that given a dirty record will return a unique clean record.
+We represent this operation as $Clean(\cdot)$ which can be applied to a record $r$ (or a set of records) to recover the clean record $r' = Clean(r)$.
+Formally, we treat the $Clean(\cdot)$ as an expensive user-defined function composed of deterministic \textsf{map} and \textsf{filter} operations applied to a subset of rows in the relation.
+A relation is defined as \emph{clean} if $R_{clean} = Clean(R_{clean})$.
+Therefore, for every $r \in R_{clean}$ there exists a unique $r' \in R$ in the dirty data.
+The \textsf{map} and \textsf{filter} cleaning model is not a fundamental restriction of \sys, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.
+
+As an example of how $Clean(\cdot)$ fits into an iterative analysis process, consider an analyst training a regression and identifying outliers. 
+When she examines one of the outliers, she realizes that the base data (prior to featurization) has a formatting inconsistency that leads to incorrect parsing of the numerical values.
+She applies a batch fix (i.e., $Clean(\cdot)$) to all of the outliers with the same error, and re-trains the model. 
+This iterative process can be described as the following pseudocode loop:
+\begin{enumerate}[leftmargin=1em]\scriptsize\sloppy
+  \item \texttt{Init(iter)}
+  \item \texttt{current\_model = Train(R)}
+  \item For each t in $\{1,...,iter\}$
+  \begin{enumerate}
+    \item \texttt{dirty\_sample $=$ Identify(R,current\_model)}
+    \item \texttt{clean\_sample $=$ Clean(dirty\_sample)}
+    \item \texttt{current\_model $=$ Update(clean\_sample, R)}
+  \end{enumerate}
+  \item \texttt{Output: current\_model}
+  \end{enumerate}
+
+\vspace{0.5em}
+
+Apart from $Train(\cdot)$ and $Clean(\cdot)$, which we have already discussed, the analyst also has to define the primitives $Identify(\cdot)$ and $Update(\cdot)$.
+For $Identify(\cdot)$, given a the current best model, the analyst must specify some criteria to select a set of records to examine.
+And in $Update(\cdot)$, the analyst must decide how to update the model given newly cleaned data.
+It turns out that these primitives are not trivial to implement since the straight-forward solutions can actually lead to divergence of the trained models.
+
+\subsection{Challenges}\label{correctness} 
+\vspace{0.5em} 
+\textbf{Correctness: } Let us assume that the analyst has implemented an $Identify(\cdot)$ function that returns $k$ candidate dirty records.
+The straight-forward application data cleaning is to repair the corruption in place, and re-train the model after each repair.
 Suppose $k \ll N$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
 Figure \ref{update-arch1} highlights the dangers of this approach on a very simple dirty dataset and a linear regression model i.e., the best fit line for two variables. 
 One of the variables is systematically corrupted with a translation in the x-axis (Figure \ref{update-arch1}a).
@@ -50,12 +86,32 @@ Thus, training models on a mixture of dirty and clean data can lead to unreliabl
 (c) Small samples of only clean data can result in similarly inaccurate models. \label{update-arch1}}
 \end{figure}
 
-An alternative is to avoid the dirty data altogether instead of mixing the two populations.
-Suppose $k$ records are randomly sampled from the dataset and cleaned.
-The model is trained only on the cleaned sample of data.
+An alternative is to avoid the dirty data altogether instead of mixing the two populations, and the model re-training is restricted to only data that are known to be clean.
 This approach is similar to SampleClean \cite{wang1999sample}, which was proposed to approximate the results of aggregate queries by applying them to a clean sample of data.
 However, high-dimensional models are highly sensitive to sample size.
 Figure \ref{update-arch1}c illustrates that, even in two dimensions, models trained from small samples can be as incorrect as the mixing solution described before.
+
+\vspace{0.5em} 
+
+\textbf{Efficiency: } Conversely, hypothetically assume that the analyst has implemented a correct $Update(\cdot)$ primitive and implements $Identify(\cdot)$ with a technique such as Active Learning to select records to clean~\cite{yakout2013don,DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
+Active learning is a technique to carefully select the set of examples to learn the most accurate model.
+However, these selection criteria are designed for stationary data distributions, an assumption which is not true in this setting.
+As more data are cleaned, the data distribution can change leading to evolving criteria of which records are the most valuable to clean.
+
+\subsection{The Need For Automation}\label{alrw}
+\sys is a framework that implements the $Identify(\cdot)$ and $Update(\cdot)$ primitives for the analyst. 
+By automating the iterative process, \sys ensures reliable semantics on trained models.
+The analyst initializes \sys with a dirty model.
+\sys carefuly selects small batches of data to clean based on data that are likely to be dirty and likely to affect the model.
+The analyst applies data cleaning to these batches, and \sys updates the model with an incremental optimization technique.
+
+Machine learning has been applied in prior work to improve the efficiency of data cleaning~\cite{yakout2013don,DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
+Human input, either for cleaning or validation of automated cleaning, is often expensive and impractical for large datasets.
+A model can learn rules from a small set of examples cleaned (or validated) by a human, and active learning is a technique to carefully select the set of examples to learn the most accurate model.
+This model can be used to extrapolate repairs to not-yet-cleaned data, and the goal of these approaches is to provide the cleanest possible dataset--independent of the subsequent analytics or query processing.
+These approaches, while very effective, suffer from composibility problems when placed inside cleaning and training loops.
+To summarize, \sys considers data cleaning \emph{during} model training, while these techniques consider model training \emph{for} data cleaning.
+One of the primary contributions of this work is an incremental model update algorithm with correctness guarantees for mixtures of data.
 
 \subsection{Use Case: Dollars for Docs \cite{dollarsfordocs}}\label{s:usecase}
 ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest. 

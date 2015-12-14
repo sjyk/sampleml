@@ -33,6 +33,10 @@ The main metric for evaluation is a relative measure of the trained model and th
 \noindent\textbf{Dollars For Docs: } The dataset has 240,089 records with 5 textual attributes and one numerical attribute.
 The dataset is featurized with bag-of-words featurization model for the textual attributes which resulted in a 2021 dimensional feature vector, and a binary SVM is used to classify the status of the medical donations.
 
+\vspace{0.25em}
+
+\noindent\textbf{World Bank: } The dataset has 193 records of country name, population, and various macro-economics statistics. The values are listed with the date at which they were acquired. This allowed us to determine that records from smaller and less populous countries were more likely to be out-of-date.
+
 \subsubsection{Compared Algorithms}
 \noindent Here are the alternative methodologies evaluated in the experiments:
 
@@ -242,7 +246,6 @@ The classifier is imperfect and misclassifies some data points incorrectly as cl
  \caption{(a) Data corruptions that are less random are easier to classify, and lead to more significant reductions in relative model error. (b) The Taylor series approximation gives more accurate estimates when the amount of cleaned data is small. \label{tradeoffs2}}
 \end{figure}
 
-\vspace{2.5em}
 \subsection{Estimation}\label{est}
 The next experiment compares estimation techniques: (1) ``linear regression" trains a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" which does not use the detection to inform how to apply the estimate, (3) ``average feature change" uses detection but no linearization, and (4) the Taylor series linear approximation.
 Figure \ref{tradeoffs2}b measures how accurately each estimation technique estimates the gradient as a function of the number of cleaned records on the EEG dataset.
@@ -304,3 +307,27 @@ For the fuzzy images, both Active Learning and \sys reach 2\% error after cleani
  \includegraphics[width=0.49\columnwidth]{exp/legend-general.png}\vspace{-0.5em}
  \caption{In a real adaptive detection scenario with the MNIST dataset, \sys outperforms Active Learning and SampleClean.  \label{mnist}}\vspace{-1em}
 \end{figure}
+
+\subsubsection{Adaptive: Regression}
+In the prior two experiments, we explored classification problems.
+In this experiment, we consider the case when the convex model represents a linear regression model.
+Regression models allow us to visualize what is happening when we apply \sys.
+In Figure \ref{wb}, we illustrate regression model training on a small dataset of 193 countries collected from the World Bank.
+Each country has an associated population and total dollar value of imports. 
+We are interested in examining the relationship between these variables.
+However, for some countries, the import values are out-of-date in the World Bank dataset. 
+Up-to-date values are usually avaiable on national statistics websites and can be determined with some web searching.
+It turns out that smaller countries were more likely to have out-of-date statistics in the World Bank dataset, and as a result, the trend line is misleading in the dirty data.
+We applied \sys after verifying 30 out of the 193 countries (marked in yellow), and found that we could achieve a highly accurate approximation of the full result.
+
+
+\begin{figure}[t]
+\centering
+ \includegraphics[width=0.49\columnwidth]{exp/worldbank1.png}
+ \includegraphics[width=0.49\columnwidth]{exp/worldbank2.png}
+ \caption{World Bank Data. We apply \sys to learn an accurate model predicting population from import values. The data has a systematic bias where small countries have out-of-date import values. \label{wb}}\vspace{-1em}
+\end{figure}
+
+\vspace{0.25em}
+
+\noindent \emph{Summary: \sys is accurate even in regression analytics. }

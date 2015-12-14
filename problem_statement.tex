@@ -1,28 +1,6 @@
 \section{Problem Formalization}\label{statements}
 \noindent This section formalizes the problems addressed in the paper.
 
-\subsection{Convex Models}
-This work focuses on a class of well analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
-Convex loss minimization problems are amenable to a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
-Examples include generalized linear models (including linear and logistic regression), support vector machines, and in fact, means and medians are also special cases. 
-
-We assume that the user provides a featurizer $F(\cdot)$ that maps every record to a feature vector $x$ and label $y$.
-For labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of \emph{model parameters} $\theta$ by minimizing a loss function $\phi$ over all training examples:
-\[
- \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
-\]
-Where $\phi$ is a convex function in $\theta$.
-For example, in a linear regression $\phi$ is:
-\[
-\phi(x_{i},y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
-\]
-Typically, a \emph{regularization} term $r(\theta)$ is added to this problem.
-$r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid overfitting to noise in the training examples.
-\[
- \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
-\]
-In this work, without loss of generality, we will include the regularization as part of the loss function i.e., $\phi(x_{i},y_{i},\theta)$ includes $r(\theta)$.
-
 \subsection{Notation and Setup}\label{notation}
 The user provides a relation $R$, a cleaner $C(\cdot)$, a featurizer $F(\cdot)$, and a convex loss problem defined by the loss $\phi(\cdot)$.
 A total of $k$ records will be cleaned in batches of size $b$, so there will be $\frac{k}{b}$ iterations. 
@@ -147,8 +125,6 @@ For example, in image processing, scale-invariant feature transforms (SIFT) are 
 \noindent\textbf{The \sys Contribution. } We try to bring two perspectives together in this work to address the problem of expensive to clean systematic errors, namely the Database idea of data cleaning and the Machine Learning formalization of empirical risk minimization.
 Some errors require expensive cleaning procedures, increasingly using the crowd, and we joint have a time budget on cleaning and analysis.
 \sys prioritizes cleaning with respect to an estimated impact on the clean model.
-
-
 
 \subsection{SampleClean Project}
 

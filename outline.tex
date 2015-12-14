@@ -28,7 +28,7 @@
 \usepackage{colortbl}
 
 \usepackage{bm}
-\usepackage{times}
+%\usepackage{times}
 %\usepackage[nospace]{cite}
 \usepackage{csquotes}
 \usepackage{enumitem}
@@ -118,32 +118,31 @@
 
 \title{ActiveClean: Progressive Data Cleaning For Convex Data Analytics}
 
-%\numberofauthors{1}
-%\author{\large Sanjay Krishnan, Jiannan Wang, Michael J. Franklin, Ken Goldberg, Tim Kraska{$\,^\dag$} \\
-%\vspace{.2em}\affaddr{\large UC Berkeley, ~~ $^\dag$Brown University} \\
-%\vspace{.1em}\affaddr{\large \{sanjaykrishnan, jnwang, franklin, goldberg\}@berkeley.edu}\\
-%\affaddr{\large tim\_kraska@brown.edu}
-%}
+\numberofauthors{1}
+\author{\large Sanjay Krishnan, Jiannan Wang, Eugene Wu{$\,^\dag$}, Michael J. Franklin, Ken Goldberg \\
+\vspace{.2em}\affaddr{\large UC Berkeley, ~~ $^\dag$Columbia University} \\
+\vspace{.1em}\affaddr{\large \{sanjaykrishnan, jnwang, franklin, goldberg\}@berkeley.edu}\\
+\affaddr{\large ewu@cs.columbia.edu}
+}
 
-%\fontsize{10pt}{11pt}
-%\selectfont
+\fontsize{9pt}{11pt}
+\selectfont
 
-\input{coverletter.tex}
 
 \maketitle
 
 \begin{abstract}
-Dirty data, including missing, incorrect, or inconsistent values, is an important challenge in data analytics.
-Predictive models, such as regression and classification, are increasingly popular and can be highly sensitive to dirty data.
-Although error can be mitigated through data cleaning, it is often very time consuming.
+Data cleaning is often applied before predictive modeling, such as regression and classification, to provide clean training data.
+The high dimensionality of predictive models can amplify small amounts of data error leading to error-prone predictions.
+Unfortunately, data cleaning can be a manual and time consuming process, and may be impractical for very large datasets.
 This paper explores techniques to train accurate models without having to clean the entire dataset.
-The challenge is that models trained on partially cleaned data can be arbitrarily incorrect requiring a new algorithm for incrementally updating results given newly cleaned data.
-The key insight of \sys is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
-This algorithm supports a popular class of models called convex loss models (e.g., linear regression and SVMs).
-We also propose a sampling algorithm that leverages the structure of downstream models to prioritize cleaning those records likely to affect the results.
+We propose \sys, a progressive cleaning approach where data is simultaneously cleaned as the model is trained.
+As more data is cleaned, the accuracy of the model gradually converges.
+The challenge is that models trained on partially cleaned data can be arbitrarily incorrect; requiring a new algorithm for incrementally updating results given newly cleaned data.
+\sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs) and record-by-record data cleaning operations.
+By coupling data cleaning and model training, \sys can leverage the structure of a user's model to prioritize cleaning those records likely to affect the results.
 Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when corruption is systematic and sparse. 
 %The key insight of \sys is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
-
 %In one set of experiments with 5\% simulated error, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{abstract}
 
@@ -181,9 +180,11 @@ We evaluate \sys on 4 real datasets and find that our methodology can return mor
 %\input{experiments.tex}
 %\input{conclusion.tex}\vspace{-1em}
 
+\textbf{\small This research is supported in part by NSF CISE Expeditions Award CCF-1139158, LBNL Award 7076018, and DARPA XData Award FA8750-12-2-0331, and gifts from Amazon Web Services, Google, SAP, The Thomas and Stacey Siebel Foundation, Adatao, Adobe, Apple, Inc., Blue Goji, Bosch, C3Energy, Cisco, Cray, Cloudera, EMC2, Ericsson, Facebook, Guavus, HP, Huawei, Informatica, Intel, Microsoft, NetApp, Pivotal, Samsung, Schlumberger, Splunk, Virdata and VMware.}
+
 %\bibliographystyle{abbrv}
 %\scriptsize
-\fontsize{8.4pt}{8.7pt} \selectfont
+\fontsize{7.5pt}{8.0pt} \selectfont
 \bibliographystyle{abbrv}
 \bibliography{ref} 
 \normalsize \selectfont

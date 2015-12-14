@@ -115,15 +115,16 @@ As mentioned above, the abstract is (to me) overly technical and did not make me
 
 \noindent We revised the abstract to better motivate our problem and solutions:
 
-\emph{Dirty data, including missing, incorrect, or inconsistent values, is an important challenge in data analytics.
-Predictive models, such as regression and classification, are increasingly popular and can be highly sensitive to dirty data.
-Although error can be mitigated through data cleaning, it is often very time consuming.
+\emph{Data cleaning is often applied before predictive modeling, such as regression and classification, to provide clean training data.
+The high dimensionality of predictive models can amplify small amounts of data error leading to error-prone predictions.
+Unfortunately, data cleaning can be a manual and time consuming process, and may be impractical for very large datasets.
 This paper explores techniques to train accurate models without having to clean the entire dataset.
-The challenge is that models trained on partially cleaned data can be arbitrarily incorrect requiring a new algorithm for incrementally updating results given newly cleaned data.
-We also design sampling algorithms that leverage the structure of downstream models to prioritize cleaning those records likely to affect the results.
-We focus on a popular class of models called convex loss models (e.g., linear regression and SVMs).
-The key insight of \sys is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
-Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when corruption is systematic and sparse.}
+We propose \sys, a progressive cleaning approach where data is simultaneously cleaned as the model is trained.
+As more data is cleaned, the accuracy of the model gradually converges.
+The challenge is that models trained on partially cleaned data can be arbitrarily incorrect; requiring a new algorithm for incrementally updating results given newly cleaned data.
+\sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs) and record-by-record data cleaning operations.
+By coupling data cleaning and model training, \sys can leverage the structure of a user's model to prioritize cleaning those records likely to affect the results.
+Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when corruption is systematic and sparse. }
 
 \vspace{0.5em}
 
