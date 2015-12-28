@@ -2,6 +2,7 @@
 This section formalizes the iterative data cleaning and training process and highlights several use-cases and examples.
 
 \subsection{Predictive Modeling}
+First, we setup the modeling task.
 The user provides a relation $R$ and wishes to train a model using the data in $R$.
 This work focuses on a class of well-analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
 Convex loss minimization problems are amenable to a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
@@ -96,7 +97,8 @@ Figure \ref{update-arch1}c illustrates that, even in two dimensions, models trai
 \textbf{Efficiency: } Conversely, hypothetically assume that the analyst has implemented a correct $Update(\cdot)$ primitive and implements $Identify(\cdot)$ with a technique such as Active Learning to select records to clean~\cite{yakout2013don,DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
 Active learning is a technique to carefully select the set of examples to learn the most accurate model.
 However, these selection criteria are designed for stationary data distributions, an assumption which is not true in this setting.
-As more data are cleaned, the data distribution can change leading to evolving criteria of which records are the most valuable to clean.
+As more data are cleaned, the data distribution changes.
+Data which may look unimportant in the dirty data might be very valuable to clean in reality, and thus any prioritization has to predict a record's value with respect to an anticipated clean model.
 
 \subsection{The Need For Automation}\label{alrw}
 \sys is a framework that implements the $Identify(\cdot)$ and $Update(\cdot)$ primitives for the analyst. 
