@@ -14,11 +14,12 @@ Detecting these hidden, yet possibly significant, errors often requires training
 When a subset of poorly modeled data is identified, the analyst must diagnose whether this is due to model error (i.e., the inherrent error in a statistical model) or data error (i.e., the acutal data are incorrect).
 Thus, the natural approach is to iterate in a time-consuming train, clean some data, and re-train loop until confidence in the model's accuracy.
 
-Without appropriate care, this iterative process can lead to some serious statistical issues.
-Due to the well-known Simpson's paradox, models trained on a mix of dirty and clean data can have very misleading results even in simple scenarios (Figure \ref{update-arch1}).
+This iterative process is the de facto standard, but without appropriate care, can lead to several serious statistical issues.
+For example, due to the well-known Simpson's paradox, models trained on a mix of dirty and clean data can have very misleading results even in simple scenarios (Figure \ref{update-arch1}).
 Furthermore, if the dirty data are not identified uniformly at random, the statistical independence assumptions required by most training methods are violated. 
 These two problems may introduce new forms of error, in addition to model error and data error, and make it difficult for analysts to arrive at conclusions about data or model quality.
 To this end, we designed \sys which trains predictive models while allowing for iterative data cleaning and has accuracy guarantees.
+\sys automates the dirty data identification process and the model update process, thereby abstracting these two error-prone steps away from the analyst.
 
 \sys is inspired by the recent success of progressive data cleaning where a user can gradually clean more data until the desired accuracy is reached~\cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
 We focus on a popular class of models called convex loss models (e.g., includes linear regression and SVMs) and show that the Simpson's paradox problem can be avoiding using iterative maintenance of a model rather than re-training.
