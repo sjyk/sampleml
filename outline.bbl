@@ -8,6 +8,11 @@ Berkeley data analytics stack.
 Dollars for docs.
 \newblock \url{http://projects.propublica.org/open-payments/}.
 
+\bibitem{nytimes}
+For big-data scientists, 'janitor work' is key hurdle to insights.
+\newblock
+  http://www.nytimes.com/2014/08/18/technology/for-big-data-scientists-hurdle-to-insights-is-janitor-work.html.
+
 \bibitem{dollarsfordocsa}
 A pharma payment a day keeps docs' finances okay.
 \newblock
@@ -45,11 +50,6 @@ L.~Bottou.
 A.~Crotty, A.~Galakatos, and T.~Kraska.
 \newblock Tupleware: Distributed machine learning on small clusters.
 \newblock {\em {IEEE} Data Eng. Bull.}, 37(3), 2014.
-
-\bibitem{dasu2003exploratory}
-T.~Dasu and T.~Johnson.
-\newblock {\em Exploratory data mining and data cleaning}.
-\newblock Wiley, 2003.
 
 \bibitem{dekel2012optimal}
 O.~Dekel, R.~Gilad{-}Bachrach, O.~Shamir, and L.~Xiao.
@@ -98,16 +98,20 @@ A.~Heise, G.~Kasneci, and F.~Naumann.
 \newblock Estimating the number and sizes of fuzzy-duplicate clusters.
 \newblock In {\em CIKM Conference}, 2014.
 
-\bibitem{hellerstein2012madlib}
-J.~M. Hellerstein, C.~R{\'{e}}, F.~Schoppmann, D.~Z. Wang, E.~Fratkin,
-  A.~Gorajek, K.~S. Ng, C.~Welton, X.~Feng, K.~Li, and A.~Kumar.
-\newblock The madlib analytics library or {MAD} skills, the {SQL}.
-\newblock {\em {PVLDB}}, 5(12), 2012.
+\bibitem{tensor}
+G.~Inc.
+\newblock Tensorflow.
+\newblock \url{https://www.tensorflow.org/}.
 
 \bibitem{DBLP:conf/pervasive/JefferyAFHW06}
 S.~R. Jeffery, G.~Alonso, M.~J. Franklin, W.~Hong, and J.~Widom.
 \newblock Declarative support for sensor data cleaning.
 \newblock In {\em Pervasive Computing}, 2006.
+
+\bibitem{kandel2012}
+S.~Kandel, A.~Paepcke, J.~M. Hellerstein, and J.~Heer.
+\newblock Enterprise data analysis and visualization: An interview study.
+\newblock {\em {IEEE} Trans. Vis. Comput. Graph.}, 18(12), 2012.
 
 \bibitem{DBLP:conf/recsys/KrishnanPFG14}
 S.~Krishnan, J.~Patel, M.~J. Franklin, and K.~Goldberg.
@@ -156,11 +160,6 @@ T.~Papenbrock, A.~Heise, and F.~Naumann.
 \newblock Progressive duplicate detection.
 \newblock {\em {IEEE} Trans. Knowl. Data Eng.}, 27(5), 2015.
 
-\bibitem{rahm2000data}
-E.~Rahm and H.~H. Do.
-\newblock Data cleaning: Problems and current approaches.
-\newblock {\em IEEE Data Eng. Bull.}, 23(4), 2000.
-
 \bibitem{settles2010active}
 B.~Settles.
 \newblock Active learning literature survey.
@@ -171,12 +170,6 @@ E.~H. Simpson.
 \newblock The interpretation of interaction in contingency tables.
 \newblock {\em Journal of the Royal Statistical Society. Series B
   (Methodological)}, 1951.
-
-\bibitem{taylor1982introduction}
-J.~R. Taylor.
-\newblock An introduction to error analysis: The study of uncertainties in
-  physical measurements, 327 pp.
-\newblock {\em Univ. Sci. Books, Mill Valley, Calif}, 1982.
 
 \bibitem{wang1999sample}
 J.~Wang, S.~Krishnan, M.~J. Franklin, K.~Goldberg, T.~Kraska, and T.~Milo.

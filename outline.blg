@@ -15,10 +15,6 @@ Repeated entry---line 2387 of file ref.bib
  : @article{DBLP:journals/pvldb/MozafariSFJM14
  :                                            ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 2436 of file ref.bib
- : @book{dasu2003exploratory
- :                          ,
-I'm skipping whatever remains of this entry
 A bad cross reference---entry "xiaofeature"
 refers to entry "DBLP:conf/icml/2015", which doesn't exist
 A bad cross reference---entry "DBLP:conf/recsys/KrishnanPFG14"
@@ -55,48 +51,49 @@ Warning--I didn't find a database entry for "DBLP:conf/recsys/2014"
 Warning--I didn't find a database entry for "DBLP:conf/sigmod/2013"
 Warning--I didn't find a database entry for "DBLP:conf/cikm/2014"
 Warning--to sort, need author or key in bdas
+Warning--to sort, need author or key in nytimes
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in dollarsfordocsa
 Warning--empty publisher in bottou2012stochastic
-You've used 40 entries,
+You've used 39 entries,
             2118 wiz_defined-function locations,
-            701 strings with 10955 characters,
-and the built_in function-call counts, 12530 in all, are:
-= -- 1071
-> -- 878
+            695 strings with 10708 characters,
+and the built_in function-call counts, 11968 in all, are:
+= -- 1025
+> -- 818
 < -- 1
-+ -- 357
-- -- 308
-* -- 882
-:= -- 2224
-add.period$ -- 118
-call.type$ -- 40
-change.case$ -- 272
++ -- 332
+- -- 286
+* -- 828
+:= -- 2104
+add.period$ -- 114
+call.type$ -- 39
+change.case$ -- 259
 chr.to.int$ -- 0
 cite$ -- 44
-duplicate$ -- 454
-empty$ -- 895
-format.name$ -- 308
-if$ -- 2505
+duplicate$ -- 436
+empty$ -- 883
+format.name$ -- 286
+if$ -- 2411
 int.to.chr$ -- 0
-int.to.str$ -- 40
-missing$ -- 38
-newline$ -- 200
-num.names$ -- 74
-pop$ -- 327
+int.to.str$ -- 39
+missing$ -- 34
+newline$ -- 194
+num.names$ -- 70
+pop$ -- 320
 preamble$ -- 1
-purify$ -- 234
+purify$ -- 221
 quote$ -- 0
-skip$ -- 301
+skip$ -- 294
 stack$ -- 0
-substring$ -- 215
-swap$ -- 55
+substring$ -- 208
+swap$ -- 54
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 156
-warning$ -- 4
-while$ -- 75
-width$ -- 42
-write$ -- 410
-(There were 16 error messages)
+type$ -- 154
+warning$ -- 5
+while$ -- 71
+width$ -- 41
+write$ -- 395
+(There were 15 error messages)

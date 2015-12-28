@@ -1,47 +1,33 @@
 \section{Introduction}
-Data are susceptible to various forms of corruption such as missing, incorrect, or inconsistent values.
-Predictive modeling, such as regression and classification, is an increasingly popular form of analytics \cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, hellerstein2012madlib}.
-These models rely on learning relationships between features and labels, and systematic corruption \cite{taylor1982introduction} can affect these relationships.
-The high dimensionality of these models can amplify small problems resulting in error-prone predictions even when trained on mostly correct data \cite{xiaofeature}.
-Consequently, some form of data cleaning or pre-processing is usually applied before predictive modeling to provide clean training data.
+As Machine Learning becomes an increasingly popular form of data analytics, there are a growing number of distributed frameworks that train predictive models at scale~\cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, tensor}.
+In spite of the significant reductions in training latency, predictive modeling on large and growing datasets can be a tedious and time-consuming task.  
+Model training almost always follows a sequence of pre-processing steps to structure, clean, and featurize the data, and analysts widely report that that these pre-processing steps account for up to 80\% of their effort~\cite{nytimes, kandel2012}.
+In comparison to traditional SQL analytics, this new problem setting exacerbates data cleaning challenges since: (1) high dimensionality can amplify even a small amount of erroneous records~\cite{xiaofeature}, (2) the complexity can make it difficult to trace the consequnces of an error, and (3) there are often subtle technical correctness conditions (e.g., independent and identically distributed) that can be violated by data cleaning.
+Consequently, we study the relationship between data cleaning and model training workflows and explore whether existing tools are reliable in this setting.
 
-In some cases, it may be obvious that a record is corrupted (e.g., missing values), and without appropriate error-handling any analysis would fail.
-However, there are a number of interesting cases where data are subtly corrupted and at first glance may look like consistent database records~\cite{rahm2000data}.
+The challenge is that detecting dirty data might happen at different points in the workflow.
+Sometimes the analyst is lucky and a record is corrupted in a way that causes the training to fail (e.g, a NULL value), and thus alerts her to an issue before training.
+However, in many cases, records are subtly corrupted such that analysis succeeds yet induces significant in accuracy in the model.
 For example, battery-powered sensors can transmit unreliable measurements when battery levels are low \cite{DBLP:conf/pervasive/JefferyAFHW06}. 
 Similarly, data entered by humans can be susceptible to a variety of inconsistencies (e.g., typos), and unintentional cognitive biases~\cite{DBLP:conf/recsys/KrishnanPFG14}.
-Such errors are particularly problematic since the analysts code may run perfectly, but produces an inaccurate model that mis-predicts some subpopulations of data.
-Furthermore, the consequences of an inaccurate model may be only be apparent when the model is deployed and queried in the future. 
+Detecting these hidden, yet possibly significant, errors often requires training the model with the errors and evaluating its prediction accuracy on different subsets of data. 
+When a subset of poorly modeled data is identified, the analyst must diagnose whether this is due to model error (i.e., the inherrent error in a statistical model) or data error (i.e., the acutal data are incorrect).
+Thus, the natural approach is to iterate in a time-consuming train, clean some data, and re-train loop until confidence in the model's accuracy.
 
-Detecting these hidden, yet possibly significant, errors is an inherently iterative process~\cite{dasu2003exploratory} that often requires training the complete model and identifying data that are not predicted well.
-Once some dirty data are identified, the analyst must decide how to handle the corruption (e.g., repair or remove). 
-The analyst iterates in a time-consuming train, clean, and re-train loop until she is sufficiently confident in the model's accuracy.
-As datasets grow and models become more complex, it is impractical to expect analysts to verify every record in a large dataset or enumerate every possible type of error.
-Then, the fundemental question is whether it is possible to train an accurate model while only cleaning $k \ll N$ records in a dataset. 
-This paper presents a framework called \sys to support this iterative cleaning and training process by providing efficient prioritization of records to check and reliable estimates of the accuracy of intermediate results.
+Without appropriate care, this iterative process can lead to some serious statistical issues.
+Due to the well-known Simpson's paradox, models trained on a mix of dirty and clean data can have very misleading results even in simple scenarios (Figure \ref{update-arch1}).
+Furthermore, if the dirty data are not identified uniformly at random, the statistical independence assumptions required by most training methods are violated. 
+These two problems may introduce new forms of error, in addition to model error and data error, and make it difficult for analysts to arrive at conclusions about data or model quality.
+To this end, we designed \sys which trains predictive models while allowing for iterative data cleaning and has accuracy guarantees.
 
 \sys is inspired by the recent success of progressive data cleaning where a user can gradually clean more data until the desired accuracy is reached~\cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental, mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
-Similarly, we explore the problem of progressive cleaning with model training, where as more data are cleaned, the effects of systematic error in a model are gradually reduced.
-Designing such a framework is challenging since the straight-forward integration of data cleaning and model training can result in highly inaccurate models.
-For example, one could repair the first $k$ dirty records in place, and re-train the user's model after each repair.
-While intuitive, we show that mixing dirty and clean training data can lead to misleading results even in simple scenarios (Figure \ref{update-arch1}).
-An alternative is to restrict training to just the $k$ clean records (e.g., sampling \cite{wang1999sample}).
-While this approach avoids the mixing problem, accurate model training may require a large amount of training data and $k$ examples may not be enough for a viable model.
-Furthermore, if the $k$ records are not selected uniformly at random, the trained model might be highly biased.
-The errors and inefficiencies introduced by these three problems may dominate any gains from data cleaning, leading to unreliable or misleading conclusions about data or model quality.
+We focus on a popular class of models called convex loss models (e.g., includes linear regression and SVMs) and show that the Simpson's paradox problem can be avoiding using iterative maintenance of a model rather than re-training.
+This process leverages the convex structure of the model rather than treating it like a black-box, and we apply convergence arguments from standard convex optimization theory.
+We propose several novel optimizations that leverage information from the model to guide data cleaning towards the records most likely to be dirty and most likely to affect the results.
 
-\begin{figure}[t]
-\centering
- \includegraphics[width=\columnwidth]{figs/arch.png}
- \caption{\sysfull allows users to train predictive models while progressively cleaning data. The framework adaptively selects the best data to clean and can optionally (denoted with dotted lines) integrate with pre-defined detection rules and estimation algorithms for improved conference. \label{sys-arch}}\vspace{-2em}
-\end{figure}
+%Consequently, while there is extensive work on progressive data cleaning before analysis, due to the aforementioned problems, existing tools are not suited for application inside the cleaning and training loop.  
 
-Consequently, while there is extensive work on progressive data cleaning before analysis, due to the aforementioned problems, existing tools are not suited for application inside the cleaning and training loop.  
-To this end, we designed \sys which trains predictive models with progressive data cleaning and has accuracy guarantees.
-We focus on a popular class of models called convex loss models (e.g., includes linear regression and SVMs).
-We show that instead of re-training the model, the model can be initialized by training on the dirty data and then iteratively corrected as more data are cleaned.
-The iterative corrections, which use gradient descent, provide guarantees that allow analysts to trust early results and make predictions using the model.
-Intuitively, this process leverages the convex structure of the model rather than treating it like a black-box, and we can apply convergence arguments from standard convex optimization theory.
-We also propose several novel optimizations that leverage information from the model to guide data cleaning towards the records most likely to be dirty and most likely to affect the results.
+
 
 %High-dimensional predictive models are highly sensitive to dirty data.
 %They rely on learning relationships between features and labels, and systematic data corruption \cite{taylor1982introduction} can mask or even introduce spurious new relationships.
@@ -63,11 +49,6 @@ We also propose several novel optimizations that leverage information from the m
 %Straight-forward applications of progressive data cleaning before model training can lead to .
 
 %Suppose $k$ records are cleaned, but all of the remaining dirty records are retained in the dataset.
-
-The \sys architecture (Figure \ref{sys-arch}) consists of a \emph{detector}, \emph{sampler}, \emph{cleaner}, \emph{updater}, and \emph{estimator}.
-The cleaner is a user-provided data cleaning technique, and \sys provides the remaining components to apply the cleaner progressively using the \emph{sampler} and the \emph{updater}.
-\sys supports cleaners that can be represented as record-by-record mappings, which does not include errors that simultaneously affect multiple records such as duplication or schema transformation problems.
-The \emph{detector} and the \emph{estimator} are optional components that leverage knowledge about the data corruption to improve the convergence rate of \sys.
 
 \noindent To summarize the contributions:
 \begin{itemize}[noitemsep]

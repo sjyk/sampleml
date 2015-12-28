@@ -116,7 +116,8 @@
 %\newcommand{\reminder}[1] {}
 \pagestyle{plain}
 
-\title{ActiveClean: Progressive Data Cleaning For Convex Data Analytics}
+%\title{ActiveClean: Progressive Data Cleaning For Convex Data Analytics}
+\title{ActiveClean: Reliable Model Training With Data Cleaning}
 
 \numberofauthors{1}
 \author{\large Sanjay Krishnan, Jiannan Wang, Eugene Wu{$\,^\dag$}, Michael J. Franklin, Ken Goldberg \\
@@ -132,15 +133,13 @@
 \maketitle
 
 \begin{abstract}
-Data cleaning is often applied before predictive modeling, such as regression and classification, to provide clean training data.
-The high dimensionality of predictive models can amplify small amounts of data error leading to error-prone predictions.
-Unfortunately, data cleaning can be a manual and time consuming process, and may be impractical for very large datasets.
-This paper explores techniques to train accurate models without having to clean the entire dataset.
-We propose \sys, a progressive cleaning approach where data is simultaneously cleaned as the model is trained.
-As more data is cleaned, the accuracy of the model gradually converges.
-The challenge is that models trained on partially cleaned data can be arbitrarily incorrect; requiring a new algorithm for incrementally updating results given newly cleaned data.
-\sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs) and record-by-record data cleaning operations.
-By coupling data cleaning and model training, \sys can leverage the structure of a user's model to prioritize cleaning those records likely to affect the results.
+Data cleaning is often an important step to ensure that predictive models, such as regression and classification, are not affected by errors such as inconsistent, out-of-date, or outlier data.
+%The high dimensionality of predictive models can amplify small amounts of data error leading to error-prone predictions.
+Identifying dirty data is often a manual and iterative process, and can be challenging on large datasets.
+For large datasets, the natural aproach, where the analyst partially cleans a dataset and retrains for evaluation, can be arbitrarily incorrect due to Simpson's paradox.
+We propose \sys, a progressive cleaning approach where the model is updated incrementally instead of re-training and can guarantee accuracy on partially cleaned data.
+\sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs) and record-by-record user-defined data cleaning operations.
+\sys also leverages the structure of a user's model to prioritize cleaning those records likely to affect the results.
 Evaluation on four real-world datasets suggests that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when corruption is systematic and sparse. 
 %The key insight of \sys is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
 %In one set of experiments with 5\% simulated error, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
