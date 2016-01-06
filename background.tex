@@ -1,8 +1,7 @@
 \section{Background and Problem Setup}\label{background}
-This section formalizes the iterative data cleaning and training process and highlights several use-cases and examples.
+This section formalizes the iterative data cleaning and training process and highlights an example application.
 
 \subsection{Predictive Modeling}
-First, we setup the modeling task.
 The user provides a relation $R$ and wishes to train a model using the data in $R$.
 This work focuses on a class of well-analyzed predictive analytics problems; ones that can be expressed as the minimization of convex loss functions.
 Convex loss minimization problems are amenable to a variety of incremental optimization methodologies with provable guarantees (see Friedman, Hastie, and Tibshirani \cite{friedman2001elements} for an introduction).
@@ -26,21 +25,19 @@ $r(\theta)$ penalizes high or low values of feature weights in $\theta$ to avoid
 \end{equation}
 In this work, without loss of generality, we will include the regularization as part of the loss function i.e., $\phi(x_{i},y_{i},\theta)$ includes $r(\theta)$.
 
-\subsection{Training-Cleaning Iteration}
-We consider corruption that affects the attribute values of records and does not cover errors that simultaneously affect multiple records such as record duplication or structure such as schema transformation.
+\subsection{Data Cleaning}
+We consider corruption that affects the attribute values of records. This does \emph{not} cover errors that simultaneously affect multiple records such as record duplication or structure such as schema transformation.
 Examples of supported cleaning operations include, batch resolving common inconsistencies (e.g., merging ``U.S.A" and ``United States"), filtering outliers (e.g., removing records with values $>1e6$), and standardizing attribute semantics (e.g., ``1.2 miles" and ``1.93 km").
-If there were no data error, $\theta^{*}$ (in Equation \ref{ideal}) would be the optimal model.
-The challenge is that if some subset of the rows in $R$ are incorrect or inconsistent, the optimal model will reflect the dirty data (denoted as $\theta^{d}$).
-If we were hypothetically able to clean the rows of $R$ before training resulting in $R_{clean}$ and then trained the model, this would result in a model $\theta^{*} \ne \theta^{d}$.
 
 We are particularly interested in those errors that are difficult or time-consuming to clean, and require a human to examine an erroneous record, and determine the appropriate action--possibly leveraging knowledge of the current best model.
-We treat the supervisor as an oracle (implemented via human or algorithm) that given a dirty record will return a unique clean record.
+%We treat the supervisor as an oracle (implemented via human or algorithm) that given a dirty record will return a unique clean record.
 We represent this operation as $Clean(\cdot)$ which can be applied to a record $r$ (or a set of records) to recover the clean record $r' = Clean(r)$.
-Formally, we treat the $Clean(\cdot)$ as an expensive user-defined function composed of deterministic \textsf{map} and \textsf{filter} operations applied to a subset of rows in the relation.
+Formally, we treat the $Clean(\cdot)$ as an expensive user-defined function composed of deterministic schema-preserving \textsf{map} and \textsf{filter} operations applied to a subset of rows in the relation.
 A relation is defined as \emph{clean} if $R_{clean} = Clean(R_{clean})$.
 Therefore, for every $r \in R_{clean}$ there exists a unique $r' \in R$ in the dirty data.
 The \textsf{map} and \textsf{filter} cleaning model is not a fundamental restriction of \sys, and Appendix~\ref{set-of-r} discusses a compatible ``set of records" cleaning model.
 
+\subsection{Iteration}
 As an example of how $Clean(\cdot)$ fits into an iterative analysis process, consider an analyst training a regression and identifying outliers. 
 When she examines one of the outliers, she realizes that the base data (prior to featurization) has a formatting inconsistency that leads to incorrect parsing of the numerical values.
 She applies a batch fix (i.e., $Clean(\cdot)$) to all of the outliers with the same error, and re-trains the model. 
@@ -59,7 +56,7 @@ This iterative process can be described as the following pseudocode loop:
 
 \vspace{0.5em}
 
-Apart from $Train(\cdot)$ and $Clean(\cdot)$, which we have already discussed, the analyst also has to define the primitives $Identify(\cdot)$ and $Update(\cdot)$.
+While we have already discussed $Train(\cdot)$ and $Clean(\cdot)$, the analyst still has to define the primitives $Identify(\cdot)$ and $Update(\cdot)$.
 For $Identify(\cdot)$, given a the current best model, the analyst must specify some criteria to select a set of records to examine.
 And in $Update(\cdot)$, the analyst must decide how to update the model given newly cleaned data.
 It turns out that these primitives are not trivial to implement since the straight-forward solutions can actually lead to divergence of the trained models.
@@ -102,8 +99,8 @@ Data which may look unimportant in the dirty data might be very valuable to clea
 
 \subsection{The Need For Automation}\label{alrw}
 \sys is a framework that implements the $Identify(\cdot)$ and $Update(\cdot)$ primitives for the analyst. 
-By automating the iterative process, \sys ensures reliable semantics on trained models.
-The analyst initializes \sys with a dirty model.
+By automating the iterative process, \sys ensures reliable models with convergence guarantees.
+The analyst first initializes \sys with a dirty model.
 \sys carefuly selects small batches of data to clean based on data that are likely to be dirty and likely to affect the model.
 The analyst applies data cleaning to these batches, and \sys updates the model with an incremental optimization technique.
 
