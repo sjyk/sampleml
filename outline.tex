@@ -28,7 +28,7 @@
 \usepackage{colortbl}
 
 \usepackage{bm}
-%\usepackage{times}
+\usepackage{charter}
 %\usepackage[nospace]{cite}
 \usepackage{csquotes}
 \usepackage{enumitem}
@@ -126,8 +126,8 @@
 \affaddr{\large ewu@cs.columbia.edu}
 }
 
-\fontsize{9pt}{11pt}
-\selectfont
+%\fontsize{9pt}{11pt}
+%\selectfont
 
 
 \maketitle
@@ -136,7 +136,7 @@
 Data cleaning is often an important step to ensure that predictive models, such as regression and classification, are not affected by errors such as inconsistent, out-of-date, or outlier data.
 %The high dimensionality of predictive models can amplify small amounts of data error leading to error-prone predictions.
 Identifying dirty data is often a manual and iterative process, and can be challenging on large datasets.
-For large datasets, the natural aproach, where the analyst partially cleans a dataset and retrains for evaluation, can be arbitrarily incorrect due to Simpson's paradox.
+However, many data cleaning workflows can introduce subtle biases into the training processes due to violation of independence assumptions.
 We propose \sys, a progressive cleaning approach where the model is updated incrementally instead of re-training and can guarantee accuracy on partially cleaned data.
 \sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs) and record-by-record user-defined data cleaning operations.
 \sys also leverages the structure of a user's model to prioritize cleaning those records likely to affect the results.
