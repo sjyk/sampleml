@@ -1,5 +1,5 @@
 \section{Introduction}
-Building distributed frameworks to facilitate Machine Learning on large and growing datasets has is a key data management challenge with significant interest in both industry and academia~\cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, tensor}.
+Building distributed frameworks to facilitate Machine Learning on large and growing datasets is a key data management challenge with significant interest in both industry and academia~\cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, tensor}.
 Despite a number of breakthroughs in reducing training time, predictive modeling can still be a tedious and time-consuming task for an analyst. 
 Data often arrive \emph{dirty}, including missing, incorrect, or inconsistent attributes, and analysts widely report that data cleaning and other forms of pre-processing account for up to 80\% of their effort~\cite{nytimes, kandel2012}.
 While data cleaning is an extensively studied problem, the predictive modeling setting poses a number of new challenges: (1) high dimensionality can amplify even a small amount of erroneous records~\cite{xiaofeature}, (2) the complexity can make it difficult to trace the consequnces of an error, and (3) there are often subtle technical correctness conditions (e.g., independent and identically distributed) that can be violated by data cleaning.
@@ -12,14 +12,11 @@ In this paper, we study the relationship between data cleaning and model trainin
  \caption{Model training on dirty data is often an iterative process with four key steps: training, identification, cleaning, and re-training. \label{teaser}}\vspace{-1.5em}
 \end{figure}
 
-However, identifying dirty data can be challenging.
-In some lucky cases, a record's corruption causes the training to fail (e.g, a NULL value), and thus alerts the analyst to an issue before training.
-Unfortunately, there are many types of corruption where the training succeeds yet induces significant inaccuracy in the model.
+One of the main bottlenecks in data cleaning is the human effort in determining which data are dirty and then developing rules or software to correct the problems.
+For some types of dirty data, such as inconsistent values, model training may seemingly succeed albeit, with potential subtle inaccuracies in the model.
 For example, battery-powered sensors can transmit unreliable measurements when battery levels are low \cite{DBLP:conf/pervasive/JefferyAFHW06}. 
 Similarly, data entered by humans can be susceptible to a variety of inconsistencies (e.g., typos), and unintentional cognitive biases~\cite{DBLP:conf/recsys/KrishnanPFG14}.
-Detecting such errors often requires training the model and evaluating its prediction accuracy on different subsets of data. 
-When a subset of poorly modeled data is identified, the analyst must diagnose whether this is due to model error (i.e., the inherrent error in a statistical model) or data error (i.e., the acutal data are incorrect).
-Thus, the process is iterative in a time-consuming train, clean some data, and re-train loop until the analyst is convinced in the model's accuracy (Figure \ref{teaser}).
+Such problems are often addressed in time-consuming loop where the analys trains a model, inspects the model and its predictions, clean some data, and re-train (Figure \ref{teaser}).
 
 This iterative process is the de facto standard, but without appropriate care, can lead to several serious statistical issues.
 Due to the well-known Simpson's paradox, models trained on a mix of dirty and clean data can have very misleading results even in simple scenarios (Figure \ref{update-arch1}).
