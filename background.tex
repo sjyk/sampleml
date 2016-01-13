@@ -27,11 +27,16 @@ In this work, without loss of generality, we will include the regularization as 
 
 \subsection{Data Cleaning}
 We consider corruption that affects the attribute values of records. This does \emph{not} cover errors that simultaneously affect multiple records such as record duplication or structure such as schema transformation.
-Examples of supported cleaning operations include, batch resolving common inconsistencies (e.g., merging ``U.S.A" and ``United States"), filtering outliers (e.g., removing records with values $>1e6$), and standardizing attribute semantics (e.g., ``1.2 miles" and ``1.93 km").
+Examples of supported cleaning operations include: 
+batch resolving common inconsistencies (e.g., merging ``U.S.A" and ``United States");
+filtering outliers (e.g., removing records with values $>1e6$);
+standardizing attribute semantics (e.g., ``1.2 miles" and ``1.93 km");
+and simply fixing incorrect values (e.g., fixing the type "Jigga" to "Jiggle").
 
 We are particularly interested in those errors that are difficult or time-consuming to clean, and require a human to examine an erroneous record, and determine the appropriate action--possibly leveraging knowledge of the current best model.
 %We treat the supervisor as an oracle (implemented via human or algorithm) that given a dirty record will return a unique clean record.
 We represent this operation as $Clean(\cdot)$ which can be applied to a record $r$ (or a set of records) to recover the clean record $r' = Clean(r)$.
+This general approach allows $Clean(\cdot)$ to be implemented as an application-defined function that may e.g., call a web API, use a machine learning model, run a pre-defined set of cleaning rules, or even ask a human to supply an answer.
 Formally, we treat the $Clean(\cdot)$ as an expensive user-defined function composed of deterministic schema-preserving \textsf{map} and \textsf{filter} operations applied to a subset of rows in the relation.
 A relation is defined as \emph{clean} if $R_{clean} = Clean(R_{clean})$.
 Therefore, for every $r \in R_{clean}$ there exists a unique $r' \in R$ in the dirty data.

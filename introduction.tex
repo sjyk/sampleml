@@ -16,7 +16,11 @@ One of the main bottlenecks in data cleaning is the human effort in determining 
 For some types of dirty data, such as inconsistent values, model training may seemingly succeed albeit, with potential subtle inaccuracies in the model.
 For example, battery-powered sensors can transmit unreliable measurements when battery levels are low \cite{DBLP:conf/pervasive/JefferyAFHW06}. 
 Similarly, data entered by humans can be susceptible to a variety of inconsistencies (e.g., typos), and unintentional cognitive biases~\cite{DBLP:conf/recsys/KrishnanPFG14}.
-Such problems are often addressed in time-consuming loop where the analys trains a model, inspects the model and its predictions, clean some data, and re-train (Figure \ref{teaser}).
+Such problems are often addressed in time-consuming loop (Figure~\ref{teaser}) 
+where the analysis trains a model, 
+inspects the model and its predictions to identify potentially erroneous data, 
+cleans erroneous data by transforming (black point) or removing (light grey point) data values, 
+and re-trains the model on the cleaned data (blue line).
 
 This iterative process is the de facto standard, but without appropriate care, can lead to several serious statistical issues.
 Due to the well-known Simpson's paradox, models trained on a mix of dirty and clean data can have very misleading results even in simple scenarios (Figure \ref{update-arch1}).
