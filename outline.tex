@@ -28,14 +28,14 @@
 \usepackage{colortbl}
 
 \usepackage{bm}
-\usepackage{charter}
+\usepackage{times}
 %\usepackage[nospace]{cite}
 \usepackage{csquotes}
 \usepackage{enumitem}
 
 \lstset{basicstyle=\large,breaklines=true,language=SQL,belowcaptionskip=.1\baselineskip}
 
-%\linespread{0.975}
+%\linespread{0.99}
 
 \makeatletter
 \def\@copyrightspace{\relax}
@@ -133,10 +133,10 @@
 \maketitle
 
 \begin{abstract}
-Data cleaning is often an important step to ensure that predictive models, such as regression and classification, are not affected by systematic errors such as inconsistent, out-of-date, or outlier data.
+Data cleaning is often an important step to ensure that statistical models, such as regression and classification, are not affected by errors such as inconsistent, out-of-date, or outlier data.
 %The high dimensionality of predictive models can amplify small amounts of data error leading to error-prone predictions.
 Identifying dirty data is often a manual and iterative process, and can be challenging on large datasets.
-However, many data cleaning workflows can introduce subtle biases into the training processes due to violation of independence assumptions.
+However, many data cleaning workflows can introduce subtle biases into the training process.
 We propose \sys, a progressive cleaning approach where the model is updated incrementally instead of re-training and can guarantee accuracy on partially cleaned data.
 \sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs).
 \sys also leverages the structure of a user's model to prioritize cleaning those records likely to affect the results.
@@ -163,7 +163,7 @@ We evaluate \sys on 4 real datasets and find that our methodology can return mor
 \input{introduction.tex}
 \input{background.tex}
 \input{problem_statement.tex}
-\input{architecture.tex}
+%\input{architecture.tex}
 \input{naive.tex}
 \input{sampling.tex}
 \input{optimal.tex}
@@ -174,7 +174,7 @@ We evaluate \sys on 4 real datasets and find that our methodology can return mor
 %\input{optimizer.tex}
 \input{experiments.tex}
 \input{relatedwork.tex}
-\input{discussion.tex}
+%\input{discussion.tex}
 \input{conclusion.tex}
 %\input{outlier.tex}
 %\input{analysis.tex}
@@ -189,7 +189,7 @@ We evaluate \sys on 4 real datasets and find that our methodology can return mor
 \bibliographystyle{abbrv}
 \bibliography{ref} 
 \normalsize \selectfont
-\appendix
-\input{appendix.tex}
+%\appendix
+%\input{appendix.tex}
 
 \end{document}

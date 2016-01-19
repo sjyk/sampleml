@@ -1,9 +1,16 @@
 \section{Problem Formalization}\label{statements}
-\noindent This section formalizes the problems addressed in the paper.
+\noindent \sys is an architecture that addresses the correctness and efficiency problems.
 
 \subsection{Notation and Setup}\label{notation}
 The user provides a relation $R$, a cleaner $C(\cdot)$, a featurizer $F(\cdot)$, and a convex loss problem defined by the loss $\phi(\cdot)$.
 A total of $k$ records will be cleaned in batches of size $b$, so there will be $\frac{k}{b}$ iterations. 
+
+The choice of $b$ does affect the convergence rate.
+Section~\ref{model-update} discusses the efficiency and convergence trade-offs of different values of $b$.
+We empirically find that a batch size of $50$ performs well across different datasets and use that as a default.
+A cleaning budget $k$ can be used as a stopping criterion once $C(\dot)$ has been called $k$ times, and so the number of iterations of \sys is $T = \frac{k}{b}$.
+Alternatively, the user can clean data until the model is of sufficient accuracy to make a decision.
+
 We use the following notation to represent relevant intermediate states:
 \begin{itemize}[noitemsep]
 \item \textbf{Dirty Model: } $\theta^{(d)}$ is the model trained on $R$ (without cleaning) with the featurizer $F(\cdot)$ and loss $\phi(\cdot)$. This serves as an initialization to \sys.
@@ -22,7 +29,7 @@ There are two metrics that we will use to measure the performance of \sys:
 
 \vspace{0.25em}
 
-\noindent\textbf{Testing Error. } Let $T(\theta^{(t)})$ be the out-of-sample testing error when the current best model is applied to the clean data, and $T(\theta^{(c)})$ be the test error when the clean model is applied to the clean data. The testing error is defined as $T(\theta^{(t)}) - T(\theta^{(c)})$
+\noindent\textbf{Testing Error. } Let $err(\theta^{(t)})$ be the out-of-sample testing error when the current best model is applied to the clean data, and $err(\theta^{(c)})$ be the test error when the clean model is applied to the clean data. The testing error is defined as $err(\theta^{(t)}) - err(\theta^{(c)})$
 
 \subsection{Problem 1. Correct Update Problem}\label{updp}
 Given newly cleaned data $S_{clean}$ and the current best model $\theta^{(t)}$, the model update problem is to calculate $\theta^{(t+1)}$. 
@@ -50,7 +57,17 @@ We derive the optimal sampling distribution for the SGD updates, and show how th
 
 \vspace{0.5em}
 
-\emph{The Efficiency Problem is to select a sampling distribution $p(\cdot)$ over all records such that the expected error w.r.t to the model if trained on fully clean data is minimized.}
+\emph{The Efficiency Problem is to select a sampling distribution $p(\cdot)$ over all records such that the expected error w.r.t the model if trained on fully clean data is minimized.}
+
+\subsection{Example}
+The following example illustrates how a user would apply \sys to address the use case in Section~\ref{s:usecase}:
+\begin{example}\label{archex}
+The analyst chooses to use an SVM model, and manually cleans records by hand (the $C(\cdot)$).  
+\sys initially selects a sample of $50$ records (the default)  to show the analyst.
+She identifies a subset of 15 records that are dirty, fixes them by normalizing the drug and corporation names with the help of a search engine, and corrects the labels with typographical or incorrect values.
+The system then uses the cleaned records to update the the current best model and select the next sample of $50$.
+The analyst can stop at any time and use the improved model to predict donation likelihoods.
+\end{example}
 
 \iffalse
 \subsection{\sys Problem}
