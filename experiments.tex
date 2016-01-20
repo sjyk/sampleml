@@ -5,11 +5,7 @@ Next, the experiments explore different prioritization and model update schemes 
 Finally, \sys is evaluated end-to-end in a number of real-world data cleaning scenarios.
 
 \subsection{Experimental Setup and Notation}
-The main metric for evaluation is a relative measure of the trained model and the model if all of the data is cleaned.
-
-\vspace{0.5em}
-
-\noindent\textbf{Relative Model Error. } Let $\theta$ be the model trained on the dirty data, and let $\theta^*$ be the model trained on the same data if it was cleaned. Then the model error is defined as $\frac{\|\theta - \theta^*\|}{\|\theta^*\|}$.
+We evaluate \sys on real and synthetic datasets for both test and training error.
 
 \subsubsection{Scenarios}
 %\vspace{0.5em}
@@ -38,7 +34,7 @@ The dataset is featurized with bag-of-words featurization model for the textual 
 
 \vspace{0.25em}
 
-\noindent\textbf{Robust Logistic Regression \cite{feng2014robust}. } Feng et al. proposed a variant of logistic regression that is robust to outliers. We chose this algorithm because it is a robust extension of the convex regularized loss model, leading to a better apples-to-apples comparison between the techniques. (See details in Appendix \ref{rlogit})  
+\noindent\textbf{Robust Logistic Regression \cite{feng2014robust}. } Machine Learning has broadly studied a number of \emph{robust} methods to deal with some types of outliers. In particular, this field studies random high-magnitude outliers and techniques to make statistical model training agnostic to their presence. Feng et al. proposed a variant of logistic regression that is robust to outliers. We chose this algorithm because it is a robust extension of the convex regularized loss model, leading to a better apples-to-apples comparison between the techniques. (See details in \cite{activecleanarxiv})  
 
 \vspace{0.25em}
 
@@ -91,12 +87,12 @@ In the remaining experiments, unless otherwise noted, the experiments use system
 
 \noindent \emph{Summary: A 5\% systematic corruption can introduce a 10\% reduction in test accuracy even when using a robust method.}
 
-\subsection{\sys: \protect\textit{\large A Priori} Detection}
-The next set of experiments evaluate different approaches to cleaning a sample of data compared to \sys using \emph{a priori} detection.
+\subsection{\protect\textit{\large A Priori} Detection Scenarios}
+This set of experiments evaluate different approaches to cleaning a sample of data compared to \sys using \emph{a priori} detection.
 \emph{A priori} detection assumes that all of the corrupted records are known in advance but their clean values are unknown. 
 
 \subsubsection{Active Learning and SampleClean}
-The next experiment evaluates the samples-to-error tradeoff between four alternative algorithms: \sys (AC), SampleClean, Active Learning, and \sys+Oracle (AC+O).
+This experiment evaluates the samples-to-error tradeoff between four alternative algorithms: \sys (AC), SampleClean, Active Learning, and \sys+Oracle (AC+O).
 Figure \ref{prio-perf} shows the model error and test accuracy as a function of the number of cleaned records.
 In terms of model error, \sys gives its largest benefits for small sample sizes.
 For 500 cleaned records of the Adult dataset, \sys has 6.1x less error than SampleClean and 2.1x less error than Active Learning.
@@ -124,11 +120,11 @@ For example, to achieve a test error of 1\% on the Adult dataset, \sys cleans 50
 \end{figure}
 
 \subsubsection{Source of Improvements}\label{comp}
-The next experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
-\sys without detection is denoted as (AC-D) (that is at each iteration we sample from the entire dirty data), and \sys without detection and importance sampling is denoted as (AC-D-I).
+This experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
+\sys without detection is denoted as (AC-D) (that is at each iteration we sample from the entire dirty data), and \sys without detection and our prioritized sampling is denoted as (AC-D-I).
 Figure \ref{opts} plots the relative error of the alternatives and \sys with and without the optimizations.
 Without detection (AC-D), \sys is still more accurate than Active Learning.
-Removing the importance sampling, \sys is slightly worse than Active Learning on the Adult dataset but is comparable on the EEG dataset.
+Removing the sampling, \sys is slightly worse than Active Learning on the Adult dataset but is comparable on the EEG dataset.
 
 \begin{figure}[t]\vspace{0.5em}
 \centering
@@ -158,10 +154,10 @@ However, as the bias increases, the fact that Active Learning prioritizes w.r.t 
 
 \subsubsection{Mixing Dirty and Clean Data}
 Training a model on mixed data is an unreliable methodology lacking the same guarantees as Active Learning or SampleClean even in the simplest of cases.
-For thoroughness, the next experiments include the model error as a function of records cleaned in comparison to \sys.
+For thoroughness, these experiments include the model error as a function of records cleaned in comparison to \sys.
 Figure \ref{pc-perf} plots the same curves as the previous experiment comparing \sys, Active Learning, and two mixed data algorithms.
 PC randomly samples data, clean, and writes-back the cleaned data.
-PC+D randomly samples data from using the dirty data detector, cleans, and writes-back the cleaned data.
+PC+D randomly samples data using the dirty data detector, cleans, and writes-back the cleaned data.
 For these errors PC and PC+D give reasonable results (not always guaranteed), but \sys converges faster.
 \sys tunes the weighting when averaging dirty and clean data into the gradient.
 
@@ -171,7 +167,7 @@ For these errors PC and PC+D give reasonable results (not always guaranteed), bu
  \includegraphics[width=0.49\columnwidth]{exp/exp14a.pdf}
     \includegraphics[width=0.49\columnwidth]{exp/exp14b.pdf}
     \includegraphics[width=0.49\columnwidth]{exp/legend-14.png}\vspace{-0.5em}
- \caption{The relative model error as a function of the number of examples cleaned. \sys converges with a smaller sample size to the true result in comparison to partial cleaning (PC,PC+D).  \label{pc-perf}}
+ \caption{The relative model error as a function of the number of examples cleaned. \sys converges with a smaller sample size to the true result in comparison to partial cleaning (PC, PC+D).  \label{pc-perf}}
 \end{figure}
 
 \noindent \emph{Summary: \sys converges faster than mixing dirty and clean data since it reweights data based on the fraction that is dirty and clean. Partial cleaning is not guaranteed to give sensible results.}
@@ -179,7 +175,7 @@ For these errors PC and PC+D give reasonable results (not always guaranteed), bu
 \vspace{1em}
 
 \subsubsection{Corruption Rate}
-The next experiment explores how much of the performance
+This experiment explores how much of the performance
 is due to the initialization with the dirty model (i.e., SampleClean trains a model from ``scratch").
 Figure \ref{bias} varies the systematic corruption rate and plots the number of records cleaned to achieve 1\% relative error for SampleClean and \sys.
 SampleClean does not use the dirty data and thus its error is essentially governed by the Central Limit Theorem.
@@ -197,7 +193,7 @@ When the initialization with the dirty model is inaccurate, \sys does not perfor
 
 \noindent \emph{Summary: SampleClean is beneficial in comparison to \sys when corruption rates exceed 45\%.}
 
-\subsection{\sys: Adaptive Detection}
+\subsection{Adaptive Detection Scenarios}
 This experiment explores how the results of the previous experiment change when using an adaptive detector instead of the \emph{a priori} detector.
 Recall, in the systematic corruption, 3 of the most informative features were corrupted, thus we group these problems into $9$ classes.
 We use an all-versus-one SVM to learn the categorization.
@@ -224,7 +220,7 @@ At 1000 records point on the curve, adaptive \sys has about 10\% higher error.
 The adaptive case depends on being able to predict corrupted records.
 For example, random corruption not correlated with any other data features may be hard to learn.
 As corruption becomes more random, the classifier becomes increasingly erroneous.
-The next experiment explores making the systematic corruption more random.
+This experiment explores making the systematic corruption more random.
 Instead of selecting the highest valued records for the most valuable features, we corrupt random records with probability $p$. 
 We compare these results to AC-D where we do not have a detector at all at one vertical slice of the previous plot (cleaning 1000 records).
 Figure \ref{tradeoffs2}a plots the relative error reduction using a classifier.
@@ -243,7 +239,7 @@ The classifier is imperfect and misclassifies some data points incorrectly as cl
 \end{figure}
 
 \subsection{Estimation}\label{est}
-The next experiment compares estimation techniques: (1) ``linear regression" trains a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" which does not use the detection to inform how to apply the estimate, (3) ``average feature change" uses detection but no linearization, and (4) the Taylor series linear approximation.
+This experiment compares estimation techniques: (1) ``linear regression" trains a linear regression model that predicts the clean gradient as a function of the dirty gradient, (2) ``average gradient" which does not use the detection to inform how to apply the estimate, (3) ``average feature change" uses detection but no linearization, and (4) the Taylor series linear approximation.
 Figure \ref{tradeoffs2}b measures how accurately each estimation technique estimates the gradient as a function of the number of cleaned records on the EEG dataset.
 
 Estimation error is measured using the relative L2 error with the true gradient.
@@ -255,11 +251,11 @@ Linear regression and the average feature change technique do eventually perform
 \noindent \emph{Summary: Linearized gradient estimates are more accurate when estimated from small samples. }
 
 \subsection{Real World Scenarios}
-The next set of experiments evaluate \sys in two real world scenarios, one demonstrating the \emph{a priori} case and the other for the adaptive detection case.
+This set of experiments evaluate \sys in two real world scenarios, one demonstrating the \emph{a priori} case and the other for the adaptive detection case.
 
 \subsubsection{A Priori: Constraint Cleaning}\label{dfd-exp}
 The first scenario explores the Dollars for Docs dataset published by ProPublica described throughout the paper.
-To run this experiment, the entire dataset was cleaned up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data (see Appendix \ref{dfd-errors} for constraints, errors, and cleaning methodology).
+To run this experiment, the entire dataset was cleaned up front, and simulated sampling from the dirty data and cleaning by looking up the value in the cleaned data (see \cite{activecleanarxiv} for constraints, errors, and cleaning methodology).
 Figure \ref{dfd}a shows that \sys converges faster than Active Learning and SampleClean.
 To achieve a 4\% relative error (i.e., a 75\% error reduction from the dirty model), \sys cleans 40000 fewer records than Active Learning.
 Also, for 10000 records cleaned, \sys has nearly an order of magnitude smaller error than SampleClean.
@@ -281,7 +277,7 @@ On the cleaned data, this classifier is nearly perfect with a 97\% true positive
 \end{figure}
 
 \subsubsection{Adaptive: Replacing Corrupted Data}
-The next experiment explores the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
+This experiment explores the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
 In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
 The MNIST dataset consists of 64x64 grayscale images.
 There are two types of simulated corruptions: (1) 5x5 block removal where a random 5x5 block is removed from the image by setting its pixel values to 0, and (2) Fuzzy where a 4x4 moving average patch is applied over the entire image.

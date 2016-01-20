@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{sparksurvey}
+Apache spark survey.
+\newblock
+  https://databricks.com/blog/2015/09/24/spark-survey-results-2015-are-now-available.html.
+
 \bibitem{bdas}
 Berkeley data analytics stack.
 \newblock \url{https://amplab.cs.berkeley.edu/software/}.
@@ -71,11 +76,6 @@ J.~Feng, H.~Xu, S.~Mannor, and S.~Yan.
 \newblock Robust logistic regression and classification.
 \newblock In {\em NIPS}, 2014.
 
-\bibitem{friedman2001elements}
-J.~Friedman, T.~Hastie, and R.~Tibshirani.
-\newblock {\em The elements of statistical learning}, volume~1.
-\newblock Springer series in statistics Springer, Berlin, 2001.
-
 \bibitem{gokhale2014corleone}
 C.~Gokhale, S.~Das, A.~Doan, J.~F. Naughton, N.~Rampalli, J.~Shavlik, and
   X.~Zhu.
@@ -124,6 +124,12 @@ S.~Krishnan, J.~Wang, M.~J. Franklin, K.~Goldberg, and T.~Kraska.
 \newblock Stale view cleaning: Getting fresh answers from stale materialized
   views.
 \newblock {\em {PVLDB}}, 8(12), 2015.
+
+\bibitem{activecleanarxiv}
+S.~Krishnan, J.~Wang, E.~Wu, M.~J. Franklin, and K.~Goldberg.
+\newblock Activeclean: Interactive data cleaning while learning convex loss
+  models.
+\newblock In {\em Arxiv: \url{http://arxiv.org/pdf/1601.03797.pdf}}, 2015.
 
 \bibitem{DBLP:conf/case/MahlerKLSMKPWFAG14}
 J.~Mahler, S.~Krishnan, M.~Laskey, S.~Sen, A.~Murali, B.~Kehoe, S.~Patil,

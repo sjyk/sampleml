@@ -6,7 +6,7 @@ The estimator will also take advantage of the detector from the previous section
 There are a number of different approaches, such as regression, that could be used to estimate the cleaned value given the dirty values.
 However, there is a problem of scarcity, where errors may affect a small number of records.
 As a result, the regression approach would have to learn a multivariate function with only a few examples.
-Thus, high-dimensional regression ill-suited for the estimator.
+Thus, high-dimensional regression is ill-suited for the estimator.
 Conversely, it could try a very simple estimator that just calculates an average change and adds this change to all of the gradients.
 This estimator can be highly inaccurate as it also applies the change to records that are known to be clean.
 
@@ -28,7 +28,7 @@ It is not possible to isolate the effect of a change of one feature on the gradi
 Even if one of the features is corrupted, all of the gradient components will be incorrect.
 
 To address this problem, the gradient can be approximated in a way that the effects of dirty features on the gradient are decoupled.
-Recall, in the \emph{a priori} detection problem, that associated with each $r \in R_{dirty}$ is a set of errors $f_r,l_r$ which is a set that identifies a set of corrupted features and labels.
+Recall, in the \emph{a priori} detection problem, that associated with each $r \in R_{dirty}$ are two sets of errors $f_r$ , $l_r$ which identifies the set of corrupted features and labels.
 This property can be used to construct a coarse estimate of the clean value.
 The main idea is to calculate average changes for each feature, then given an uncleaned (but dirty) record, add these average changes to correct the gradient.
 
@@ -50,9 +50,9 @@ The needed approximation represents a linearization of the errors, and the resul
 p(r)\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{rx} +  M_y \cdot \Delta_{ry}\|
 \]
 where $M_x$, $M_y$ are matrices and $\Delta_{rx}$ and $\Delta_{ry}$ are vectors with one component for each feature and label where each value is the average change for those features that are corrupted and 0 otherwise.
-Essentially, it the gradient with respect to the dirty data plus some linear correction factor.
-In the appendix, we present a derivation using a Taylor series expansion and a number of $M_x$ and $M_y$ matrices for common convex losses (Appendix \ref{apptaylor} and \ref{example-deriv}).
-The appendix also describes how to maintain $\Delta_{rx}$ and $\Delta_{ry}$ as cleaning progresses.
+Essentially, if the gradient with respect to the dirty data plus some linear correction factor.
+In the technical report, we present a derivation using a Taylor series expansion and a number of $M_x$ and $M_y$ matrices for common convex losses~\cite{activecleanarxiv}.
+It also describes how to maintain $\Delta_{rx}$ and $\Delta_{ry}$ as cleaning progresses~\cite{activecleanarxiv}.
 
 \iffalse
 \paragraph{More Accurate Early Error Estimates}\label{acc}
@@ -104,8 +104,8 @@ Then, given a new record ($r_3$,$\{1,2,3,6\}$), $\Delta_{r_3x}$ is the vector $\
 Suppose the data analyst is using an SVM, then the $M_x$ matrix is as follows:
 \[
 M_x[i,i] = \begin{cases}      
--y[i] \text{ if } y\cdot\boldsymbol{x}\cdot\theta \le 1 \\
-0\ \text{ if } y\ \boldsymbol{x}\cdot\theta \geq 1      
+-y[i] ~~~~~~\text{ if } y\boldsymbol{x}\cdot\theta < 1 \\
+0\ ~~~~~~~\text{ if } y\boldsymbol{x}\cdot\theta \geq 1      
 \end{cases} 
 \]
 Thus, we calculate a sampling weight for record $r_3$:

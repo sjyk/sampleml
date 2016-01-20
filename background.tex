@@ -20,7 +20,8 @@ Sometimes, a \emph{regularization} term $r(\theta)$ is added to the loss, howeve
 
 \subsection{Data Cleaning}
 We assume that there is a one-to-one known mapping between records in a relation $R$ and labeled training examples $(x_{i},y_{i})$.
-\sys supports two types of data cleaning operations attribute value transformations and removal.We represent the data cleaning operation as user-defined function $Clean(\cdot)$ which can be applied to a record $r$ to recover a unique clean record $r' = Clean(r)$ with the same schema or remove the record $\emptyset = Clean(r)$.
+%\sys supports two types of data cleaning operations attribute value transformations and removal.
+We represent the data cleaning operation as general user-defined function $Clean(\cdot)$ which can be applied to a record $r$ to recover a unique clean record $r' = Clean(r)$ with the same schema or remove the record $\emptyset = Clean(r)$.
 $Clean(\cdot)$ can be implemented software or represent a manual action by the analyst.
 We define the clean relation as a relation of all of the records after cleaning:
 \[R_{clean} = \cup_i^N Clean(r_i \in R)\]
@@ -34,16 +35,16 @@ In this generalization, the $Clean(\cdot)$ function is composed of schema-preser
 This can model problems such batch resolution of inconsistencies such as a find-and-replace.
 However, mathematically, this does not make a significant difference in the rest of the paper.
 
-\subsection{Use Case: Dollars for Docs \cite{dollarsfordocs}}\label{s:usecase}
-ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest. 
-They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses \cite{dollarsfordocsa}.
-ProPublica laboriously curated and cleaned a dataset from the Centers for Medicare and Medicaid Services that listed nearly 250,000 research donations, and aggregated these donations by physician, drug, and pharmaceutical company.
+\subsection{Use Case: Dollars for Docs}\label{s:usecase}
+ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest~\cite{dollarsfordocsa}. 
+They reported that some doctors received over \$500,000 in travel, meals, and consultation expenses.
+In order to make such strong claims about the doctors, ProPublica laboriously curated and cleaned a dataset from the Centers for Medicare and Medicaid Services that listed nearly 250,000 research donations, and aggregated these donations by physician, drug, and pharmaceutical company.
 We collected the raw unaggregated data and explored whether suspect donations could be predicted with a model.
 This problem is typical of analysis scenarios based on observational data seen in finance, insurance, medicine, and investigative journalism.
 The dataset has the following schema:
 \begin{lstlisting}[mathescape,basicstyle={\scriptsize}]
 Contribution(pi_specialty$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
-corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
+$~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 \end{lstlisting}
 
 \noindent\texttt{pi\_specialty} is a textual attribute describing the specialty of the doctor receiving the donation.
@@ -63,9 +64,9 @@ corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
 \vspace{0.5em}
 
 However, this dataset is very dirty, and the systematic nature of the data corruption can result in an inaccurate model.
-On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Appendix \ref{dfd-errors}).
-For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data, e.g., ``Pfizer Inc.", ``Pfizer Incorporated", ``Pfizer".
-In such scenarios, the effect of systematic error can be serious.
+On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Technical Report~\cite{activecleanarxiv}).
+For example, the most significant donations were made by large companies whose names were also more often inconsistently represented in the data, e.g., Pfizer Inc., Pfizer Incorporated, Pfizer.
+The data cleaning problem is to resolve this common inconsistency to a canonical name.
 Duplicate representations could artificially reduce the correlation between these entities and suspected contributions.
 There were nearly 40,000 of the 250,000 records that had either naming inconsistencies or other inconsistencies in labeling the allowed or disallowed \texttt{status}.
 Without data cleaning, the detection rate using a Support Vector Machine was 66\%.
@@ -111,8 +112,10 @@ Figure \ref{update-arch1}c illustrates that, even in two dimensions, models trai
 \textbf{Efficiency: } Conversely, hypothetically assume that the analyst has implemented a correct $Update(\cdot)$ primitive and implements $Identify(\cdot)$ with a technique such as Active Learning to select records to clean~\cite{yakout2013don,DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
 Active learning is a technique to carefully select the set of examples to learn the most accurate model.
 However, these selection criteria are designed for data distributions that do not change, an assumption which is not true in this setting.
-As more data are cleaned, the data distributions and the models change.
-Data which may look unimportant in the dirty data might be very valuable to clean in reality, and thus any prioritization has to predict a record's value with respect to an anticipated clean model.
+Active learning issues queries to an oracle that provides labels on unlabled data that is constant, and in contrast, the data cleaning problem queries an oracle to modify the underlying data.
+This distinction has consequences for prioritization.
+For example, a dirty example which may appear unimportant (e.g., far away from the SVM hyperplane), may in reality be a support vector (e.g., close to the hyperplane) once it is cleaned.  
+Thus, we would like a way to predict the impact of a cleaning operation on the trained model in the presence of systematic corruptions.
 
 
 

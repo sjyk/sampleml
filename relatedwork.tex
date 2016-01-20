@@ -3,7 +3,7 @@
 \noindent \textbf{Data Cleaning: } 
 When data cleaning is expensive, it is desirable to apply it \textbf{progressively}, where analysts can inspect early results with only $k \ll N$ records cleaned.
 Progressive data cleaning is a well studied problem especially in the context of entity resolution \cite{altowim2014progressive, whang2014incremental, papenbrock2015progressive, gruenheid2014incremental}.
-Prior work has focused on the problem of designing data structures and algorithms to apply data cleaning progressively. which is challenging because many data cleaning algorithms require information from the entire relation.
+Prior work has focused on the problem of designing data structures and algorithms to apply data cleaning progressively, which is challenging because many data cleaning algorithms require information from the entire relation.
 Over the last 5 years a number of new results have expanded the scope and practicality of progressive data cleaning~\cite{mayfield2010eracer, DBLP:journals/pvldb/YakoutENOI11, yakout2013don}.
 \sys studies the problem of prioritizing progressive cleaning by leveraging information about a user's subsequent use for the data.
 Certain records, if cleaned, may be more likely to affect the downstream analysis.

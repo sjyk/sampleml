@@ -35,7 +35,7 @@
 
 \lstset{basicstyle=\large,breaklines=true,language=SQL,belowcaptionskip=.1\baselineskip}
 
-%\linespread{0.99}
+%\linespread{0.985}
 
 \makeatletter
 \def\@copyrightspace{\relax}
@@ -43,10 +43,10 @@
 
 \begin{document}
 
-%\setlength{\belowdisplayskip}{1pt} \setlength{\belowdisplayshortskip}{1pt}
-%\setlength{\abovedisplayskip}{1pt} \setlength{\abovedisplayshortskip}{1pt}
-%\setlength{\belowcaptionskip}{-10pt}
-%\selectfont
+\setlength{\belowdisplayskip}{2pt} \setlength{\belowdisplayshortskip}{2pt}
+\setlength{\abovedisplayskip}{2pt} \setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowcaptionskip}{-10pt}
+\selectfont
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{example}{Example}
@@ -117,7 +117,7 @@
 \pagestyle{plain}
 
 %\title{ActiveClean: Progressive Data Cleaning For Convex Data Analytics}
-\title{ActiveClean: Interactive Data Cleaning While Learning Convex Loss Models}
+\title{ActiveClean: Interactive Data Cleaning For \\ Statistical Modeling}
 
 \numberofauthors{1}
 \author{\large Sanjay Krishnan, Jiannan Wang, Eugene Wu{$\,^\dag$}, Michael J. Franklin, Ken Goldberg \\
@@ -133,18 +133,14 @@
 \maketitle
 
 \begin{abstract}
-Data cleaning is often an important step to ensure that statistical models, such as regression and classification, are not affected by errors such as inconsistent, out-of-date, or outlier data.
-%The high dimensionality of predictive models can amplify small amounts of data error leading to error-prone predictions.
-Identifying dirty data is often a manual and iterative process, and can be challenging on large datasets.
-However, many data cleaning workflows can introduce subtle biases into the training process.
-We propose \sys, a progressive cleaning approach where the model is updated incrementally instead of re-training and can guarantee accuracy on partially cleaned data.
-\sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs).
-\sys also leverages the structure of a user's model to prioritize cleaning those records likely to affect the results.
+Studies have shown that analysts working with dirty data often repeatedly alternate between analysis and cleaning until a desired accuracy is achieved.
+We explore this procedure in the context of statistical model training.  
+Training high-dimensional statistical models on partially clean data lacks guarantees, and this process may actually diverge.
+We propose \sys which allows for progressive and iterative cleaning for statistical modeling problems while preserving convergence guarantees.
+\sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs), and also prioritizes cleaning those records likely to affect the results.
 We evaluate \sys on five real-world datasets UCI Adult, UCI EEG, MNIST, Dollars For Docs, and WorldBank with both real and synthetic errors.
 Our results suggest that our proposed optimizations can improve model accuracy by up-to 2.5x for the same amount of data cleaned.
 Furthermore for a fixed cleaning budget and on all real dirty datasets, \sys returns more accurate models than uniform sampling and Active Learning. 
-%The key insight of \sys is that data cleaning can be applied simultaneously with incremental optimization allowing for progressive cleaning while preserving provable properties.
-%In one set of experiments with 5\% simulated error, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{abstract}
 
 \if{0}

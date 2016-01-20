@@ -31,7 +31,6 @@ The \emph{updater} uses the cleaned sample to update the weights of the model, t
 Finally, the system either terminates due to a stopping condition (e.g., $C(\cdot)$ has been called a maximum number of times $k$, or training error convergence),
 or passes control to the {\it sampler} for the next iteration.
 
-\subsubsection{Optimizations}
 In many cases, such as missing values, errors can be efficiently detected.
 A user provided {\it Detector} can be used to identify such records that are more likely to be dirty, and thus improves the likelihood that the next sample will contain true dirty records.
 Furthermore, the {\it Estimator} uses previously cleaned data to estimate the effect that cleaning a given record will have on the model.

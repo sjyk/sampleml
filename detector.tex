@@ -7,9 +7,9 @@
 The detector returns two important aspects of a record: 
 (1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
 The sampler can use (1) to select a subset of dirty records to sample at each batch and 
-the estimator can use (2) estimate the value of data cleaning based on other records with the same corruption.
+the estimator can use (2) to estimate the value of data cleaning based on other records with the same corruption.
 \sys supports two types of detectors: \emph{a priori} and \emph{adaptive}.
-In former assumes that we know the set of dirty records and how they are dirty \emph{a priori} to \sys,
+The former assumes that we know the set of dirty records and how they are dirty \emph{a priori} to \sys,
 while the latter \emph{adaptively} learns characteristics of the dirty data as part of running \sys.
 
 \subsubsection{\protect\textit{\large A Priori} Detector}
@@ -24,7 +24,7 @@ D(r) = (\{0,1\}, e_r)
 From the set of columns that are dirty, find the corresponding features that are dirty $f_r$ and labels that are dirty $l_r$.
 \end{definition}
 
-\noindent Here is an example this definition using a data cleaning methodology proposed in the literature.
+\noindent Here is an example of this definition using a data cleaning methodology proposed in the literature.
 
 \vspace{0.5em}
 
@@ -43,10 +43,10 @@ a contribution can be only ``allowed" or ``disallowed".
 Any other value for \texttt{status} is an error.
 \end{example}
 
-\subsection{Adaptive Detection}
+\subsubsection{Adaptive Detection}
 \emph{A priori} detection is not possible in all cases.
 The detector also supports adaptive detection where detection is learned from previously cleaned data.
-Note that this ``learning" is distinct from the ``learning" at the end of the pipeline.
+Note that this ``learning" is distinct from the ``learning" in the user-specified statistical model.
 The challenge in formulating this problem is that detector needs to describe how the data is dirty (e.g. $e_r$ in the \emph{a priori} case).
 The detector achieves this by categorizing the corruption into $u$ classes.
 These classes are corruption categories that do not necessarily align with features, but every record is classified with at most one category.
@@ -67,8 +67,8 @@ This approach is better suited than a statistical approach for a large number of
 However, it relies on errors being well aligned with certain attribute values.
 
 \begin{definition}[Adaptive Case]
-Select the set of records for which $\kappa$ gives a positive error classification (i.e., one of the $u$ error classes).
-After each sample of data is cleaned, the classifier $\kappa$ is retrained.
+Select the set of records for which a classifier gives a positive error classification (i.e., one of the $u$ error classes).
+After each sample of data is cleaned, the classifier is retrained.
 So the result is:
 \[D(r) = (\{1,0\},\{1,...,u+1\})\]
 \end{definition}

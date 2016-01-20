@@ -1,4 +1,4 @@
-\section{Updates With Correctness}\label{model-update}
+\section{Correctness Problem}\label{model-update}
 This section describes an algorithm for reliable model updates.
 The updater assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
 Sections \ref{dist-samp} and \ref{opti} show how to optimize $p(\cdot)$ and the analysis in this section applies for any sampling distribution $p(\cdot) > 0$.
@@ -23,7 +23,7 @@ The optimal clean model $\theta^{(c)}$ is visualized as a yellow star.
 The first question is which direction to update $\theta^{(d)}$ (i.e., left or right).
 For this class of models, given a suboptimal point, the direction to 
 the global optimum is the gradient of the loss function.
-The gradient is a $d$-dimensional vector function of the current model $\theta^{(d)}$ and the clean data.
+The gradient is a $p$-dimensional vector function of the current model $\theta^{(d)}$ and the clean data.
 Therefore, \sys needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \ref{update-arch2}B):
 \[
 \theta^{new} \leftarrow \theta^{(d)} - \gamma \cdot \nabla\phi(\theta^{(d)})
@@ -31,22 +31,22 @@ Therefore, \sys needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \r
 At the optimal point, the magnitude of the gradient will be zero.
 So intuitively, this approach iteratively moves the model downhill (transparent red circle) -- correcting the dirty model until the desired accuracy is reached.
 However, the gradient depends on all of the clean data which is not available and \sys will have to approximate the gradient from a sample of newly cleaned data.
-The main intuition is that if the gradient steps are on average correct, the model still moves downhill albeit with a reduced convergence rate proportional to the inaccuracy of the sample-based estimate.
+%The main intuition is that if the gradient steps are on average correct, the model still moves downhill albeit with a reduced convergence rate proportional to the inaccuracy of the sample-based estimate.
 
 To derive a sample-based update rule, the most important property is that sums commute with derivatives and gradients.
 The convex loss class of models are sums of losses, so given the current best model $\theta$, the true gradient $g^*(\theta)$ is:
 \[
-g^*(\theta) = \nabla\phi(\theta) = \frac{1}{N} \sum_i^N \nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
+g^*(\theta) = \nabla\phi(\theta) = \frac{1}{N} \sum_{i=1}^N \nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
 \sys needs to estimate $g^*(\theta)$ from a sample $S$, which is drawn from the dirty data $R_{dirty}$.
- Therefore, the sum has two components the gradient on the already clean data $g_C$ which can be computed without cleaning and $g_S$ the gradient estimate from a sample of dirty data to be cleaned:
-\[
-g(\theta) = \frac{\mid R_{clean} \mid}{\mid R \mid} \cdot g_C(\theta) + \frac{\mid R_{dirty} \mid}{\mid R \mid} \cdot g_S(\theta)
-\]
+ Therefore, the sum has two components which are the gradient from the already clean data $g_C$ and $g_S$ a gradient estimate from a sample of dirty data to be cleaned:
+\begin{equation}
+g(\theta) = \frac{\mid R_{clean} \mid}{\mid R \mid} \cdot g_C(\theta) + \frac{\mid R_{dirty} \mid}{\mid R \mid} \cdot g_S(\theta)\label{unbia}
+\end{equation}
 $g_C$ can be calculated by applying the gradient to all of the already cleaned records:
 \[
 g_C(\theta) = \frac{1}{\mid R_{clean}\mid}\sum_{i \in R_{clean}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
-\]
+\] 
 $g_S$ can be estimated from a sample by taking the gradient w.r.t each record, and re-weighting the average by their respective sampling probabilities.
 Before taking the gradient the cleaning function $C(\cdot)$ is applied to each sampled record.
 Therefore, let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p(i)$:
@@ -59,6 +59,7 @@ Then, at each iteration $t$, the update becomes:
 \]
 
 \subsection{Model Update Algorithm}
+We present pseudocode for one iteration of the update algorithm.
 To summarize, the algorithm is initialized with $\theta^{(0)} = \theta^{(d)}$ which is the dirty model.
 There are three user set parameters the budget $k$, batch size $b$, and the step size $\gamma$.
 In the following section, we will provide references from the convex optimization literature that allow the user to appropriately select these values.
@@ -67,31 +68,33 @@ Then, an average gradient is estimated from the cleaned batch and the model is u
 Iterations continue until $k = T \cdot b$ records are cleaned.
 
 \begin{enumerate}[noitemsep]
+	\item Take a sample of data $S$ from $R_{dirty}$ 
 	\item Calculate the gradient over the sample of newly clean data and call the result $g_S(\theta^{(t)})$
 	\item Calculate the average gradient over all of the already clean data in $R_{clean}=R-R_{dirty}$, and call the result $g_C(\theta^{(t)})$
 	\item Apply the following update rule:
 	\[
 	\theta^{(t+1)} \leftarrow \theta^{(t)} - \gamma \cdot(\frac{\mid R_{dirty} \mid}{\mid R \mid} \cdot g_S(\theta^{(t)}) + \frac{\mid R_{clean} \mid}{\mid R \mid} \cdot  g_C(\theta^{(t)}))
 	\]
+	\item $R_{clean} = R_{clean} \cup S$ 
 \end{enumerate} 
 
 \subsection{Analysis with Stochastic Gradient Descent}\label{sgd}
-The update algorithm can be formalized as a class of very well studied algorithms called Stochastic Gradient Descent.
-SGD provides a theoretical framework to understand and analyze the update rule and bound the error.
-Mini-batch stochastic gradient descent (SGD) is an algorithm for finding the optimal value
-given the convex loss and data.
-In mini-batch SGD, random subsets of data are selected at each iteration and the average gradient is computed for every batch.
+The update algorithm can be formalized as a class of very well studied algorithms called Mini-batch Stochastic Gradient Descent (SGD).
+In SGD, random subsets of data are selected at each iteration and the average gradient is computed for every batch.
+The basic condition for convergence is that the gradient steps need to be on average correct.
+We provided the intuition that this is the case in Equation \ref{unbia}, and this can be more rigorously formalized as an unbiased estimate of the true gradient~\cite{activecleanarxiv}.
+Then model is guaranteed to converge essentially with a rate proportional to the inaccuracy of the sample-based estimate.
 
-One key difference with traditional SGD models is that \sys applies a \emph{full} gradient step on the already clean data and averages it with a stochastic gradient step (i.e., calculated from a sample) on the dirty data. 
-Therefore, \sys iterations can take multiple passes over the clean data but at most a single cleaning pass of the dirty data.
+One key difference with the SGD models applied in model training frameworks is that \sys applies a \emph{full} gradient step on the already clean data and averages it with a stochastic gradient step (i.e., calculated from a sample) on the dirty data. 
+This is because that data is already clean and we assume that the time-consuming step in the data cleaning and not the numerical operations.
 The update algorithm can be thought of as a variant of SGD that lazily materializes the clean value.
-As data is sampled at each iteration, data is cleaned when needed by the optimization.
+As data is sampled at each iteration, data is cleaned when needed.
 It is well known that even for an arbitrary initialization SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
-In practice, the dirty model can be much more accurate than an arbitrary initialization as corruption may only affect a few features and combined with the full gradient step on the clean data the updates converge very quickly.
+However, the dirty model can be much more accurate than an arbitrary initialization.
 
 \vspace{0.25em}
 
-\noindent\textbf{ Setting the step size $\gamma$: } There is extensive literature in machine learning for choosing the step size $\gamma$ appropriately. $\gamma$ can be set either to be a constant or decayed over time. Many machine learning frameworks (e.g., MLLib, Sci-kit Learn, Vowpal Wabbit) automatically set learning rates or provide different learning scheduling frameworks. 
+\noindent\textbf{ Setting the step size $\gamma$: } There is extensive literature in machine learning for choosing the step size $\gamma$ appropriately. $\gamma$ can be set either to be a constant or decayed over time. Many machine learning frameworks (e.g., MLLib, Sci-kit Learn, Vowpal Wabbit) automatically set this value. 
 In the experiments, we use a technique called inverse scaling where there is a parameter $\gamma_0=0.1$, and at each iteration it decays to $\gamma_t = \frac{\gamma_0}{\mid S \mid t}$. 
 
 \vspace{0.25em}
@@ -99,25 +102,22 @@ In the experiments, we use a technique called inverse scaling where there is a p
 \noindent\textbf{ Setting the batch size $b$: } The batch size should be set by the user to have the desired properties.
 Larger batches will take longer to clean and will make more progress towards the clean model but will have less frequent model updates.
 On the other hand, smaller batches are cleaned faster and have more frequent model updates.
-There are diminishing returns to increasing the batch size $O(\frac{1}{\sqrt{b}})$.
 In the experiments, we use a batch size of 50 which converges fast but allows for frequent model updates.
-If a data cleaning technique requires a larger batch size than 50, i.e., data cleaning is fast enough that the iteration overhead is significant compared to cleaning 50 records, \sys can apply the updates in smaller batches.
+If a data cleaning technique requires a larger batch size than 50, \sys can abstract this size away from the update algorithm and apply the updates in smaller batches.
 For example, the batch size set by the user might be $b=1000$, but the model updates after every $50$ records are cleaned.
 We can disassociate the batching requirements of SGD and the batching requirements of the data cleaning technique.
 
 \subsubsection{Convergence Conditions and Properties}
-Convergence properties of batch SGD formulations have been well studied \cite{dekel2012optimal}. Essentially, if the gradient estimate is unbiased and the step size is appropriately chosen, the algorithm is guaranteed to converge. 
-In Appendix \ref{appsgd}, we show that the gradient estimate from \sys is indeed unbiased and our choice of step size is one that is established to converge.
 The convergence rates of SGD are also well analyzed \cite{dekel2012optimal,bertsekas2011incremental,zhao2014stochastic}. 
 The analysis gives a bound on the error of intermediate models and the expected number of steps before achieving a model within a certain error. 
 For a general convex loss, a batch size $b$, and $T$ iterations, the convergence rate is bounded by $O(\frac{\sigma^2}{\sqrt{bT}})$. 
+$\sigma^2$ is a measure of how well the sample gradient estimates the gradient over the entire dataset, and $\sqrt{T}$ shows that each iteration has diminishing returns.
 $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 \[
 \mathbb{E}(\|g - g^*\|^2)
 \]
 where $g^*$ is the gradient computed over the full data if it were fully cleaned.
 This property of SGD allows us to bound the model error with a monotonically decreasing function of the number of records cleaned, thus satisfying the reliability condition in the problem statement.
-If the loss in non-convex, the update procedure will converge towards a local minimum rather than the global minimum (See Appendix \ref{non-convex}).
 
 \subsection{Example}
 This example describes an application of the update algorithm.
@@ -129,8 +129,8 @@ The gradient of a basic SVM is given by the following function:
 \[
 \nabla\phi(x,y,\theta) =
 \begin{cases}      
--y\cdot\boldsymbol{x} \text{ if } y\cdot\boldsymbol{x}\cdot\theta \le 1 \\
-~~~~~~~0\ \text{ if } y\ \boldsymbol{x}\cdot\theta \geq 1      
+-y\cdot\boldsymbol{x} ~~~~~~ \text{ if } y\boldsymbol{x}\cdot\theta < 1 \\
+~~~~~~~0\ ~~~~~~\text{ if } y\boldsymbol{x}\cdot\theta \geq 1      
 \end{cases}
 \]
 
