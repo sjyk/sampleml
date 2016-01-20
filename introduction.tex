@@ -1,18 +1,20 @@
 \section{Introduction}
 Statistical models trained on historical data facilitate several important predictive applications such as fraud detection, recommendation systems, and automatic content classification.
-In fact, in one survey, over 60\% of Apache Spark users responded that support for advanced statistical analytics was Spark's most important feature~\cite{sparksurvey}.
-This sentiment is echoed across both industry and academia, and there has been significant interest in improving the efficiency of model training workflows~\cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, tensor}. 
-An important, yet unfortunately undervalued, step is data pre-processing including structuring data, imputing missing values, and handling incorrect data.
-Analysts widely report that this is a significant challenge~\cite{kandel2012,nytimes}, and consequently, it is important to understand if such operations can affect the subsequent statistical models.
+In a survey of Apache Spark users, over 60\% responded that support for advanced statistical analytics was Spark's most important feature~\cite{sparksurvey}.
+This sentiment is echoed across both industry and academia, and there has been significant interest in improving the efficiency of model training pipelines~\cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, tensor}. 
+An important, yet often overlooked, step in all model training pipelines is data pre-processing including structuring data, imputing missing values, and handling incorrect data.
+Analysts widely report that this is a significant and time-consuming problem~\cite{kandel2012,nytimes}, and consequently, it is important to understand how such operations could affect any subsequent statistical models.
 
-While this problem has been well-studied in the context of SQL analytics as \emph{data cleaning}, the effects of cleaning operations can be counter-intuitive in statistical models.
-For example, studies have shown that many analysts do not approach cleaning as a one-shot pre-processing step, and instead, repeatedly alternate between cleaning and analysis--using the analysis to guide identification of potential errors~\cite{kandel2012}.
-For statistical models, iteratively cleaning some data and re-training leads to biases for even simple models in two dimensions.
+While many aspects of the pre-processing problem has been well-studied in the context of SQL analytics as \emph{data cleaning}, the effects of these operations can be very counter-intuitive in statistical models.
+For example, studies have shown that many analysts do not approach cleaning as a one-shot pre-processing step, and instead, repeatedly alternate between cleaning and analysis.
+It is common to use the analysis results as a guide to help identify potential errors and design repairs~\cite{kandel2012}.
+Unfortunately, for statistical models, iteratively cleaning some data and re-training on a partially clean dataset can lead to biases for even simple models in two dimensions.
 Figure \ref{update-arch1}a illustrates training a linear regression on systematically incorrect (shifted) data.
-If the analyst only partially cleans the dataset in the first iteration and re-trains the model, the intermediate result can be arbitrarily incorrect with respect to the true model where all of the data are cleaned (Figure \ref{update-arch1}b).
+In this example, the intermediate result is highly inaccurate with respect to the true model, i.e., where all of the data are clean (Figure \ref{update-arch1}b).
 In other words, partial data cleaning may actually make a result worse.
 Similarly, high dimensional models face more dramatic sampling effects than the 1D traditional \sumfunc, \countfunc, \avgfunc aggregates (Figure \ref{update-arch1}c).
-Data cleaning methodologies designed for SQL analytics, such as Sample-and-Clean~\cite{wang1999sample} and Progressive Data Cleaning~\cite{altowim2014progressive, papenbrock2015progressive, DBLP:journals/pvldb/YakoutENOI11}, will have to be re-thought for the statistical modeling setting, and this paper explores how to apply existing data cleaning algorithms with guarantees of convergence for a large class modeling problems. 
+These results are problematic because recent advances in SQL data cleaning, such as Sample-and-Clean~\cite{wang1999sample} and Progressive Data Cleaning~\cite{altowim2014progressive, papenbrock2015progressive, DBLP:journals/pvldb/YakoutENOI11}, advocate cleaning subsets of data to avoid the potentially expensive cleaning costs.
+Clearly, these approaches will have to be re-evaluated for the statistical modeling setting, and this paper explores how to adapt such approaches with guarantees of convergence for a large class modeling problems. 
 
 Data cleaning is a broad problem that encompasses extraction, de-duplication, schema matching, and many other problems in relational data.
 We focus on two common operations that often necessitate iterative cleaning, removing outliers and attribute transformation.
@@ -44,7 +46,8 @@ Convexity is a property that ensures that the iterative optimization converges t
 
 This paper describes the entire \sys architecture. However, the correctness of many of the components require detailed statistical proofs, which we have included in our extended technical report~\cite{activecleanarxiv}. To summarize our contributions:
 \begin{itemize}[noitemsep]
-\item \textbf{Correctness} (Section \ref{model-update}). We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation. For a batch size $b$ and iterations $T$, it converges with rate $O(\frac{1}{\sqrt{bT}})$. 
+\item We propose \sys, which allows for progressive data cleaning and statistical model training with guarantees.
+\item \textbf{Correctness} (Section \ref{model-update}). We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation with a rate of with rate $O(\frac{1}{\sqrt{T}})$.
 \item \textbf{Efficiency} (Section \ref{dist-samp}). We derive a theoretical optimal sampling distribution that minimizes the update error and an approximation to estimate the theoretical optimum.
 \item \textbf{Detection and Estimation} (Section \ref{opti}). We show how \sys can be integrated with data detection to guide data cleaning towards records expected to be dirty.
 \item The experiments evaluate these components on four datasets with real and synthetic corruption (Section \ref{eval}). Results suggest that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse.

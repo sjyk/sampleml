@@ -43,8 +43,8 @@
 
 \begin{document}
 
-\setlength{\belowdisplayskip}{2pt} \setlength{\belowdisplayshortskip}{2pt}
-\setlength{\abovedisplayskip}{2pt} \setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayskip}{3pt} \setlength{\belowdisplayshortskip}{3pt}
+\setlength{\abovedisplayskip}{3pt} \setlength{\abovedisplayshortskip}{3pt}
 \setlength{\belowcaptionskip}{-10pt}
 \selectfont
 
@@ -133,12 +133,12 @@
 \maketitle
 
 \begin{abstract}
-Studies have shown that analysts working with dirty data often repeatedly alternate between analysis and cleaning until a desired accuracy is achieved.
-We explore this procedure in the context of statistical model training.  
-Training high-dimensional statistical models on partially clean data lacks guarantees, and this process may actually diverge.
-We propose \sys which allows for progressive and iterative cleaning for statistical modeling problems while preserving convergence guarantees.
+Analysts working with dirty data often clean iteratively, where they repeatedly alternate between analysis and cleaning to diagnose and repair data errors.
+We explore iterative cleaning in the context of statistical model training, which is an increasingly popular form of data analytics.  
+The challenge is that training high-dimensional statistical models on partially clean data lacks guarantees, and the iterative cleaning process may actually diverge.
+We propose \sys which allows for progressive and iterative cleaning in statistical modeling problems while preserving convergence guarantees.
 \sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs), and also prioritizes cleaning those records likely to affect the results.
-We evaluate \sys on five real-world datasets UCI Adult, UCI EEG, MNIST, Dollars For Docs, and WorldBank with both real and synthetic errors.
+We evaluate \sys on four real-world datasets UCI Adult, UCI EEG, MNIST, and Dollars For Docs with both real and synthetic errors.
 Our results suggest that our proposed optimizations can improve model accuracy by up-to 2.5x for the same amount of data cleaned.
 Furthermore for a fixed cleaning budget and on all real dirty datasets, \sys returns more accurate models than uniform sampling and Active Learning. 
 \end{abstract}
