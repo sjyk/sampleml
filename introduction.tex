@@ -40,17 +40,18 @@ We propose several novel optimizations that leverage information from the model 
 \sys can also incorporate prior knowledge about records that are likely to be dirty.
 
 From a statistical perspective, our key insight is to model the cleaning-training iteration as a form of Stochastic Gradient Descent, an iterative optimization method.
-We treat the dirty model as an initialization, and incrementally take gradient steps towards the global solution (i.e., the clean model).
+We treat the dirty model as an initialization, and incrementally take gradient steps (cleaning a sample of records) towards the global solution (i.e., the clean model).
 Our argument ensures global convergence with a provable rate for an important class of models called \emph{convex}-loss models which include SVMs, Linear Regression, and Logistic Regression.
 Convexity is a property that ensures that the iterative optimization converges to a true global optimum, and we can apply convergence arguments from convex optimization theory to show that \sys converges.
 
 This paper describes the entire \sys architecture. However, the correctness of many of the components require detailed statistical proofs, which we have included in our extended technical report~\cite{activecleanarxiv}. To summarize our contributions:
 \begin{itemize}[noitemsep]
 \item We propose \sys, which allows for progressive data cleaning and statistical model training with guarantees.
-\item \textbf{Correctness} (Section \ref{model-update}). We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation with a rate of with rate $O(\frac{1}{\sqrt{T}})$.
-\item \textbf{Efficiency} (Section \ref{dist-samp}). We derive a theoretical optimal sampling distribution that minimizes the update error and an approximation to estimate the theoretical optimum.
+\item \textbf{Correctness} (Section \ref{model-update}). We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation with a with rate $O(\frac{1}{\sqrt{T}})$.
+\item \textbf{Efficiency} (Section \ref{dist-samp}). We derive a theoretically optimal sampling distribution that minimizes the update error and an approximation to estimate the theoretical optimum. \ewu{Both are experimentally shown to BE GOOD.}
 \item \textbf{Detection and Estimation} (Section \ref{opti}). We show how \sys can be integrated with data detection to guide data cleaning towards records expected to be dirty.
 \item The experiments evaluate these components on four datasets with real and synthetic corruption (Section \ref{eval}). Results suggest that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse.
+\ewu{add money shot numbers}
 
 %For a 5\%  systematic corruption, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{itemize}
