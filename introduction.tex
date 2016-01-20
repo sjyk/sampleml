@@ -48,11 +48,10 @@ This paper describes the entire \sys architecture. However, the correctness of m
 \begin{itemize}[noitemsep]
 \item We propose \sys, which allows for progressive data cleaning and statistical model training with guarantees.
 \item \textbf{Correctness} (Section \ref{model-update}). We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation with a with rate $O(\frac{1}{\sqrt{T}})$.
-\item \textbf{Efficiency} (Section \ref{dist-samp}). We derive a theoretically optimal sampling distribution that minimizes the update error and an approximation to estimate the theoretical optimum. \ewu{Both are experimentally shown to BE GOOD.}
+\item \textbf{Efficiency} (Section \ref{dist-samp}). We derive a theoretically optimal sampling distribution that minimizes the update error and an approximation to estimate the theoretical optimum. Our proposed optimizations can improve model accuracy by up-to 2.5x for the same amount of data cleaned.
 \item \textbf{Detection and Estimation} (Section \ref{opti}). We show how \sys can be integrated with data detection to guide data cleaning towards records expected to be dirty.
-\item The experiments evaluate these components on four datasets with real and synthetic corruption (Section \ref{eval}). Results suggest that for a fixed cleaning budget, \sys returns more accurate models than uniform sampling and Active Learning when systematic corruption is sparse.
-\ewu{add money shot numbers}
-
+\item \textbf{Experiments} (Section \ref{eval}). The experiments evaluate these components on four datasets with real and synthetic corruption. In a fraud prediction example, to achieve an 80\% true detection accuracy, \sys cleans nearly 10x less records than alternatives. In an image classification example with corrupted images, \sys significantly reduces
+(more than 2x) the number of images to clean for training a model with 98\% accuracy.
 %For a 5\%  systematic corruption, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
 \end{itemize}
 

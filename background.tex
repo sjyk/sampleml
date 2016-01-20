@@ -3,10 +3,10 @@ This section formalizes the iterative data cleaning and training process and hig
 
 \subsection{Statistical Modeling}
 In this paper, we will use the term \emph{statistical modeling} to describe a well studied class of analytics problems; ones that can be expressed as the minimization of convex loss functions.
-Examples include generalized linear models (including linear and logistic regression), support vector machines, and in fact, means and medians are also special cases. 
-Generally, such a formulation is restricted to supervised Machine Learning.
+This class is restricted to supervised Machine Learning.
+Examples include linear models (including linear and logistic regression), support vector machines, and in fact, means and medians are also special cases. 
 
-Suppose $x$ is a feature vector and $y$ is a label.
+Formally, suppose $x$ is a feature vector and $y$ is a label.
 For labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of \emph{model parameters} $\theta$ by minimizing a loss function $\phi$ (a function that measures prediction error) over all training examples:
 \[
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
@@ -18,10 +18,12 @@ For example, in a linear regression $\phi$ is:
 \]
 Sometimes, a \emph{regularization} term $r(\theta)$ is added to the loss, however, this will not affect our results, and we ignore this term without loss of generality.
 
+\vspace{2em}
+
 \subsection{Data Cleaning}
 We assume that there is a one-to-one known mapping between records in a relation $R$ and labeled training examples $(x_{i},y_{i})$.
 %\sys supports two types of data cleaning operations attribute value transformations and removal.
-We represent the data cleaning operation as general user-defined function $Clean(\cdot)$ which can be applied to a record $r$ to recover a unique clean record $r' = Clean(r)$ with the same schema or remove the record $\emptyset = Clean(r)$.
+We represent the data cleaning operation as general user-defined function $Clean(\cdot)$ that can be applied to a record $r$ to perform two actions: recover a unique clean record $r' = Clean(r)$ with the same schema or remove the record $\emptyset = Clean(r)$.
 $Clean(\cdot)$ can be implemented software or represent a manual action by the analyst.
 We define the clean relation as a relation of all of the records after cleaning:
 \[R_{clean} = \cup_i^N Clean(r_i \in R)\]
