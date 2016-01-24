@@ -28,16 +28,11 @@ From the set of columns that are dirty, find the corresponding features that are
 
 \vspace{0.5em}
 
-\noindent\textbf{Constraint-based Repair: }
-One model for detecting errors involves declaring constraints on the database.
-
-\vspace{0.5em}
-
-\emph{Detection. } Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
-In the detection step, the detector selects a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint.
-The set $e_r$ is the set of columns for each record which have a constraint violation. 
+\noindent\textbf{Constraint-based Detection: } 
 
 \begin{example}\label{detex1}
+Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
+In the detection step, the detector selects a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint. The set $e_r$ is the set of columns for each record which have a constraint violation.
 An example of a constraint on the running example dataset is that the \texttt{status} of
 a contribution can be only ``allowed" or ``disallowed".
 Any other value for \texttt{status} is an error.
@@ -59,9 +54,7 @@ There are usually a small number of error classes even if a large number of reco
 
 One approach for adaptive detection is using a statistical classifier. 
 This approach is particularly suited for a small number data error classes, each of which containing many erroneous records.
-This problem can be addressed by any classifier, and we use an all-versus-one SVM in our experiments.
-
-Another approach could be to adaptively learn predicates that define each of the error classes.
+This problem can be addressed by any classifier, and we use an all-versus-one SVM in our experiments.Another approach could be to adaptively learn predicates that define each of the error classes.
 For example, if records with certain attributes are corrupted, a pattern tableau can be assigned to each class to select a set of possibly corrupted records.
 This approach is better suited than a statistical approach for a large number of error classes or scarcity of errors.
 However, it relies on errors being well aligned with certain attribute values.

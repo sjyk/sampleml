@@ -3,25 +3,39 @@
 
 \subsection{Notation and Setup}\label{notation}
 The user provides a relation $R$, a cleaner $C(\cdot)$, a featurizer $F(\cdot)$, and a convex loss problem defined by the loss $\phi(\cdot)$.
-A total of $k$ records will be cleaned in batches of size $b$, so there will be $\frac{k}{b}$ iterations. 
-
-The choice of $b$ does affect the convergence rate.
+A total of $k$ records will be cleaned in batches of size $b$, so there will be $\frac{k}{b}$ iterations.  The choice of $b$ does affect the convergence rate.
 Section~\ref{model-update} discusses the efficiency and convergence trade-offs of different values of $b$.
 We empirically find that a batch size of $50$ performs well across different datasets and use that as a default.
 A cleaning budget $k$ can be used as a stopping criterion once $C(\dot)$ has been called $k$ times, and so the number of iterations of \sys is $T = \frac{k}{b}$.
 Alternatively, the user can clean data until the model is of sufficient accuracy to make a decision.
 
 We use the following notation to represent relevant intermediate states:
-\begin{itemize}[noitemsep]
-\item \textbf{Dirty Model: } $\theta^{(d)}$ is the model trained on $R$ (without cleaning) with the featurizer $F(\cdot)$ and loss $\phi(\cdot)$. This serves as an initialization to \sys.
-\item \textbf{Dirty Records: } $R_{dirty} \subseteq R$ is the subset of records that are still dirty. As more data are cleaned $R_{dirty} \rightarrow \{\}$.
-\item \textbf{Clean Records: } $R_{clean} \subseteq R$ is the subset of records that are clean, i.e., the complement of $R_{dirty}$.
-\item \textbf{Samples: } $S$ is a sample (possibly non-uniform but with known probabilities) of the records $R_{dirty}$. The clean sample is denoted by $S_{clean} = C(S)$.
-\item \textbf{Clean Model: } $\theta^{(c)}$ is the optimal clean model, i.e., the model trained on a fully cleaned relation.
-\item \textbf{Current Model: } $\theta^{(t)}$ is the current best model at iteration $t \in \{1,...,\frac{k}{b}\}$, and $\theta^{(0)} = \theta^{(d)}$. 
-\end{itemize}
 
-There are two metrics that we will use to measure the performance of \sys:
+\vspace{0.25em}
+
+\noindent\textbf{Dirty Model: } $\theta^{(d)}$ is the model trained on $R$ (without cleaning) with the featurizer $F(\cdot)$ and loss $\phi(\cdot)$. This serves as an initialization to \sys.
+
+\vspace{0.25em}
+
+\noindent\textbf{Dirty Records: } $R_{dirty} \subseteq R$ is the subset of records that are still dirty. As more data are cleaned $R_{dirty} \rightarrow \{\}$.
+
+\vspace{0.25em}
+
+\noindent\textbf{Clean Records: } $R_{clean} \subseteq R$ is the subset of records that are clean, i.e., the complement of $R_{dirty}$.
+
+\vspace{0.25em}
+
+\noindent\textbf{Samples: } $S$ is a sample (possibly non-uniform but with known probabilities) of the records $R_{dirty}$. The clean sample is denoted by $S_{clean} = C(S)$.
+
+\vspace{0.25em}
+
+\noindent\textbf{Clean Model: } $\theta^{(c)}$ is the optimal clean model, i.e., the model trained on a fully cleaned relation.
+
+\noindent\textbf{Current Model: } $\theta^{(t)}$ is the current best model at iteration $t \in \{1,...,\frac{k}{b}\}$, and $\theta^{(0)} = \theta^{(d)}$. 
+
+\vspace{1.5em}
+
+There are two main metrics that we will use to measure the performance of \sys:
 
 \vspace{0.25em}
 
@@ -32,12 +46,12 @@ There are two metrics that we will use to measure the performance of \sys:
 \noindent\textbf{Testing Error. } Let $err(\theta^{(t)})$ be the out-of-sample testing error when the current best model is applied to the clean data, and $err(\theta^{(c)})$ be the test error when the clean model is applied to the clean data. The testing error is defined as $err(\theta^{(t)}) - err(\theta^{(c)})$
 
 \subsection{Problem 1. Correctness Problem}\label{updp}
-Given newly cleaned data $S_{clean}$ and the current best model $\theta^{(t)}$, the model update problem is to calculate $\theta^{(t+1)}$. 
+Given newly cleaned a newly cleaned sample $S_{clean}$ and the current best model $\theta^{(t)}$, the model update problem is to calculate $\theta^{(t+1)}$. 
 $\theta^{(t+1)}$ will have some error with respect to the true model $\theta^{(c)}$, which we denote as:
 \[
 error(\theta^{(t+1)}) = \| \theta^{(t+1)} - \theta^{(c)} \|
 \]
-Since a sample of data are cleaned, it is only meaningful to talk about expected errors.
+Since the sample is potentially stochastic, it is only meaningful to talk about expected errors.
 We call the update algorithm ``reliable" if the expected error is upper bounded by a monotonically decreasing function $\mu$ of the amount of cleaned data:
 \[
 \mathbb{E}(error(\theta^{new})) = O(\mu(\mid S_{clean} \mid))

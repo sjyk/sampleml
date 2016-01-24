@@ -3,18 +3,18 @@ Statistical models trained on historical data facilitate several important predi
 In a survey of Apache Spark users, over 60\% responded that support for advanced statistical analytics was Spark's most important feature~\cite{sparksurvey}.
 This sentiment is echoed across both industry and academia, and there has been significant interest in improving the efficiency of model training pipelines~\cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, tensor}. 
 An important, yet often overlooked, step in all model training pipelines is data pre-processing including structuring data, imputing missing values, and handling incorrect data.
-Analysts widely report that this is a significant and time-consuming problem~\cite{kandel2012,nytimes}, and consequently, it is important to understand how such operations could affect any subsequent statistical models.
+Analysts widely report that this is a significant and time-consuming problem~\cite{kandel2012,nytimes}, and consequently, it is important to understand the efficiency and correctness such operations.
 
-While many aspects of the pre-processing problem has been well-studied in the context of SQL analytics as \emph{data cleaning}, the effects of these operations can be very counter-intuitive in statistical models.
+While many aspects of the pre-processing problem has been well-studied in the context of SQL analytics as \emph{data cleaning}, the results can be very counter-intuitive in statistical models.
 For example, studies have shown that many analysts do not approach cleaning as a one-shot pre-processing step, and instead, repeatedly alternate between cleaning and analysis.
-It is common to use the analysis results as a guide to help identify potential errors and design repairs~\cite{kandel2012}.
+It is common to use the prelimary analysis on dirty data as a guide to help identify potential errors and design repairs~\cite{kandel2012}.
 Unfortunately, for statistical models, iteratively cleaning some data and re-training on a partially clean dataset can lead to biases for even simple models in two dimensions.
 Figure \ref{update-arch1}a illustrates training a linear regression on systematically incorrect (shifted) data.
 In this example, the intermediate result is highly inaccurate with respect to the true model, i.e., where all of the data are clean (Figure \ref{update-arch1}b).
 In other words, partial data cleaning may actually make a result worse.
-Similarly, high dimensional models face more dramatic sampling effects than the 1D traditional \sumfunc, \countfunc, \avgfunc aggregates (Figure \ref{update-arch1}c).
+Similarly, high dimensional models face more dramatic sampling effects than the traditional 1D  \sumfunc, \countfunc, \avgfunc aggregates (Figure \ref{update-arch1}c).
 These results are problematic because recent advances in SQL data cleaning, such as Sample-and-Clean~\cite{wang1999sample} and Progressive Data Cleaning~\cite{altowim2014progressive, papenbrock2015progressive, DBLP:journals/pvldb/YakoutENOI11}, advocate cleaning subsets of data to avoid the potentially expensive cleaning costs.
-Clearly, these approaches will have to be re-evaluated for the statistical modeling setting, and this paper explores how to adapt such approaches with guarantees of convergence for a large class modeling problems. 
+Clearly, these approaches will have to be re-evaluated for the statistical modeling setting, and this paper explores how to adapt such approaches with guarantees of convergence for an important class modeling of problems. 
 
 Data cleaning is a broad problem that encompasses extraction, de-duplication, schema matching, and many other problems in relational data.
 We focus on two common operations that often necessitate iterative cleaning, removing outliers and attribute transformation.
@@ -32,14 +32,14 @@ Since these two types of errors do not affect the schema or leave any obvious si
 \end{figure}
 
 We propose \sys, a model training framework that allows for iterative data cleaning while preserving provable convergence properties.
-The analyst initializes \sys with a model, a featurization function, and a pointer to a dirty relational table, and the \sys initially returns the model trained on the dirty dataset.
-\sys recommends a set of sample data that are possibly dirty based on measuring their impact and prediction accuracy with the current best model.
-The analyst can apply value transformations and filtering operations to the sample data, and then prompt the system to iterate. 
-\sys will incrementally and safely update the model (as opposed to complete retraining), and present a new sample to clean.
+The analyst initializes \sys with a model, a featurization function, and a pointer to a dirty relational table, and the framework initially returns the model trained on the dirty dataset.
+In each iteration, \sys recommends a set of sample data that are possibly dirty based on measuring their impact and prediction accuracy with the current best model.
+The analyst can apply value transformations and filtering operations to the sample data, and then prompts the framework to iterate to the next batch. 
+\sys will incrementally and safely update the model (as opposed to complete re-training).
 We propose several novel optimizations that leverage information from the model to guide data cleaning towards the records most likely to be dirty and most likely to affect the results.
 \sys can also incorporate prior knowledge about records that are likely to be dirty.
 
-From a statistical perspective, our key insight is to model the cleaning-training iteration as a form of Stochastic Gradient Descent, an iterative optimization method.
+From a statistical perspective, our key insight is to treat the cleaning-training iteration as a form of Stochastic Gradient Descent, an iterative optimization method.
 We treat the dirty model as an initialization, and incrementally take gradient steps (cleaning a sample of records) towards the global solution (i.e., the clean model).
 Our argument ensures global convergence with a provable rate for an important class of models called \emph{convex}-loss models which include SVMs, Linear Regression, and Logistic Regression.
 Convexity is a property that ensures that the iterative optimization converges to a true global optimum, and we can apply convergence arguments from convex optimization theory to show that \sys converges.

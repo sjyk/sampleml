@@ -16,7 +16,7 @@ It also applies a linearization that leads to improved estimates when the sample
 We evaluate the linearization in Section \ref{est} against alternatives, and find that it provides more accurate estimates for a small number of samples cleaned.
 The result is a biased estimator, and when the number of cleaned samples is large the alternative techniques are comparable or even slightly better due to the bias.
 
-\paragraph{Estimation For A Priori Detection}
+\subsection{Estimation For A Priori Detection}
 If most of the features are correct, it would seem like the gradient is only
 incorrect in one or two of its components.
 The problem is that the gradient $\nabla\phi(\cdot)$ can be a very non-linear function of the features that couple features together.
@@ -81,7 +81,7 @@ We evaluate this linearization in Section \ref{est} against alternatives, and fi
 When the number of cleaned samples is large the alternative techniques are comparable or even slightly better.
 \fi
 
-\paragraph{Estimation For Adaptive Case}
+\subsection{Estimation For Adaptive Case}
 A similar procedure holds in the adaptive setting, however, it requires reformulation.
 Here, \sys uses $u$ corruption classes provided by the detector.
 Instead of conditioning on the features that are corrupted, the estimator conditions on the classes.
@@ -91,7 +91,6 @@ These are the average change in the features given that class and the average ch
 p(r_u)\propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{ux} +  M_y \cdot \Delta_{uy}\|
 \] 
 
-\subsubsection{Example}
 Here is an example of using the optimization to select a sample of data for cleaning.
 \begin{example}\label{estex}
 Consider using \sys with an a priori detector.

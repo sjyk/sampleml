@@ -30,7 +30,7 @@ Therefore, \sys needs to update $\theta^{(d)}$ some distance $\gamma$ (Figure \r
 \]
 At the optimal point, the magnitude of the gradient will be zero.
 So intuitively, this approach iteratively moves the model downhill (transparent red circle) -- correcting the dirty model until the desired accuracy is reached.
-However, the gradient depends on all of the clean data which is not available and \sys will have to approximate the gradient from a sample of newly cleaned data.
+However, the gradient depends on all of the clean data, which is not available, and \sys will have to approximate the gradient from a sample of newly cleaned data.
 %The main intuition is that if the gradient steps are on average correct, the model still moves downhill albeit with a reduced convergence rate proportional to the inaccuracy of the sample-based estimate.
 
 To derive a sample-based update rule, the most important property is that sums commute with derivatives and gradients.
@@ -107,7 +107,9 @@ If a data cleaning technique requires a larger batch size than 50, \sys can abst
 For example, the batch size set by the user might be $b=1000$, but the model updates after every $50$ records are cleaned.
 We can disassociate the batching requirements of SGD and the batching requirements of the data cleaning technique.
 
-\subsubsection{Convergence Conditions and Properties}
+\vspace{0.25em}
+
+\noindent\textbf{Convergence Conditions and Properties}
 The convergence rates of SGD are also well analyzed \cite{dekel2012optimal,bertsekas2011incremental,zhao2014stochastic}. 
 The analysis gives a bound on the error of intermediate models and the expected number of steps before achieving a model within a certain error. 
 For a general convex loss, a batch size $b$, and $T$ iterations, the convergence rate is bounded by $O(\frac{\sigma^2}{\sqrt{bT}})$. 
@@ -119,8 +121,6 @@ $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 where $g^*$ is the gradient computed over the full data if it were fully cleaned.
 This property of SGD allows us to bound the model error with a monotonically decreasing function of the number of records cleaned, thus satisfying the reliability condition in the problem statement.
 
-\subsection{Example}
-This example describes an application of the update algorithm.
 \begin{example}\label{upex}
 Recall that the analyst has a dirty SVM model on the dirty data $\theta^{(d)}$.
 She decides that she has a budget of cleaning $100$ records, and decides to clean the 100 records in batches of 10 (set based on how fast she can clean the data, and how often she wants to see an updated result).
@@ -135,17 +135,14 @@ The gradient of a basic SVM is given by the following function:
 \]
 
 For each iteration $t$, a sample of 10 records $S$ is drawn from $R_{dirty}$.
-\sys then applies the cleaning function to the sample:
-\[
-\{(x_i^{(c)},y_i^{(c)})\} = \{C(i): \forall i \in S\}
-\]
+\sys then applies the cleaning function to the sample.
 Using these values, \sys estimates the gradient on the newly cleaned data:
 \[
-g_{S}(\theta) = \frac{1}{10} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
+\frac{1}{10} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
 \sys also applies the gradient to the already clean data (initially non-existent):
 \[
-g_C(\theta) = \frac{1}{\mid R_{clean}\mid}\sum_{i \in R_{clean}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
+\frac{1}{\mid R_{clean}\mid}\sum_{i \in R_{clean}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \]
 Then, it calculates the update rule:
 \[
