@@ -82,7 +82,7 @@ Iterations continue until $k = T \cdot b$ records are cleaned.
 The update algorithm can be formalized as a class of very well studied algorithms called Mini-batch Stochastic Gradient Descent (SGD).
 In SGD, random subsets of data are selected at each iteration and the average gradient is computed for every batch.
 The basic condition for convergence is that the gradient steps need to be on average correct.
-We provided the intuition that this is the case in Equation \ref{unbia}, and this can be more rigorously formalized as an unbiased estimate of the true gradient~\cite{activecleanarxiv}.
+We provided the intuition that this is the case in Equation \ref{unbia}, and this can be more rigorously formalized as an unbiased estimate of the true gradient~(see T.R \cite{activecleanarxiv}).
 Then model is guaranteed to converge essentially with a rate proportional to the inaccuracy of the sample-based estimate.
 
 One key difference with the SGD models applied in model training frameworks is that \sys applies a \emph{full} gradient step on the already clean data and averages it with a stochastic gradient step (i.e., calculated from a sample) on the dirty data. 
