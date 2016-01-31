@@ -2,8 +2,8 @@
 Statistical models trained on historical data facilitate several important predictive applications such as fraud detection, recommendation systems, and automatic content classification.
 In a survey of Apache Spark users, over 60\% responded that support for advanced statistical analytics was Spark's most important feature~\cite{sparksurvey}.
 This sentiment is echoed across both industry and academia, and there has been significant interest in improving the efficiency of model training pipelines~\cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, tensor}. 
-Although it is often overlooked, an important step in all model training pipelines is data pre-processing including structuring data, imputing missing values, and handling incorrect data.
-Analysts widely report that \emph{data cleaning} is a major concern~\cite{kandel2012,nytimes}, and consequently, it is important to understand the efficiency and correctness of such operations in the context of emerging statistical analytics.
+Although it is often overlooked, an important step in all model training pipelines is handling dirty or inconsistent data including extracting structure, imputing missing values, and handling incorrect data.
+Analysts widely report that cleaning dirty data is a major concern~\cite{kandel2012,nytimes}, and consequently, it is important to understand the efficiency and correctness of such operations in the context of emerging statistical analytics.
 
 While many aspects of the data cleaning problem have been well-studied for SQL analytics, the results can be counter-intuitive in high-dimensional statistical models.
 For example, studies have shown that many analysts do not approach cleaning as a one-shot pre-processing step, and instead, repeatedly alternate between cleaning and analysis.

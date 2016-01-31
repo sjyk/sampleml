@@ -35,7 +35,7 @@
 
 \lstset{basicstyle=\large,breaklines=true,language=SQL,belowcaptionskip=.1\baselineskip}
 
-%\linespread{0.995}
+\linespread{0.995}
 
 \makeatletter
 \def\@copyrightspace{\relax}
@@ -133,8 +133,8 @@
 \maketitle
 
 \begin{abstract}
-Analysts working with dirty data often clean iteratively, where they repeatedly alternate between analysis and cleaning to diagnose and repair data errors.
-We explore iterative cleaning in the context of statistical model training, which is an increasingly popular form of data analytics.  
+Analysts often clean dirty data iteratively--cleaning some data, executing the analysis, and then, cleaning more data based on the results.
+We explore the iterative cleaning process in the context of statistical model training, which is an increasingly popular form of data analytics.  
 The challenge is that training high-dimensional statistical models on partially clean data lacks guarantees, and the iterative cleaning process may actually diverge.
 We propose \sys which allows for progressive and iterative cleaning in statistical modeling problems while preserving convergence guarantees.
 \sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs), and also prioritizes cleaning those records likely to affect the results.

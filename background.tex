@@ -19,20 +19,20 @@ For example, in a linear regression $\phi$ is:
 Sometimes, a \emph{regularization} term $r(\theta)$ is added to the loss, however, this will not affect our results, and we ignore this term without loss of generality.
 
 \subsection{Data Cleaning}
-We assume that there is a one-to-one known mapping between records in a relation $R$ and labeled training examples $(x_{i},y_{i})$.
+We assume that there is a one-to-one mapping between records in a relation $R$ and labeled training examples $(x_{i},y_{i})$.
 %\sys supports two types of data cleaning operations attribute value transformations and removal.
-We represent the data cleaning operation as general user-defined function $Clean(\cdot)$ that can be applied to a record $r$ to perform two actions: recover a unique clean record $r' = Clean(r)$ with the same schema or remove the record $\emptyset = Clean(r)$.
+We represent the data cleaning operation as a general user-defined function $Clean(\cdot)$ that can be applied to a record $r$ and can perform two actions: recover a unique clean record $r' = Clean(r)$ with the same schema or remove the record $\emptyset = Clean(r)$.
 $Clean(\cdot)$ can be implemented with software or represent a manual action by the analyst.
 We define the clean relation as a relation of all of the records after cleaning:
 \[R_{clean} = \cup_i^N Clean(r_i \in R)\]
 Therefore, for every $r' \in R_{clean}$ there exists a unique $r \in R$ in the dirty data.
 We acknowledge that this definition is limited as it does \emph{not} cover errors that simultaneously affect multiple records such as record duplication or structure such as schema transformation.
-However, the supported cleaning operations include many important operations, resolving common inconsistencies (e.g., merging ``U.S.A" and ``United States"), filtering outliers (e.g., removing records with values $>1e6$), and standardizing attribute semantics (e.g., ``1.2 miles" and ``1.93 km").
-These errors are very common in the context of statistical models on sensors, logs, and human-input datasets. 
+However, the supported cleaning operations include resolving common inconsistencies (e.g., merging ``U.S.A" and ``United States"), filtering outliers (e.g., removing records with values $>1e6$), and standardizing attribute semantics (e.g., ``1.2 miles" and ``1.93 km").
+These errors are very common in the context of statistical models for sensor, log, and human-input datasets. 
 
 The record-by-record cleaning model is not a fundamental restriction of \sys, and our technical report discusses a generalization called the ``set of records" cleaning model~\cite{activecleanarxiv}.
-In this generalization, the $Clean(\cdot)$ function is composed of schema preserving \textsf{map} and \textsf{filter} applied to the entire dataset.
-This can model problems such batch resolution of inconsistencies such as a find-and-replace.
+In this generalization, the $Clean(\cdot)$ function is composed of schema preserving \textsf{map} and \textsf{filter} operations applied to the entire dataset.
+This can model problems such batch resolution of inconsistencies with a ``find-and-replace".
 
 \subsection{Use Case: Dollars for Docs}\label{s:usecase}
 ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest~\cite{dollarsfordocsa}. 
@@ -113,7 +113,7 @@ Active Learning considers the problem of selecting the most informative unlabele
 Active Learning iteratively queries new examples to label and integrates those examples into the model.
 In contrast, \sys studies a broader problem of accounting for modifications to both features and labels in existing examples.
 We have access to dirty values may give us valuable information about which data are likely to be dirty, and which data are likely to impact the model. 
-This would be like Active Learning, where instead of unlabled data there are inaccurate prior estimates for the labels.
+This would be like Active Learning, where instead of unlabled data, there are inaccurate prior estimates for the labels.
 \sys reduces to a form of Expected Gradient Length Active Learning when there is no structure in the dirty data to exploit (such as completely missing attribute values).
 
 
