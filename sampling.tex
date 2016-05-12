@@ -1,4 +1,5 @@
 \section{Efficiency With Sampling}\label{dist-samp}
+\reminder{Revise Sampling Section}
 The \emph{updater} received a sample with probabilities $p(\cdot)$.
 For any distribution where  $p(\cdot) > 0$, we can preserve correctness.
 \sys uses a sampling algorithm that selects the most valuable records to clean with higher probability. 
@@ -14,7 +15,7 @@ It can be shown that the optimal distribution over records in $R_{dirty}$ is pro
 p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|
 \]
 The problem is that the optimal distribution leads to a chicken-and-egg problem:
-the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, which are the clean values, however we are sampling the values so that they can be cleaned..
+the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, which are the clean values, however we are sampling the values so that they can be cleaned.
 
 \subsection{Dirty Gradient Solution}\label{dgsample}
 Since such an oracle does not exist, and one solution is to use the gradient w.r.t the dirty data:
