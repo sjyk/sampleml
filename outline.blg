@@ -83,45 +83,46 @@ Warning--to sort, need author or key in dollarsfordocsa
 Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in keystone
 Warning--empty publisher in bottou2012stochastic
-You've used 39 entries,
+Warning--empty publisher in DBLP:series/synthesis/2012Fan
+You've used 42 entries,
             2118 wiz_defined-function locations,
-            655 strings with 10085 characters,
-and the built_in function-call counts, 12375 in all, are:
-= -- 1013
-> -- 816
+            670 strings with 10482 characters,
+and the built_in function-call counts, 13162 in all, are:
+= -- 1083
+> -- 855
 < -- 0
-+ -- 331
-- -- 286
-* -- 800
-:= -- 2069
-add.period$ -- 114
-call.type$ -- 39
-change.case$ -- 260
++ -- 346
+- -- 298
+* -- 840
+:= -- 2204
+add.period$ -- 124
+call.type$ -- 42
+change.case$ -- 273
 chr.to.int$ -- 0
-cite$ -- 46
-duplicate$ -- 505
-empty$ -- 1063
-format.name$ -- 286
-if$ -- 2579
+cite$ -- 50
+duplicate$ -- 543
+empty$ -- 1135
+format.name$ -- 298
+if$ -- 2747
 int.to.chr$ -- 0
-int.to.str$ -- 39
-missing$ -- 33
-newline$ -- 192
-num.names$ -- 66
-pop$ -- 421
+int.to.str$ -- 42
+missing$ -- 38
+newline$ -- 207
+num.names$ -- 72
+pop$ -- 447
 preamble$ -- 1
-purify$ -- 221
+purify$ -- 233
 quote$ -- 0
-skip$ -- 277
+skip$ -- 299
 stack$ -- 0
-substring$ -- 201
-swap$ -- 71
+substring$ -- 216
+swap$ -- 75
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 156
-warning$ -- 7
-while$ -- 66
-width$ -- 41
-write$ -- 376
+type$ -- 164
+warning$ -- 8
+while$ -- 72
+width$ -- 44
+write$ -- 406
 (There were 18 error messages)

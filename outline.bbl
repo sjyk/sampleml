@@ -60,6 +60,11 @@ A.~Crotty, A.~Galakatos, and T.~Kraska.
 \newblock Tupleware: Distributed machine learning on small clusters.
 \newblock In {\em IEEE Data Eng. Bull.}, 2014.
 
+\bibitem{Dasu:2003:EDM:861869}
+T.~Dasu and T.~Johnson.
+\newblock {\em Exploratory Data Mining and Data Cleaning}.
+\newblock John Wiley \& Sons, Inc., 2003.
+
 \bibitem{dekel2012optimal}
 O.~Dekel, R.~Gilad{-}Bachrach, O.~Shamir, and L.~Xiao.
 \newblock Optimal distributed online prediction using mini-batches.
@@ -74,6 +79,11 @@ A.~Deshpande, C.~Guestrin, S.~Madden, J.~M. Hellerstein, and W.~Hong.
 P.~Drineas, M.~Magdon{-}Ismail, M.~W. Mahoney, and D.~P. Woodruff.
 \newblock Fast approximation of matrix coherence and statistical leverage.
 \newblock In {\em JMLR}, 2012.
+
+\bibitem{DBLP:series/synthesis/2012Fan}
+W.~Fan and F.~Geerts.
+\newblock {\em Foundations of Data Quality Management}.
+\newblock Synthesis Lectures on Data Management. 2012.
 
 \bibitem{feng2014robust}
 J.~Feng, H.~Xu, S.~Mannor, and S.~Yan.
@@ -163,6 +173,11 @@ S.~J. Pan and Q.~Yang.
 T.~Papenbrock, A.~Heise, and F.~Naumann.
 \newblock Progressive duplicate detection.
 \newblock In {\em TKDE}, 2015.
+
+\bibitem{rahm2000data}
+E.~Rahm and H.~H. Do.
+\newblock Data cleaning: Problems and current approaches.
+\newblock In {\em IEEE Data Eng. Bull.}, 2000.
 
 \bibitem{settles2010active}
 B.~Settles.
