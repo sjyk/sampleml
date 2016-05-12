@@ -1,29 +1,38 @@
-\section{Efficiency With Sampling}\label{dist-samp}
-\reminder{Revise Sampling Section}
-The \emph{updater} received a sample with probabilities $p(\cdot)$.
-For any distribution where  $p(\cdot) > 0$, we can preserve correctness.
+\section{Non-Uniform Sampling}\label{dist-samp}
+The algorithm proposed in Section \ref{update-alg} will convege for 
+any distribution distribution where  $p(\cdot) > 0$ for all records, albeit different distributions will have different convergence rates.
 \sys uses a sampling algorithm that selects the most valuable records to clean with higher probability. 
 
 \subsection{Optimal Sampling Problem}
 Recall that the convergence rate of an SGD algorithm is bounded by $\sigma^2$ which is the variance of the gradient.
 Intuitively, the variance measures how accurately the gradient is estimated from a uniform sample.
 Other sampling distributions, while preserving the sample expected value, may have a lower variance.
-Thus, the oracle sampling problem is defined as a search over sampling distributions to find the minimum variance sampling distribution.
+Thus, the optimal sampling problem is defined as a search over sampling distributions to find the minimum variance sampling distribution.
 
-It can be shown that the optimal distribution over records in $R_{dirty}$ is probabilities proportional to:
+\begin{definition}[optimal Sampling Problem]
+Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find sampling probabilities $p(r)$ such that over all samples $S$ of size $k$ it minimizes the variance:
+\[
+\mathbb{E}(\|g_S - g^*\|^2)
+\]
+\end{definition}
+
+It can be shown~\cite{zhao2014stochastic} that the optimal distribution over records in $R_{dirty}$ is probabilities proportional to:
 \[
 p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|
 \]
 The problem is that the optimal distribution leads to a chicken-and-egg problem:
 the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, which are the clean values, however we are sampling the values so that they can be cleaned.
 
-\subsection{Solutions}\label{dgsample}
-Since such an oracle does not exist, and one solution is to use the gradient w.r.t the dirty data:
+Since we do not know the clean values, and one solution is to use the gradient w.r.t the dirty data:
 \[
 p_i \propto \|\nabla\phi(x^{(d)}_i,y^{(d)}_i,\theta^{(t)})\|
 \]
-It turns out that the solution works reasonably well in practice on our experimental datasets and has been studied in Machine Learning as the Expected Gradient Length heuristic \cite{settles2010active}.
-The contribution in our work is integrating this heuristic with statistically correct updates.
-However, intuitively, approximating the oracle as closely as possible can result in improved prioritization.
-The subsequent section describes two components, the detector and estimator, that can be used to improve the convergence rate.
-Our experiments suggest up-to a 2x improvement in convergence when using these optional optimizations (Section \ref{comp}).
+It turns out that this solution is highly related to the Expected Gradient Length heuristic \cite{settles2010active}.
+Note that as long as every record gets sampled, the algorithm will still converge.
+However, intuitively, approximating the optimum as closely as possible can result in improved prioritization. 
+Using this insight, we show that we can do significantly better by using the detector results to estimate the impact of data cleaning.
+
+
+
+
+

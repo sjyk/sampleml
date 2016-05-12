@@ -1,48 +1,56 @@
-\subsection{The Detector}\label{det}
-% Partitioning Data With Detection}\label{det}
-% \sys improves the progress of each update iteration by intelligently partitioning the data into expected dirty and clean partitions. 
-% This ensures that sampling draws data that are likely to be dirty.
+\section{Dirty Data Detection}\label{det}
+If corrupted records are relatively rare, a sampling-based approach might be very inefficient.
+The analyst may have to sample many batches of data before finding a corrupted record.
+In this section, we describe how we can couple \sys with prior knowledge about which data are likely to be dirty.
+In the data cleaning literature, error detection (determine whether a record is erroneous) and error repair (synthesize a set updates to remove all erroneous records) are considered two distinct problems~\cite{DBLP:series/synthesis/2012Fan, Dasu:2003:EDM:861869, rahm2000data}.
+Error detection is often considered a substantially easier, since one can often declare a set of integrity rules on a database (i.e., a key must be unique), and select rows that violate those rules.
+We discuss how rule-based detectors can be integrated with \sys, as well as learning a detector as the dataset is cleaned.
 
-% \subsubsection{Goals}
+\subsection{Detection Problem}
 The detector returns two important aspects of a record: 
-(1) whether the record is dirty, and (2) if it is dirty, what is wrong with the record.
+(1) whether the record is dirty, and (2) if it is dirty, on which attributes there are errors.
 The sampler can use (1) to select a subset of dirty records to sample at each batch and 
 the estimator can use (2) to estimate the value of data cleaning based on other records with the same corruption.
-\sys supports two types of detectors: \emph{a priori} and \emph{adaptive}.
-The former assumes that we know the set of dirty records and how they are dirty \emph{a priori} to \sys,
-while the latter \emph{adaptively} learns characteristics of the dirty data as part of running \sys.
 
-\subsubsection{\protect\textit{\large A Priori} Detector}
-\reminder{Add surveys and more discussion}
-For many types of dirtiness such as missing attribute values and constraint violations, 
-it is possible to efficiently enumerate a set of corrupted records and determine how the records are corrupted.
-
-\begin{definition}[A Priori Detection]
-Let $r$ be a record in $R$. An a priori detector is a detector that returns a Boolean of whether the record is dirty and a set of columns $e_r$ that are dirty.
+\begin{definition}[Detector]
+Let $r$ be a record in $R$. An detector is a deterministic program that returns a Boolean of whether the record is dirty and a set of columns $e_r$ that are dirty.
 \[
 D(r) = (\{0,1\}, e_r)
 \]
 From the set of columns that are dirty, find the corresponding features that are dirty $f_r$ and labels that are dirty $l_r$.
 \end{definition}
 
-\noindent Here is an example of this definition using a data cleaning methodology proposed in the literature.
+We will consider two types of detectors in this paper: exact rule-based detectors that rely on detecting integrity constraint or functional dependency violates, and approximate adaptive detectors that learn which data are likely to be dirty.
+
+\subsection{Rule-Based Detector}
+Data quality rules are widely studied as a technique for detecting data errors.
+In most rule-based frameworks, an analyst declares a set of rules $\Sigma$ and checks whether a relation $R$ satisfies such rules.
+These rules can be declared in advance before applying \sys, or constructed from the first batch of sampled data.
+This paper focuses on integrity constraints (ICs), conditional functional dependencies (CFDs), and matching dependencies (MDs) where it is efficient to enumerate the set of records that violate at least one constraint. 
+
+Let $R_{viol}$ and $R_{sat}$ be the subset of records in $R_{ditry}$ that violate at least one rule and satisfy all rules respectively.
+The rule-based detector modifies the update workflow in the following way:
+\begin{enumerate}
+\item $R_{clean} = R_{clean} \cup R_{sat}$
+\item $R_{dirty} = R_{viol}$
+\item Apply the algorithm in Section \ref{update-alg}.
+\end{enumerate}
 
 \vspace{0.5em}
 
-\begin{example}[Constraint-Based Detection]\label{detex1}
-Let $\Sigma$ be a set of constraints on the relation $\mathcal{R}$. 
-In the detection step, the detector selects a subset of records $\mathcal{R}_{dirty} \subseteq \mathcal{R}$ that violate at least one constraint. The set $e_r$ is the set of columns for each record which have a constraint violation.
-An example of a constraint on the running example dataset is that the \texttt{status} of
+\begin{example}[Rule-Based Detection]\label{detex1}
+An example of a rule on the running example dataset is that the \texttt{status} of
 a contribution can be only ``allowed" or ``disallowed".
-Any other value for \texttt{status} is an error.
+Any other value for \texttt{status} is considered violation.
 \end{example}
 
 \subsubsection{Adaptive Detection}
-\emph{A priori} detection is not possible in all cases.
-The detector also supports adaptive detection where detection is learned from previously cleaned data.
+Rule-based detection is not possible in all cases, especially in cases where the analyst selective modifies data.
+This is why we propose an alternative called the adaptive detector.
+Essentially, we reduce the problem to training a classifier on previously cleaned data.
 Note that this ``learning" is distinct from the ``learning" in the user-specified statistical model.
-The challenge in formulating this problem is that detector needs to describe how the data is dirty (e.g. $e_r$ in the \emph{a priori} case).
-The detector achieves this by categorizing the corruption into $u$ classes.
+One challenge is that detector needs to describe how the data is dirty.
+The detector achieves this by categorizing the corruption into $u$ classes, and using a multi-class classifier.
 These classes are corruption categories that do not necessarily align with features, but every record is classified with at most one category.
 
 When using adaptive detection, the repair step has to clean the data and report to which of the $u$ classes the corrupted record belongs.
@@ -50,20 +58,16 @@ When an example $(x,y)$ is cleaned, the repair step labels it with one of the ${
 It is possible that $u$ increases each iteration as more types of dirtiness are discovered.
 In many real world datasets, data errors have locality, where similar records tend to be similarly corrupted.
 There are usually a small number of error classes even if a large number of records are corrupted.
+This problem can be addressed by any classifier, and we use an all-versus-one SVM in our experiments.
 
-One approach for adaptive detection is using a statistical classifier. 
-This approach is particularly suited for a small number data error classes, each of which containing many erroneous records.
-This problem can be addressed by any classifier, and we use an all-versus-one SVM in our experiments.Another approach could be to adaptively learn predicates that define each of the error classes.
-For example, if records with certain attributes are corrupted, a pattern tableau can be assigned to each class to select a set of possibly corrupted records.
-This approach is better suited than a statistical approach for a large number of error classes or scarcity of errors.
-However, it relies on errors being well aligned with certain attribute values.
-
-\begin{definition}[Adaptive Case]
-Select the set of records for which a classifier gives a positive error classification (i.e., one of the $u$ error classes).
-After each sample of data is cleaned, the classifier is retrained.
-So the result is:
-\[D(r) = (\{1,0\},\{1,...,u+1\})\]
-\end{definition}
+The adaptive detector modifies the update workflow in the following way:
+\begin{enumerate}
+\item Let $R_{clean}$ be the previously cleaned data, and let $U_{clean}$ be a set of labels for each record indicating the error class and if they are dirty or ``not dirty''.
+\item Train a classifier to predict the label \textsf{Train}$(R_{clean}, U_{clean})$
+\item Apply the classifier to the dirty data \textsf{Predict}$(R_{dirty})$
+\item For all records predicted to be clean, remove from $R_{dirty}$ and append to $R_{clean}$.
+\item Apply the algorithm in Section \ref{update-alg}.
+\end{enumerate}
 
 \vspace{0.75em}
 

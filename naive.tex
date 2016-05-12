@@ -58,7 +58,7 @@ Then, at each iteration $t$, the update becomes:
 \theta^{(t+1)} \leftarrow \theta^{(t)} - \gamma \cdot g(\theta^{(t)})
 \]
 
-\subsection{Model Update Algorithm}
+\subsection{Model Update Algorithm}\label{update-alg}
 We present pseudocode for one iteration of the update algorithm.
 To summarize, the algorithm is initialized with $\theta^{(0)} = \theta^{(d)}$ which is the dirty model.
 There are three user set parameters the budget $k$, batch size $b$, and the step size $\gamma$.

@@ -1,22 +1,17 @@
-
 \subsection{The Estimator}\label{sampling}
-%\subsubsection{Approximating an Oracle Sampler}
-To get around the problem with oracle sampling, the estimator will estimate the cleaned value with previously cleaned data.
-The estimator will also take advantage of the detector from the previous section.
+The goal of the estimator is to estimate the gradient of a record w.r.t to the clean data $\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})$.
+\sys leverages previously cleaned data as well as the detector to compute this estimate.
 There are a number of different approaches, such as regression, that could be used to estimate the cleaned value given the dirty values.
 However, there is a problem of scarcity, where errors may affect a small number of records.
 As a result, the regression approach would have to learn a multivariate function with only a few examples.
-Thus, high-dimensional regression is ill-suited for the estimator.
-Conversely, it could try a very simple estimator that just calculates an average change and adds this change to all of the gradients.
-This estimator can be highly inaccurate as it also applies the change to records that are known to be clean.
+Consequently, high-dimensional regression is ill-suited for the estimator.
 
-\sys leverages the detector for an estimator between these two extremes.
-The estimator calculates average changes feature-by-feature and selectively corrects the gradient when a feature is known to be corrupted based on the detector.
+The estimator tht we propose calculates average changes feature-by-feature and selectively corrects the gradient when a feature is known to be corrupted based on the detector.
 It also applies a linearization that leads to improved estimates when the sample size is small.
 We evaluate the linearization in Section \ref{est} against alternatives, and find that it provides more accurate estimates for a small number of samples cleaned.
 The result is a biased estimator, and when the number of cleaned samples is large the alternative techniques are comparable or even slightly better due to the bias.
 
-\subsection{Estimation For A Priori Detection}
+\subsection{Estimation Algorithm}
 If most of the features are correct, it would seem like the gradient is only
 incorrect in one or two of its components.
 The problem is that the gradient $\nabla\phi(\cdot)$ can be a very non-linear function of the features that couple features together.
@@ -28,7 +23,7 @@ It is not possible to isolate the effect of a change of one feature on the gradi
 Even if one of the features is corrupted, all of the gradient components will be incorrect.
 
 To address this problem, the gradient can be approximated in a way that the effects of dirty features on the gradient are decoupled.
-Recall, in the \emph{a priori} detection problem, that associated with each $r \in R_{dirty}$ are two sets of errors $f_r$ , $l_r$ which identifies the set of corrupted features and labels.
+Recall, in the detection problem, that associated with each $r \in R_{dirty}$ are two sets of errors $f_r$ , $l_r$ which identifies the set of corrupted features and labels.
 This property can be used to construct a coarse estimate of the clean value.
 The main idea is to calculate average changes for each feature, then given an uncleaned (but dirty) record, add these average changes to correct the gradient.
 
@@ -41,9 +36,8 @@ Essentially, if the gradient with respect to the dirty data plus some linear cor
 In the technical report, we present a derivation using a Taylor series expansion and a number of $M_x$ and $M_y$ matrices for common convex losses~\cite{activecleanarxiv}.
 It also describes how to maintain $\Delta_{rx}$ and $\Delta_{ry}$ as cleaning progresses~\cite{activecleanarxiv}.
 
-\iffalse
-\paragraph{More Accurate Early Error Estimates}\label{acc}
-Linearization over avoids amplifying estimation error.
+\subsubsection{More Accurate Early Error Estimates}\label{acc}
+Linearization over avoids amplifying estimation error for small samples.
 Consider the linear regression gradient:
 \[
 \nabla\phi(x,y,\theta) = (\theta^Tx - y)x
@@ -66,8 +60,9 @@ If the variance is large, the Taylor estimate avoids amplifying the error.
 Of course, there is a tradeoff of some additional bias since the true function is non-linear.
 We evaluate this linearization in Section \ref{est} against alternatives, and find that indeed it provides more accurate estimates for a small number of samples cleaned.
 When the number of cleaned samples is large the alternative techniques are comparable or even slightly better.
-\fi
 
+
+\iffalse
 \subsection{Estimation For Adaptive Case}
 A similar procedure holds in the adaptive setting, however, it requires reformulation.
 Here, \sys uses $u$ corruption classes provided by the detector.
@@ -100,5 +95,5 @@ p(r_3) \propto\|\nabla\phi(x,y,\theta^{(t)}) + M_x \cdot \Delta_{r_3x} \|
 \] 
 To turn the result into a probability distribution, \sys normalizes over all dirty records.
 \end{example}
-
+\fi
 
