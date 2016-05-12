@@ -4,7 +4,7 @@ The \emph{updater} received a sample with probabilities $p(\cdot)$.
 For any distribution where  $p(\cdot) > 0$, we can preserve correctness.
 \sys uses a sampling algorithm that selects the most valuable records to clean with higher probability. 
 
-\subsection{Oracle Sampling Problem}
+\subsection{Optimal Sampling Problem}
 Recall that the convergence rate of an SGD algorithm is bounded by $\sigma^2$ which is the variance of the gradient.
 Intuitively, the variance measures how accurately the gradient is estimated from a uniform sample.
 Other sampling distributions, while preserving the sample expected value, may have a lower variance.
@@ -17,7 +17,7 @@ p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|
 The problem is that the optimal distribution leads to a chicken-and-egg problem:
 the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$, which are the clean values, however we are sampling the values so that they can be cleaned.
 
-\subsection{Dirty Gradient Solution}\label{dgsample}
+\subsection{Solutions}\label{dgsample}
 Since such an oracle does not exist, and one solution is to use the gradient w.r.t the dirty data:
 \[
 p_i \propto \|\nabla\phi(x^{(d)}_i,y^{(d)}_i,\theta^{(t)})\|
