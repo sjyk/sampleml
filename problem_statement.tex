@@ -1,7 +1,40 @@
 \section{Problem Formalization}\label{statements}
 \noindent \sys is an architecture that addresses the correctness and efficiency problems.
 
-\subsection{Notation and Setup}\label{notation}
+\subsection{Statistical Modeling}
+In this paper, we will use the term \emph{statistical modeling} to describe a well studied class of analytics problems; ones that can be expressed as the minimization of convex loss functions.
+This class is restricted to supervised Machine Learning.
+Examples include linear models (including linear and logistic regression), support vector machines, and in fact, means and medians are also special cases. 
+
+Formally, suppose $x$ is a feature vector and $y$ is a label.
+For labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of \emph{model parameters} $\theta$ by minimizing a loss function $\phi$ (a function that measures prediction error) over all training examples:
+\[
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
+\]
+Where $\phi$ is a convex function in $\theta$.
+For example, in a linear regression $\phi$ is:
+\[
+\phi(x_{i},y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
+\]
+Sometimes, a \emph{regularization} term $r(\theta)$ is added to the loss, however, this will not affect our results, and we ignore this term without loss of generality.
+
+\subsection{Data Cleaning}
+We assume that there is a one-to-one mapping between records in a relation $R$ and labeled training examples $(x_{i},y_{i})$.
+%\sys supports two types of data cleaning operations attribute value transformations and removal.
+We represent the data cleaning operation as a general user-defined function $C(\cdot)$ that can be applied to a record $r$ and can perform two actions: recover a unique clean record $r' = C(r)$ with the same schema or remove the record $\emptyset = C(r)$.
+$C(\cdot)$ can be implemented with software or represent a manual action by the analyst.
+We define the clean relation as a relation of all of the records after cleaning:
+\[R_{clean} = \cup_i^N C(r_i \in R)\]
+Therefore, for every $r' \in R_{clean}$ there exists a unique $r \in R$ in the dirty data.
+We acknowledge that this definition is limited as it does \emph{not} cover errors that simultaneously affect multiple records such as record duplication or structure such as schema transformation.
+However, the supported cleaning operations include resolving common inconsistencies (e.g., merging ``U.S.A" and ``United States"), filtering outliers (e.g., removing records with values $>1e6$), and standardizing attribute semantics (e.g., ``1.2 miles" and ``1.93 km").
+These errors are very common in the context of statistical models for sensor, log, and human-input datasets. 
+
+The record-by-record cleaning model is not a fundamental restriction of \sys, and our technical report discusses a generalization called the ``set of records" cleaning model~\cite{activecleanarxiv}.
+In this generalization, the $C(\cdot)$ function is composed of schema preserving \textsf{map} and \textsf{filter} operations applied to the entire dataset.
+This can model problems such batch resolution of inconsistencies with a ``find-and-replace".
+
+\subsection{Notation}\label{notation}
 The user provides a relation $R$, a cleaner $C(\cdot)$, a featurizer $F(\cdot)$, and a convex loss problem defined by the loss $\phi(\cdot)$.
 A total of $k$ records will be cleaned in batches of size $b$, so there will be $\frac{k}{b}$ iterations.  The choice of $b$ does affect the convergence rate.
 Section~\ref{model-update} discusses the efficiency and convergence trade-offs of different values of $b$.
