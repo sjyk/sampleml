@@ -34,7 +34,7 @@ The model is trained on the previously cleaned data as in SampleClean.
  \caption{(a) We plot the relative model error as a function of the number of records cleaned for each of the alternatives on the IMDB content tagging task. \sys results in the fastest convergence. (b) Faster convergence translates into improved test accuracy. On a holdout set of 20\%, \sys is more accurate than the alternatives. (c) We evaluate \sys on the Dollars For Docs fraud detection task and find similar results, where \sys converges faster than the alternatives. (d) \sys improves the detection error (true positive rate) of the classifier resulting in an improved fraud detector. \label{real}}\vspace{-1.5em}
 \end{figure*}
 
-\subsection{Real Scenarios}
+\subsection{Real Scenarios}\label{real-errors}
 First, we describe two data analyst scenarios with real data and real data corruption.
 Both of these scenarios are classification examples, see our technical report for an additional regression example~\cite{activecleanarxiv}.
 We model these scenarios around common industrial use cases for Machine Learning reported in the Apache Spark user survey~\cite{sparksurvey}.
@@ -64,7 +64,7 @@ For 2000 records cleaned, \sys is within 2\% of the accuracy of the model if the
 On the other hand, for the same amount of cleaning, the ``Re-training'' approach hasn't improved the model. 
 
 One of the reasons for this positive result is the significant systematic bias in the errors. Horror movies were more likely to be erroneously tagged. 
-On the dirty dataset, the prediction precision of the model for just Horror movies was only 29\%.
+On the dirty dataset, the prediction precision of the model for Horror movies was only 29\%.
 This improved to 74\% after data cleaning.
 
 \subsubsection{Dollars For Docs (DfD)}\label{exp:dfd}

@@ -57,7 +57,7 @@ There are two key challenges: correctness and efficiency.
 \noindent \textbf{Correctness: } Let us revist Figure \ref{update-arch1} from the introduction. 
 The straight-forward application of data cleaning is to repair the corruption in-place, and re-train the model after each repair.
 The problem is that aggregates over mixtures of different populations of data can result in spurious relationships due to the well-known phenomenon called Simpson's paradox \cite{simpson1951interpretation}.
-Simpson's paradox is by no means a corner case, and it has affected the validity of a number of high-profile studies~\cite{simpsonsparadox}.
+Simpson's paradox is by no means a corner case, and it has affected the validity of a number of high-profile studies~\cite{pearl2003causality}.
 Thus, training models on a mixture of dirty and clean data can lead to unreliable results, where artificial trends introduced by the mixture can be confused for the effects of data cleaning.
 
 \vspace{0.5em}
@@ -67,11 +67,12 @@ However, high-dimensional models are highly sensitive to sample size.
 Figure \ref{update-arch1}c illustrates that, even in two dimensions, models trained from small samples can be as incorrect as the mixing solution described before.
 We call this the efficiency problem since while this approach is technically correct, it may converge very slowly.
 One of the most popular prioritization techniques is Active Learning, which has been widely applied in the context of data cleaning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone}.
-Active Learning considers the problem of selecting the most informative unlabeled examples to label in partially labeled static data, and the key problem in using Active Learning for data cleaning is to formulate the human input as a binary labeling task.
+Active Learning considers the problem of selecting the most informative unlabeled examples to label in partially labeled static data.
 Active Learning iteratively queries new examples to label and integrates those examples into the model.
 In contrast, we require a broader problem of accounting for modifications to both features and labels in existing examples.
-We have access to dirty values may give us valuable information about which data are likely to be dirty, and which data are likely to impact the model. 
-This would be like Active Learning, where instead of unlabled data, there are inaccurate prior estimates for the labels.
+Thus, the data actually changes iteration to iteration.
+Furthermore, the existing dirty attribute values may give us valuable information about the model. 
+%This would be like Active Learning, where instead of unlabled data, there are inaccurate prior estimates for the labels.
 %\sys reduces to a form of Expected Gradient Length Active Learning when there is no structure in the dirty data to exploit (such as completely missing attribute values).
 
 

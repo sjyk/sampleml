@@ -1,7 +1,10 @@
-\section{Correctness Problem}\label{model-update}
+\section{Updating the Model}\label{model-update}
 This section describes an algorithm for reliable model updates.
-The updater assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
-Sections \ref{dist-samp} and \ref{opti} show how to optimize $p(\cdot)$ and the analysis in this section applies for any sampling distribution $p(\cdot) > 0$.
+For convex loss minimization, Stochastic Gradient Descent converges to an optimum from any initialization as long each gradient descent step is unbiased.
+We show how we can leverage this property to prove convergence for interactive data cleaning regardless of the inaccuracy of the initial model--as long as the analyst does not systematically exclude certain data from cleaning. 
+%To do so, we will sample yet-to-be-cleaned data in batches, where every record has a non-zero probability $p(i)$ of being sampled.
+%Sections \ref{dist-samp} show how to select a non-uniform $p(\cdot)$ and the analysis in this section applies for any sampling distribution $p(\cdot) > 0$.
+The updater only assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
 
 \subsection{Geometric Derivation}\label{geod}
 The update algorithm intuitively follows from the convex geometry of the problem.
@@ -70,13 +73,17 @@ Iterations continue until $k = T \cdot b$ records are cleaned.
 \begin{enumerate}[noitemsep]
 	\item Take a sample of data $S$ from $R_{dirty}$ 
 	\item Calculate the gradient over the sample of newly clean data and call the result $g_S(\theta^{(t)})$
-	\item Calculate the average gradient over all of the already clean data in $R_{clean}=R-R_{dirty}$, and call the result $g_C(\theta^{(t)})$
-	\item Apply the following update rule:
+	\item Calculate the average gradient over all of the already clean records in $R_{clean}=R-R_{dirty}$, and call the result $g_C(\theta^{(t)})$
+	\item Apply the following update rule, which is a weighted average of the gradient on the already clean records and newly cleaned records:
 	\[
 	\theta^{(t+1)} \leftarrow \theta^{(t)} - \gamma \cdot(\frac{\mid R_{dirty} \mid}{\mid R \mid} \cdot g_S(\theta^{(t)}) + \frac{\mid R_{clean} \mid}{\mid R \mid} \cdot  g_C(\theta^{(t)}))
 	\]
-	\item $R_{clean} = R_{clean} \cup S$ 
+	\item Append the newly cleaned records to set of previously clean records $R_{clean} = R_{clean} \cup S$ 
 \end{enumerate} 
+
+This basic algorithm will serve as the scaffolding for the optimizations in the subsequent sections.
+For example, if we know a record is likely to be clean, we can move it from $R_{dirty}$ to $R_{clean}$ without having to sample it.
+Similarly, we can set the sampling probabilities $p(\cdot)$ to favor records that are likely to affect the model.
 
 \subsection{Analysis with Stochastic Gradient Descent}\label{sgd}
 The update algorithm can be formalized as a class of very well studied algorithms called Mini-batch Stochastic Gradient Descent (SGD).
@@ -116,10 +123,19 @@ For a general convex loss, a batch size $b$, and $T$ iterations, the convergence
 $\sigma^2$ is a measure of how well the sample gradient estimates the gradient over the entire dataset, and $\sqrt{T}$ shows that each iteration has diminishing returns.
 $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 \[
-\mathbb{E}(\|g - g^*\|^2)
+\sigma^2 = \mathbb{E}(\|g - g^*\|^2)
 \]
 where $g^*$ is the gradient computed over the full data if it were fully cleaned.
 This property of SGD allows us to bound the model error with a monotonically decreasing function of the number of records cleaned, thus satisfying the reliability condition in the problem statement.
+
+Gradient descent techniques still apply to non-convex losses as they are widely applied in graphical model inference and deep learning. Instead of converging to a global optimum
+they converge to a locally optimal value. However, there is a dependence on the initialization.
+ActiveClean will converge to the closest locally optimal value to
+the dirty model (which is how we initialize). Because of this, it is harder to reason about
+the objective quality of the results and to define accuracy.
+ Different initializations will lead to different local
+optima, and thus, introduces a complex dependence on the
+initialization with the dirty model.
 
 \begin{example}\label{upex}
 Recall that the analyst has a dirty SVM model on the dirty data $\theta^{(d)}$.

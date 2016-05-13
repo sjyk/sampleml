@@ -1,7 +1,7 @@
-\section{Non-Uniform Sampling}\label{dist-samp}
+\section{Selecting Records to Clean}\label{dist-samp}
 The algorithm proposed in Section \ref{update-alg} will convege for 
-any distribution distribution where  $p(\cdot) > 0$ for all records, albeit different distributions will have different convergence rates.
-\sys uses a sampling algorithm that selects the most valuable records to clean with higher probability. 
+any sampling distribution where  $p(\cdot) > 0$ for all records, albeit different distributions will have different convergence rates.
+\sys uses a sampling algorithm that selects the most valuable records from $R_{dirty}$ to clean with higher probability. 
 
 \subsection{Optimal Sampling Problem}
 Recall that the convergence rate of an SGD algorithm is bounded by $\sigma^2$ which is the variance of the gradient.
@@ -12,7 +12,7 @@ Thus, the optimal sampling problem is defined as a search over sampling distribu
 \begin{definition}[optimal Sampling Problem]
 Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find sampling probabilities $p(r)$ such that over all samples $S$ of size $k$ it minimizes the variance:
 \[
-\mathbb{E}(\|g_S - g^*\|^2)
+\arg\min_p \mathbb{E}(\|g_S - g^*\|^2)
 \]
 \end{definition}
 
@@ -28,10 +28,8 @@ Since we do not know the clean values, and one solution is to use the gradient w
 p_i \propto \|\nabla\phi(x^{(d)}_i,y^{(d)}_i,\theta^{(t)})\|
 \]
 It turns out that this solution is highly related to the Expected Gradient Length heuristic \cite{settles2010active}.
+We show that we can do significantly better by using the detector results to estimate the impact of data cleaning, thereby approximating the optimum.
 Note that as long as every record gets sampled, the algorithm will still converge.
-However, intuitively, approximating the optimum as closely as possible can result in improved prioritization. 
-Using this insight, we show that we can do significantly better by using the detector results to estimate the impact of data cleaning.
-
 
 
 

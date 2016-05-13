@@ -5,11 +5,7 @@ There are a number of different approaches, such as regression, that could be us
 However, there is a problem of scarcity, where errors may affect a small number of records.
 As a result, the regression approach would have to learn a multivariate function with only a few examples.
 Consequently, high-dimensional regression is ill-suited for the estimator.
-
-The estimator tht we propose calculates average changes feature-by-feature and selectively corrects the gradient when a feature is known to be corrupted based on the detector.
-It also applies a linearization that leads to improved estimates when the sample size is small.
-We evaluate the linearization in Section \ref{est} against alternatives, and find that it provides more accurate estimates for a small number of samples cleaned.
-The result is a biased estimator, and when the number of cleaned samples is large the alternative techniques are comparable or even slightly better due to the bias.
+Instead, the estimator uses a linearization of the gradient and average feature-by-feature changes.
 
 \subsection{Estimation Algorithm}
 If most of the features are correct, it would seem like the gradient is only

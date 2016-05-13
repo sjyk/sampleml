@@ -1,4 +1,4 @@
-\section{Introduction}
+\section{Introduction}\label{intro}
 Statistical models trained on historical data facilitate several important predictive applications such as fraud detection, recommendation systems, and automatic content classification.
 In a survey of Apache Spark users, over 60\% responded that support for advanced statistical analytics was Spark's most important feature~\cite{sparksurvey}.
 This sentiment is echoed across both industry and academia, and there has been significant interest in improving the efficiency of model training pipelines~\cite{bdas, alexandrov2014stratosphere, crotty2014tupleware, tensor}. 
@@ -33,7 +33,7 @@ Since these two types of errors do not affect the schema or leave any obvious si
 \end{figure}
 
 We propose \sys, a model training framework that allows for iterative data cleaning while preserving provable convergence properties.
-The analyst initializes \sys with a model, a featurization function, and a pointer to a dirty relational table, and the framework initializes itself with a model trained on the dirty dataset ignoring data errors.
+The analyst initializes \sys with a model, a featurization function, and a pointer to a dirty relational table.
 In each iteration, \sys suggests a sample of data to clean based on the value to the model and the likelihood that it is actually dirty.
 The analyst can apply value transformations and filtering operations to the sample. 
 \sys will incrementally and safely update the current model (as opposed to complete re-training).
@@ -48,12 +48,9 @@ Convexity is a property that ensures that the iterative optimization converges t
 This paper describes the entire \sys architecture. However, the correctness of many of the components require detailed statistical proofs, which we have included in our extended technical report~\cite{activecleanarxiv}. To summarize our contributions:
 \begin{itemize}[noitemsep]
 \item We propose \sys, which allows for progressive data cleaning and statistical model training with guarantees.
-\item \textbf{Correctness} (Section \ref{model-update}). We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation with a with rate $O(\frac{1}{\sqrt{T}})$.
-\item \textbf{Efficiency} (Section \ref{dist-samp}). We derive a theoretically optimal sampling distribution that minimizes the update error and an approximation to estimate the theoretical optimum. Our proposed optimizations can improve model accuracy by up-to 2.5x for the same amount of data cleaned.
-\item \textbf{Detection and Estimation} (Section \ref{opti}). We show how \sys can be integrated with data detection to guide data cleaning towards records expected to be dirty.
-\item \textbf{Experiments} (Section \ref{eval}). The experiments evaluate these components on four datasets with real and synthetic corruption. In a fraud prediction example, to achieve an 80\% true detection accuracy, \sys cleans nearly 10x less records than alternatives. In an image classification example with corrupted images, \sys significantly reduces
-(more than 2x) the number of images to clean for training a model with 98\% accuracy.
-%For a 5\%  systematic corruption, \sys cleans 55\% fewer records to achieve the same accuracy as an Active Learning algorithm.
+\item \textbf{Correctness} We show how to update a dirty model given newly cleaned data. This update converges monotonically in expectation with a with rate $O(\frac{1}{\sqrt{T}})$.
+\item \textbf{Optimizations} We derive a theoretically optimal sampling distribution that minimizes the update error and an approximation to estimate the theoretical optimum. We further show that \sys can integrate with existing dirty data detection techniques. Our proposed optimizations can improve model accuracy by up-to 2.5x for the same amount of data cleaned.
+\item \textbf{Experiments} The experiments evaluate these components on five datasets with real and synthetic corruption. In a fraud prediction example, to achieve an 80\% true detection accuracy, \sys cleans nearly 10x less records than alternatives.
 \end{itemize}
 
 
