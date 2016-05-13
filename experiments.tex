@@ -1,31 +1,42 @@
 \section{Experiments}\label{eval}
 Our experiments evaluate \sys on a variety of data cleaning problems and statistical models.
 We start by presenting two end-to-end scenarios based on a dataset of movies from IMDB and a dataset of medical donations from ProPublica.
-These scenarios have real data and real data errors, and we describe how these errors can affect statistical modeling problems.
+These scenarios have real data and real errors, and we describe how these errors can affect statistical modeling problems.
 Then, we evaluate each of the components of \sys on standard Machine Learning benchmarks (Tax Record Classification, EEG anomaly detection) with synthetic errors.
 Finally, evaluate a how dirty data may affect Machine Learning ``pipelines'' in an image classification example where we corrupted certain images.
 
-\subsection{Alternative Techniques}
-We compare \sys to the following alternatives for interactive data cleaning for Machine Learning.
+\subsection{Setup}
+We compare \sys to alternative solutions along two primary axes: the sampling procedure to pick the next set of records to clean, and the model update procedure to incorporate the cleaned sample.
 
-\vspace{0.25em}
-
-\noindent\textbf{Re-training (RTr): } Re-training takes a sample of data, applies data cleaning in place, and then re-trains the model over the partially clean data. 
-
-\vspace{0.25em}
-
-\noindent\textbf{SampleClean (SC) \cite{wang1999sample}. } SampleClean takes a sample of data, applies data cleaning, and then trains a model to completion on the sample.
-
-\vspace{0.25em}
-
-\noindent\textbf{Active Learning (AL) \cite{guillory2009active}. }
-Within each iteration, examples are prioritized by distance to the decision boundary (called Uncertainty Sampling in \cite{settles2010active}).
-The model is trained on the previously cleaned data as in SampleClean.
+% We compare \sys to the following alternatives for interactive data cleaning for Machine Learning.
 
 
 \vspace{0.25em}
+\noindent\textbf{Naive-Mix (NM): } In each iteration, NM draws a random sample, merges the cleaned sample back into the dataset, and re-trains over the entire dataset.
 
-\noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, instead of an estimation and detection step, the true clean value is used to evaluate the theoretical ideal performance of \sys.
+\vspace{0.25em}
+\noindent\textbf{Naive-Sample (NS): } In contrast to NM, NS only re-trains over the set of samples that have been cleaned so far.
+
+\vspace{0.25em}
+\noindent\textbf{Active Learning (AL): }
+The samples are picked using Active Learning (more precisely, Uncertainty Sampling~\cite{settles2010active}), and the model is re-trained over the cleaned samples.
+
+\vspace{0.25em}
+\noindent\textbf{Oracle (O): } Oracle has complete access to the ground truth, and in each iteration, selects samples that maximize the expected convergence rate.  It uses \sys's model update procedure.  
+
+% \vspace{0.25em}
+% \noindent\textbf{Re-training (RTr): } Re-training takes a sample of data, applies data cleaning in place, and then re-trains the model over the partially clean data. 
+% 
+% \vspace{0.25em}
+% \noindent\textbf{SampleClean (SC) \cite{wang1999sample}. } SampleClean takes a sample of data, applies data cleaning, and then trains a model to completion on the sample.
+% 
+% \vspace{0.25em}
+% \noindent\textbf{Active Learning (AL) \cite{guillory2009active}. }
+% Within each iteration, examples are prioritized by distance to the decision boundary (called Uncertainty Sampling in \cite{settles2010active}).
+% The model is trained on the previously cleaned data as in SampleClean.
+% 
+% \vspace{0.25em}
+% \noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, instead of an estimation and detection step, the true clean value is used to evaluate the theoretical ideal performance of \sys.
 
 \begin{figure*}[t]
 \centering
@@ -35,28 +46,41 @@ The model is trained on the previously cleaned data as in SampleClean.
 \end{figure*}
 
 \subsection{Real Scenarios}\label{real-errors}
-First, we describe two data analyst scenarios with real data and real data corruption.
-Both of these scenarios are classification examples, see our technical report for an additional regression example~\cite{activecleanarxiv}.
-We model these scenarios around common industrial use cases for Machine Learning reported in the Apache Spark user survey~\cite{sparksurvey}.
-The first scenario is an automatic content tagging problem where a classifier categorizes movies from plot descriptions.
-The second scenario resembles a fraud detection problem where a classifier determines whether a medical donation is suspicious.
-Both the scenarios are affected by systematic error, since dirtiness in the data affects one classification class more than the other.
-To run each experiment, the entire dataset was cleaned up front, and interactivity with an analyst was simulated by looking up the value in the cleaned data (see \cite{activecleanarxiv} for constraints, errors, and cleaning methodology). 
+We now describe two data analyst classification scenarios based on popular industry use cases reported in the Apache Spark user survey~\cite{sparksurvey} --- these experiments are run with real data and real corruption.
+The first is a content tagging problem to categorize movies from plot descriptions; 
+the second is a fraud detection problem to  determine whether a medical donation is suspicious.
+Both of the datasets are plagued by systematic errors that affect the classification accuracy by $10-35\%$.
+% the scenarios are affected by systematic error, since dirtiness in the data affects one classification class more than the other\ewu{THIS IS NOT WHAT SYSTEMATIC ERROR MEANS THOUGH, IT'S A POSSIBLE SYMPTOM}.
+We simulate the analyst's cleaning procedure by looking up the cleaned value in the dataset that we cleaned beforehand.
+See~\cite{activecleanarxiv} for constraints, errors, and cleaning methodology, as well as an additional regression scenario.
 
-\subsubsection{Internet Movie Database (IMDB)}
-The first scenario explores a dataset of movie descriptions scrapped from the Internet Movie Database (IMDB)\footnote{\url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}}. 
-Each movie has a title, a 1-2 paragraph plot description, and a list of categories.
-We want to train a model that predicts whether a movie is a ``Horror'' movie or a ``Comedy'' from the plot description and the title.
-These textual attributes are featurized using a TFIDF model and stop words are removed. 
+\subsubsection{Movie Prediction (Movie)}
+The first scenario uses two movie datasets from IMDB\footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published \ewu{REFERENCE WHERE THEY ARE FROM}.
+Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title.  The text data was featurized using a TFIDF model.
 
-However, since much of this data is user contributed, the category list of the movies is often very dirty with redundant and sometimes conflicting tags (e.g., ``Kids and Family'' and ``Horror''). 
-Furthermore, the dataset was scrapped in HTML and then encoded in Markdown leaving a number of artifacts of parsing in the plot descriptions (e.g., ``results fr\^Celf, the'').
-Fortunately, we were able to find a much smaller but cleaner dataset from Yahoo of 106959 movies, almost all of which were contained in the IMDB dataset.
-Using this cleaner reference dataset, we matched titles and imported categories when possible.
-We also appended the cleaner plot descriptions from Yahoo to the IMDB descriptions when available.
-The clean dataset had about 10\% less examples than the dirty dataset since some movies were marked as neither  ``Horror'' or ``Comedy''.
+The IMDB dataset is larger (\ewu{HOW MANY}), but much dirtier because it was collected from a web scraper.  
+This data is user contributed, and the category list is very dirty, with redundant and possibly conflicting tags (e.g., ``Kids'' and ``Horror'' for the same movie).  
+In addition, the plot and title text may have errors from the scraping procedure (e.g., ``results fr\^Celf, the'').
+In contrast, the smaller (106959 movies) Yahoo dataset is much cleaner.  In addition, nearly all of the movies are found in the IMDB dataset.
+Thus, we used this as a cleaner reference dataset and performed simple entity resolution to match movies together, and imported the Yahoo dataset's categories to the IMDB dataset when possible.
+For the movies that did not match, we appended the records to the IMDB dataset.
+Finally, we filtered the dataset for movies whose category lists included ``Horror'' or ``Comedy''
 
-Figure \ref{real}a illustrates that models trained with \sys converge faster than those trained with the alternatives.
+
+% The first scenario explores a dataset of movie descriptions scrapped from the Internet Movie Database (IMDB)\footnote{\url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}}. 
+% Each movie has a title, a 1-2 paragraph plot description, and a list of categories.
+% We want to train a model that predicts whether a movie is a ``Horror'' movie or a ``Comedy'' from the plot description and the title.
+% These textual attributes are featurized using a TFIDF model and stop words are removed. 
+% 
+% However, since much of this data is user contributed, the category list of the movies is often very dirty with redundant and sometimes conflicting tags (e.g., ``Kids and Family'' and ``Horror''). 
+% Furthermore, the dataset was scrapped in HTML and then encoded in Markdown leaving a number of artifacts of parsing in the plot descriptions (e.g., ``results fr\^Celf, the'').
+% Fortunately, we were able to find a much smaller but cleaner dataset from Yahoo of 106959 movies, almost all of which were contained in the IMDB dataset.
+% Using this cleaner reference dataset, we matched titles and imported categories when possible.
+% We also appended the cleaner plot descriptions from Yahoo to the IMDB descriptions when available.
+% The clean dataset had about 10\% less examples than the dirty dataset since some movies were marked as neither  ``Horror'' or ``Comedy''.
+
+Figure \ref{real}a lots the distance between the current and cleaned model parameters as more records are cleaned. 
+We find that \sys converge faster than those trained with the alternatives.
 The reasons for this include: (1) \sys samples more data that is likely to be dirty, and (2) \sys selects data that is most valuable to the model.
 This improvement in model convergence translates into large improvements in the accuracy of the model on a holdout set Figure \ref{real}b.
 Figure \ref{real}b illustrates two points: dirty data significantly affects the quality of the model (25\% misclassification rate) and a relatively small amount of data cleaning can greatly improve the quality of the model with the appropriate update techniques.
