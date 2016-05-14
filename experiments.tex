@@ -55,10 +55,10 @@ We simulate the analyst's cleaning procedure by looking up the cleaned value in 
 See~\cite{activecleanarxiv} for constraints, errors, and cleaning methodology, as well as an additional regression scenario.
 
 \subsubsection{Movie Prediction (Movie)}
-The first scenario uses two movie datasets from IMDB\footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published \ewu{REFERENCE WHERE THEY ARE FROM}.
+The first scenario uses two movie datasets from IMDB\footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published \reminder{REFERENCE WHERE THEY ARE FROM}.
 Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title.  The text data was featurized using a TFIDF model.
 
-The IMDB dataset is larger (\ewu{HOW MANY}), but much dirtier because it was collected from a web scraper.  
+The IMDB dataset is larger (\reminder{HOW MANY}), but much dirtier because it was collected from a web scraper.  
 This data is user contributed, and the category list is very dirty, with redundant and possibly conflicting tags (e.g., ``Kids'' and ``Horror'' for the same movie).  
 In addition, the plot and title text may have errors from the scraping procedure (e.g., ``results fr\^Celf, the'').
 In contrast, the smaller (106959 movies) Yahoo dataset is much cleaner.  In addition, nearly all of the movies are found in the IMDB dataset.

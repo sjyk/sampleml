@@ -1,5 +1,61 @@
 \section{Problem Formalization}\label{statements}
-\noindent \sys is a framework that addresses the correctness and efficiency problems.
+\sys is an iterative framework for cleaning data in support of statistical modeling problems.
+Analysts clean batches of data, which are fed back into the system to intelligently re-train the model, and recommend a next batch of data to clean.
+We will first introduce the terms used in the rest of the paper, clarify our assumptions, and the two fundamental problems that we solve in this paper.
+
+
+\subsection{System Architecture}\label{syarch}
+The main insight of \sys is to model the interactive data cleaning problem as a form of Stochastic Gradient Descent (SGD).
+SGD is one of the most widely studied forms of optimization and has well understood theoretical properties.
+For the purposes of designing a system, it gives us clear, composable restrictions on different components.
+Figure \ref{sys-arch} illustrates the \sys architecture including the: {\it Sampler}, {\it Cleaner}, \emph{Updater}, {\it Detector}, and {\it Estimator}.
+
+\vspace{0.25em}
+
+\noindent \textbf{Initialization: } We first set $R_{dirty} = R$ and $R_{clean} = \emptyset$.
+The system first trains the model $\phi(\cdot)$ on $R_{dirty}$ to find an initial model $\theta^{(d)}$ that the system will subsequently improve iteratively.
+It turns out that SGD converges for an arbitrary initialization, so $\theta^{(d)}$ need not be very accurate. This can be done by featurizing the dirty records (e.g., using an arbitrary placeholder for missing values), and then training the model. 
+
+\vspace{0.25em}
+
+\noindent \textbf{Sampler: } The {\it Sampler} selects a batch of size $b$ records from data that has not been cleaned already. To ensure convergence, the Sampler has to do this in a randomized way, but can assign higher probabilities to some data as long as no data has a zero sampling probability.
+
+\vspace{0.25em}
+
+\noindent \textbf{Cleaner: } The {\it Cleaner} is user-specifed and executes $C(\cdot)$ for each sample record and outputs their cleaned versions.
+
+\vspace{0.25em}
+
+\noindent \textbf{Updater: }  The {\it Updater} uses the cleaned sample to update the model using a Gradient Descent step, thus moving the model closer to the true cleaned model (in expectation).
+
+\vspace{0.25em}
+
+\noindent \textbf{Optimizations: } A user provided {\it Detector} can be used to identify records that are more likely to be dirty (e.g., using data quality rules), and thus improves the likelihood that the next sample will contain true dirty records. Furthermore, the {\it Estimator} uses previously cleaned data to estimate the effect that cleaning a given record will have on the model. These components are optional, but our experiments show that these optimizations can improve model accuracy by up-to 2.5x (Section \ref{comp}).
+
+\vspace{0.25em}
+
+\noindent \textbf{Closing the loop: } Finally, the system either terminates due to a stopping condition (e.g., $C(\cdot)$ has been called a maximum number of times $k$, or training error convergence), or passes control to the {\it sampler} for the next iteration.
+
+\vspace{0.25em}
+
+\begin{figure}[t]
+\centering
+ \includegraphics[width=\columnwidth]{figs/arch.png}
+ \caption{\sysfull allows users to train predictive models while progressively cleaning data but preserves convergence guarantees. \label{sys-arch}}
+\end{figure}
+
+
+Going back to the ProPublica example in Section~\ref{s:usecase}, we illustrate how \sys can be used:
+\begin{example}\label{archex}
+The analyst chooses to use an SVM model, and manually cleans records by hand (the $C(\cdot)$).  
+\sys initially selects a sample of $50$ records (the default)  to show the analyst.
+She identifies a subset of 15 records that are dirty, fixes them by normalizing the drug and corporation names with the help of a search engine, and corrects the labels with typographical or incorrect values.
+The system then uses the cleaned records to update the current best model and selects the next sample of $50$.
+The analyst can stop at any time and use the improved model to predict donation likelihoods.
+\end{example}
+
+
+
 
 \subsection{Statistical Modeling}
 In this paper, we will use the term \emph{statistical modeling} to describe a well studied class of analytics problems; ones that can be expressed as the minimization of convex loss functions.
@@ -110,56 +166,6 @@ We derive the optimal sampling distribution for the updates, and show how the th
 \vspace{0.5em}
 
 \emph{The Efficiency Problem is to select a sampling distribution $p(\cdot)$ over all records such that the expected error w.r.t the model if trained on fully clean data is minimized.}
-
-\subsection{System Architecture}\label{syarch}
-The main insight of \sys is to model the interactive data cleaning problem as a form of Stochastic Gradient Descent (SGD).
-SGD is one of the most widely studied forms of optimization and has well understood theoretical properties.
-For the purposes of designing a system, it gives us clear, composable restrictions on different components.
-Figure \ref{sys-arch} illustrates the \sys architecture including the: {\it Sampler}, {\it Cleaner}, \emph{Updater}, {\it Detector}, and {\it Estimator}.
-
-\vspace{0.25em}
-
-\noindent \textbf{Initialization: } We first set $R_{dirty} = R$ and $R_{clean} = \emptyset$.
-The system first trains the model $\phi(\cdot)$ on $R_{dirty}$ to find an initial model $\theta^{(d)}$ that the system will subsequently improve iteratively.
-It turns out that SGD converges for an arbitrary initialization, so $\theta^{(d)}$ need not be very accurate. This can be done by featurizing the dirty records (e.g., using an arbitrary placeholder for missing values), and then training the model. 
-
-\vspace{0.25em}
-
-\noindent \textbf{Sampler: } The {\it Sampler} selects a batch of size $b$ records from data that has not been cleaned already. To ensure convergence, the Sampler has to do this in a randomized way, but can assign higher probabilities to some data as long as no data has a zero sampling probability.
-
-\vspace{0.25em}
-
-\noindent \textbf{Cleaner: } The {\it Cleaner} is user-specifed and executes $C(\cdot)$ for each sample record and outputs their cleaned versions.
-
-\vspace{0.25em}
-
-\noindent \textbf{Updater: }  The {\it Updater} uses the cleaned sample to update the model using a Gradient Descent step, thus moving the model closer to the true cleaned model (in expectation).
-
-\vspace{0.25em}
-
-\noindent \textbf{Optimizations: } A user provided {\it Detector} can be used to identify records that are more likely to be dirty (e.g., using data quality rules), and thus improves the likelihood that the next sample will contain true dirty records. Furthermore, the {\it Estimator} uses previously cleaned data to estimate the effect that cleaning a given record will have on the model. These components are optional, but our experiments show that these optimizations can improve model accuracy by up-to 2.5x (Section \ref{comp}).
-
-\vspace{0.25em}
-
-\noindent \textbf{Closing the loop: } Finally, the system either terminates due to a stopping condition (e.g., $C(\cdot)$ has been called a maximum number of times $k$, or training error convergence), or passes control to the {\it sampler} for the next iteration.
-
-\vspace{0.25em}
-
-\begin{figure}[t]
-\centering
- \includegraphics[width=\columnwidth]{figs/arch.png}
- \caption{\sysfull allows users to train predictive models while progressively cleaning data but preserves convergence guarantees. \label{sys-arch}}
-\end{figure}
-
-
-Going back to the ProPublica example in Section~\ref{s:usecase}, we illustrate how \sys can be used:
-\begin{example}\label{archex}
-The analyst chooses to use an SVM model, and manually cleans records by hand (the $C(\cdot)$).  
-\sys initially selects a sample of $50$ records (the default)  to show the analyst.
-She identifies a subset of 15 records that are dirty, fixes them by normalizing the drug and corporation names with the help of a search engine, and corrects the labels with typographical or incorrect values.
-The system then uses the cleaned records to update the current best model and selects the next sample of $50$.
-The analyst can stop at any time and use the improved model to predict donation likelihoods.
-\end{example}
 
 \iffalse
 \subsection{\sys Problem}
