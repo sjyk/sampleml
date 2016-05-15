@@ -6,6 +6,24 @@ We show how we can leverage this property to prove convergence for interactive d
 %Sections \ref{dist-samp} show how to select a non-uniform $p(\cdot)$ and the analysis in this section applies for any sampling distribution $p(\cdot) > 0$.
 The updater only assumes that it is given a sample of data $S_{dirty}$ from $R_{dirty}$ where $i \in S_{dirty}$ has a known sampling probability $p(i)$.
 
+\subsection{Convex Loss Models}
+Formally, suppose $x$ is a feature vector and $y$ is a label.
+For labeled training examples $\{(x_{i},y_{i})\}_{i=1}^{N}$, the problem is to find a vector of model parameters $\theta$ by minimizing a loss function $\phi$ (a function that measures prediction error) over all training examples:
+\[
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta)
+\]
+where $\phi$ is a convex function in $\theta$.
+For example, in a linear regression $\phi$ is:
+\[
+\phi(x_{i},y_{i},\theta) = \|\theta^Tx_{i} - y_i \|_2^2
+\]
+Sometimes, a convex \emph{regularization} term $r(\theta)$ is added to the loss:
+\[
+ \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
+\]
+However, we ignore this term without loss of generality, since none of our results require analysis of the regularization.
+The regularization can be moved into the sum as a part of $\phi$ for the purposes of this paper.
+
 \subsection{Geometric Derivation}\label{geod}
 The update algorithm intuitively follows from the convex geometry of the problem.
 Consider the problem in one dimension (i.e., the parameter $\theta$ is a scalar value), so then the goal is to find the minimum point ($\theta$) of a curve $l(\theta)$.
