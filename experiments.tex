@@ -80,17 +80,27 @@ Finally, we filtered the dataset for movies whose category lists included ``Horr
 % We also appended the cleaner plot descriptions from Yahoo to the IMDB descriptions when available.
 % The clean dataset had about 10\% less examples than the dirty dataset since some movies were marked as neither  ``Horror'' or ``Comedy''.
 
-Figure \ref{real}a plots the distance between the current and cleaned model parameters as more records are cleaned. 
-We find that \sys converges faster than those trained with the alternatives.
-The reasons for this include: (1) \sys samples more data that is likely to be dirty, and (2) \sys selects data that is most valuable to the model.
-This improvement in model convergence translates into large improvements in the accuracy of the model on a holdout set Figure \ref{real}b.
-Figure \ref{real}b illustrates two points: dirty data significantly affects the quality of the model (25\% misclassification rate) and a relatively small amount of data cleaning can greatly improve the quality of the model with the appropriate update techniques.
-For 2000 records cleaned, \sys is within 2\% of the accuracy of the model if the data were fully cleaned.
-On the other hand, for the same amount of cleaning, the ``Re-training'' approach hasn't improved the model. 
+Figure \ref{real}a plots the distance between the current and cleaned model parameters (model error) as more records are cleaned. 
+The purple bottom curve is the oracle approach, and we find that \sys reduces the model error the fastest, and is the only method that converges to the oracle model.
+Figure~\ref{real}b directly shows how \sys rapidly reduces the \ewu{Test error} --- after 2000 records, \sys's test error is within 0.02 of the fully cleaned model.
+\sys is superior for several reasons: First, the update algorithm is able to incorporate both the raw data as well as the smaller set of cleaned records.
+For instance, the difference between NS and NM in Figure~\ref{real}b highlights the effects of naively combining clean and dirty datasets.
+Second, \sys selects records that are both more likely to by dirty (\ewu{Section XX}) and will most improve the model (\ewu{Section XX}).
+This is illustrated in AC's faster convergence curve in the first 2000 cleaned records.
 
-One of the reasons for this positive result is the significant systematic bias in the errors. Horror movies were more likely to be erroneously tagged. 
-On the dirty dataset, the prediction precision of the model for Horror movies was only 29\%.
-This improved to 74\% after data cleaning.
+The key reason for these positive results is the presence of systematic bias in the dataset --- horror movies are more likely to be erroneously tagged.
+Cleaning the dataset improved the test error for horror movies from 29 to 74\%.
+
+% We find that \sys converges faster than those trained with the alternatives.
+% The reasons for this include: (1) \sys samples more data that is likely to be dirty, and (2) \sys selects data that is most valuable to the model.
+% This improvement in model convergence translates into large improvements in the accuracy of the model on a holdout set Figure \ref{real}b.
+% Figure \ref{real}b illustrates two points: dirty data significantly affects the quality of the model (25\% misclassification rate) and a relatively small amount of data cleaning can greatly improve the quality of the model with the appropriate update techniques.
+% For 2000 records cleaned, \sys is within 2\% of the accuracy of the model if the data were fully cleaned.
+% On the other hand, for the same amount of cleaning, the ``Re-training'' approach hasn't improved the model. 
+
+% One of the reasons for this positive result is the significant systematic bias in the errors. Horror movies were more likely to be erroneously tagged. 
+% On the dirty dataset, the prediction precision of the model for Horror movies was only 29\%.
+% This improved to 74\% after data cleaning.
 
 \subsubsection{Dollars For Docs (DfD)}\label{exp:dfd}
 The second scenario explores the Dollars for Docs dataset published by ProPublica described throughout the paper.
