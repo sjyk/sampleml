@@ -146,20 +146,24 @@ Thus the further experiments focus on the other algorithms and we discuss the di
 \end{figure}
 
 \subsection{Simulated Machine Learning Pipeline}
-In this dataset, the task is to classify 60,000 images of handwritten images into 10 categories with an one-to-all multiclass SVM classifier~\footnote{\scriptsize\url{http://ufldl.stanford.edu/wiki/index.php/Using_the_MNIST_Dataset}}. 
-What is unique about image processing is that data are often processed through a pipeline of operators edge detectors, projections, and raw image patches~\cite{keystone,tensor}.
-This experiment explores data cleaning in this context, where dirtiness is in the raw data but get propagated through the pipeline.
+This scenario is representative of modern machine learning pipelines such as Keystone~\cite{keystone} and Google's Tensor Flow~\cite{tensor}. 
+The tasks is to classify 60,000 images of handwritten digits from the MNIST dataset into 10 categories with an one-to-all multiclass SVM classifier~\footnote{\scriptsize\url{http://ufldl.stanford.edu/wiki/index.php/Using_the_MNIST_Dataset}}. 
+In contrast to the prior scenarios, which directly extracted feature vectors from the raw dataset, image feature extraction involves a pipeline of transformation steps including edge detection, projection, and raw image patch extraction~\cite{keystone,tensor}.
+The cleaning function $Clean(\dot)$ involves replacing a potentially corrupted image with a non-corrupted version.
+Thus we will see that dirtiness in the raw data propogates and spreads throughout the pipeline.
+% What is unique about image processing is that data are often processed through a pipeline of operators edge detectors, projections, and raw image patches~\cite{keystone,tensor}.
+% This experiment explores data cleaning in this context, where dirtiness is in the raw data but get propagated through the pipeline.
 
-We use the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
-In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
-The MNIST dataset consists of 64x64 grayscale images.
-There are two types of simulated corruptions: (1) 5x5 block removal where a random 5x5 block is removed from the image by setting its pixel values to 0, and (2) Fuzzy where a 4x4 moving average patch is applied over the entire image.
-These corruptions are applied to a random 5\% of the images, and mimic the random (Fuzzy) vs. systematic corruption (5x5 removal) studied in the previous experiments.
-The adaptive detector uses a 10 class classifier (one for each digit) to detect the corruption.
+% We use the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
+% In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
+% The MNIST dataset consists of 64x64 grayscale images.
+There are two types of simulated corruptions that mimic corruptions in previous studies(\reminder{REF?}): \texttt{5x5 Removal} deletes a random 5x5 pixel block by setting the pixel values to 0, and \texttt{Fuzzy} blurs the entire image using a 4x4 moving average patch. 
+We apply these corruptions to a random 5\% of the images.%, and mimic the random (Fuzzy) vs. systematic corruption (5x5 removal) studied in the previous experiments.
+\sys's adaptive detector uses a 10 class classifier (one for each digit) to detect the corruption.
 
 Figure \ref{mnist} shows that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
-To achieve a 2\% error for the block removal, \sys can inspect 2200 fewer images than Active Learning and 2750 fewer images than SampleClean.
-For the fuzzy images, both Active Learning and \sys reach 2\% error after cleaning fewer than 100 images, while SampleClean requires 1750.
+To achieve a 2\% error for 5x5 Removal, \sys can inspect 2200 fewer images than Active Learning and 2750 fewer images than NS.
+For the fuzzy images, both Active Learning and \sys reach 2\% error after examining $<100$ images, while NS requires 1750.
 
 \subsection{Simulated Error Scenarios}
 In the next set of experiments, we use standard Machine Learning benchmark datasets and corrupt them with varying levels of systematic noise.
