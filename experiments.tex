@@ -1,5 +1,5 @@
 \section{Experiments}\label{eval}
-Our experiments evaluate \sys on a variety of data cleaning problems and statistical models.
+We evaluate \sys on a variety of data cleaning problems and statistical models.
 We start by presenting two end-to-end scenarios based on a dataset of movies from IMDB and a dataset of medical donations from ProPublica.
 These scenarios have real data and real errors, and we describe how these errors can affect statistical modeling problems.
 Then, we evaluate each of the components of \sys on standard Machine Learning benchmarks (Tax Record Classification, EEG anomaly detection) with synthetic errors.
@@ -7,6 +7,7 @@ Finally, evaluate a how dirty data may affect Machine Learning ``pipelines'' in 
 
 \subsection{Setup}
 We compare \sys to alternative solutions along two primary axes: the sampling procedure to pick the next set of records to clean, and the model update procedure to incorporate the cleaned sample.
+All of the compared approaches clean the same amount of data, and we evalauate the accuracy of the approaches as a function of the amount of data cleaned.
 
 % We compare \sys to the following alternatives for interactive data cleaning for Machine Learning.
 
@@ -50,12 +51,12 @@ We now describe two data analyst classification scenarios based on popular indus
 The first is a content tagging problem to categorize movies from plot descriptions; 
 the second is a fraud detection problem to  determine whether a medical donation is suspicious.
 Both of the datasets are plagued by systematic errors that affect the classification accuracy by $10-35\%$.
-% the scenarios are affected by systematic error, since dirtiness in the data affects one classification class more than the other\ewu{THIS IS NOT WHAT SYSTEMATIC ERROR MEANS THOUGH, IT'S A POSSIBLE SYMPTOM}.
+One indication of the systematic nature of the data error is that errors disproportionately affect one class rather than another.
 We simulate the analyst's cleaning procedure by looking up the cleaned value in the dataset that we cleaned beforehand.
 See~\cite{activecleanarxiv} for constraints, errors, and cleaning methodology, as well as an additional regression scenario.
 
 \subsubsection{Movie Prediction (Movie)}
-The first scenario uses two movie datasets from IMDB\footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published \reminder{REFERENCE WHERE THEY ARE FROM}.
+The first scenario uses two movie datasets from IMDB \footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published \reminder{REFERENCE WHERE THEY ARE FROM}.
 Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title.  The text data was featurized using a TFIDF model.
 
 The IMDB dataset is larger (\reminder{HOW MANY}), but much dirtier because it was collected from a web scraper.  
@@ -79,8 +80,8 @@ Finally, we filtered the dataset for movies whose category lists included ``Horr
 % We also appended the cleaner plot descriptions from Yahoo to the IMDB descriptions when available.
 % The clean dataset had about 10\% less examples than the dirty dataset since some movies were marked as neither  ``Horror'' or ``Comedy''.
 
-Figure \ref{real}a lots the distance between the current and cleaned model parameters as more records are cleaned. 
-We find that \sys converge faster than those trained with the alternatives.
+Figure \ref{real}a plots the distance between the current and cleaned model parameters as more records are cleaned. 
+We find that \sys converges faster than those trained with the alternatives.
 The reasons for this include: (1) \sys samples more data that is likely to be dirty, and (2) \sys selects data that is most valuable to the model.
 This improvement in model convergence translates into large improvements in the accuracy of the model on a holdout set Figure \ref{real}b.
 Figure \ref{real}b illustrates two points: dirty data significantly affects the quality of the model (25\% misclassification rate) and a relatively small amount of data cleaning can greatly improve the quality of the model with the appropriate update techniques.
