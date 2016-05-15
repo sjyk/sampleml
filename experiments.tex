@@ -142,12 +142,12 @@ Thus the further experiments focus on the other algorithms and we discuss the di
  \includegraphics[width=0.49\columnwidth]{exp/exp7a.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/exp7b.pdf}
  \includegraphics[width=0.49\columnwidth]{exp/legend-general.png}\vspace{-0.5em}
- \caption{In an image processing pipeline on the MNIST dataset with simulated errors, \sys outperforms Active Learning and SampleClean.  \label{mnist}}\vspace{-1em}
+ \caption{In an image processing pipeline on the MNIST dataset with simulated errors, \sys outperforms Active Learning and Naive-Sample.  \label{mnist}}\vspace{-1em}
 \end{figure}
 
 \subsection{Simulated Machine Learning Pipeline}
-This scenario is representative of modern machine learning pipelines such as Keystone~\cite{keystone} and Google's Tensor Flow~\cite{tensor}. 
-The tasks is to classify 60,000 images of handwritten digits from the MNIST dataset into 10 categories with an one-to-all multiclass SVM classifier~\footnote{\scriptsize\url{http://ufldl.stanford.edu/wiki/index.php/Using_the_MNIST_Dataset}}. 
+This experiment is representative of modern machine learning pipelines such as Keystone~\cite{keystone} and Google's Tensor Flow~\cite{tensor}. 
+The task is to classify 60,000 images of handwritten digits from the MNIST dataset into 10 categories with an one-to-all multiclass SVM classifier~\footnote{\scriptsize\url{http://ufldl.stanford.edu/wiki/index.php/Using_the_MNIST_Dataset}}. 
 In contrast to the prior scenarios, which directly extracted feature vectors from the raw dataset, image feature extraction involves a pipeline of transformation steps including edge detection, projection, and raw image patch extraction~\cite{keystone,tensor}.
 The cleaning function $Clean(\dot)$ involves replacing a potentially corrupted image with a non-corrupted version.
 Thus we will see that dirtiness in the raw data propogates and spreads throughout the pipeline.
