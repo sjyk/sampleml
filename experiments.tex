@@ -83,10 +83,10 @@ Finally, we filtered the dataset for movies whose category lists included ``Horr
 Figure \ref{real}a plots the distance between the current and cleaned model parameters (model error) versus the number of $Clean(\dot)$ calls.  
 %as more records are cleaned. 
 The purple bottom curve is the oracle approach, and we find that \sys reduces the model error the fastest, and is the only method that converges to the oracle model.
-Figure~\ref{real}b directly shows how \sys rapidly reduces the \ewu{Test error} --- after 2000 records, \sys's test error is within 0.02 of the fully cleaned model.
+Figure~\ref{real}b directly shows how \sys rapidly reduces the \reminder{Test error} --- after 2000 records, \sys's test error is within 0.02 of the fully cleaned model.
 \sys is superior for several reasons: First, the update algorithm is able to incorporate both the raw data as well as the smaller set of cleaned records.
 For instance, the difference between NS and NM in Figure~\ref{real}b highlights the effects of naively combining clean and dirty datasets.
-Second, \sys selects records that are both more likely to by dirty (\ewu{Section XX}) and will most improve the model (\ewu{Section XX}).
+Second, \sys selects records that are both more likely to by dirty (\reminder{Section XX}) and will most improve the model (\reminder{Section XX}).
 This is illustrated in AC's faster convergence curve in the first 2000 cleaned records.
 
 The key reason for these positive results is the presence of systematic bias in the dataset --- horror movies are more likely to be erroneously tagged.
@@ -112,7 +112,7 @@ For instance, \sys requires 40,000 fewer calls to $Clean(\dot)$ in order to redu
 and exhibits nearly an order of magnitude smaller model error than either of the naive approaches after only 10,000 calls to $Clean(\dot)$.
 
 Figure~\ref{real}d reports the detection error (percentage of disallowed research contributions that the model misses) rather than the overall test error because the former was the focus of the investigation.  The dirty and fully cleaned models have respectively a 34\% and 3\% detection error.
-Due to the systematic bias in the data errors (\ewu{Can we easily explain what the bias was?}), \sys is able to identify the dirty records and
+Due to the systematic bias in the data errors (\reminder{Can we easily explain what the bias was?}), \sys is able to identify the dirty records and
 reduce the detection error to 8\% after 10,000 $Clean(\dot)$ calls --- much faster than the alternatives.
 
 Overall, we found that systematic errors are indeed present in real world datasets, and that \sys can effectively identify and exploit this bias
