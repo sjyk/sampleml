@@ -55,6 +55,8 @@ One indication of the systematic nature of the data error is that errors disprop
 We simulate the analyst's cleaning procedure by looking up the cleaned value in the dataset that we cleaned beforehand.
 See~\cite{activecleanarxiv} for constraints, errors, and cleaning methodology, as well as an additional regression scenario.
 
+\reminder{Can I propose using "Records Examined" as the x-axes instead of "records cleaned"?}
+
 \subsubsection{Movie Prediction (Movie)}
 The first scenario uses two movie datasets from IMDB \footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published \reminder{REFERENCE WHERE THEY ARE FROM}.
 Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title.  The text data was featurized using a TFIDF model.
@@ -164,6 +166,7 @@ We apply these corruptions to a random 5\% of the images.%, and mimic the random
 Figure \ref{mnist} shows that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
 To achieve a 2\% error for 5x5 Removal, \sys can inspect 2200 fewer images than Active Learning and 2750 fewer images than NS.
 For the fuzzy images, both Active Learning and \sys reach 2\% error after examining $<100$ images, while NS requires 1750.
+\reminder{How did having a pipeline affect dirtiness?}
 
 \subsection{Simulated Error Scenarios}
 In the next set of experiments, we use standard Machine Learning benchmark datasets and corrupt them with varying levels of systematic noise.
