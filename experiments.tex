@@ -71,9 +71,9 @@ The purple bottom curve is the oracle approach, and we find that \sys reduces th
 Figure~\ref{real}b directly shows how \sys rapidly reduces the test error --- after 2000 records, \sys's test error is within 0.02 of the fully cleaned model.
 \sys provides superior convergence for several reasons.
 First, the update algorithm is able to incorporate both the raw data as well as the smaller set of cleaned records.
-For instance, the difference between NS and NM in Figure~\ref{real}b highlights the effects of naively combining clean and dirty datasets.
-Second, \sys selects records that are both more likely to by dirty (Section \ref{det}) and will most improve the model (Section \ref{dist-samp}).
-This is illustrated in AC's faster convergence curve in the first 2000 cleaned records.
+On the other hand, the difference between Naive-Sampling and Naive-Mix in Figure~\ref{real}b highlights the effects of only using the cleaned data or naively combining clean and dirty datasets.
+\sys selects records that are both more likely to by dirty (Section \ref{det}) and will most improve the model (Section \ref{dist-samp}).
+This is illustrated in \sys's faster convergence curve in the first 2000 cleaned records.
 The key reason for these positive results is the presence of systematic bias in the dataset as horror movies are more likely to be erroneously tagged.
 Cleaning the dataset improved the test error for horror movies from 29 to 74\%.
 
@@ -101,7 +101,7 @@ reduce the detection error to 8\% after 10,000 $Clean(\dot)$ calls --- much fast
 
 Overall, we found that systematic errors are indeed present in real world datasets, and that \sys can effectively identify and exploit this bias
 to more quickly converge to the true clean model as compared to the naive or active learning approaches.  
-In fact, we found that the commonly used retraining approach (NM) was almost completely ineffective as compared to other model update techniques.
+In fact, we found that the commonly used retraining approach (Naive-Mix) was almost completely ineffective as compared to other model update techniques.
 Thus the further experiments focus on the other algorithms and we discuss the difficulties of naively mixing dirty and clean data in Section~\ref{exp:rtr}.
 
 % The dataset has 240,089 records with 5 textual attributes and one numerical attribute.
@@ -146,8 +146,8 @@ We apply these corruptions to a random 5\% of the images.
 \sys's adaptive detector uses a 10 class classifier (one for each digit) to detect the corruption.
 
 Figure \ref{mnist} shows that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
-To achieve a 2\% error for 5x5 Removal, \sys can inspect 2200 fewer images than Active Learning and 2750 fewer images than NS.
-For the fuzzy images, both Active Learning and \sys reach 2\% error after examining $<100$ images, while NS requires 1750.
+To achieve a 2\% error for 5x5 Removal, \sys can inspect 2200 fewer images than Active Learning and 2750 fewer images than Naive-Sampling.
+For the fuzzy images, both Active Learning and \sys reach 2\% error after examining $<100$ images, while Naive-Sampling requires 1750.
 Even though these corruptions are applied independent of the data, the \texttt{5x5 Removal} propagates through the pipeline as a systematic error.
 The image features are constructed with edge detectors, which are highly sensitive to this type of corruption.
 Some digits naturually have less edges than others are disproportionately affected since the removal process adds suprious edges.
@@ -173,6 +173,60 @@ The two datasets that we used were:
  \includegraphics[width=0.49\columnwidth]{exp/exp1.pdf}
  \includegraphics[width=0.5\columnwidth]{exp/legend-1.png}\vspace{-1em}
  \caption{(a) Robust techniques and discarding data work when corrupted data are random and look atypical. (b) Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}\vspace{-1.5em}
+\end{figure}
+
+\subsubsection{Source of Improvements}\label{comp}
+This experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
+\sys without detection is denoted as (AC-D) (that is at each iteration we sample from the entire dirty data), and \sys without detection and our prioritized sampling is denoted as (AC-D-I).
+Figure \ref{opts} plots the relative error of the alternatives and \sys with and without the optimizations.
+Without detection (AC-D), \sys is still more accurate than Active Learning.
+Removing the sampling, \sys is slightly worse than Active Learning on the Adult dataset but is comparable on the EEG dataset.
+The advantage of \sys is that it is a composable framework supporting different instantiations of the detection and prioritization modules, while still preserving convergence guarantees.
+With these optimizations, \sys is consistently more efficient than Active Learning.
+
+\begin{figure}[t]\vspace{0.5em}
+\centering
+ \includegraphics[width=0.49\columnwidth]{exp/exp8a.png}
+ \includegraphics[width=0.49\columnwidth]{exp/exp8b.png}
+ \includegraphics[width=0.5\columnwidth]{exp/legend-8.png}\vspace{-1em}
+ \caption{ -D denotes no detection, and -D-I denotes no detection and no importance sampling. Both optimizations significantly help \sys outperform Naive-Sampling and Active Learning. \label{opts}}\vspace{-1.5em}
+\end{figure}
+
+\subsubsection{Mixing Dirty and Clean Data}\label{exp:rtr}
+Naive-Mix is an unreliable methodology lacking the same guarantees as Active Learning or Naive-Sampling even in the simplest of cases.
+We also saw that it is significantly less efficient than \sys, Naive-Sampling, and Active Learning.
+For thoroughness, these experiments include the model error as a function of records cleaned in comparison to \sys.
+Figure \ref{pc-perf} plots the same curves as the previous experiment comparing \sys, Active Learning, and two mixed data algorithms.
+Naive-Mix randomly samples data, clean, and writes-back the cleaned data.
+Naive-Mix+D randomly samples data using the dirty data detector, cleans, and writes-back the cleaned data.
+Intuitively, retraining makes less progress with each update.
+Consider the case where 10\% of the dataset is corrupted and a small sample of data 1\%.
+\sys and Naive-Sampling extrapolate from the cleaned sample (\sys extropolates a gradient), while Naive-Mix considers the entire dirty data which might be much larger.
+
+%\sys converges faster.
+%\sys tunes the weighting when averaging dirty and clean data into the gradient.
+
+\begin{figure}[ht!]
+\centering\vspace{-0.5em}
+ %\includegraphics[scale=0.15]{exp/exp3a.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp14a.pdf}
+    \includegraphics[width=0.49\columnwidth]{exp/exp14b.pdf}
+    \includegraphics[width=0.49\columnwidth]{exp/legend-14.png}\vspace{-0.5em}
+ \caption{The relative model error as a function of the number of examples cleaned. \sys converges with a smaller sample size to the true result in comparison to partial cleaning (RTr, RTr+D).  \label{pc-perf}}
+\end{figure}
+
+\subsubsection{Corruption Rate}
+This experiment explores the tradeoff between Naive-Sampling and \sys.
+Figure \ref{bias} varies the systematic corruption rate and plots the number of records cleaned to achieve 1\% relative error for Naive-Sampling and \sys.
+Naive-Sampling does not use the dirty data and thus its error is essentially governed by the Central Limit Theorem.
+Naive-Sampling outperforms \sys only when corruptions are very severe (45\% in Adult and nearly 60\% in EEG).
+When the initialization with the dirty model is inaccurate, \sys does not perform as well. 
+
+\begin{figure}[t]
+\centering
+ \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
+  \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}\vspace{-1em}
+ \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization. The error of SampleClean does not depend on the corruption rate so it is a vertical line.  \label{bias}}\vspace{-1.5em}
 \end{figure}
 
 \subsubsection{Data Cleaning v.s. Robust Statistics}
@@ -223,59 +277,6 @@ These gains in model error also correlate well to improvements in test error (de
 The test error converges more quickly than model error, emphasizing the benefits of progressive data cleaning, since it is not neccessary to clean all the data to get a model with essentially the same performance as the clean model.
 For example, to achieve a test error of 1\% on the Adult dataset, \sys cleans 500 fewer records than Active Learning.
 \fi
-
-\subsubsection{Source of Improvements}\label{comp}
-This experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
-\sys without detection is denoted as (AC-D) (that is at each iteration we sample from the entire dirty data), and \sys without detection and our prioritized sampling is denoted as (AC-D-I).
-Figure \ref{opts} plots the relative error of the alternatives and \sys with and without the optimizations.
-Without detection (AC-D), \sys is still more accurate than Active Learning.
-Removing the sampling, \sys is slightly worse than Active Learning on the Adult dataset but is comparable on the EEG dataset.
-
-\begin{figure}[t]\vspace{0.5em}
-\centering
- \includegraphics[width=0.49\columnwidth]{exp/exp8a.png}
- \includegraphics[width=0.49\columnwidth]{exp/exp8b.png}
- \includegraphics[width=0.5\columnwidth]{exp/legend-8.png}\vspace{-1em}
- \caption{ -D denotes no detection, and -D-I denotes no detection and no importance sampling. Both optimizations significantly help \sys outperform SampleClean and Active Learning. \label{opts}}\vspace{-1.5em}
-\end{figure}
-
-\subsubsection{Mixing Dirty and Clean Data}\label{exp:rtr}
-Retraining (RTr) a model on mixed data is an unreliable methodology lacking the same guarantees as Active Learning or SampleClean even in the simplest of cases.
-We also saw that it is significantly less efficient than \sys, SampleClean, and Active Learning.
-For thoroughness, these experiments include the model error as a function of records cleaned in comparison to \sys.
-Figure \ref{pc-perf} plots the same curves as the previous experiment comparing \sys, Active Learning, and two mixed data algorithms.
-RTr randomly samples data, clean, and writes-back the cleaned data.
-RTr+D randomly samples data using the dirty data detector, cleans, and writes-back the cleaned data.
-Intuitively, retraining makes less progress with each update.
-Consider the case where 10\% of the dataset is corrupted and a small sample of data 1\%.
-\sys and SampleClean extrapolate from the cleaned sample (\sys extropolates a gradient), while Retraining considers the entire dirty data which might be much larger.
-
-%\sys converges faster.
-%\sys tunes the weighting when averaging dirty and clean data into the gradient.
-
-\begin{figure}[ht!]
-\centering\vspace{-0.5em}
- %\includegraphics[scale=0.15]{exp/exp3a.pdf}
- \includegraphics[width=0.49\columnwidth]{exp/exp14a.pdf}
-    \includegraphics[width=0.49\columnwidth]{exp/exp14b.pdf}
-    \includegraphics[width=0.49\columnwidth]{exp/legend-14.png}\vspace{-0.5em}
- \caption{The relative model error as a function of the number of examples cleaned. \sys converges with a smaller sample size to the true result in comparison to partial cleaning (RTr, RTr+D).  \label{pc-perf}}
-\end{figure}
-
-\subsubsection{Corruption Rate}
-This experiment explores how much of the performance
-is due to the initialization with the dirty model (i.e., SampleClean trains a model from ``scratch").
-Figure \ref{bias} varies the systematic corruption rate and plots the number of records cleaned to achieve 1\% relative error for SampleClean and \sys.
-SampleClean does not use the dirty data and thus its error is essentially governed by the Central Limit Theorem.
-SampleClean outperforms \sys only when corruptions are very severe (45\% in Adult and nearly 60\% in EEG).
-When the initialization with the dirty model is inaccurate, \sys does not perform as well. 
-
-\begin{figure}[t]
-\centering
- \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
-  \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}\vspace{-1em}
- \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization. The error of SampleClean does not depend on the corruption rate so it is a vertical line.  \label{bias}}\vspace{-1.5em}
-\end{figure}
 
 \subsubsection{Dirty Data Detection}
 The adaptive detection depends on being able to predict corrupted records.
