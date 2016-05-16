@@ -213,6 +213,7 @@ The problem is that without cleaning, there is no way to know if the corruption 
 While data cleaning requires more effort, it provides benefits in both settings.
 In the remaining experiments, unless otherwise noted, the experiments use systematic corruption.
 
+\iffalse
 \begin{figure}[t]
 \centering\vspace{-1em}
  %\includegraphics[scale=0.15]{exp/exp3a.pdf}
@@ -235,6 +236,7 @@ Active Learning has no notion of dirty and clean data, and therefore prioritizes
 These gains in model error also correlate well to improvements in test error (defined as the test accuracy difference w.r.t cleaning all data).
 The test error converges more quickly than model error, emphasizing the benefits of progressive data cleaning, since it is not neccessary to clean all the data to get a model with essentially the same performance as the clean model.
 For example, to achieve a test error of 1\% on the Adult dataset, \sys cleans 500 fewer records than Active Learning.
+\fi
 
 \subsubsection{Source of Improvements}\label{comp}
 This experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
