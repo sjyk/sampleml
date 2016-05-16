@@ -31,6 +31,12 @@ A pharma payment a day keeps docs' finances okay.
 Tensor flow.
 \newblock \url{https://www.tensorflow.org/}.
 
+\bibitem{AgarwalMPMMS13}
+S.~Agarwal, B.~Mozafari, A.~Panda, H.~Milner, S.~Madden, and I.~Stoica.
+\newblock Blinkdb: queries with bounded errors and bounded response times on
+  very large data.
+\newblock In {\em EuroSys}, 2013.
+
 \bibitem{alexandrov2014stratosphere}
 A.~Alexandrov, R.~Bergmann, S.~Ewen, J.~Freytag, F.~Hueske, A.~Heise, O.~Kao,
   M.~Leich, U.~Leser, V.~Markl, F.~Naumann, M.~Peters, A.~Rheinl{\"{a}}nder,

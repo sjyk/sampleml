@@ -46,27 +46,28 @@ We apologize that the writing was unclear. We have revised the experiments to mo
 
 \noindent\textbf{R1.1: I'm not fully convinced that mixed dirty and clean data can be even worse than no cleaning. It would be helpful to show experimental support from the beginning for this and clarify whether this holds in general or only applies to certain models.}
 
-\noindent We believe that this is an important point, and we have revised the paper to describe the problem from the beginning. The basic problem is that any aggregate over multiple populations of data is susceptible to such bias, which is called Simpson's Paradox. This problem has affected a number of high-profile studies outside of the context of data cleaning. We recognized that when data are systematically corrupted, a partially clean dataset has two populations of data. Machine Learning models are sophisticated aggregates that are potentially biased in this setting. Consequently, we have updated the introduction, background, and experiments to better emphasize and justify this point.
-
-Regardless of the theoretical issue, we revised our experiments to show that practically this approach is not efficient. 
-Experiments in Section \ref{real-errors} show that ``Re-training'' on a mix of dirty and clean data makes very slow progress. 
-We beleive that Simpson's paradox is one of the contributing factors to the slow convergence.
-We further elaborate on this for synthetic datasets as well in Section \ref{exp:rtr}.
+\noindent We have updated the introduction, background, and experiments to better emphasize that training on a mix of dirty and clean data can have misleading result.
+The introduction 
+The basic problem is that any aggregate over multiple populations of data is susceptible to a bias called Simpson's Paradox. 
+This problem has affected a number of high-profile studies outside of the context of data cleaning (e.g.,~\cite{bickel1975sex, charig1986comparison}. 
+In the introduction and background sections, we clarify how this statistical problem is relevant to data cleaning and model training since partial cleaning creates two populations of data. 
+Even if this approach sometimes works, we argue that it is incorrect in general.
+Experiments in Section \ref{real-errors} show that training a model on a mix of dirty and clean data makes very slow progress. 
+We believe that model training on a mix of data is one of the contributing factors to the slow convergence in the real datasets.
 
 \vspace{0.5em}
 
 \noindent\textbf{R1.2: The algorithm is based on the assumption that we have to do sampling. Why is sampling necessary? Especially that the experimental data sets and examples are not big. If we do not do sampling, how would the solution change? Also, why is the sample potentially stochastic?}
 
-\noindent In each iteration, \sys samples a batch $b$ from the set of records that are yet to be cleaned. It is important to note that this is different from the way that sampling is used in other work, such as BlinkDB~\cite{AgarwalMPMMS13} and SampleClean~\cite{wang1999sample}, where a dataset is sampled up-front and all analytics are performed on the sample.
-In contrast, \sys uses sampling as a randomized prioritization technique, and as the number of iterations increases, eventually all of the data are sampled.
-This is because a determistic prioritization may lead to excluding certain data from cleaning.
-\sys can assign higher probabilities to some data as long as no data has a zero sampling probability. 
+\noindent Any iterative or progressive data cleaning framework will present small batches of data to the analyst in each iteration. 
+The sampling algorithm in \sys is the procedure to select which data to present based on the current model and previously cleaned data.
+This procedure has to be stochastic since a determistic prioritization may lead to excluding certain data from cleaning; however, \sys can assign higher probabilities to some data as long as no data has a zero probability. 
 
 \vspace{0.5em}
 
 \noindent\textbf{R1.3 Why does the paper focus on convex loss functions? Which theorems would not hold w/o this assumption?}
 
-\noindent This is a subtle point, which we had chosen to address in our technical report~(see Appendix C in \cite{activecleanarxiv}). This may not be a problem in practice, but does pose a theoretical issue. We have added an intuitive explanation to the revision (Section \ref{sgd}):
+\noindent This is a subtle point, which we had chosen to address in our technical report~(see Appendix C in \cite{activecleanarxiv}). We have added an intuitive explanation to the revision (Section \ref{sgd}):
 
 \emph{Gradient descent techniques still apply to non-convex losses as they are widely applied in graphical model inference and deep learning. Instead of converging to a global optimum
 they converge to a locally optimal value. However, there is a dependence on the initialization.
@@ -81,17 +82,11 @@ initialization with the dirty model.}
 
 \noindent\textbf{R1.4 For cleaning, is it through cleaning on random samples, or by cleaning rules? My understanding is that it is the former but why not the latter?}
 
-\noindent \sys recommends a random sample of data to clean at each iteration. 
-The user can chose to clean that data using a rule-based technique, statistical technique, manually, or a combination of approaches.
-In fact, the user can modify records outside of the sample based on the information in the sample, e.g., a find-and-replace operation to resolve a common inconsistency.
-The only restriction is that once a sample of records is recommended to a user, it is completely cleaned--that is, a record does not have to be sampled more than once.
-We have clarified this point in the paper (Section \ref{dcmodel}).
-
-This question also raises a second point that we wish to clarify.
-In the data cleaning literature, error detection and error repair are two distinct problems~\cite{DBLP:series/synthesis/2012Fan, Dasu:2003:EDM:861869, rahm2000data}.
-Error detection is often considered a substantially easier, since one can often declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
-On the other hand, repair is harder and often requires human involvement or verification (e.g., imputing a value for the NULL attribute).
-\sys is fully compatible with a set of data quality rules that are declared on a database, and then using the iterative procedure to prioritize which repairs to verify as to best benefit the model (Section \ref{rule-det}).
+\noindent \sys cleans a batch of data in each iteration. There are two main issues: (1) which data are in the batch and (2) how to clean the batch. We assume that (2) is given to us in the form of a user-defined function that is implemented either with software or a manual action by the analyst (Section \ref{dmodel}). 
+Given a dirty batch of data this function returns a cleaned batch of data (if a record is not dirty, it is a ``noop'').
+\sys is compatible with any algorithm that can be written in this way.
+For (1), \sys is fully compatible with a set of data quality rules and selecting dirty data that violate these rules (Section \ref{rule-det}).
+Furthermore, \sys can be used to prioritize verification of automated repairs to maximally benefit the ultimate model.
 
 \vspace{0.5em}
 
