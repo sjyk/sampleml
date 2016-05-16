@@ -1,16 +1,13 @@
 \section{Experiments}\label{eval}
-We evaluate \sys on a variety of data cleaning problems and statistical models.
+%We evaluate \sys on a variety of data cleaning problems and statistical models.
 We start by presenting two end-to-end scenarios based on a dataset of movies from IMDB and a dataset of medical donations from ProPublica.
 These scenarios have real data and real errors, and we describe how these errors can affect statistical modeling problems.
+Next, we evaluate a how dirty data may affect Machine Learning ``pipelines'' in an image classification example where we corrupted certain images.
 Then, we evaluate each of the components of \sys on standard Machine Learning benchmarks (Tax Record Classification, EEG anomaly detection) with synthetic errors.
-Finally, evaluate a how dirty data may affect Machine Learning ``pipelines'' in an image classification example where we corrupted certain images.
 
 \subsection{Setup}
 We compare \sys to alternative solutions along two primary axes: the sampling procedure to pick the next set of records to clean, and the model update procedure to incorporate the cleaned sample.
-All of the compared approaches clean the same amount of data, and we evalauate the accuracy of the approaches as a function of the amount of data cleaned.
-
-% We compare \sys to the following alternatives for interactive data cleaning for Machine Learning.
-
+All of the compared approaches clean the same amount of data, and we evalauate the accuracy of the approaches as a function of the amount of data examined; defined as the number of evaluations of the user-specified $Clean(\dot)$ on a record whether or not the record is actually dirty.
 
 \vspace{0.25em}
 \noindent\textbf{Naive-Mix (NM): } In each iteration, NM draws a random sample, merges the cleaned sample back into the dataset, and re-trains over the entire dataset.
@@ -24,20 +21,6 @@ The samples are picked using Active Learning (more precisely, Uncertainty Sampli
 
 \vspace{0.25em}
 \noindent\textbf{Oracle (O): } Oracle has complete access to the ground truth, and in each iteration, selects samples that maximize the expected convergence rate.  It uses \sys's model update procedure.  
-
-% \vspace{0.25em}
-% \noindent\textbf{Re-training (RTr): } Re-training takes a sample of data, applies data cleaning in place, and then re-trains the model over the partially clean data. 
-% 
-% \vspace{0.25em}
-% \noindent\textbf{SampleClean (SC) \cite{wang1999sample}. } SampleClean takes a sample of data, applies data cleaning, and then trains a model to completion on the sample.
-% 
-% \vspace{0.25em}
-% \noindent\textbf{Active Learning (AL) \cite{guillory2009active}. }
-% Within each iteration, examples are prioritized by distance to the decision boundary (called Uncertainty Sampling in \cite{settles2010active}).
-% The model is trained on the previously cleaned data as in SampleClean.
-% 
-% \vspace{0.25em}
-% \noindent\textbf{ActiveClean Oracle (AC+O): } In \sys Oracle, instead of an estimation and detection step, the true clean value is used to evaluate the theoretical ideal performance of \sys.
 
 \begin{figure*}[t]
 \centering
@@ -55,20 +38,20 @@ One indication of the systematic nature of the data error is that errors disprop
 We simulate the analyst's cleaning procedure by looking up the cleaned value in the dataset that we cleaned beforehand.
 See~\cite{activecleanarxiv} for constraints, errors, and cleaning methodology, as well as an additional regression scenario.
 
-\reminder{Can I propose using "Records Examined" as the x-axes instead of "records cleaned"?}
+%\reminder{Can I propose using "Records Examined" as the x-axes instead of "records cleaned"?}
 
 \subsubsection{Movie Prediction (Movie)}
-The first scenario uses two movie datasets from IMDB \footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published \reminder{REFERENCE WHERE THEY ARE FROM}.
-Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title.  The text data was featurized using a TFIDF model.
+The first scenario uses two movie datasets from IMDB \footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published~\footnote{http://webscope.sandbox.yahoo.com/catalog.php?datatype=r}.
+Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title.  
+The text data was featurized using a TFIDF model.
 
-The IMDB dataset is larger (\reminder{HOW MANY}), but much dirtier because it was collected from a web scraper.  
-This data is user contributed, and the category list is very dirty, with redundant and possibly conflicting tags (e.g., ``Kids'' and ``Horror'' for the same movie).  
+The IMDB dataset is larger (486,298), but much dirtier because it was collected from a web scraper.  
+This data is user-contributed, and the category list is very dirty, with redundant and possibly conflicting tags (e.g., ``Kids'' and ``Horror'' for the same movie).  
 In addition, the plot and title text may have errors from the scraping procedure (e.g., ``results fr\^Celf, the'').
-In contrast, the smaller (106959 movies) Yahoo dataset is much cleaner.  In addition, nearly all of the movies are found in the IMDB dataset.
+In contrast, the smaller (106,959 movies) Yahoo dataset is much cleaner.  In addition, nearly all of the movies are found in the IMDB dataset.
 Thus, we used this as a cleaner reference dataset and performed simple entity resolution to match movies together, and imported the Yahoo dataset's categories to the IMDB dataset when possible.
 For the movies that did not match, we appended the records to the IMDB dataset.
 Finally, we filtered the dataset for movies whose category lists included ``Horror'' or ``Comedy''
-
 
 % The first scenario explores a dataset of movie descriptions scrapped from the Internet Movie Database (IMDB)\footnote{\url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}}. 
 % Each movie has a title, a 1-2 paragraph plot description, and a list of categories.
@@ -85,13 +68,13 @@ Finally, we filtered the dataset for movies whose category lists included ``Horr
 Figure \ref{real}a plots the distance between the current and cleaned model parameters (model error) versus the number of $Clean(\dot)$ calls.  
 %as more records are cleaned. 
 The purple bottom curve is the oracle approach, and we find that \sys reduces the model error the fastest, and is the only method that converges to the oracle model.
-Figure~\ref{real}b directly shows how \sys rapidly reduces the \reminder{Test error} --- after 2000 records, \sys's test error is within 0.02 of the fully cleaned model.
-\sys is superior for several reasons: First, the update algorithm is able to incorporate both the raw data as well as the smaller set of cleaned records.
+Figure~\ref{real}b directly shows how \sys rapidly reduces the test error --- after 2000 records, \sys's test error is within 0.02 of the fully cleaned model.
+\sys provides superior convergence for several reasons.
+First, the update algorithm is able to incorporate both the raw data as well as the smaller set of cleaned records.
 For instance, the difference between NS and NM in Figure~\ref{real}b highlights the effects of naively combining clean and dirty datasets.
-Second, \sys selects records that are both more likely to by dirty (\reminder{Section XX}) and will most improve the model (\reminder{Section XX}).
+Second, \sys selects records that are both more likely to by dirty (Section \ref{det}) and will most improve the model (Section \ref{dist-samp}).
 This is illustrated in AC's faster convergence curve in the first 2000 cleaned records.
-
-The key reason for these positive results is the presence of systematic bias in the dataset --- horror movies are more likely to be erroneously tagged.
+The key reason for these positive results is the presence of systematic bias in the dataset as horror movies are more likely to be erroneously tagged.
 Cleaning the dataset improved the test error for horror movies from 29 to 74\%.
 
 % We find that \sys converges faster than those trained with the alternatives.
@@ -106,7 +89,6 @@ Cleaning the dataset improved the test error for horror movies from 29 to 74\%.
 % This improved to 74\% after data cleaning.
 
 \subsubsection{Dollars For Docs (DfD)}\label{exp:dfd}
-
 The second scenario explores ProPublica's Dollars for Docs dataset described in Section\ref{s:usecase}.
 The application featurizes the 5 text attributes using bag-of-words, and predicts the status of medical donations using a binary SVM.
 Figure~\ref{real}c again shows that \sys outperforms the other cleaning approaches.
@@ -114,7 +96,7 @@ For instance, \sys requires 40,000 fewer calls to $Clean(\dot)$ in order to redu
 and exhibits nearly an order of magnitude smaller model error than either of the naive approaches after only 10,000 calls to $Clean(\dot)$.
 
 Figure~\ref{real}d reports the detection error (percentage of disallowed research contributions that the model misses) rather than the overall test error because the former was the focus of the investigation.  The dirty and fully cleaned models have respectively a 34\% and 3\% detection error.
-Due to the systematic bias in the data errors (\reminder{Can we easily explain what the bias was?}), \sys is able to identify the dirty records and
+Due to the systematic bias in the data errors (explained in Section \ref{s:usecase}), \sys is able to identify the dirty records and
 reduce the detection error to 8\% after 10,000 $Clean(\dot)$ calls --- much faster than the alternatives.
 
 Overall, we found that systematic errors are indeed present in real world datasets, and that \sys can effectively identify and exploit this bias
@@ -159,14 +141,18 @@ Thus we will see that dirtiness in the raw data propogates and spreads throughou
 % We use the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
 % In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
 % The MNIST dataset consists of 64x64 grayscale images.
-There are two types of simulated corruptions that mimic corruptions in previous studies(\reminder{REF?}): \texttt{5x5 Removal} deletes a random 5x5 pixel block by setting the pixel values to 0, and \texttt{Fuzzy} blurs the entire image using a 4x4 moving average patch. 
-We apply these corruptions to a random 5\% of the images.%, and mimic the random (Fuzzy) vs. systematic corruption (5x5 removal) studied in the previous experiments.
+There are two types of simulated corruptions that mimic standard corruptions in image processing (occulusion and low-resolution): \texttt{5x5 Removal} deletes a random 5x5 pixel block by setting the pixel values to 0, and \texttt{Fuzzy} blurs the entire image using a 4x4 moving average patch. 
+We apply these corruptions to a random 5\% of the images.
 \sys's adaptive detector uses a 10 class classifier (one for each digit) to detect the corruption.
 
 Figure \ref{mnist} shows that \sys makes more progress towards the clean model with a smaller number of examples cleaned.
 To achieve a 2\% error for 5x5 Removal, \sys can inspect 2200 fewer images than Active Learning and 2750 fewer images than NS.
 For the fuzzy images, both Active Learning and \sys reach 2\% error after examining $<100$ images, while NS requires 1750.
-\reminder{How did having a pipeline affect dirtiness?}
+Even though these corruptions are applied independent of the data, the \texttt{5x5 Removal} propagates through the pipeline as a systematic error.
+The image features are constructed with edge detectors, which are highly sensitive to this type of corruption.
+Some digits naturually have less edges than others are disproportionately affected since the removal process adds suprious edges.
+On the other hand, the \texttt{Fuzzy} corruption propagates through the pipeline more similar to random error.
+This experiment highlights that featurization and other data processing pipelines between the raw data and model can introduce systematic biases in the presence of data corruption.
 
 \subsection{Simulated Error Scenarios}
 In the next set of experiments, we use standard Machine Learning benchmark datasets and corrupt them with varying levels of systematic noise.
