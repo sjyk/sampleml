@@ -10,10 +10,10 @@ We compare \sys to alternative solutions along two primary axes: the sampling pr
 All of the compared approaches clean the same amount of data, and we evalauate the accuracy of the approaches as a function of the amount of data examined; defined as the number of evaluations of the user-specified $Clean(\dot)$ on a record whether or not the record is actually dirty.
 
 \vspace{0.25em}
-\noindent\textbf{Naive-Mix (NM): } In each iteration, NM draws a random sample, merges the cleaned sample back into the dataset, and re-trains over the entire dataset.
+\noindent\textbf{Naive-Mix (NM): } In each iteration, Naive-Mix  draws a random sample, merges the cleaned sample back into the dataset, and re-trains over the entire dataset.
 
 \vspace{0.25em}
-\noindent\textbf{Naive-Sample (NS): } In contrast to NM, NS only re-trains over the set of samples that have been cleaned so far.
+\noindent\textbf{Naive-Sampling (NS): } In contrast to Naive-Mix , Naive-Sampling only re-trains over the set of samples that have been cleaned so far.
 
 \vspace{0.25em}
 \noindent\textbf{Active Learning (AL): }
@@ -26,7 +26,7 @@ The samples are picked using Active Learning (more precisely, Uncertainty Sampli
 \centering
  \includegraphics[width=\textwidth]{exp/real-experiments-full.png}
  \includegraphics[width=0.6\columnwidth]{exp/legend-real.png}\vspace{-1em}
- \caption{(a) We plot the relative model error as a function of the number of records cleaned for each of the alternatives on the IMDB content tagging task. \sys results in the fastest convergence. (b) Faster convergence translates into improved test accuracy. On a holdout set of 20\%, \sys is more accurate than the alternatives. (c) We evaluate \sys on the Dollars For Docs fraud detection task and find similar results, where \sys converges faster than the alternatives. (d) \sys improves the detection error (true positive rate) of the classifier resulting in an improved fraud detector. \label{real}}\vspace{-1.5em}
+ \caption{(a) We plot the relative model error as a function of the number of records cleaned for each of the alternatives on the IMDB content tagging task. \sys results in the fastest convergence. (b) Faster convergence translates into improved test accuracy. On a holdout set of 20\%, \sys is more accurate than the alternatives. (c) We evaluate \sys on the Dollars For Docs fraud detection task and find similar results, where \sys converges faster than the alternatives. (d) \sys improves the false negative rate (detection error) of the classifier resulting in an improved fraud detector. \label{real}}\vspace{-1.5em}
 \end{figure*}
 
 \subsection{Real Scenarios}\label{real-errors}
@@ -95,9 +95,9 @@ Figure~\ref{real}c again shows that \sys outperforms the other cleaning approach
 For instance, \sys requires 40,000 fewer calls to $Clean(\dot)$ in order to reduce the model error by $75\%$ as compared to the initial dirty model,
 and exhibits nearly an order of magnitude smaller model error than either of the naive approaches after only 10,000 calls to $Clean(\dot)$.
 
-Figure~\ref{real}d reports the detection error (percentage of disallowed research contributions that the model misses) rather than the overall test error because the former was the focus of the investigation.  The dirty and fully cleaned models have respectively a 34\% and 3\% detection error.
+Figure~\ref{real}d reports the detection error or false negative \% (percentage of disallowed research contributions that the model misses) rather than the overall test error because the former was the focus of the investigation.  The dirty and fully cleaned models have respectively a 34\% and 3\% detection error.
 Due to the systematic bias in the data errors (explained in Section \ref{s:usecase}), \sys is able to identify the dirty records and
-reduce the detection error to 8\% after 10,000 $Clean(\dot)$ calls --- much faster than the alternatives.
+reduce the detection error to 8\% after 10,000 $Clean(\dot)$ calls, which is much faster than the alternatives.
 
 Overall, we found that systematic errors are indeed present in real world datasets, and that \sys can effectively identify and exploit this bias
 to more quickly converge to the true clean model as compared to the naive or active learning approaches.  
@@ -167,14 +167,6 @@ The two datasets that we used were:
 
 \noindent\textbf{Seizure Classification (EEG): } In this dataset, the task is to predict the onset of a seizure (binary) from 15 numerical covariates with a thresholded Linear Regression. There are 14980 data points in this dataset. This classification task is inherently hard with an accuracy on completely clean data of only 65\%.
 
-\begin{figure}[t]
-\centering
- \includegraphics[width=0.49\columnwidth]{exp/exp2.pdf}
- \includegraphics[width=0.49\columnwidth]{exp/exp1.pdf}
- \includegraphics[width=0.5\columnwidth]{exp/legend-1.png}\vspace{-1em}
- \caption{(a) Robust techniques and discarding data work when corrupted data are random and look atypical. (b) Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}\vspace{-1.5em}
-\end{figure}
-
 \subsubsection{Source of Improvements}\label{comp}
 This experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
 \sys without detection is denoted as (AC-D) (that is at each iteration we sample from the entire dirty data), and \sys without detection and our prioritized sampling is denoted as (AC-D-I).
@@ -212,7 +204,7 @@ Consider the case where 10\% of the dataset is corrupted and a small sample of d
  \includegraphics[width=0.49\columnwidth]{exp/exp14a.pdf}
     \includegraphics[width=0.49\columnwidth]{exp/exp14b.pdf}
     \includegraphics[width=0.49\columnwidth]{exp/legend-14.png}\vspace{-0.5em}
- \caption{The relative model error as a function of the number of examples cleaned. \sys converges with a smaller sample size to the true result in comparison to partial cleaning (RTr, RTr+D).  \label{pc-perf}}
+ \caption{The relative model error as a function of the number of examples cleaned. \sys converges with a smaller sample size to the true result in comparison to partial cleaning (NM, NM+D).  \label{pc-perf}}
 \end{figure}
 
 \subsubsection{Corruption Rate}
@@ -226,7 +218,15 @@ When the initialization with the dirty model is inaccurate, \sys does not perfor
 \centering
  \includegraphics[width=0.49\columnwidth]{exp/exp9a.pdf}
   \includegraphics[width=0.49\columnwidth]{exp/exp9b.pdf}\vspace{-1em}
- \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization. The error of SampleClean does not depend on the corruption rate so it is a vertical line.  \label{bias}}\vspace{-1.5em}
+ \caption{\sys performs well until the corruption is so severe that the dirty model is not a good initialization. The error of SampleClean does not depend on the corruption rate so it is a vertical line.  \label{bias}}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+ \includegraphics[width=0.49\columnwidth]{exp/exp2.pdf}
+ \includegraphics[width=0.49\columnwidth]{exp/exp1.pdf}
+ \includegraphics[width=0.5\columnwidth]{exp/legend-1.png}
+ \caption{(a) Robust techniques and discarding data work when corrupted data are random and look atypical. (b) Data cleaning can provide reliable performance in both the systematically corrupted setting and randomly corrupted setting.\label{sys-rand}}
 \end{figure}
 
 \subsubsection{Data Cleaning v.s. Robust Statistics}
