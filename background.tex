@@ -52,11 +52,11 @@ $~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$corporation$\textrm{,}$ amount$\textrm{,}$ disp
 \subsection{Iteration in Model Construction}
 Consider an analyst designing a classifier on the ProPublica dataset.
 When she first develops her model on the dirty data, she will find that the detection rate (true positives predicted) is quite low 66\%.
-To investigate why, she might examine those records that are labled as flagged but not predicted by the classifier.
+To investigate why she might examine those records that are incorrectly predicted by the classifier.
 
-A number of studies have reported that this process is non-linear, iterative, and adaptive.
+Several studies have reported that this process is non-linear, iterative, and adaptive.
 It is common for analysts to use the preliminary analysis on dirty data as a guide to help identify potential errors and design repairs~\cite{kandel2012}.
-For example, our analyst may discover that there are numerous examples where two records are nearly identical but one is predicted correctly and one is incorrect, and their only difference is the \texttt{corporation} attribute: Pfizer and Pfizer Incorporated.
+For example, our analyst may discover that there are numerous examples where two records are nearly identical, but one is predicted correctly, and one is incorrect, and their only difference is the \texttt{corporation} attribute: Pfizer and Pfizer Incorporated.
 Upon discovering such inconsistencies, she will merge those two attribute values, re-train the model, and repeat this process (Figure \ref{cartoon}).
 
 We define iterative data cleaning to be the process of cleaning subsets of data, evaluating preliminary results, and then cleaning more data as necessary.

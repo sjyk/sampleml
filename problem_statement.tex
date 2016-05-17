@@ -54,7 +54,7 @@ The main insight of \sys is to model the interactive data cleaning problem as a 
 SGD is an iterative optimization algorithm that starts with an initial estimate and then takes a sequence of steps ``downhill'' to minimize an objective function.
 Similarly, in interactive data cleaning, the human starts with a dirty model and makes a series of cleaning decisions to improve the accuracy of the model.
 We formalize the link between these two processes, and since SGD is one of the most widely studied forms of optimization, it well understood theoretical convergence conditions.
-For the purposes of designing a system, it gives us clear restrictions on different components.
+These theoretical properties give us clear restrictions on different components.
 Figure \ref{sys-arch} illustrates the \sys architecture including the: {\it Sampler}, {\it Cleaner}, \emph{Updater}, {\it Detector}, and {\it Estimator}.
 
 The first step of \sys is initialization. We first set $R_{dirty} = R$ and $R_{clean} = \emptyset$.
@@ -63,7 +63,7 @@ It turns out that SGD converges for an arbitrary initialization, so $\theta^{(d)
 This can be done by featurizing the dirty records (e.g., using an arbitrary placeholder for missing values), and then training the model.
 
 In the next step, the {\it Sampler} selects a batch of data $S$ from the data that has not been cleaned already. To ensure convergence, the Sampler has to do this in a randomized way, but can assign higher probabilities to some data as long as no data has a zero sampling probability.
-The {\it Cleaner} is user-specifed and executes $C(\cdot)$ for each sample record and outputs their cleaned versions.
+The {\it Cleaner} is user-specified and executes $C(\cdot)$ for each sample record and outputs their cleaned versions.
 The {\it Updater} uses the cleaned batch to update the model using a Gradient Descent step, thus moving the model closer to the true cleaned model (in expectation).
 Finally, the system either terminates due to a stopping condition (e.g., $C(\cdot)$ has been called a maximum number of times $k$, or training error convergence), or passes control to the {\it sampler} for the next iteration.
 

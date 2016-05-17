@@ -1,5 +1,4 @@
 \section{Experiments}\label{eval}
-%We evaluate \sys on a variety of data cleaning problems and statistical models.
 We start by presenting two end-to-end scenarios based on a dataset of movies from IMDB and a dataset of medical donations from ProPublica.
 These scenarios have real data and real errors, and we describe how these errors can affect statistical modeling problems.
 Next, we evaluate a how dirty data may affect Machine Learning ``pipelines'' in an image classification example where we corrupted certain images.
@@ -7,13 +6,13 @@ Then, we evaluate each of the components of \sys on standard Machine Learning be
 
 \subsection{Setup}
 We compare \sys to alternative solutions along two primary axes: the sampling procedure to pick the next set of records to clean, and the model update procedure to incorporate the cleaned sample.
-All of the compared approaches clean the same amount of data, and we evalauate the accuracy of the approaches as a function of the amount of data examined; defined as the number of evaluations of the user-specified $Clean(\dot)$ on a record whether or not the record is actually dirty.
+All of the compared approaches clean the same amount of data, and we evaluate the accuracy of the approaches as a function of the amount of data examined; defined as the number of evaluations of the user-specified $Clean(\dot)$ on a record whether or not the record is actually dirty.
 
 \vspace{0.25em}
 \noindent\textbf{Naive-Mix (NM): } In each iteration, Naive-Mix  draws a random sample, merges the cleaned sample back into the dataset, and re-trains over the entire dataset.
 
 \vspace{0.25em}
-\noindent\textbf{Naive-Sampling (NS): } In contrast to Naive-Mix , Naive-Sampling only re-trains over the set of samples that have been cleaned so far.
+\noindent\textbf{Naive-Sampling (NS): } In contrast to Naive-Mix, Naive-Sampling only re-trains over the set of samples that have been cleaned so far.
 
 \vspace{0.25em}
 \noindent\textbf{Active Learning (AL): }
@@ -47,8 +46,8 @@ The text data was featurized using a TFIDF model.
 
 The IMDB dataset is larger (486,298), but much dirtier because it was collected from a web scraper.  
 This data is user-contributed, and the category list is very dirty, with redundant and possibly conflicting tags (e.g., ``Kids'' and ``Horror'' for the same movie).  
-In addition, the plot and title text may have errors from the scraping procedure (e.g., ``results fr\^Celf, the'').
-In contrast, the smaller (106,959 movies) Yahoo dataset is much cleaner.  In addition, nearly all of the movies are found in the IMDB dataset.
+Also, the plot and title text may have errors from the scraping procedure (e.g., ``results fr\^Celf, the'').
+In contrast, the smaller (106,959 movies) Yahoo dataset is much cleaner, and nearly all of the movies are found in the IMDB dataset.
 Thus, we used this as a cleaner reference dataset and performed simple entity resolution to match movies together, and imported the Yahoo dataset's categories to the IMDB dataset when possible.
 For the movies that did not match, we appended the records to the IMDB dataset.
 Finally, we filtered the dataset for movies whose category lists included ``Horror'' or ``Comedy''
@@ -67,11 +66,11 @@ Finally, we filtered the dataset for movies whose category lists included ``Horr
 
 Figure \ref{real}a plots the distance between the current and cleaned model parameters (model error) versus the number of $Clean(\dot)$ calls.  
 %as more records are cleaned. 
-The purple bottom curve is the oracle approach, and we find that \sys reduces the model error the fastest, and is the only method that converges to the oracle model.
+The purple bottom curve is the Oracle approach, and we find that \sys reduces the model error the fastest, and is the only method that converges to the Oracle performance.
 Figure~\ref{real}b directly shows how \sys rapidly reduces the test error --- after 2000 records, \sys's test error is within 0.02 of the fully cleaned model.
 \sys provides superior convergence for several reasons.
-First, the update algorithm is able to incorporate both the raw data as well as the smaller set of cleaned records.
-On the other hand, the difference between Naive-Sampling and Naive-Mix in Figure~\ref{real}b highlights the effects of only using the cleaned data or naively combining clean and dirty datasets.
+First, the update algorithm can incorporate both the raw data as well as the smaller set of cleaned records.
+On the other hand, the difference between Naive-Sampling and Naive-Mix in Figure~\ref{real}b highlights the effects of only using the cleaned data or combining clean and dirty datasets.
 \sys selects records that are both more likely to by dirty (Section \ref{det}) and will most improve the model (Section \ref{dist-samp}).
 This is illustrated in \sys's faster convergence curve in the first 2000 cleaned records.
 The key reason for these positive results is the presence of systematic bias in the dataset as horror movies are more likely to be erroneously tagged.
@@ -99,10 +98,10 @@ Figure~\ref{real}d reports the detection error or false negative \% (percentage 
 Due to the systematic bias in the data errors (explained in Section \ref{s:usecase}), \sys is able to identify the dirty records and
 reduce the detection error to 8\% after 10,000 $Clean(\dot)$ calls, which is much faster than the alternatives.
 
-Overall, we found that systematic errors are indeed present in real world datasets, and that \sys can effectively identify and exploit this bias
+Overall, we found that systematic errors are indeed present in real-world datasets, and that \sys can effectively identify and exploit this bias
 to more quickly converge to the true clean model as compared to the naive or active learning approaches.  
 In fact, we found that the commonly used retraining approach (Naive-Mix) was almost completely ineffective as compared to other model update techniques.
-Thus the further experiments focus on the other algorithms and we discuss the difficulties of naively mixing dirty and clean data in Section~\ref{exp:rtr}.
+Thus, the further experiments focus on the other algorithms, and we discuss the difficulties of naively mixing dirty and clean data in Section~\ref{exp:rtr}.
 
 % The dataset has 240,089 records with 5 textual attributes and one numerical attribute.
 % The dataset is featurized with bag-of-words featurization model for the textual attributes which resulted in a 2021 dimensional feature vector, and a binary SVM is used to classify the status of the medical donations.
@@ -134,7 +133,7 @@ This experiment is representative of modern machine learning pipelines such as K
 The task is to classify 60,000 images of handwritten digits from the MNIST dataset into 10 categories with an one-to-all multiclass SVM classifier~\footnote{\scriptsize\url{http://ufldl.stanford.edu/wiki/index.php/Using_the_MNIST_Dataset}}. 
 In contrast to the prior scenarios, which directly extracted feature vectors from the raw dataset, image feature extraction involves a pipeline of transformation steps including edge detection, projection, and raw image patch extraction~\cite{keystone,tensor}.
 The cleaning function $Clean(\dot)$ involves replacing a potentially corrupted image with a non-corrupted version.
-Thus we will see that dirtiness in the raw data propogates and spreads throughout the pipeline.
+We find that pipelines tend to propagate small amounts of corruptions.
 % What is unique about image processing is that data are often processed through a pipeline of operators edge detectors, projections, and raw image patches~\cite{keystone,tensor}.
 % This experiment explores data cleaning in this context, where dirtiness is in the raw data but get propagated through the pipeline.
 
@@ -150,7 +149,7 @@ To achieve a 2\% error for 5x5 Removal, \sys can inspect 2200 fewer images than 
 For the fuzzy images, both Active Learning and \sys reach 2\% error after examining $<100$ images, while Naive-Sampling requires 1750.
 Even though these corruptions are applied independent of the data, the \texttt{5x5 Removal} propagates through the pipeline as a systematic error.
 The image features are constructed with edge detectors, which are highly sensitive to this type of corruption.
-Some digits naturually have less edges than others are disproportionately affected since the removal process adds suprious edges.
+Some digits naturally have fewer edges than others are disproportionately affected since the removal process adds spurious edges.
 On the other hand, the \texttt{Fuzzy} corruption propagates through the pipeline more similar to random error.
 This experiment highlights that featurization and other data processing pipelines between the raw data and model can introduce systematic biases in the presence of data corruption.
 
@@ -165,7 +164,7 @@ The two datasets that we used were:
 
 \vspace{0.25em}
 
-\noindent\textbf{Seizure Classification (EEG): } In this dataset, the task is to predict the onset of a seizure (binary) from 15 numerical covariates with a thresholded Linear Regression. There are 14980 data points in this dataset. This classification task is inherently hard with an accuracy on completely clean data of only 65\%.
+\noindent\textbf{Seizure Classification (EEG): } In this dataset, the task is to predict the onset of a seizure (binary) from 15 numerical covariates with a thresholded Linear Regression. There are 14980 data points in this dataset. This classification task is inherently hard with an accuracy on the completely clean data is only 65\%.
 
 \subsubsection{Source of Improvements}\label{comp}
 This experiment compares the performance of \sys with and without various optimizations at 500 records cleaned point. 
@@ -173,7 +172,7 @@ This experiment compares the performance of \sys with and without various optimi
 Figure \ref{opts} plots the relative error of the alternatives and \sys with and without the optimizations.
 Without detection (AC-D), \sys is still more accurate than Active Learning.
 Removing the sampling, \sys is slightly worse than Active Learning on the Adult dataset but is comparable on the EEG dataset.
-The advantage of \sys is that it is a composable framework supporting different instantiations of the detection and prioritization modules, while still preserving convergence guarantees.
+The advantage of \sys is that it is a composable framework supporting different instantiations of the detection and prioritization modules while still preserving convergence guarantees.
 With these optimizations, \sys is consistently more efficient than Active Learning.
 
 \begin{figure}[t]\vspace{0.5em}
@@ -193,7 +192,7 @@ Naive-Mix randomly samples data, clean, and writes-back the cleaned data.
 Naive-Mix+D randomly samples data using the dirty data detector, cleans, and writes-back the cleaned data.
 Intuitively, retraining makes less progress with each update.
 Consider the case where 10\% of the dataset is corrupted and a small sample of data 1\%.
-\sys and Naive-Sampling extrapolate from the cleaned sample (\sys extropolates a gradient), while Naive-Mix considers the entire dirty data which might be much larger.
+\sys and Naive-Sampling extrapolate from the cleaned sample (\sys extrapolates a gradient) while Naive-Mix considers the entire dirty data which might be much larger.
 
 %\sys converges faster.
 %\sys tunes the weighting when averaging dirty and clean data into the gradient.
@@ -232,7 +231,7 @@ When the initialization with the dirty model is inaccurate, \sys does not perfor
 \subsubsection{Data Cleaning v.s. Robust Statistics}
 Machine Learning has broadly studied a number of \emph{robust} methods to deal with some types of outliers. In particular, this field studies random high-magnitude outliers and techniques to make statistical model training agnostic to their presence. Feng et al. proposed a variant of logistic regression that is robust to outliers~\cite{feng2014robust}. We chose this algorithm because it is a robust extension of the convex regularized loss model, leading to a better apples-to-apples comparison between the techniques.
 Our goal is to understand which types of data corruption are amenable to data cleaning and which are better suited for robust statistical techniques.
-The experiment compares four schemes: (1) full data cleaning  , (2) baseline of no cleaning, (3) discarding the dirty data, and (4) robust logistic regression. 
+The experiment compares four schemes: (1) full data cleaning, (2) baseline of no cleaning, (3) discarding the dirty data, and (4) robust logistic regression. 
 We corrupted 5\% of the training examples in each dataset in two different ways:
 
 \vspace{0.5em}
@@ -272,9 +271,9 @@ In terms of model error, \sys gives its largest benefits for small sample sizes.
 For 500 cleaned records of the Adult dataset, \sys has 6.1x less error than SampleClean and 2.1x less error than Active Learning.
 For 500 cleaned records of the EEG dataset, \sys has 9.6x less error than SampleClean and 2.4x less error than Active Learning.
 Both Active Learning and \sys benefit from the initialization with the dirty model as they do not retrain their models from scratch, and \sys improves on this performance with detection and error estimation.
-Active Learning has no notion of dirty and clean data, and therefore prioritizes with respect to the dirty data.
+Active Learning has no notion of dirty and clean data, and therefore prioritizes its selections with respect to the dirty data.
 These gains in model error also correlate well to improvements in test error (defined as the test accuracy difference w.r.t cleaning all data).
-The test error converges more quickly than model error, emphasizing the benefits of progressive data cleaning, since it is not neccessary to clean all the data to get a model with essentially the same performance as the clean model.
+The test error converges more quickly than model error, emphasizing the benefits of progressive data cleaning since it is not necessary to clean all the data to get a model with essentially the same performance as the clean model.
 For example, to achieve a test error of 1\% on the Adult dataset, \sys cleans 500 fewer records than Active Learning.
 \fi
 
@@ -302,4 +301,3 @@ Figure \ref{tradeoffs2}b measures how accurately each estimation technique estim
 Estimation error is measured using the relative L2 error with the true gradient.
 The Taylor series approximation proposed gives more accurate for small cleaning sizes.
 Linear regression and the average feature change technique do eventually perform comparably but only after cleaning much more data.
-
