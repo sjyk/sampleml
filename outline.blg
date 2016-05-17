@@ -3,76 +3,76 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: outline.aux
 The style file: abbrv.bst
 Database file #1: ref.bib
-Repeated entry---line 1208 of file ref.bib
+Repeated entry---line 1229 of file ref.bib
  : @inproceedings{DBLP:conf/sigmod/BergmanMNT15
  :                                             ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1263 of file ref.bib
+Repeated entry---line 1284 of file ref.bib
  : @article{bertsekas2011incremental
  :                                  ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1276 of file ref.bib
+Repeated entry---line 1297 of file ref.bib
  : @article{dekel2012optimal
  :                          ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1302 of file ref.bib
+Repeated entry---line 1323 of file ref.bib
  : @inproceedings{feng2014robust
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1325 of file ref.bib
+Repeated entry---line 1346 of file ref.bib
  : @inproceedings{guillory2009active
  :                                  ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1332 of file ref.bib
+Repeated entry---line 1353 of file ref.bib
  : @article{alexandrov2014stratosphere
  :                                    ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1363 of file ref.bib
+Repeated entry---line 1384 of file ref.bib
  : @incollection{bottou2012stochastic
  :                                   ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1440 of file ref.bib
+Repeated entry---line 1461 of file ref.bib
  : @article{crotty2014tupleware
  :                             ,
 I'm skipping whatever remains of this entry
-I was expecting a `,' or a `}'---line 1477 of file ref.bib
+I was expecting a `,' or a `}'---line 1498 of file ref.bib
  : 
  : @misc{keystone,
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
-Repeated entry---line 1487 of file ref.bib
+Repeated entry---line 1508 of file ref.bib
  : @article{simpson1951interpretation
  :                                   ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1505 of file ref.bib
+Repeated entry---line 1526 of file ref.bib
  : @inproceedings{mayfield2010eracer
  :                                  ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1520 of file ref.bib
+Repeated entry---line 1541 of file ref.bib
  : @inproceedings{deshpande2004model
  :                                  ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1536 of file ref.bib
+Repeated entry---line 1557 of file ref.bib
  : @inproceedings{DBLP:conf/case/MahlerKLSMKPWFAG14
  :                                                 ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1560 of file ref.bib
+Repeated entry---line 1581 of file ref.bib
  : @inproceedings{DBLP:conf/recsys/KrishnanPFG14
  :                                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1578 of file ref.bib
+Repeated entry---line 1599 of file ref.bib
  : @article{krishnan2015svc
  :                         ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1603 of file ref.bib
+Repeated entry---line 1624 of file ref.bib
  : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
  :                                                 ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1620 of file ref.bib
+Repeated entry---line 1641 of file ref.bib
  : @article{whang2014incremental
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1635 of file ref.bib
+Repeated entry---line 1656 of file ref.bib
  : @article{gruenheid2014incremental
  :                                  ,
 I'm skipping whatever remains of this entry
@@ -89,45 +89,45 @@ Warning--to sort, need author or key in dollarsfordocs
 Warning--to sort, need author or key in keystone
 Warning--empty publisher in bottou2012stochastic
 Warning--empty publisher in DBLP:series/synthesis/2012Fan
-You've used 45 entries,
+You've used 46 entries,
             2118 wiz_defined-function locations,
-            684 strings with 10876 characters,
-and the built_in function-call counts, 14009 in all, are:
-= -- 1161
-> -- 896
+            696 strings with 11116 characters,
+and the built_in function-call counts, 14372 in all, are:
+= -- 1206
+> -- 904
 < -- 0
-+ -- 363
-- -- 312
-* -- 894
-:= -- 2339
-add.period$ -- 132
-call.type$ -- 45
-change.case$ -- 289
++ -- 366
+- -- 314
+* -- 930
+:= -- 2398
+add.period$ -- 135
+call.type$ -- 46
+change.case$ -- 293
 chr.to.int$ -- 0
-cite$ -- 54
-duplicate$ -- 575
-empty$ -- 1212
-format.name$ -- 312
-if$ -- 2926
+cite$ -- 55
+duplicate$ -- 583
+empty$ -- 1238
+format.name$ -- 314
+if$ -- 2998
 int.to.chr$ -- 0
-int.to.str$ -- 45
-missing$ -- 40
-newline$ -- 221
-num.names$ -- 76
-pop$ -- 470
+int.to.str$ -- 46
+missing$ -- 41
+newline$ -- 226
+num.names$ -- 78
+pop$ -- 466
 preamble$ -- 1
-purify$ -- 246
+purify$ -- 249
 quote$ -- 0
-skip$ -- 321
+skip$ -- 328
 stack$ -- 0
-substring$ -- 256
+substring$ -- 311
 swap$ -- 79
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 176
+type$ -- 180
 warning$ -- 9
-while$ -- 78
-width$ -- 47
-write$ -- 434
+while$ -- 84
+width$ -- 48
+write$ -- 446
 (There were 19 error messages)

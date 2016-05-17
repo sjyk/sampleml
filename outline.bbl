@@ -31,12 +31,6 @@ A pharma payment a day keeps docs' finances okay.
 Tensor flow.
 \newblock \url{https://www.tensorflow.org/}.
 
-\bibitem{AgarwalMPMMS13}
-S.~Agarwal, B.~Mozafari, A.~Panda, H.~Milner, S.~Madden, and I.~Stoica.
-\newblock Blinkdb: queries with bounded errors and bounded response times on
-  very large data.
-\newblock In {\em EuroSys}, 2013.
-
 \bibitem{alexandrov2014stratosphere}
 A.~Alexandrov, R.~Bergmann, S.~Ewen, J.~Freytag, F.~Hueske, A.~Heise, O.~Kao,
   M.~Leich, U.~Leser, V.~Markl, F.~Naumann, M.~Peters, A.~Rheinl{\"{a}}nder,
@@ -60,10 +54,21 @@ D.~P. Bertsekas.
   optimization: {A} survey.
 \newblock In {\em CoRR}, 2015.
 
+\bibitem{bickel1975sex}
+P.~Bickel, E.~Hammel, and J.~O'connell.
+\newblock Sex bias in graduate admissions: data from berkeley.
+\newblock {\em Science (New York, NY)}, 187(4175):398--404, 1975.
+
 \bibitem{bottou2012stochastic}
 L.~Bottou.
 \newblock Stochastic gradient descent tricks.
 \newblock In {\em Neural Networks: Tricks of the Trade}. 2012.
+
+\bibitem{charig1986comparison}
+C.~R. Charig, D.~R. Webb, S.~R. Payne, and J.~E. Wickham.
+\newblock Comparison of treatment of renal calculi by open surgery,
+  percutaneous nephrolithotomy, and extracorporeal shockwave lithotripsy.
+\newblock {\em Br Med J (Clin Res Ed)}, 292(6524):879--882, 1986.
 
 \bibitem{crotty2014tupleware}
 A.~Crotty, A.~Galakatos, and T.~Kraska.
