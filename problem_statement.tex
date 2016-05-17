@@ -51,7 +51,7 @@ We use the following notation to represent relevant quantities:
 
 \subsection{System Architecture}\label{syarch}
 The main insight of \sys is to model the interactive data cleaning problem as a form of Stochastic Gradient Descent (SGD)~\cite{bottou2012stochastic}.
-SGD is an iterative optimization algorithm that start with an initial estimate and then takes a sequence of steps ``downhill'' to minimize an objective function.
+SGD is an iterative optimization algorithm that starts with an initial estimate and then takes a sequence of steps ``downhill'' to minimize an objective function.
 Similarly, in interactive data cleaning, the human starts with a dirty model and makes a series of cleaning decisions to improve the accuracy of the model.
 We formalize the link between these two processes, and since SGD is one of the most widely studied forms of optimization, it well understood theoretical convergence conditions.
 For the purposes of designing a system, it gives us clear restrictions on different components.

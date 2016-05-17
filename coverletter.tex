@@ -82,38 +82,29 @@ initialization with the dirty model.}
 
 \noindent\textbf{R1.4 For cleaning, is it through cleaning on random samples, or by cleaning rules? My understanding is that it is the former but why not the latter?}
 
-\noindent \sys cleans a batch of data in each iteration. There are two main issues: (1) which data are in the batch and (2) how to clean the batch. We assume that (2) is given to us in the form of a user-defined function that is implemented either with software or a manual action by the analyst (Section \ref{dmodel}). 
-Given a dirty batch of data this function returns a cleaned batch of data (if a record is not dirty, it is a ``noop'').
-\sys is compatible with any algorithm that can be written in this way.
+\noindent \sys cleans a batch of data in each iteration. 
+There are two main issues: (1) which data are in the batch and (2) how to clean the batch. 
 For (1), \sys is fully compatible with a set of data quality rules and selecting dirty data that violate these rules (Section \ref{rule-det}).
-Furthermore, \sys can be used to prioritize verification of automated repairs to maximally benefit the ultimate model.
+We assume that (2) is given to us in the form of a user-defined function that is implemented either with software or a manual action by the analyst (Section \ref{dmodel}). 
+Given a dirty batch of data this function returns a cleaned batch of data (if a record is not dirty, it is a ``noop'').
+One could use the rules to synthesize repairs on the batches.
 
 \vspace{0.5em}
 
 \noindent\textbf{R1.5 The experimental data are in a sense synthetic (clean data are corrupted), which is very disappointing. It will be much more convincing to show on at least one REAL data set how the dirty data can lead to bad models and how the proposed solutions can help.}
 
 \noindent We greatly value this suggestion and have expanded our experiments to include an additional real dataset.
-Section \ref{real-errors} describes two real scenarios, a movie dataset from IMDB and a medical dataset from ProPublica, and how thse use cases can be addressed by \sys:
-
-\emph{The first scenario is an automatic content tagging problem where a classifier categorizes movies from plot descriptions.
+Section \ref{real-errors} describes two real scenarios, a movie dataset from IMDB and a medical dataset from ProPublica, and how thse use cases can be addressed by \sys.
+The first scenario is an automatic content tagging problem where a classifier categorizes movies from plot descriptions.
 The second scenario resembles a fraud detection problem where a classifier determines whether a medical donation is suspicious.
-Both the scenarios are affected by systematic error, since dirtiness in the data affects one classification class more than the other.}
+Both the scenarios are affected by systematic error, since dirtiness in the data affects one classification class more than the other.
 
 \vspace{0.5em}
 
 \noindent\textbf{R1.6 Systematic corruption is a bit anti-intuition. I would imagine systematic errors (e.g., shifting of numerical values, misspellings) are made independent of the importance of the features. The results might be more towards those on randomly corrupted data, where the learned models are only marginally worse.}
 
-\noindent  We explored binary classification problems on our real datasets. In both of these datasets, we found that errors disproportionately affected one class compared to the other.
-
-For the IMDB dataset, we classified movies into two categories ``Horror'' and ``Comedy''. 
-On the dirty dataset, the prediction precision of the model for Horror movies was only 29\%.
-This is because ``Horror'' movies were more likely to be incorrectly tagged and have sparser plot descriptions than ``Comedy'' movies.
-This improved to 74\% after data cleaning. 
-
-For the ProPublica dataset, we predicted suspicious donations given features of the data.  
-On the dirty data, we can only correctly classify 66\% of the suspected examples (88\% overall accuracy due to a class imbalance).
-On the cleaned data, this classifier is nearly perfect with a 97\% true positive rate (98\% overall accuracy).
-Similar to IMDB, this indicates that errors disproportionately affect one class over the others.
+\noindent  We have empirically found systematic errors to exist in many real world datasets from journalism, movies, and academic publication datasets, and they greatly affect the model accuracies if not cleaned. In our movie tag classification experiment, we found that ``Horror'' movies were more likely to be incorrectly tagged than ``Comedy'' movies.
+For our fraud detection experiment, we found that the attributes for corporate donations from larger the companies were more likely to be inconsisten.
 
 This problem has been noted in our prior work on other datasets as well where corruption is correlated with the hypotheses of interest~(see Microsoft Academic Search in~\cite{wang1999sample}, see World Bank in~\cite{activecleanarxiv}). It is possible that some types of errors do not have a systematic bias, however, the analyst could not know that without cleaning the dataset.
 Without \sys there would be no way to be certain if the errors were truly independent of the model or it was an artifact of sampling or Simpson's paradox.
@@ -138,9 +129,9 @@ This is a consequence of the well-known Simpson's paradox, where aggregates over
 
 \vspace{0.5em}
 
-\noindent\textbf{R1.7 End of Sec 2.1. Why regularization term does not affect the results? It was stated w/o justification.}
+\noindent\textbf{R1.8 End of Sec 2.1. Why regularization term does not affect the results? It was stated w/o justification.}
 
-\noindent  We have updated the section accordingly.
+\noindent We have revised the paper to make this more clear.
 None of the results that we present in this paper depend on the regularization term $r(\theta)$.
 Consider the regularized convex-loss minimization problem:
 \[
@@ -148,11 +139,11 @@ Consider the regularized convex-loss minimization problem:
 \]
 Since $r(\theta)$ does not depend on on $i$, we can move it into the sum and treat is as part of $\phi$.
 In statistics, the regularization term is required for analysis when ``strong'' convexity is important.
-We consider this a technical point and defer the detailed discussion of this to future work.
+
 
 \vspace{0.5em}
 
-\noindent\textbf{R1.8 Example 1 assumes very small sample (50). Why? Is that only for illustration purpose?}
+\noindent\textbf{R1.9 Example 1 assumes very small sample (50). Why? Is that only for illustration purpose?}
 
 \noindent  A discussion is included in Section \ref{sgd} on why we used 50, and how that value can be set depending on the application. As we noted earlier, sampling is done in iterations. Each iteration samples a batch of 50 records to clean, and this was the batch size used in our experiments. However, the other numbers in the examples (budgets etc.) are chosen for illustration purposes. 
 
@@ -166,9 +157,8 @@ We consider this a technical point and defer the detailed discussion of this to 
 
 \noindent\textbf{R1.10 End of Sec 5. Expected Gradient Length heuristic needs more explanation}
 
-\noindent  We apologize for this as the writing in our submission implied that we used this technique. However, we only meant to point out that our proposed approach is similar in spirit to this Active Learning technique.
+\noindent  The discussion about Expected Gradient Length was an effort to analogize our work with Active Learning, because both are iterative algorithms.  This was a side point that made the text more confusing and we have removed it.
 Section \ref{dist-samp} provides a detailed discussion of the sampling problem, what the optimal solution is, and how we apply an approximation to the optimal.
-The interesting point to note is that we design a technique that is convergent regardless of the sampling distribution and a sub-optimal sampling distribution only reduces the convergence rate.
 
 \subsection*{Review 2 Details}
 
@@ -202,30 +192,13 @@ to make this accessible to a general audience.}
 I do not understand statistics well enough to see why this will work at all,
 and the statistically correct updates argument. Also see D6.}
 
-\noindent  We have re-organized the paper to clearly overview each of the components. In Section \ref{model-update}, we provide the following intuition behind the mathematics:
+\noindent  We have made a number of revisions to clarify the relationship between updating, sampling, and detection. We expanded the architecture section to overview the main data flows and an example of how an analyst may use \sys~(Section \ref{syarch}). Section \ref{det} now formalizes and discusses the detection component, and Section \ref{dist-samp} formalizes and discusses the sampling problem.
 
-\emph{This section describes an algorithm for reliable model updates.
-For convex loss minimization, Stochastic Gradient Descent converges to an optimum from any initialization as long each gradient descent step is unbiased.
-We show how we can leverage this property to prove convergence for interactive data cleaning regardless of the inaccuracy of the initial model--as long as the analyst does not systematically exclude certain data from cleaning.} 
+The main insight of \sys is to model the interactive data cleaning problem as a form of Stochastic Gradient Descent (SGD)~\cite{bottou2012stochastic}.
+SGD is an iterative optimization algorithm that starts with an initial estimate and then takes a sequence of steps ``downhill'' to minimize an objective function.
+Similarly, in interactive data cleaning, the human starts with a dirty model and makes a series of cleaning decisions to improve the accuracy of the model.
+We formalize the link between these two processes, and since SGD is one of the most widely studied forms of optimization, it well understood theoretical convergence conditions.
 
-\vspace{0.5em}
-
-In Section \ref{det}, we provide the following intuition for the dirty data detection:
-
-\emph{If corrupted records are relatively rare, the batch sampling might be very inefficient.
-The analyst may have to sample many batches of data before finding a corrupted record.
-In this section, we describe how we can couple \sys with prior knowledge about which data are likely to be dirty.
-In the data cleaning literature, error detection and error repair are two distinct problems~\cite{DBLP:series/synthesis/2012Fan, Dasu:2003:EDM:861869, rahm2000data}.
-Error detection is often considered a substantially easier, since one can often declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
-On the other hand, repair is harder and often requires human involvement (e.g., imputing a value for the NULL attribute).}
-
-\vspace{0.5em}
-
-In Section \ref{dist-samp}, we introduce the sampling problem more formally:
-
-\emph{The algorithm proposed in Section \ref{update-alg} will convege for 
-any sampling distribution where  $p(\cdot) > 0$ for all records, albeit different distributions will have different convergence rates.
-\sys uses a sampling algorithm that selects the most valuable records from $R_{dirty}$ to clean with higher probability.}
 
 \vspace{0.5em}
 
@@ -237,14 +210,18 @@ I thought cleaning was an operation that can
 affect both rows that are mispredicted and rows that
 are predicted correctly. Update() is not defined.}
 
-\noindent  We have removed the pseudo-code in favor of a more precise discussion of the system architecture in Section \ref{syarch}. This new section highlights all of the components, the key data flows, and their conditions for correctness. Additionally, we would like to clarify a point in this review. Mispredicted rows are not necessarily dirty. Data error is a property of the underlying data, which prediction error is a property of the model. Poor prediction accuracy might suggest that a record is incorrect, and this would naturally factor in to the selection algorithm of \sys.
+\noindent  We have removed the pseudo-code in favor of a more precise discussion of the system architecture in Section \ref{syarch}. This new section highlights all of the components, the key data flows, and their conditions for correctness. 
+Additionally, we would like to clarify a point in this review. 
+Mispredicted rows are not necessarily dirty data. 
+However, poor prediction accuracy might suggest that a record is incorrect, and this would naturally factor in to the selection algorithm of \sys (since those would have a larger gradient).
 
 \vspace{0.5em}
 
 \noindent \textbf{R3.4. Suppose k much less than N .. are retained .. Aren't all
 the dirty records cleaned?}
 
-\noindent  We have clarified this wording and intended to say that $k$ records are cleaned, the model is retrained on a mix of $k$ clean records and $N-k$ dirty records.
+\noindent This section discusses the correctness of the intermeidate result (before the data are fully cleaned).
+We meant to say that the user-defined $Clean()$ function was only applied to $k$ records.
 
 \vspace{0.5em}
 
