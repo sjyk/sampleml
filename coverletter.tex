@@ -45,11 +45,15 @@ We apologize that the writing was unclear. We have revised the experiments to mo
 
 \noindent\textbf{R1.1: I'm not fully convinced that mixed dirty and clean data can be even worse than no cleaning. It would be helpful to show experimental support from the beginning for this and clarify whether this holds in general or only applies to certain models.}
 
-\noindent We have updated the introduction, background, and experiments to emphasize that training on a mix of dirty and clean data can have misleading results.
-The key problem is that any aggregate over multiple populations of data is susceptible to a bias called Simpson's Paradox. 
-This problem has affected a number of high-profile studies outside of the context of data cleaning (e.g.,~\cite{bickel1975sex, charig1986comparison}. 
-In the introduction and background sections, we clarify how this statistical problem is relevant to data cleaning since partial cleaning creates two populations of data. 
-Even if this approach sometimes works, we argue that it is incorrect in general.
+\noindent Any aggregate over multiple populations of data is susceptible to Simpson's Paradox, and this problem has affected a number of high-profile studies (e.g.,~\cite{bickel1975sex, charig1986comparison}).
+One of the most famous examples of Simpson's paradox occured during an analysis of UC Berkeley Admissions in 1975~\cite{bickel1975sex}: a study found that women were statistically significantly less likely than men to be admitted to UC Berkeley; however, further analysis revealed that women were just more likely to apply to selective departments, and there no significant gender bias in any particular department. 
+Partial data cleaning results in two distinct populations of data (clean and dirty), and a model trained on the mix may learn correlations that do not exist in either population. 
+We have added a new paragraph to the introduction to clarify the relevance of Simpson's Paradox to data cleaning and expanded a conceptual example in which this occurs.
+The background section further describes how such a scenario arises during iterative data cleaning.
+
+In principle, any model trained on a mix of dirty and clean data can be less accurate than a model trained on just the dirty data.
+However, the magnitude of the bias depends on the data distribution, the amount of data cleaning, and particulars of the statistical model.
+On some datasets, this approach may be reasonable, but in general, Simpson's Paradox is always a risk.
 Experiments in Section \ref{real-errors} show that training a model on a mix of dirty and clean data makes very slow progress. 
 We believe that this mixing effect is one of the contributing factors to the slow convergence in the real datasets.
 
@@ -58,8 +62,9 @@ We believe that this mixing effect is one of the contributing factors to the slo
 \noindent\textbf{R1.2: The algorithm is based on the assumption that we have to do sampling. Why is sampling necessary? Especially that the experimental data sets and examples are not big. If we do not do sampling, how would the solution change? Also, why is the sample potentially stochastic?}
 
 \noindent Any iterative or progressive data cleaning framework will clean data in small batches in each iteration. 
+If we do not do sampling, the solution will reduce to a non-iterative data-cleaning framework, which presents the entire data for the analyst to clean.
 The sampling algorithm in \sys is the procedure to select which data to present based on the current model and previously cleaned data.
-This procedure has to be stochastic since a deterministic prioritization may lead to excluding certain data from cleaning; however, \sys can assign higher probabilities to some data as long as no data has a zero probability. 
+This procedure has to be stochastic since a deterministic prioritization may lead to excluding certain data from cleaning.
 
 \vspace{0.5em}
 
@@ -84,7 +89,7 @@ initialization with the dirty model.}
 There are two main issues: (1) which data are in the batch and (2) how to clean the batch. 
 For (1), \sys is fully compatible with rule-based techniques to select dirty data that violate these rules (Section \ref{rule-det}).
 We assume that (2) is given to us in the form of a user-defined function that is implemented either with software or a manual action by the analyst (Section \ref{dmodel}). 
-Given a dirty batch of data this function returns a cleaned batch of data (if a record is not dirty, it is a ``noop'').
+Given a dirty batch of data this function returns a cleaned batch of data (if a record is not dirty, it just passes through).
 One could use also the same rules to synthesize repairs on the batches as in~\cite{DBLP:journals/pvldb/YakoutENOI11}.
 
 \vspace{0.5em}
@@ -93,9 +98,19 @@ One could use also the same rules to synthesize repairs on the batches as in~\ci
 
 \noindent We greatly value this suggestion and have expanded our experiments to include an additional real dataset.
 Section \ref{real-errors} describes two real scenarios, a movie dataset from IMDB and a medical dataset from ProPublica, and how these use cases can be addressed by \sys.
+
 The first scenario is an automatic content tagging problem where a classifier categorizes movies from plot descriptions.
-The second scenario resembles a fraud detection problem where a classifier determines whether a medical donation is suspicious.
-Both the scenarios are affected by systematic errors, since dirtiness in the data affects one classification class more than the other.
+Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title. 
+This data is user-contributed, and the category list is very dirty, with redundant, spurious, and conflicting tags.  
+Thus, we used a cleaner reference dataset from Yahoo Moview and performed simple entity resolution to match movies together, and imported the Yahoo dataset's categories to the IMDB dataset when possible.
+``Horror'' movies were more likely to have incorrect category tags, and thus, the prediction accuracy of the model was greatly affected. 
+We applied \sys to select the movies were the most valuable to import (Section \ref{imdb}). 
+
+The second scenario resembles a fraud detection problem where a classifier determines whether corporate medical donations are suspicious.
+In this dataset, company names were often inconsistently represented in the data, e.g., Pfizer Inc., Pfizer Incorporated, Pfizer.
+Furthermore, donation records were often inconsistently flagged, e.g. Suspiscious, Review, Disallowed.
+This dataset has a systematic bias because records that were suspicious were more likely to have an inconsistent flagging attribute and inconsistencies in the company name.
+We applied \sys to select the most valuable records to check and repair when possible (Section \ref{dfd}). 
 
 \vspace{0.5em}
 
@@ -136,8 +151,6 @@ Consider the regularized convex-loss minimization problem:
  \theta^{*}=\arg\min_{\theta}\sum_{i=1}^{N}\phi(x_{i},y_{i},\theta) + r(\theta)
 \]
 Since $r(\theta)$ does not depend on on $i$, we can move it into the sum and treat is as part of $\phi$.
-In statistics, the regularization term is required for analysis when ``strong'' convexity is important.
-
 
 \vspace{0.5em}
 
@@ -149,7 +162,7 @@ In statistics, the regularization term is required for analysis when ``strong'' 
 
 \noindent\textbf{R1.9 Sec 4.2. Steps 4-5 need more intuition}
 
-\noindent  We have clarified that Step 4 is a ``is a weighted average of the gradient on the already clean data and newly cleaned data", and Step 5 ``appends the newly cleaned data to set of previously clean records''.
+\noindent  Section 4.2 is Section 4.3 in the revision. We have clarified that Step 4 ``is a weighted average of the gradient on the already clean data and newly cleaned data", and Step 5 ``appends the newly cleaned data to set of previously clean records''.
 
 \vspace{0.5em}
 
@@ -164,18 +177,18 @@ Section \ref{dist-samp} provides a detailed discussion of the sampling problem, 
 
 \noindent  We have included a revised discussion on the differences with Active Learning:
 
-\emph{Active Learning considers the problem of selecting the most informative unlabeled examples to label in partially labeled static data.
+\emph{In spirit, \sys is similar to Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
+However, the two approaches consider different problems.
+Active Learning considers the problem of selecting the most informative unlabeled examples to label in partially labeled static data.
 Active Learning iteratively queries new examples to label and integrates those examples into the model.
-In contrast, we require a broader problem of accounting for modifications to both features and labels in existing examples.
-Thus, the data changes iteration to iteration.
-Furthermore, we have access to dirty values may give us valuable information about which data are likely to be dirty, and which data are likely to impact the model. }
+In contrast, \sys studies the broader problem of prioritizing modifications to both features and labels in existing examples.}
 
 \vspace{0.5em}
 
 \noindent\textbf{R2.2: The selection of the records to clean in each iteration (efficiency problem) uses heuristic solutions (e.g., expected gradient length). There is no formal study of the efficiency of the solution.}
 
-\noindent  As noted in Review 1.10, we apologize for the poor description on our part. We meant to highlight a similarity between \sys and one particular form of Active Learning and did not intend to imply that we used this approach. 
-We have revised the section to make the exact selection procedure clear. Section \ref{det} describes how we partition the data to prioritize data likely to be dirty (not done in Active Learning). Section \ref{dist-samp} formally describes the optimal sampling problem and our solution to it which is an approximation to the optimum. We clearly note that the \sys will converge for any sampling distribution where there is non-zero sampling probability for all remaining dirty records--and more accurate approximations only lead to faster convergence. In all of our experiments, we include \sys+O (ActiveClean + Oracle) which is the theoretical best performance with an optimal sampler and optimal detector.
+\noindent  We have expanded the technical discussion of the the prioritization solution and a number of experiments that evaluate its efficiency. Section \ref{dist-samp} formally describes the optimal sampling problem and our solution to it which is an approximation to the optimum. We clearly note that the \sys will converge for any sampling distribution where there is non-zero sampling probability for all remaining dirty records--and more accurate approximations only lead to faster convergence. In all of our experiments, we include ActiveClean + Oracle, which is the theoretical best performance with an optimal sampler and optimal detector.
+Our results suggest that the approximate solution is very competitive to the optimum. 
 
  \subsection*{Reviewer 3}
 
@@ -209,9 +222,8 @@ affect both rows that are mispredicted and rows that
 are predicted correctly. Update() is not defined.}
 
 \noindent  We have removed the pseudo-code in favor of a more precise discussion of the system architecture in Section \ref{syarch}. This new section highlights all of the components, the key data flows, and their conditions for correctness. 
-Additionally, we would like to clarify a point in this review. 
-Mispredicted rows are not necessarily dirty data. 
-However, poor prediction accuracy might suggest that a record is incorrect, and this would naturally factor into the selection algorithm of \sys (since those would have a larger gradient).
+The cleaning operation is applied to all rows in a batch whether or not they are predicted correctly.
+In each iteration, \sys suggests this batch of data to clean based on the value to the model and the likelihood that the rows are actually dirty.
 
 \vspace{0.5em}
 
@@ -245,7 +257,7 @@ The system first trains the model $\phi(\cdot)$ on $R_{dirty}$ to find an initia
 
 \vspace{0.5em}
 
-\noindent\textbf{D6. The apriori detector assumption seems bogus.} 
+\noindent\textbf{R3.7. The apriori detector assumption seems bogus.} 
 
 \noindent  We have revised the detector section to clarify what we meant by the ``a priori'' detector (Section \ref{rule-det}). We have now renamed it a ``rule-based detector'' and have described concrete scenarios to which it applies.
 
