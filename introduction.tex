@@ -12,7 +12,7 @@ Unfortunately, for statistical models, iteratively cleaning some data and re-tra
 
 Consider performing linear regression on systematically translated data (Figure \ref{update-arch1}a).
 If one only cleans two of the data points, the intermediate result reveals a misleading trend (Figure \ref{update-arch1}b).
-This is a consequence of the well-known Simpson's paradox, where aggregates over different populations of data can result in spurious relationships~\cite{simpson1951interpretation}. 
+This is a consequence of the well-known Simpson's paradox where aggregates over different populations of data can result in spurious relationships~\cite{simpson1951interpretation}. 
 Similarly, statistical models face more dramatic sampling effects than the traditional 1D  \sumfunc, \countfunc, \avgfunc SQL aggregates (Figure \ref{update-arch1}c).
 The challenges with Simpson's paradox and sampling are problematic because recent advances in SQL data cleaning, such as Sample-and-Clean~\cite{wang1999sample} and Progressive Data Cleaning~\cite{altowim2014progressive, papenbrock2015progressive, DBLP:journals/pvldb/YakoutENOI11}, actually advocate cleaning subsets of data to avoid the potentially expensive cleaning costs.
 Clearly, such data cleaning approaches will have to be re-evaluated for the statistical modeling setting, and this paper explores how to adapt such approaches with guarantees of convergence for an important class of modeling problems. 

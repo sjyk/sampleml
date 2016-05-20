@@ -72,7 +72,7 @@ This procedure has to be stochastic since a deterministic prioritization may lea
 
 \noindent We had chosen to address this point in our technical report~(see Appendix C in \cite{activecleanarxiv}). We have now added an intuitive explanation to the revision (Section \ref{sgd}):
 
-\emph{Gradient descent techniques still apply to non-convex losses as they are widely applied in graphical model inference and deep learning. Instead of converging to a global optimum
+\emph{Gradient descent techniques still apply to non-convex losses as they are widely applied in graphical model inference and deep learning. Instead of converging to a global optimum,
 they converge to a locally optimal value. However, there is a dependence on the initialization.
 ActiveClean will converge to the closest locally optimal value to
 the dirty model (which is how we initialize). Because of this, it is harder to reason about
@@ -120,7 +120,7 @@ We applied \sys to select the most valuable records to check and repair when pos
 For our fraud detection experiment, we found that the attributes for corporate donations from larger the companies were more likely to be inconsistent.
 
 This problem has been noted in our prior work on other datasets as well, where corruption is correlated with the hypotheses of interest~(see Microsoft Academic Search in~\cite{wang1999sample}, see World Bank in~\cite{activecleanarxiv}). It is possible that some types of errors do not have a systematic bias; however, the analyst could not know that without cleaning the dataset.
-Without \sys, there would be no way to be certain if the errors were truly independent of the model or it was an artifact of sampling or Simpson's paradox.
+Without \sys, there would be no way to be certain if the errors were truly independent of the model.
 
 \vspace{0.5em}
 
@@ -130,7 +130,7 @@ Without \sys, there would be no way to be certain if the errors were truly indep
 
 \emph{Consider performing linear regression on systematically translated data (Figure \ref{update-arch-coverletter}a).
 If one only cleans two of the data points, the intermediate result actually reveals a misleading trend (Figure \ref{update-arch-coverletter}b).
-This is a consequence of the well-known Simpson's paradox, where aggregates over different populations of data can result in spurious relationships~\cite{simpson1951interpretation}.}
+This is a consequence of the well-known Simpson's paradox where aggregates over different populations of data can result in spurious relationships~\cite{simpson1951interpretation}.}
 
 \begin{figure}[ht!]
 \centering
@@ -168,7 +168,7 @@ Since $r(\theta)$ does not depend on on $i$, we can move it into the sum and tre
 
 \noindent\textbf{R1.10 End of Sec 5. Expected Gradient Length heuristic needs more explanation}
 
-\noindent  The discussion about Expected Gradient Length was an effort to analogize our work with Active Learning, because both are iterative algorithms.  This was a side point that made the text more confusing, and we have removed it.
+\noindent  The discussion about Expected Gradient Length was an effort to analogize our work with Active Learning, because both are iterative algorithms. This was a side point that made the text more confusing, and we have removed it.
 Section \ref{dist-samp} provides a detailed discussion of the sampling problem, what the optimal solution is, and how we apply an approximation to the optimal.
 
 \subsection*{Review 2 Details}
@@ -195,7 +195,7 @@ Our results suggest that the approximate solution is very competitive to the opt
 \noindent\textbf{R3.1 The background sections were not very clear. This needs to be improved
 to make this accessible to a general audience.}
 
-\noindent  We have revised the background section to make the problem clearer. The background section includes first introducing use cases and the problems with existing tools, and then transitioning to the formalism. We also significantly expanded the discussion about the system architecture~(Section \ref{syarch}), which provides intuition on the key insights.
+\noindent  We have revised the background section to make the problem clearer. The background section first introduces a use case and the problems with existing tools, and then transitions to the formalism. We also significantly expanded the discussion about the system architecture~(Section \ref{syarch}), which provides intuition on the key insights.
 
 \vspace{0.5em}
 
@@ -203,9 +203,9 @@ to make this accessible to a general audience.}
 I do not understand statistics well enough to see why this will work at all,
 and the statistically correct updates argument. Also see D6.}
 
-\noindent  We have made several revisions to clarify the relationship between updating, sampling, and detection. We expanded the architecture section to overview the main data flows and an example of how an analyst may use \sys~(Section \ref{syarch}). Section \ref{det} now formalizes and discusses the detection component, and Section \ref{dist-samp} formalizes and discusses the sampling problem.
+\noindent  We have made several revisions to clarify the relationship between updating, sampling, and detection. We expanded the architecture section to overview the main data flows and an example of how an analyst may use \sys~(Section \ref{syarch}). Section \ref{det} now formalizes the detection component and presents our solution, and Section \ref{dist-samp} formalizes the sampling problem and then presents our solution.
 
-The main insight of \sys is to model the interactive data cleaning problem as a form of Stochastic Gradient Descent (SGD)~\cite{bottou2012stochastic}.
+The main insight of \sys is to model the interactive data cleaning process as a form of Stochastic Gradient Descent (SGD)~\cite{bottou2012stochastic}.
 SGD is an iterative optimization algorithm that starts with an initial estimate and then takes a sequence of steps ``downhill'' to minimize an objective function.
 Similarly, in interactive data cleaning, the human starts with a dirty model and makes a series of cleaning decisions to improve the accuracy of the model.
 We formalize the link between these two processes, and since SGD is one of the most widely studied forms of optimization, it well understood theoretical convergence conditions.
@@ -223,7 +223,7 @@ are predicted correctly. Update() is not defined.}
 
 \noindent  We have removed the pseudo-code in favor of a more precise discussion of the system architecture in Section \ref{syarch}. This new section highlights all of the components, the key data flows, and their conditions for correctness. 
 The cleaning operation is applied to all rows in a batch whether or not they are predicted correctly.
-In each iteration, \sys suggests this batch of data to clean based on the value to the model and the likelihood that the rows are actually dirty.
+In each iteration, \sys suggests a batch of data to clean based on the value to the model and the likelihood that the rows are actually dirty.
 
 \vspace{0.5em}
 
@@ -264,7 +264,7 @@ The system first trains the model $\phi(\cdot)$ on $R_{dirty}$ to find an initia
 \vspace{0.5em}
 
 \emph{In the data cleaning literature, error detection and error repair are two distinct problems~\cite{DBLP:series/synthesis/2012Fan, Dasu:2003:EDM:861869, rahm2000data}.
-Error detection is often considered a substantially easier since one can often declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
+Error detection is often considered a substantially easier since one can declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
 On the other hand, repair is harder and often requires human involvement (e.g., imputing a value for the NULL attribute).}
 
 \vspace{0.5em}

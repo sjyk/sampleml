@@ -3,7 +3,7 @@ If corrupted records are relatively rare, the batch sampling might be very ineff
 The analyst may have to sample many batches of data before finding a corrupted record.
 In this section, we describe how we can couple \sys with prior knowledge about which data are likely to be dirty.
 In the data cleaning literature, error detection and error repair are two distinct problems~\cite{DBLP:series/synthesis/2012Fan, Dasu:2003:EDM:861869, rahm2000data}.
-Error detection is often considered a substantially easier, since one can often declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
+Error detection is often considered a substantially easier, since one can declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
 On the other hand, repair is harder and often requires human involvement (e.g., imputing a value for the NULL attribute).
 
 \subsection{Detection Problem}
