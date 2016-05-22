@@ -4,15 +4,15 @@
 
 We thank the reviewers for the helpful feedback on our paper. 
 We addressed all of the concerns and included references to the revised text. 
-To remind the reviewers, \sys is a model training framework that allows for iterative data cleaning with provable convergence properties.
+To remind the reviewers, \sys studies techniques for iterative data cleaning before Machine Learning model training.
 In summary, the major revisions are:
 
 \begin{enumerate}
-\item We include new experimental results on a dataset of movie plot descriptions from IMDB with real errors. We also clarify that the experiment that was previously in the paper was real as well. Accordingly, we have re-organized the experiments section to describe these applications in more detail~(Section \ref{real-errors}).
+\item We included new results on a dataset of movie plot descriptions from IMDB with real errors. We also clarified that the experiment that was previously in the paper was real as well. Accordingly, we have re-organized the experiments section to describe these applications in more detail~(Section \ref{real-errors}).
 
 \item As the reviewers suggested, we have revised Section \ref{intro} and Section \ref{background} to be more accessible to a general audience. We expanded our discussion about the convergence problem in the introduction and revised our background section to illustrate this in the context of one of our experimental datasets.
 
-\item We further revised the presentation of the sampling component of \sys. We clarify that ``sampling'' means the process of selecting a new batch of data to be cleaned (new Section \ref{dist-samp}). 
+\item We further revised the presentation of the sampling component of \sys. We clarified that ``sampling'' means the process of selecting a new batch of data to be cleaned (new Section \ref{dist-samp}). 
 
 \item We have also clarified the relationship between \sys and Active Learning. Active Learning studies the problem of acquiring the most valuable labels for unlabeled data. On the other hand, \sys studies select the most valuable data to clean in a dirty dataset (Section \ref{background}). 
 
@@ -24,9 +24,9 @@ In summary, the major revisions are:
 
 \vspace{0.5em}
 
-We thank the reviewers for insisting on an evaluation of \sys on a real dataset. We believe that benchmarking data cleaning techniques on real use cases is an important problem, and accordingly, we have revised our experiments (Section \ref{eval}) to include a result on a real dataset with real errors. 
+We thank the reviewers for insisting on an evaluation of \sys with real data and errors. We believe that benchmarking data cleaning on real use cases is an important issue, and accordingly, we have revised our experiments (Section \ref{eval}) to include an additional result on a real dataset with real errors. 
 
-This scenario explores a dataset of movie descriptions from the Internet Movie Database (IMDB). 
+This new result explores a dataset of movie descriptions from the Internet Movie Database (IMDB). 
 Each movie has a title, a 1-2 paragraph plot description, and a list of categories.
 We train a classifier on this data that predicts whether a movie is a ``Horror'' movie or a ``Comedy'' from the plot description and the title.
 However, since much of this data is user-contributed, the category listed are often dirty with redundant and sometimes conflicting tags.
@@ -34,19 +34,19 @@ There are also numerous examples of parsing artifacts in the plot description.
 We clean this dataset by cross-referencing the IMDB dataset with a cleaner, curated dataset of movies from Yahoo.
 
 This dataset also shows experimental evidence for systematic bias.
-Horror movies were more likely to be erroneously tagged. 
+Horror movies were more likely to be erroneously tagged, and consequently, a classifier trained on the dirty data favored ``Comedy'' predictions. 
 On the dirty dataset, the prediction precision of the classification model for Horror movies was only 29\%.
 The precision improved to 74\% after data cleaning.
 
 In our original submission, we did include an experiment performed on real data with real errors. 
-We apologize that the writing was unclear. We have revised the experiments to move the real datasets up-front~(Section \ref{real-errors}), and expanded our discussion of the datasets, challenges, and results.
+We apologize that the writing was unclear. We have revised the experiments to move the real datasets up-front, and expanded our discussion of the datasets, challenges, and results~(Section \ref{real-errors}).
 
 \subsection*{Review 1 Details} 
 
 \noindent\textbf{R1.1: I'm not fully convinced that mixed dirty and clean data can be even worse than no cleaning. It would be helpful to show experimental support from the beginning for this and clarify whether this holds in general or only applies to certain models.}
 
 \noindent Any aggregate over multiple populations of data is susceptible to Simpson's Paradox, and this problem has affected several high-profile studies (e.g.,~\cite{bickel1975sex, charig1986comparison}).
-One of the most famous examples of Simpson's paradox occured during an analysis of UC Berkeley Admissions in 1975~\cite{bickel1975sex}: a study found that women were statistically significantly less likely than men to be admitted to UC Berkeley; however, further analysis revealed that women were just more likely to apply to selective departments, and there no significant gender bias in any particular department. 
+One of the most famous examples of Simpson's paradox occurred during an analysis of UC Berkeley Admissions in 1975~\cite{bickel1975sex}: a study found that women were statistically significantly less likely than men to be admitted to UC Berkeley; however, further analysis revealed that women were just more likely to apply to selective departments, and there no significant gender bias in any particular department. 
 Partial data cleaning results in two distinct populations of data (clean and dirty), and a model trained on the mix may learn correlations that do not exist in either population. 
 We have added a new paragraph to the introduction to clarify the relevance of Simpson's Paradox to data cleaning and expanded a conceptual example in which this occurs.
 The background section further describes how such a scenario arises during iterative data cleaning.
@@ -102,7 +102,7 @@ Section \ref{real-errors} describes two real scenarios, a movie dataset from IMD
 The first scenario is an automatic content tagging problem where a classifier categorizes movies from plot descriptions.
 Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title. 
 This data is user-contributed, and the category list is very dirty, with redundant, spurious, and conflicting tags.  
-Thus, we used a cleaner reference dataset from Yahoo Moview and performed simple entity resolution to match movies together, and imported the Yahoo dataset's categories to the IMDB dataset when possible.
+Thus, we used a cleaner reference dataset from Yahoo Movies and performed simple entity resolution to match movies together, and imported the Yahoo dataset's categories to the IMDB dataset when possible.
 ``Horror'' movies were more likely to have incorrect category tags, and thus, the prediction accuracy of the model was greatly affected. 
 We applied \sys to select the movies were the most valuable to import (Section \ref{imdb}). 
 
@@ -116,7 +116,7 @@ We applied \sys to select the most valuable records to check and repair when pos
 
 \noindent\textbf{R1.6 Systematic corruption is a bit anti-intuition. I would imagine systematic errors (e.g., shifting of numerical values, misspellings) are made independent of the importance of the features. The results might be more towards those on randomly corrupted data, where the learned models are only marginally worse.}
 
-\noindent  We have empirically found that systematic errors exist in many real-world datasets including journalism, movies, and academic publications, and they greatly affect the model accuracies if not cleaned. In our movie tag classification experiment, we found that ``Horror'' movies were more likely to be incorrectly tagged than ``Comedy'' movies.
+\noindent  We have empirically found that systematic errors exist in many real-world datasets including journalism, movies, and academic publications, and they greatly affect the model accuracy if not cleaned. In our movie tag classification experiment, we found that ``Horror'' movies were more likely to be incorrectly tagged than ``Comedy'' movies.
 For our fraud detection experiment, we found that the attributes for corporate donations from larger the companies were more likely to be inconsistent.
 
 This problem has been noted in our prior work on other datasets as well, where corruption is correlated with the hypotheses of interest~(see Microsoft Academic Search in~\cite{wang1999sample}, see World Bank in~\cite{activecleanarxiv}). It is possible that some types of errors do not have a systematic bias; however, the analyst could not know that without cleaning the dataset.
@@ -165,16 +165,18 @@ On the other hand, smaller batches are cleaned faster and have more frequent mod
 
 \vspace{0.5em}
 
-For example, if the data cleaning is implmemented using crowdsourcing, then larger batches can be used. Alternatively, if the data cleaning is implemented via manual action, then smaller batches may be used.
+For example, if the data cleaning is implemented using crowdsourcing, then larger batches can be used. Alternatively, if the data cleaning is implemented via manual action, then smaller batches may be used.
 The batch size does affect the rate of convergence, and we discuss this in Section \ref{sgd} as well. 
 
-\noindent\textbf{R1.9 Sec 4.2. Steps 4-5 need more intuition}
+\vspace{0.5em}
+
+\noindent\textbf{R1.10 Sec 4.2. Steps 4-5 need more intuition}
 
 \noindent  Section 4.2 is Section 4.3 in the revision. We have clarified that Step 4 ``is a weighted average of the gradient on the already clean data and newly cleaned data", and Step 5 ``appends the newly cleaned data to set of previously clean records''.
 
 \vspace{0.5em}
 
-\noindent\textbf{R1.10 End of Sec 5. Expected Gradient Length heuristic needs more explanation}
+\noindent\textbf{R1.11 End of Sec 5. Expected Gradient Length heuristic needs more explanation}
 
 \noindent  The discussion about Expected Gradient Length was an effort to analogize our work with Active Learning, because both are iterative algorithms. This was a side point that made the text more confusing, and we have removed it.
 Section \ref{dist-samp} provides a detailed discussion of the sampling problem, what the optimal solution is, and how we apply an approximation to the optimal.

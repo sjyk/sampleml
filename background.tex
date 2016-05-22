@@ -54,12 +54,12 @@ For example, company names were often inconsistently represented in the data, e.
 A crucial data cleaning operation is to canonicalize these various names.
 \reminder{Why would duplicates reduce correlation?  How does that affect propublica/svm?}.
 Duplicate representations could artificially reduce the correlation between certain companies and suspected contributions.
-Furthermore, donation records were often inconsistently flagged, e.g. Suspiscious, Review, Disallowed.
+Furthermore, donation records were often inconsistently flagged, e.g. Suspicious, Review, Disallowed.
 Nearly 40,000 of the 250,000 records had some form of inconsistency.
 
 When we analyzed this data, we found that the errors were indeed structural and not random.  %were not random and were correlated with the eventual prediction.
 First, records that were suspicious were more likely to have an inconsistent flagging attribute.
-Next, the names of the larger pharmaseutical companies were also more likely to have inconsistent names, and it turns out that these companies were also more likely to provide a flagged donation.
+Next, the names of the larger pharmaceutical companies were also more likely to have inconsistent names, and it turns out that these companies were also more likely to provide a flagged donation.
 Without data cleaning, the true positive rate of an SVM model is only 66\%.
 Applying the data cleaning to the entire dataset improved this rate to 97\% in the clean data (Section \ref{exp:dfd}).
 This problem is typical of analysis scenarios based on observational data seen in finance, insurance, medicine, and investigative journalism.
