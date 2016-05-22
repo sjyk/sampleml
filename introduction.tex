@@ -10,7 +10,7 @@ For example, studies have shown that many analysts do not approach cleaning as a
 It is common to use the preliminary analysis on dirty data as a guide to help identify potential errors and design repairs~\cite{kandel2012}.
 Unfortunately, for statistical models, iteratively cleaning some data and re-training on a partially clean dataset can lead to biases in even the simplest models.
 
-Consider performing linear regression on systematically translated data (Figure \ref{update-arch1}a).
+Consider a linear regression model on systematically translated data (Figure \ref{update-arch1}a).
 If one only cleans two of the data points, the intermediate result reveals a misleading trend (Figure \ref{update-arch1}b).
 This is a consequence of the well-known Simpson's paradox where aggregates over different populations of data can result in spurious relationships~\cite{simpson1951interpretation}. 
 Similarly, statistical models face more dramatic sampling effects than the traditional 1D  \sumfunc, \countfunc, \avgfunc SQL aggregates (Figure \ref{update-arch1}c).

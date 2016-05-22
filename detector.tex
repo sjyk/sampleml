@@ -27,7 +27,7 @@ We will consider two types of detectors: exact rule-based detectors that rely on
 Data quality rules are widely studied as a technique for detecting data errors.
 In most rule-based frameworks, an analyst declares a set of rules $\Sigma$ and checks whether a relation $R$ satisfies such rules.
 These rules can be declared in advance before applying \sys, or constructed from the first batch of sampled data.
-This paper focuses on integrity constraints (ICs), conditional functional dependencies (CFDs), and matching dependencies (MDs) where it is efficient to enumerate the set of records that violate at least one declared rule. 
+\sys is compatible with integrity constraints (ICs), conditional functional dependencies (CFDs), and matching dependencies (MDs) where it is efficient to enumerate the set of records that violate at least one declared rule.
 
 Let $R_{viol}$ and $R_{sat}$ be the subset of records in $R_{ditry}$ that violate at least one rule and satisfy all rules respectively.
 The rule-based detector modifies the update workflow in the following way:

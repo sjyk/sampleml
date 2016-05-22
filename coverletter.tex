@@ -8,13 +8,13 @@ To remind the reviewers, \sys is a model training framework that allows for iter
 In summary, the major revisions are:
 
 \begin{enumerate}
-\item We include new experimental results on a dataset of movie plot descriptions from IMDB with real errors. We also clarify that the experiment that was previously in the paper was real as well~(Section \ref{real-errors}). Accordingly, we have re-organized the experiments section to describe these applications in more detail.
+\item We include new experimental results on a dataset of movie plot descriptions from IMDB with real errors. We also clarify that the experiment that was previously in the paper was real as well. Accordingly, we have re-organized the experiments section to describe these applications in more detail~(Section \ref{real-errors}).
 
 \item As the reviewers suggested, we have revised Section \ref{intro} and Section \ref{background} to be more accessible to a general audience. We expanded our discussion about the convergence problem in the introduction and revised our background section to illustrate this in the context of one of our experimental datasets.
 
-\item We further revised the presentation of the sampling component of \sys. By ``sampling'', we mean that in each iteration \sys selects a new batch of data to be cleaned. 
+\item We further revised the presentation of the sampling component of \sys. We clarify that ``sampling'' means the process of selecting a new batch of data to be cleaned (new Section \ref{dist-samp}). 
 
-\item We have also clarified the relationship between \sys and Active Learning. Active Learning studies the problem of acquiring the most valuable labels for unlabeled data. On the other hand, \sys studies select the most valuable data to clean in a dirty dataset. 
+\item We have also clarified the relationship between \sys and Active Learning. Active Learning studies the problem of acquiring the most valuable labels for unlabeled data. On the other hand, \sys studies select the most valuable data to clean in a dirty dataset (Section \ref{background}). 
 
 \end{enumerate}
 
@@ -128,7 +128,7 @@ Without \sys, there would be no way to be certain if the errors were truly indep
 
 \noindent We have revised the text as follows (image included in the cover letter):
 
-\emph{Consider performing linear regression on systematically translated data (Figure \ref{update-arch-coverletter}a).
+\emph{Consider a linear regression model on systematically translated data (Figure \ref{update-arch-coverletter}a).
 If one only cleans two of the data points, the intermediate result actually reveals a misleading trend (Figure \ref{update-arch-coverletter}b).
 This is a consequence of the well-known Simpson's paradox where aggregates over different populations of data can result in spurious relationships~\cite{simpson1951interpretation}.}
 
@@ -240,7 +240,7 @@ In each iteration, \sys suggests a batch of data to clean based on the value to 
 the dirty records cleaned?}
 
 \noindent This section discusses the correctness of the intermediate result (before the data are fully cleaned).
-We meant to say that the user-defined $Clean()$ function was only applied to $k$ records.
+We meant to say that the user-defined cleaning function $C()$ was only applied to $k$ records.
 
 \vspace{0.5em}
 
@@ -281,4 +281,4 @@ On the other hand, repair is harder and often requires human involvement (e.g., 
 \emph{Data quality rules are widely studied as a technique for detecting data errors.
 In most rule-based frameworks, an analyst declares a set of rules $\Sigma$ and checks whether a relation $R$ satisfies such rules.
 These rules can be declared in advance before applying \sys, or constructed from the first batch of sampled data.
-This paper focuses on integrity constraints (ICs), conditional functional dependencies (CFDs), and matching dependencies (MDs) where it is efficient to enumerate the set of records that violate at least one declared rule. }
+\sys is compatible with integrity constraints (ICs), conditional functional dependencies (CFDs), and matching dependencies (MDs) where it is efficient to enumerate the set of records that violate at least one declared rule. }
