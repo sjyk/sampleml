@@ -140,7 +140,7 @@ We find that pipelines tend to propagate small amounts of corruption, and in fac
 % We use the MNIST handwritten digit recognition dataset with a MATLAB image processing pipeline.
 % In this scenario, the analyst must inspect a potentially corrupted image and replace it with a higher quality one.
 % The MNIST dataset consists of 64x64 grayscale images.
-There are two types of simulated corruptions that mimic standard corruptions in image processing (occulusion and low-resolution): \texttt{5x5 Removal} deletes a random 5x5 pixel block by setting the pixel values to 0, and \texttt{Fuzzy} blurs the entire image using a 4x4 moving average patch. 
+There are two types of simulated corruptions that mimic standard corruptions in image processing (occlusion and low-resolution): \texttt{5x5 Removal} deletes a random 5x5 pixel block by setting the pixel values to 0, and \texttt{Fuzzy} blurs the entire image using a 4x4 moving average patch. 
 We apply these corruptions to a random 5\% of the images.
 \sys's adaptive detector uses a 10 class classifier (one for each digit) to detect the corruption.
 
