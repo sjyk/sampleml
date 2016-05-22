@@ -2,45 +2,67 @@
 This section introduces the problem of iterative data cleaning through an example application.
 
 \subsection{Use Case: Dollars for Docs}\label{s:usecase}
-ProPublica collected a dataset of corporate donations to doctors to analyze conflicts of interest~\cite{dollarsfordocsa}. 
-Some of these donations are flagged as suspicious after careful manual review.
-Suppose ProPublica wants to train a classification model to automate the flagging process in the future.
-We collected the raw data and explored whether suspect donations could be predicted with an Support Vector Machine model.
+ProPublica collected a dataset of corporate donations to medical researchers to analyze conflicts of interest~\cite{dollarsfordocsa}. 
+\reminder{Their goal needs to be clearer.  Is it that the status field is dirty and they want to clean it to find the corrupt donations, or something else?  Why would they want to clean the other attributes?}
+The goal is to assign a value to the \texttt{status} field, which describes whether or not the donation was allowed under the declared research protocol.
+For reference, the dataset has the following schema:
 
-However, this dataset has a number of inconsistencies.
-On the ProPublica website \cite{dollarsfordocs}, they list numerous types of data problems that had to be cleaned before publishing the data (see Technical Report~\cite{activecleanarxiv}).
+{\ssmall\begin{verbatim}
+Contribution(
+ pi_specialty text, # PI's medical specialty
+ drug_nm text ,  # drug brand name, null if not drug
+ device_nm text, # device brand name, null if not a device
+ corp text,      # name of pharamceutical donor
+ amount float,   # amount donated
+ dispute bool,   # whether the research is disputed
+ status text     # if the donation is allowed 
+                 # under research protocol
+)
+\end{verbatim}
+}
+
+% \begin{lstlisting}[mathescape,basicstyle={\small}]
+% Contribution(pi_specialty$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
+% $~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
+% \end{lstlisting}
+% 
+% \noindent\texttt{pi\_specialty:} textual attribute describing the specialty of the doctor receiving the donation.
+% 
+% \noindent\texttt{drug\_name:} branded name of the drug in the research study (null if not a drug).
+% 
+% \noindent\texttt{device\_name} is the branded name of the device in the study (null if not a device).
+% 
+% \noindent\texttt{corporation} is the name of the pharmaceutical providing the donation.
+% 
+% \noindent\texttt{amount} is a numerical attribute representing the donation amount.
+% 
+% \noindent\texttt{dispute} is a Boolean attribute describing whether the research was disputed.
+% 
+% \noindent\texttt{status} is a string label describing whether the  donation was allowed under the declared research protocol. The goal is to predict disallowed  donation. 
+
+
+
+%Some of these donations are flagged as suspicious after careful manual review.
+%We collected the raw data and explored whether suspect donations could be predicted with an Support Vector Machine model.
+
+\reminder{What needed to be cleaned for propublica?  What needs to be cleaned for the classifier?}
+The ProPublica team identified the suspicious donations via extensive manual review (documented in ~\cite{dollarsfordocs}).
+However, suppose that ProPublica wants to train a classification model to focus their manual efforts in the future.
+Unfortunately, this dataset contains numerous errors that needed to be cleaned before publication
+%and in the Technical Report~\cite{activecleanarxiv}).
 For example, company names were often inconsistently represented in the data, e.g., Pfizer Inc., Pfizer Incorporated, Pfizer.
-A crucial data cleaning operation is to merge this inconsistency to a single value.
+A crucial data cleaning operation is to canonicalize these various names.
+\reminder{Why would duplicates reduce correlation?  How does that affect propublica/svm?}.
 Duplicate representations could artificially reduce the correlation between certain companies and suspected contributions.
 Furthermore, donation records were often inconsistently flagged, e.g. Suspiscious, Review, Disallowed.
 Nearly 40,000 of the 250,000 records had some form of inconsistency.
 
-When we analyzed this data, we found that the errors were not random and were correlated with the eventual prediction.
+When we analyzed this data, we found that the errors were indeed structural and not random.  %were not random and were correlated with the eventual prediction.
 First, records that were suspicious were more likely to have an inconsistent flagging attribute.
 Next, the names of the larger pharmaseutical companies were also more likely to have inconsistent names, and it turns out that these companies were also more likely to provide a flagged donation.
 Without data cleaning, the true positive rate of an SVM model is only 66\%.
 Applying the data cleaning to the entire dataset improved this rate to 97\% in the clean data (Section \ref{exp:dfd}).
 This problem is typical of analysis scenarios based on observational data seen in finance, insurance, medicine, and investigative journalism.
-
-For reference, the dataset has the following schema:
-\begin{lstlisting}[mathescape,basicstyle={\small}]
-Contribution(pi_specialty$\textrm{,}$ drug_name$\textrm{,}$ device_name$\textrm{,}$
-$~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$corporation$\textrm{,}$ amount$\textrm{,}$ dispute$\textrm{,}$ status)
-\end{lstlisting}
-
-\noindent\texttt{pi\_specialty} is a textual attribute describing the specialty of the doctor receiving the donation.
-
-\noindent\texttt{drug\_name} is the branded name of the drug in the research study (null if not a drug).
-
-\noindent\texttt{device\_name} is the branded name of the device in the study (null if not a device).
-
-\noindent\texttt{corporation} is the name of the pharmaceutical providing the donation.
-
-\noindent\texttt{amount} is a numerical attribute representing the donation amount.
-
-\noindent\texttt{dispute} is a Boolean attribute describing whether the research was disputed.
-
-\noindent\texttt{status} is a string label describing whether the  donation was allowed under the declared research protocol. The goal is to predict disallowed  donation. 
 
 
 \begin{figure}[t]
