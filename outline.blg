@@ -35,50 +35,49 @@ Repeated entry---line 1461 of file ref.bib
  : @article{crotty2014tupleware
  :                             ,
 I'm skipping whatever remains of this entry
-I was expecting a `,' or a `}'---line 1498 of file ref.bib
+I was expecting a `,' or a `}'---line 1505 of file ref.bib
  : 
  : @misc{keystone,
 (Error may have been on previous line)
 I'm skipping whatever remains of this entry
-Repeated entry---line 1508 of file ref.bib
+Repeated entry---line 1515 of file ref.bib
  : @article{simpson1951interpretation
  :                                   ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1526 of file ref.bib
+Repeated entry---line 1533 of file ref.bib
  : @inproceedings{mayfield2010eracer
  :                                  ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1541 of file ref.bib
+Repeated entry---line 1548 of file ref.bib
  : @inproceedings{deshpande2004model
  :                                  ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1557 of file ref.bib
+Repeated entry---line 1564 of file ref.bib
  : @inproceedings{DBLP:conf/case/MahlerKLSMKPWFAG14
  :                                                 ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1581 of file ref.bib
+Repeated entry---line 1588 of file ref.bib
  : @inproceedings{DBLP:conf/recsys/KrishnanPFG14
  :                                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1599 of file ref.bib
+Repeated entry---line 1606 of file ref.bib
  : @article{krishnan2015svc
  :                         ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1624 of file ref.bib
+Repeated entry---line 1631 of file ref.bib
  : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
  :                                                 ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1641 of file ref.bib
+Repeated entry---line 1648 of file ref.bib
  : @article{whang2014incremental
  :                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1656 of file ref.bib
+Repeated entry---line 1663 of file ref.bib
  : @article{gruenheid2014incremental
  :                                  ,
 I'm skipping whatever remains of this entry
 A bad cross reference---entry "xiaofeature"
 refers to entry "DBLP:conf/icml/2015", which doesn't exist
-Warning--I didn't find a database entry for "real-errors"
 Warning--I didn't find a database entry for "DBLP:conf/icml/2015"
 Warning--to sort, need author or key in sparksurvey
 Warning--to sort, need author or key in bdas
@@ -86,48 +85,49 @@ Warning--to sort, need author or key in tensor
 Warning--to sort, need author or key in nytimes
 Warning--to sort, need author or key in dollarsfordocsa
 Warning--to sort, need author or key in dollarsfordocs
+Warning--to sort, need author or key in or
 Warning--to sort, need author or key in keystone
 Warning--empty publisher in bottou2012stochastic
 Warning--empty publisher in DBLP:series/synthesis/2012Fan
-You've used 46 entries,
+You've used 47 entries,
             2118 wiz_defined-function locations,
-            696 strings with 11116 characters,
-and the built_in function-call counts, 14372 in all, are:
-= -- 1206
-> -- 904
+            697 strings with 11143 characters,
+and the built_in function-call counts, 14531 in all, are:
+= -- 1221
+> -- 905
 < -- 0
-+ -- 366
++ -- 367
 - -- 314
-* -- 930
-:= -- 2398
-add.period$ -- 135
-call.type$ -- 46
-change.case$ -- 293
+* -- 935
+:= -- 2415
+add.period$ -- 137
+call.type$ -- 47
+change.case$ -- 296
 chr.to.int$ -- 0
-cite$ -- 55
-duplicate$ -- 583
-empty$ -- 1238
+cite$ -- 57
+duplicate$ -- 590
+empty$ -- 1261
 format.name$ -- 314
-if$ -- 2998
+if$ -- 3038
 int.to.chr$ -- 0
-int.to.str$ -- 46
+int.to.str$ -- 47
 missing$ -- 41
-newline$ -- 226
+newline$ -- 230
 num.names$ -- 78
-pop$ -- 466
+pop$ -- 474
 preamble$ -- 1
-purify$ -- 249
+purify$ -- 251
 quote$ -- 0
-skip$ -- 328
+skip$ -- 336
 stack$ -- 0
-substring$ -- 311
-swap$ -- 79
+substring$ -- 316
+swap$ -- 80
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 180
-warning$ -- 9
+type$ -- 184
+warning$ -- 10
 while$ -- 84
-width$ -- 48
-write$ -- 446
+width$ -- 49
+write$ -- 453
 (There were 19 error messages)
