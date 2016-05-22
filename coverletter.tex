@@ -64,7 +64,7 @@ We believe that this mixing effect is one of the contributing factors to the slo
 \noindent Any iterative or progressive data cleaning framework will clean data in small batches in each iteration. 
 If we do not do sampling, the solution will reduce to a non-iterative data-cleaning framework, which presents the entire data for the analyst to clean.
 The sampling algorithm in \sys is the procedure to select which data to present based on the current model and previously cleaned data.
-This procedure has to be stochastic since a deterministic prioritization may lead to excluding certain data from cleaning.
+While the selection of dirty records has to be stochastic, since a deterministic prioritization may lead to excluding certain data from cleaning, we show how this approach can be integrated with deterministic rules to select data expected to be dirty~(Section \ref{det}).
 
 \vspace{0.5em}
 
@@ -108,7 +108,7 @@ We applied \sys to select the movies were the most valuable to import (Section \
 
 The second scenario resembles a fraud detection problem where a classifier determines whether corporate medical donations are suspicious.
 In this dataset, company names were often inconsistently represented in the data, e.g., Pfizer Inc., Pfizer Incorporated, Pfizer.
-Furthermore, donation records were often inconsistently flagged, e.g. Suspiscious, Review, Disallowed.
+Furthermore, donation records were often inconsistently flagged, e.g. Suspicious, Review, Disallowed.
 This dataset has a systematic bias because records that were suspicious were more likely to have an inconsistent flagging attribute and inconsistencies in the company name.
 We applied \sys to select the most valuable records to check and repair when possible (Section \ref{dfd}). 
 
@@ -116,7 +116,7 @@ We applied \sys to select the most valuable records to check and repair when pos
 
 \noindent\textbf{R1.6 Systematic corruption is a bit anti-intuition. I would imagine systematic errors (e.g., shifting of numerical values, misspellings) are made independent of the importance of the features. The results might be more towards those on randomly corrupted data, where the learned models are only marginally worse.}
 
-\noindent  We have empirically found that systematic errors exist in many real-world datasets from journalism, movies, and academic publication datasets, and they greatly affect the model accuracies if not cleaned. In our movie tag classification experiment, we found that ``Horror'' movies were more likely to be incorrectly tagged than ``Comedy'' movies.
+\noindent  We have empirically found that systematic errors exist in many real-world datasets including journalism, movies, and academic publications, and they greatly affect the model accuracies if not cleaned. In our movie tag classification experiment, we found that ``Horror'' movies were more likely to be incorrectly tagged than ``Comedy'' movies.
 For our fraud detection experiment, we found that the attributes for corporate donations from larger the companies were more likely to be inconsistent.
 
 This problem has been noted in our prior work on other datasets as well, where corruption is correlated with the hypotheses of interest~(see Microsoft Academic Search in~\cite{wang1999sample}, see World Bank in~\cite{activecleanarxiv}). It is possible that some types of errors do not have a systematic bias; however, the analyst could not know that without cleaning the dataset.
@@ -156,9 +156,17 @@ Since $r(\theta)$ does not depend on on $i$, we can move it into the sum and tre
 
 \noindent\textbf{R1.9 Example 1 assumes very small sample (50). Why? Is that only for illustration purpose?}
 
-\noindent  A discussion is included in Section \ref{sgd} on why we used 50, and how that value can be set depending on the application. As we noted earlier, sampling is done in iterations. Each iteration samples a batch of 50 records to clean, and this was the batch size used in our experiments. However, the other numbers in the examples (budgets, etc.) are chosen for illustration purposes. 
+\noindent   The numbers in the examples (budgets, etc.) are chosen for illustration purposes. In the particular example, each iteration samples a batch of 50 records to clean.  A discussion is included in Section \ref{sgd} on how that value can be set depending on the application:
 
 \vspace{0.5em}
+\emph{The batch size should be set by the user to have the desired properties.
+Larger batches will take longer to clean and will make more progress towards the clean model but will have less frequent model updates.
+On the other hand, smaller batches are cleaned faster and have more frequent model updates.}
+
+\vspace{0.5em}
+
+For example, if the data cleaning is implmemented using crowdsourcing, then larger batches can be used. Alternatively, if the data cleaning is implemented via manual action, then smaller batches may be used.
+The batch size does affect the rate of convergence, and we discuss this in Section \ref{sgd} as well. 
 
 \noindent\textbf{R1.9 Sec 4.2. Steps 4-5 need more intuition}
 
@@ -177,11 +185,12 @@ Section \ref{dist-samp} provides a detailed discussion of the sampling problem, 
 
 \noindent  We have included a revised discussion on the differences with Active Learning:
 
-\emph{In spirit, \sys is similar to Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
-However, the two approaches consider different problems.
+\emph{While the motivation of \sys is similar to Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
+Active Learning addresses a fundamentally different problem than \sys.
 Active Learning considers the problem of selecting the most informative unlabeled examples to label in partially labeled static data.
 Active Learning iteratively queries new examples to label and integrates those examples into the model.
-In contrast, \sys studies the broader problem of prioritizing modifications to both features and labels in existing examples.}
+In contrast, \sys studies the problem of prioritizing modifications to both features and labels in existing examples.
+As such, this property fundamentally changes the type of analysis and algorithms we can use.}
 
 \vspace{0.5em}
 
@@ -259,7 +268,7 @@ The system first trains the model $\phi(\cdot)$ on $R_{dirty}$ to find an initia
 
 \noindent\textbf{R3.7. The apriori detector assumption seems bogus.} 
 
-\noindent  We have revised the detector section to clarify what we meant by the ``a priori'' detector (Section \ref{rule-det}). We have now renamed it a ``rule-based detector'' and have described concrete scenarios to which it applies.
+\noindent  We have revised the detector section to clarify what we meant by the ``a priori'' detector (Section \ref{rule-det}). This section explains how we can integrate \emph{a priori} knowledge about which records are known to be dirty. We apologize for the lack of clarity and we have now renamed it a ``rule-based detector'' and have described concrete scenarios to which it applies. 
 
 \vspace{0.5em}
 

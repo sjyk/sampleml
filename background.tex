@@ -80,11 +80,12 @@ Sampling further as a problem of scarcity, where errors that are rare may not sh
 \emph{\sys uses a model trained on the dirty data as an initialization and uses this model as guide to identify future data to clean.}
 
 \vspace{0.5em}
-\noindent \textbf{Comparison to Active Learning: } In spirit, \sys is similar to Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
-However, the two approaches consider different problems.
+\noindent \textbf{Comparison to Active Learning: } While the motivation of \sys is similar to Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
+Active Learning addresses a fundamentally different problem than \sys.
 Active Learning considers the problem of selecting the most informative unlabeled examples to label in partially labeled static data.
 Active Learning iteratively queries new examples to label and integrates those examples into the model.
-In contrast, \sys studies the broader problem of prioritizing modifications to both features and labels in existing examples.
+In contrast, \sys studies the problem of prioritizing modifications to both features and labels in existing examples.
+As such, this property fundamentally changes the type of analysis and algorithms we can use.
 
 %This would be like Active Learning, where instead of unlabled data, there are inaccurate prior estimates for the labels.
 %\sys reduces to a form of Expected Gradient Length Active Learning when there is no structure in the dirty data to exploit (such as completely missing attribute values).
