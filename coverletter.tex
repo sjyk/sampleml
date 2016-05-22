@@ -4,7 +4,7 @@
 
 We thank the reviewers for the helpful feedback on our paper. 
 We addressed all of the concerns and included references to the revised text. 
-To remind the reviewers, \sys is a model training framework that allows for iterative data cleaning with provable convergence properties.
+To remind the reviewers, \sys studies techniques for iterative data cleaning before Machine Learning model training.
 In summary, the major revisions are:
 
 \begin{enumerate}
@@ -168,13 +168,15 @@ On the other hand, smaller batches are cleaned faster and have more frequent mod
 For example, if the data cleaning is implmemented using crowdsourcing, then larger batches can be used. Alternatively, if the data cleaning is implemented via manual action, then smaller batches may be used.
 The batch size does affect the rate of convergence, and we discuss this in Section \ref{sgd} as well. 
 
-\noindent\textbf{R1.9 Sec 4.2. Steps 4-5 need more intuition}
+\vspace{0.5em}
+
+\noindent\textbf{R1.10 Sec 4.2. Steps 4-5 need more intuition}
 
 \noindent  Section 4.2 is Section 4.3 in the revision. We have clarified that Step 4 ``is a weighted average of the gradient on the already clean data and newly cleaned data", and Step 5 ``appends the newly cleaned data to set of previously clean records''.
 
 \vspace{0.5em}
 
-\noindent\textbf{R1.10 End of Sec 5. Expected Gradient Length heuristic needs more explanation}
+\noindent\textbf{R1.11 End of Sec 5. Expected Gradient Length heuristic needs more explanation}
 
 \noindent  The discussion about Expected Gradient Length was an effort to analogize our work with Active Learning, because both are iterative algorithms. This was a side point that made the text more confusing, and we have removed it.
 Section \ref{dist-samp} provides a detailed discussion of the sampling problem, what the optimal solution is, and how we apply an approximation to the optimal.
