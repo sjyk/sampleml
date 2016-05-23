@@ -1,10 +1,10 @@
 \section{Problem Formalization}\label{statements}
 \sys is an iterative framework for cleaning data in support of statistical modeling.
 Analysts clean batches of data, which are fed back into the system to intelligently re-train the model, and recommend a next batch of data to clean.
-We will first introduce the terms used in the rest of the paper, clarify our assumptions, and the two fundamental problems that we solve in this paper.
+We will first introduce the terms used in the rest of the paper, describe our assumptions, and define the two problems that we solve in this paper.
 
 \subsection{Assumptions}\label{dmodel}
-In this paper, we will use the term \emph{statistical modeling} to describe a well-studied class of analytics problems; ones that can be expressed as the minimization of convex loss functions.
+In this paper, we use the term \emph{statistical modeling} to describe a well-studied class of analytics problems; ones that can be expressed as the minimization of convex loss functions.
 Examples include linear models (including linear and logistic regression), support vector machines, and in fact, means and medians are also special cases. 
 This class is restricted to supervised Machine Learning, and the result of the minimization is a vector of parameters $\theta$.
 We further assume that there is a one-to-one mapping between records in a relation $R$ and labeled training examples $(x_{i},y_{i})$.
@@ -19,7 +19,7 @@ Supported cleaning operations include merging common inconsistencies (e.g., merg
 Our technical report discusses a generalization of this basic data cleaning model called the ``set of records" cleaning model~\cite{activecleanarxiv}.
 In this generalization, the $C(\cdot)$ function is composed of schema preserving \textsf{map} and \textsf{filter} operations applied to the entire dataset.
 This can model problems such batch merging of inconsistencies with a ``find-and-replace".
-We acknowledge that this definition is limited as it does \emph{not} cover errors that simultaneously affect multiple records such as record duplication or structure such as schema transformation.
+We acknowledge that both definitions of data cleaning are limited as they do \emph{not} cover errors that simultaneously affect multiple records such as record duplication or structure such as schema transformation.
 
 \subsection{Notation}\label{notation}
 The user provides a pointer to a dirty relation $R$, a cleaner $C(\cdot)$, a featurizer $F(\cdot)$, and a convex loss problem.
@@ -44,7 +44,7 @@ We use the following notation to represent relevant quantities:
 
 \vspace{0.25em}
 
-\noindent\textbf{Clean Model: } $\theta^{(c)}$ is the optimal clean model, i.e., the model trained on a fully cleaned relation. Accuracy and convergence is always with respect to $\theta^{(c)}$.
+\noindent\textbf{Clean Model: } $\theta^{(c)}$ is the optimal clean model, i.e., the model trained on a fully cleaned relation. Accuracy and convergence are always with respect to $\theta^{(c)}$.
 
 \noindent\textbf{Current Model: } $\theta^{(t)}$ is the current best model at iteration $t \in \{1,...,\frac{k}{b}\}$, and $\theta^{(0)} = \theta^{(d)}$. 
 
@@ -53,11 +53,11 @@ We use the following notation to represent relevant quantities:
 The main insight of \sys is to model the interactive data cleaning problem as a form of Stochastic Gradient Descent (SGD)~\cite{bottou2012stochastic}.
 SGD is an iterative optimization algorithm that starts with an initial estimate and then takes a sequence of steps ``downhill'' to minimize an objective function.
 Similarly, in interactive data cleaning, the human starts with a dirty model and makes a series of cleaning decisions to improve the accuracy of the model.
-We formalize the link between these two processes, and since SGD is one of the most widely studied forms of optimization, it well understood theoretical convergence conditions.
+We formalize the link between these two processes, and since SGD is one of the most widely studied forms of optimization, it has well understood theoretical convergence conditions.
 These theoretical properties give us clear restrictions on different components.
 Figure \ref{sys-arch} illustrates the \sys architecture including the: {\it Sampler}, {\it Cleaner}, \emph{Updater}, {\it Detector}, and {\it Estimator}.
 
-The first step of \sys is initialization. We first set $R_{dirty} = R$ and $R_{clean} = \emptyset$.
+The first step of \sys is initialization. We first initialize $R_{dirty} = R$ and $R_{clean} = \emptyset$.
 The system first trains the model on $R_{dirty}$ to find an initial model $\theta^{(d)}$ that the system will subsequently improve iteratively.
 It turns out that SGD converges for an arbitrary initialization, so $\theta^{(d)}$ need not be very accurate. 
 This can be done by featurizing the dirty records (e.g., using an arbitrary placeholder for missing values), and then training the model.
@@ -72,7 +72,8 @@ A user provided {\it Detector} can be used to identify records that are more lik
 \begin{figure}[t]
 \centering
  \includegraphics[width=\columnwidth]{figs/arch.png}
- \caption{\sysfull allows users to train predictive models while progressively cleaning data but preserves convergence guarantees. \label{sys-arch}}
+ \caption{\sysfull allows users to train predictive models while progressively cleaning data but preserves convergence guarantees. Solid boxes are essential components for correctness and 
+ dotted boxes indicate optimizations that can improve model accuracy by up-to 2.5x (Section \ref{comp}) \label{sys-arch}}
 \end{figure}
 
 Going back to the ProPublica example in Section~\ref{s:usecase}:
@@ -81,7 +82,7 @@ The analyst chooses to use an SVM model, and manually cleans records by hand (th
 \sys initially selects a sample of $50$ records (the default) to show the analyst.
 She identifies records that are dirty, fixes them by normalizing the drug and corporation names with the help of a search engine, and corrects the labels with typographical or incorrect values.
 The system then uses the cleaned records to update the current best model and selects the next sample of $50$.
-The analyst can stop at any time and use the improved model to predict donation likelihoods.
+The analyst can stop at any time and use the improved model to predict whether a record is fraudulent or not.
 \end{example}
 
 \subsection{Problem Statements}\label{updp}
