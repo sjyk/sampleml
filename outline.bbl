@@ -163,13 +163,6 @@ S.~Krishnan, J.~Wang, E.~Wu, M.~J. Franklin, and K.~Goldberg.
   models.
 \newblock In {\em Arxiv}, 2015.
 
-\bibitem{DBLP:conf/case/MahlerKLSMKPWFAG14}
-J.~Mahler, S.~Krishnan, M.~Laskey, S.~Sen, A.~Murali, B.~Kehoe, S.~Patil,
-  J.~Wang, M.~Franklin, P.~Abbeel, and K.~Y. Goldberg.
-\newblock Learning accurate kinematic control of cable-driven surgical robots
-  using data cleaning and gaussian process regression.
-\newblock In {\em CASE}, 2014.
-
 \bibitem{mayfield2010eracer}
 C.~Mayfield, J.~Neville, and S.~Prabhakar.
 \newblock {ERACER:} a database approach for statistical inference and data
