@@ -7,7 +7,7 @@ Analysts widely report that cleaning dirty data is a major concern~\cite{kandel2
 
 While many aspects of the data cleaning problem have been well-studied for SQL analytics, the results can be counter-intuitive in high-dimensional statistical models.
 For example, studies have shown that many analysts do not approach cleaning as a one-shot pre-processing step, and instead, repeatedly alternate between cleaning and analysis.
-It is common to use the preliminary analysis on dirty data as a guide to help identify potential errors and design repairs~\cite{kandel2012}.
+It is common to use the preliminary analysis on dirty data as a guide to help identify potential errors and design repairs~\cite{fayyad1996data, kandel2012,krishnan2016hilda}.
 Unfortunately, for statistical models, iteratively cleaning some data and re-training on a partially clean dataset can lead to biases in even the simplest models.
 
 Consider a linear regression model on systematically translated data (Figure \ref{update-arch1}a).
