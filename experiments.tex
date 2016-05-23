@@ -21,6 +21,9 @@ The samples are picked using Active Learning (more precisely, Uncertainty Sampli
 \vspace{0.25em}
 \noindent\textbf{Oracle (O): } Oracle has complete access to the ground truth, and in each iteration, selects samples that maximize the expected convergence rate.  It uses \sys's model update procedure.  
 
+\vspace{0.25em}
+\noindent\textbf{Metrics: } We evaluate these approaches on two metrics: \emph{model error}, which is the distance between the trained model and true model if all data were cleaned $\|\theta - \theta^{(c)}\|$, and \emph{test error}, which is the prediction accuracy of the model on a held out set of clean data. 
+
 \begin{figure*}[t]
 \centering
  \includegraphics[width=\textwidth]{exp/real-experiments-full.png}
@@ -40,17 +43,26 @@ See~\cite{activecleanarxiv} for constraints, errors, and cleaning methodology, a
 %\reminder{Can I propose using "Records Examined" as the x-axes instead of "records cleaned"?}
 
 \subsubsection{Movie Prediction (Movie)}\label{imdb}
-The first scenario uses two movie datasets from IMDB \footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo that was published~\footnote{\tiny \url{http://webscope.sandbox.yahoo.com/catalog.php?datatype=r}}.
+The first scenario uses two published datasets about movies, from IMDB~\footnote{\tiny \url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}} and Yahoo~\footnote{\tiny \url{http://webscope.sandbox.yahoo.com/catalog.php?datatype=r}}.
 Each movie has a title, a short 1-2 paragraph plot description, and a list of categories, and the goal is to train a model to predict whether a movie is a ``Horror'' or ``Comedy'' from the description and title.  
 The text data was featurized using a TFIDF model.
 
-The IMDB dataset is larger (486,298), but much dirtier because it was collected from a web scraper.  
-This data is user-contributed, and the category list is very dirty, with redundant and possibly conflicting tags (e.g., ``Kids'' and ``Horror'' for the same movie).  
-Also, the plot and title text may have errors from the scraping procedure (e.g., ``results fr\^Celf, the'').
-In contrast, the smaller (106,959 movies) Yahoo dataset is much cleaner, and nearly all of the movies are found in the IMDB dataset.
-Thus, we used this as a cleaner reference dataset and performed simple entity resolution to match movies together, and imported the Yahoo dataset's categories to the IMDB dataset when possible.
+The IMDB dataset has 486,298 movies and is very dirty.  
+The category list of many movies has redundant and possibly conflicting tags (e.g., ``Kids'' and ``Horror'' for the same movie).   
+Also, the plot and title text may have errors from the scraping procedure (e.g., ``br\^Cuin, the'').
+This dataset also shows experimental evidence for systematic bias.
+Horror movies were more likely to be erroneously tagged, and consequently, a classifier trained on the dirty data favored ``Comedy'' predictions.
+In contrast, the smaller Yahoo dataset (106,959 movies) is much cleaner, and nearly all of the movies are found in the IMDB dataset.
+
+To clean the category lists, this smaller dataset to cross-referencing records when possible and import categories from Yahoo.
+This was done using a simple entity resolution to match movie titles between the two dataset.
+When there was a sufficiently close textual match (in terms of title string similarity), we imported the Yahoo dataset's category list to the IMDB dataset.
 For the movies that did not match, we appended the records to the IMDB dataset.
-Finally, we filtered the dataset for movies whose category lists included ``Horror'' or ``Comedy''
+Finally, we filtered the dataset for movies whose category lists included ``Horror'' or ``Comedy''.
+To clean the parsing errors, we identify common parsing artifacts in each sampled batch and write a script to fix all records with that problem (e.g., remove all instances of ``\^C'').
+
+
+
 
 % The first scenario explores a dataset of movie descriptions scrapped from the Internet Movie Database (IMDB)\footnote{\url{ftp://ftp.fu-berlin.de/pub/misc/movies/database/}}. 
 % Each movie has a title, a 1-2 paragraph plot description, and a list of categories.
@@ -64,17 +76,18 @@ Finally, we filtered the dataset for movies whose category lists included ``Horr
 % We also appended the cleaner plot descriptions from Yahoo to the IMDB descriptions when available.
 % The clean dataset had about 10\% less examples than the dirty dataset since some movies were marked as neither  ``Horror'' or ``Comedy''.
 
-Figure \ref{real}a plots the distance between the current and cleaned model parameters (model error) versus the number of $C()$ calls.  
+Figure \ref{real}a plots the model error and test error versus the number of records examined by each algorithm. 
+For very small batches of data (e.g., 50 out of 400,000), some of the techniques are actually less accurate than the dirty model. 
+This is because the error due to the particular initial sampled batch of dominates, and we find that differences between the techniques are not statistically significant in that regime.
+However, as more data is cleaned, we see a clear seperation between the techniques
 %as more records are cleaned. 
-The purple bottom curve is the Oracle approach, and we find that \sys reduces the model error the fastest, and is the only method that converges to the Oracle performance.
+The purple bottom curve is the Oracle approach, and we find that out of the practical approaches \sys reduces the model error the fastest, and is the only method that converges to the Oracle performance.
 Figure~\ref{real}b directly shows how \sys rapidly reduces the test error --- after 2000 records, \sys's test error is within 0.02 of the fully cleaned model.
-\sys provides superior convergence for several reasons.
+\sys provides superior convergence for two main reasons.
 First, the update algorithm can incorporate both the raw data as well as the smaller set of cleaned records.
-On the other hand, the difference between Naive-Sampling and Naive-Mix in Figure~\ref{real}b highlights the effects of only using the cleaned data or combining clean and dirty datasets.
-\sys selects records that are both more likely to by dirty (Section \ref{det}) and will most improve the model (Section \ref{dist-samp}).
+This makes \sys less sensitive to sampling error.
+Next, \sys also selects records that are more likely to by dirty (Section \ref{det}) and will will most improve the model (Section \ref{dist-samp}).
 This is illustrated in \sys's faster convergence curve in the first 2000 cleaned records.
-The key reason for these positive results is the presence of systematic bias in the dataset as horror movies are more likely to be erroneously tagged.
-Cleaning the dataset improved the test error for horror movies from 29 to 74\%.
 
 % We find that \sys converges faster than those trained with the alternatives.
 % The reasons for this include: (1) \sys samples more data that is likely to be dirty, and (2) \sys selects data that is most valuable to the model.
