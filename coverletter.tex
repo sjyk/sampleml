@@ -29,7 +29,7 @@ We thank the reviewers for insisting on an evaluation of \sys with real data and
 This new experiment explores a dataset of movie descriptions from the Internet Movie Database (IMDB). 
 Each movie has a title, a 1-2 paragraph plot description, and a list of categories.
 We train a classifier on this data that predicts whether a movie is a ``Horror'' movie or a ``Comedy'' from the plot description and the title.
-However, since much of this data is user-contributed, the category listed are often dirty with redundant and sometimes conflicting tags.
+However, since much of this data is user-contributed, the categories listed are often dirty with redundant and sometimes conflicting tags.
 There are also numerous examples of parsing artifacts in the plot description.
 We clean this dataset by cross-referencing the IMDB dataset with a cleaner, curated dataset of movies from Yahoo.
 
@@ -74,7 +74,7 @@ While the selection of dirty records has to be stochastic, since a deterministic
 
 \emph{Gradient descent techniques still apply to non-convex losses as they are widely applied in graphical model inference and deep learning. Instead of converging to a global optimum,
 they converge to a locally optimal value. However, there is a dependence on the initialization.
-ActiveClean will converge to the closest locally optimal value to
+In the non-convex setting, ActiveClean will converge to the closest locally optimal value to
 the dirty model (which is how we initialize). Because of this, it is harder to reason about
 the objective quality of the results and to define accuracy.
  Different initializations may lead to different local
@@ -187,8 +187,8 @@ Section \ref{dist-samp} provides a detailed discussion of the sampling problem, 
 
 \noindent  We have included a revised discussion on the differences with Active Learning:
 
-\emph{While the motivation of \sys is similar to Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
-Active Learning addresses a fundamentally different problem than \sys.
+\emph{The motivation of \sys is similar to Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
+However, Active Learning addresses a fundamentally different problem than \sys.
 Active Learning considers the problem of selecting the most informative unlabeled examples to label in partially labeled static data.
 Active Learning iteratively queries new examples to label and integrates those examples into the model.
 In contrast, \sys studies the problem of prioritizing modifications to both features and labels in existing examples.
@@ -275,7 +275,7 @@ The system first trains the model $\phi(\cdot)$ on $R_{dirty}$ to find an initia
 \vspace{0.5em}
 
 \emph{In the data cleaning literature, error detection and error repair are two distinct problems~\cite{DBLP:series/synthesis/2012Fan, Dasu:2003:EDM:861869, rahm2000data}.
-Error detection is often considered a substantially easier since one can declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
+ Error detection is often considered to be substantially easier than error repair since one can declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
 On the other hand, repair is harder and often requires human involvement (e.g., imputing a value for the NULL attribute).}
 
 \vspace{0.5em}

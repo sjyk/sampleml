@@ -136,13 +136,13 @@
 \maketitle
 
 \begin{abstract}
-Analysts often clean dirty data iteratively--cleaning some data, executing the analysis, and then, cleaning more data based on the results.
+Analysts often clean dirty data iteratively--cleaning some data, executing the analysis, and then cleaning more data based on the results.
 We explore the iterative cleaning process in the context of statistical model training, which is an increasingly popular form of data analytics.  
 The challenge is that training high-dimensional statistical models on partially clean data lacks guarantees, and the iterative cleaning process may actually diverge.
-We propose \sys which allows for progressive and iterative cleaning in statistical modeling problems while preserving convergence guarantees.
-\sys supports a popular class of models called convex loss models (e.g., linear regression and SVMs), and also prioritizes cleaning those records likely to affect the results.
-We evaluate \sys on four real-world datasets UCI Adult, UCI EEG, MNIST, and Dollars For Docs with both real and synthetic errors.
-Our results suggest that our proposed optimizations can improve model accuracy by up-to 2.5x for the same amount of data cleaned.
+We propose \sys, which allows for progressive and iterative cleaning in statistical modeling problems while preserving convergence guarantees.
+\sys supports an important class of models called convex loss models (e.g., linear regression and SVMs), and prioritizes cleaning those records likely to affect the results.
+We evaluate \sys on five real-world datasets UCI Adult, UCI EEG, MNIST, IMDB, and Dollars For Docs with both real and synthetic errors.
+The results show that our proposed optimizations can improve model accuracy by up-to 2.5x for the same amount of data cleaned.
 Furthermore for a fixed cleaning budget and on all real dirty datasets, \sys returns more accurate models than uniform sampling and Active Learning. 
 \end{abstract}
 

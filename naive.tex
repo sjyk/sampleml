@@ -146,12 +146,12 @@ $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 where $g^*$ is the gradient computed over the full data if it were fully cleaned.
 This property of SGD allows us to bound the model error with a monotonically decreasing function of the number of records cleaned, thus satisfying the reliability condition in the problem statement.
 
-Gradient descent techniques still apply to non-convex losses as they are widely applied in graphical model inference and deep learning. Instead of converging to a global optimum
+Gradient descent techniques still apply to non-convex losses as they are widely applied in graphical model inference and deep learning. Instead of converging to a global optimum,
 they converge to a locally optimal value. However, there is a dependence on the initialization.
-ActiveClean will converge to the closest locally optimal value to
+In the non-convex setting, ActiveClean will converge to the closest locally optimal value to
 the dirty model (which is how we initialize). Because of this, it is harder to reason about
 the objective quality of the results and to define accuracy.
- Different initializations will lead to different local
+ Different initializations may lead to different local
 optima, and thus, introduces a complex dependence on the
 initialization with the dirty model.
 
