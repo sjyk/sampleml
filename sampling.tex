@@ -16,10 +16,7 @@ Given a set of candidate dirty data $R_{dirty}$, $\forall r \in R_{dirty}$ find 
 \]
 \end{definition}
 
-It can be shown~\cite{zhao2014stochastic} that the optimal distribution over records in $R_{dirty}$ is proportional to:
-\[
-p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|
-\]
+It can be shown~\cite{zhao2014stochastic} that the optimal distribution over records in $R_{dirty}$ is proportional to: $p_i \propto \|\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})\|$
 Intuitively, this sampling distribution prioritizes records with higher gradients, i.e., make a larger impact during optimization.
 The challenge is that this particular optimal distribution depends on knowing the clean value of a records, which is a chicken-and-egg problem:
 the optimal sampling distribution requires knowing $(x^{(c)}_i,y^{(c)}_i)$; however, we are sampling the values so that they can be cleaned.

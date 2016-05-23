@@ -122,13 +122,15 @@ Sampling further has a problem of scarcity, where errors that are rare may not s
 
 \vspace{0.5em}
 \noindent \textbf{Comparison to Active Learning: } The motivation of \sys similar to that of Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
-However, Active Learning addresses a fundamentally different problem than \sys.
+However, active learning addresses a fundamentally different problem than \sys.
 Active Learning poses the problem of iteratively selecting the most informative {\it unlabeled} examples to label in partially labeled datasets---these
 examples are labeled by an expert and integrated into the machine learning model.
-Note that Active Learning does not handle cases where the dataset is labelled incorrectly.
+Note that active learning does not handle cases where the dataset is labelled incorrectly but only cases where labels are missing.
 In contrast, \sys studies the problem of prioritizing modifications to both features and labels in existing examples.
 In essence, \sys handles incorrect values in {\it any} part (label or feature) of an example.
-This property fundamentally changes the type of analysis and algorithms that can be used.
+This property changes the type of analysis and algorithms that can be used.
+Consequently, our experiments find that general active learning approaches (e.g., uncertainty sampling~\cite{settles2010active}) converge slower than \sys. 
+If the only form of data error was missing labels, then we would expect active learning to perform comparably or better than \sys.
 
 %This would be like Active Learning, where instead of unlabled data, there are inaccurate prior estimates for the labels.
 %\sys reduces to a form of Expected Gradient Length Active Learning when there is no structure in the dirty data to exploit (such as completely missing attribute values).

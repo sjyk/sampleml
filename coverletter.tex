@@ -51,11 +51,9 @@ Partial data cleaning results in two distinct populations of data (clean and dir
 We have added a new paragraph to the introduction to clarify the relevance of Simpson's Paradox to data cleaning and expanded a conceptual example in which this occurs.
 The background section further describes how such a scenario arises during iterative data cleaning.
 
-In principle, any model trained on a mix of dirty and clean data can be less accurate than a model trained on just the dirty data.
-However, the magnitude of the bias depends on the data distribution, the amount of data cleaning, and particulars of the statistical model.
-On some datasets, this approach may be reasonable, but in general, Simpson's Paradox is always a risk.
-Experiments in Section \ref{real-errors} show that training a model on a mix of dirty and clean data makes very slow progress. 
-We believe that this mixing effect is one of the contributing factors to the slow convergence in the real datasets.
+We believe that this problem is important for two reasons: (1) any model trained on a mix of dirty and clean data is theoretically affected but the analyst could not know this without cleaning the full dataset, (2) even if this is not a problem this particular converges slowly in practice (Section \ref{real-errors}).
+The magnitude of the bias depends on the data distribution, the amount of data cleaning, and particulars of the statistical model.
+A tool like \sys provides a guarantee against this bias whether or not it actually occurs.
 
 \vspace{0.5em}
 
