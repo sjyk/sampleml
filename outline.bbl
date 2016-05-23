@@ -11,7 +11,7 @@ Berkeley data analytics stack.
 
 \bibitem{dollarsfordocs}
 Dollars for docs.
-\newblock \url{http://projects.propublica.org/open-payments/}.
+\newblock \url{https://projects.propublica.org/docdollars/}.
 
 \bibitem{nytimes}
 For big-data scientists, 'janitor work' is key hurdle to insights.
@@ -104,6 +104,11 @@ W.~Fan and F.~Geerts.
 \newblock {\em Foundations of Data Quality Management}.
 \newblock Synthesis Lectures on Data Management. 2012.
 
+\bibitem{fayyad1996data}
+U.~Fayyad, G.~Piatetsky-Shapiro, and P.~Smyth.
+\newblock From data mining to knowledge discovery in databases.
+\newblock {\em AI magazine}, 17(3):37, 1996.
+
 \bibitem{feng2014robust}
 J.~Feng, H.~Xu, S.~Mannor, and S.~Yan.
 \newblock Robust logistic regression and classification.
@@ -139,6 +144,12 @@ S.~R. Jeffery, G.~Alonso, M.~J. Franklin, W.~Hong, and J.~Widom.
 S.~Kandel, A.~Paepcke, J.~M. Hellerstein, and J.~Heer.
 \newblock Enterprise data analysis and visualization: An interview study.
 \newblock In {\em TVCG}, 2012.
+
+\bibitem{krishnan2016hilda}
+S.~Krishnan, D.~Haas, M.~J. Franklin, and E.~Wu.
+\newblock Towards reliable interactive data cleaning: A user survey and
+  recommendations.
+\newblock In {\em HILDA}, 2016.
 
 \bibitem{DBLP:conf/recsys/KrishnanPFG14}
 S.~Krishnan, J.~Patel, M.~J. Franklin, and K.~Goldberg.
