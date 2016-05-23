@@ -198,7 +198,7 @@ This property fundamentally changes the type of analysis and algorithms that can
 
 \noindent\textbf{R2.2: The selection of the records to clean in each iteration (efficiency problem) uses heuristic solutions (e.g., expected gradient length). There is no formal study of the efficiency of the solution.}
 
-\noindent  We have expanded the technical discussion of the the prioritization solution and a number of experiments that evaluate its efficiency. Section \ref{dist-samp} formally describes the optimal sampling problem and our solution to it which is an approximation to the optimum. We clearly note that the \sys will converge for any sampling distribution where there is non-zero sampling probability for all remaining dirty records--and more accurate approximations only lead to faster convergence. In all of our experiments, we include ActiveClean + Oracle, which is the theoretical best performance with an optimal sampler and optimal detector.
+\noindent  We have expanded the technical discussion of the prioritization solution and a number of experiments that evaluate its efficiency. Section \ref{dist-samp} formally describes the optimal sampling problem and our solution to it which is an approximation to the optimum. We clearly note that the \sys will converge for any sampling distribution where there is non-zero sampling probability for all remaining dirty records--and more accurate approximations only lead to faster convergence. In all of our experiments, we include ActiveClean + Oracle, which is the theoretical best performance with an optimal sampler and optimal detector.
 Our results suggest that the approximate solution is very competitive to the optimum. 
 
  \subsection*{Reviewer 3}
@@ -214,12 +214,12 @@ to make this accessible to a general audience.}
 I do not understand statistics well enough to see why this will work at all,
 and the statistically correct updates argument. Also see D6.}
 
-\noindent  We have made several revisions to clarify the relationship between updating, sampling, and detection. We expanded the architecture section to overview the main data flows and an example of how an analyst may use \sys~(Section \ref{syarch}). Section \ref{det} now formalizes the detection component and presents our solution, and Section \ref{dist-samp} formalizes the sampling problem and then presents our solution.
+\noindent  We have made several revisions to clarify the relationship between updating, sampling, and detection. We expanded the architecture section to overview the main data flows and an example of how an analyst may use \sys~(Section \ref{syarch}). Section \ref{det} now formalizes the detection component and presents our solution, and Section~\ref{dist-samp} formalizes the sampling problem and then presents our solution.
 
 The main insight of \sys is to model the interactive data cleaning process as a form of Stochastic Gradient Descent (SGD)~\cite{bottou2012stochastic}.
 SGD is an iterative optimization algorithm that starts with an initial estimate and then takes a sequence of steps ``downhill'' to minimize an objective function.
 Similarly, in interactive data cleaning, the human starts with a dirty model and makes a series of cleaning decisions to improve the accuracy of the model.
-We formalize the link between these two processes, and since SGD is one of the most widely studied forms of optimization, it well understood theoretical convergence conditions.
+We formalize the link between these two processes, and since SGD is one of the most widely studied forms of optimization, it is well understood theoretical convergence conditions.
 
 
 \vspace{0.5em}
