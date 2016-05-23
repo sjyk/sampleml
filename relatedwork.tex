@@ -16,26 +16,23 @@ Human input is often expensive and impractical to apply to entire large datasets
 Machine learning can extrapolate rules from a small set of examples cleaned by a human (or humans) to uncleaned data \cite{gokhale2014corleone, DBLP:journals/pvldb/YakoutENOI11}.
 This approach can be coupled with active learning \cite{DBLP:journals/pvldb/MozafariSFJM14} to learn an accurate model with the fewest possible number of examples.
 While, in spirit, \sys is similar to these approaches, it addresses a very different problem of data cleaning before user-specified modeling.
-The key new challenge in this problem is ensuring the correctness of the user's model after partial data cleaning.
+%The key new challenge in this problem is ensuring the correctness of the user's model after partial data cleaning.
 
 SampleClean~\cite{wang1999sample} applies data cleaning to a sample of data, and estimates the results of aggregate queries.
 Sampling has also been applied to estimate the number of duplicates in a relation \cite{heise2014estimating}. 
 Similarly, Bergman et al. explore the problem of query-oriented data cleaning \cite{DBLP:conf/sigmod/BergmanMNT15}, where given a query, they clean data relevant to that query. 
-Existing work does not explore cleaning driven by the downstream machine learning ``queries" studied in this work.
 Deshpande et al. studied data acquisition in sensor networks \cite{deshpande2004model}. They explored value of information based prioritization of data acquisition for estimating aggregate queries of sensor readings.
 Similarly, Jeffery et al. \cite{DBLP:conf/pervasive/JefferyAFHW06} explored similar prioritization based on value of information.
-We see this work as pushing prioritization further down the pipeline to the end analytics.
-Finally, incremental optimization methods like SGD have a connection to incremental materialized view maintenance as the argument for incremental maintenance over recomputation is similar (i.e., relatively sparse updates).
-Krishnan et al. explored how samples of materialized views can be maintained similar to how models are updated with a sample of clean data in this work \cite{krishnan2015svc}.
+Existing work does not explore cleaning driven by the downstream machine learning ``queries" studied in this work.
+%Finally, incremental optimization methods like SGD have a connection to incremental materialized view maintenance as the argument for incremental maintenance over recomputation is similar (i.e., relatively sparse updates).
+%Krishnan et al. explored how samples of materialized views can be maintained similar to how models are updated with a sample of clean data in this work \cite{krishnan2015svc}.
 
 \vspace{0.5em}
 
 \noindent \textbf{Stochastic Optimization and Active Learning: } Zhao and Tong recently proposed using importance sampling in conjunction with stochastic gradient descent \cite{zhao2014stochastic}. 
-The ideas applied in \sys are well rooted in the Machine Learning and Optimization literature, and we apply these ideas to the data cleaning problem. 
 This line of work builds on prior results in linear algebra that show that some matrix columns are more informative than others \cite{drineas2012fast}, and Active Learning which shows that some labels are more informative that others \cite{settles2010active}.
 Active Learning largely studies the problem of label acquisition \cite{settles2010active},
 and recently the links between Active Learning and Stochastic optimization have been studied \cite{guillory2009active}. 
-We use the work in Guillory et al. to evaluate a state-of-the-art Active Learning technique against \sys.
 
 
 \vspace{0.5em}

@@ -251,13 +251,7 @@ We meant to say that the user-defined cleaning function $C()$ was only applied t
 \noindent\textbf{R3.5. Sentence not clear - ' We have access to dirty
 values may give us ..'}
 
- \noindent We have revised this to make it clear:
-
-\emph{In spirit, \sys is similar to Active Learning~\cite{DBLP:journals/pvldb/YakoutENOI11,gokhale2014corleone} as both seek to reduce the number of queries to an analyst or a crowd.
-However, the two approaches consider different problems.
-Active Learning considers the problem of selecting the most informative unlabeled examples to label in partially labeled static data.
-Active Learning iteratively queries new examples to label and integrates those examples into the model.
-In contrast, \sys studies the broader problem of prioritizing modifications to both features and labels in existing examples.} 
+ \noindent We have revised this to make it clear (see R2.1).
 
 \vspace{0.5em}
 
@@ -265,8 +259,8 @@ In contrast, \sys studies the broader problem of prioritizing modifications to b
 
 \noindent Section \ref{syarch} now describes the initialization as follows:
 
-\emph{We first set $R_{dirty} = R$ and $R_{clean} = \emptyset$.
-The system first trains the model $\phi(\cdot)$ on $R_{dirty}$ to find an initial model $\theta^{(d)}$ that the system will subsequently improve iteratively.}
+\emph{ We first initialize $R_{dirty} = R$ and $R_{clean} = \emptyset$.
+The system first trains the model on $R_{dirty}$ to find an initial model $\theta^{(d)}$ that the system will subsequently improve iteratively.}
 
 \vspace{0.5em}
 
@@ -276,12 +270,13 @@ The system first trains the model $\phi(\cdot)$ on $R_{dirty}$ to find an initia
 
 \vspace{0.5em}
 
-\emph{In the data cleaning literature, error detection and error repair are two distinct problems~\cite{DBLP:series/synthesis/2012Fan, Dasu:2003:EDM:861869, rahm2000data}.
- Error detection is often considered to be substantially easier than error repair since one can declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
+\emph{In the data cleaning literature, error detection and error repair are treated as two distinct problems~\cite{DBLP:series/synthesis/2012Fan, Dasu:2003:EDM:861869, rahm2000data}.
+Error detection is often considered to be substantially easier than error repair since one can declare a set of integrity rules on a database (e.g., an attribute must not be NULL), and select rows that violate those rules.
 On the other hand, repair is harder and often requires human involvement (e.g., imputing a value for the NULL attribute).}
 
 \vspace{0.5em}
 
 \emph{Data quality rules are widely studied as a technique for detecting data errors.
-In most rule-based frameworks, an analyst declares a set of rules $\Sigma$ and checks whether a relation $R$ satisfies those rules.  The rules rules can be declared in advance before applying \sys, or constructed from the first batch of sampled data.
-\sys is compatible with integrity constraints (ICs), conditional functional dependencies (CFDs), and matching dependencies (MDs) where it is efficient to enumerate the set of records that violate at least one declared rule. }
+In most rule-based frameworks, an analyst declares a set of rules $\Sigma$ and checks whether a relation $R$ satisfies those rules. The rules rules can be declared in advance before applying \sys, or constructed from the first batch of sampled data.
+\sys is compatible with many commonly used classes of rules for error detection including integrity constraints (ICs), conditional functional dependencies (CFDs), and matching dependencies (MDs).
+The only requirement on the rules is that there is an algorithm to enumerate the set of records that violate at least one rule.}

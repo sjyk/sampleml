@@ -157,12 +157,6 @@ S.~Krishnan, J.~Patel, M.~J. Franklin, and K.~Goldberg.
   influence bias in recommender systems.
 \newblock In {\em RecSys}, 2014.
 
-\bibitem{krishnan2015svc}
-S.~Krishnan, J.~Wang, M.~J. Franklin, K.~Goldberg, and T.~Kraska.
-\newblock Stale view cleaning: Getting fresh answers from stale materialized
-  views.
-\newblock In {\em VLDB}, 2015.
-
 \bibitem{activecleanarxiv}
 S.~Krishnan, J.~Wang, E.~Wu, M.~J. Franklin, and K.~Goldberg.
 \newblock Activeclean: Interactive data cleaning while learning convex loss

@@ -83,11 +83,13 @@ The rest of this section will introduce the key challenges in designing a Machin
 % This problem is typical of analysis scenarios based on observational data seen in finance, insurance, medicine, and investigative journalism.
 % 
 
+\iffalse
 \begin{figure}[t]
 \centering
  \includegraphics[width=0.8\columnwidth]{figs/workflow.png}
  \caption{Analysts often clean data interactively with data analytics; iteratively cleaning some data and re-training on a partially clean dataset to evaluate whether the cleaning was effective. It is common to use the preliminary analysis on dirty data as a guide to help identify potential errors and design repairs. \label{cartoon}}
 \end{figure}
+\fi
 
 \subsection{Iteration in Model Construction}\label{alcmp}
 Consider an analyst designing a classifier on the ProPublica dataset.
@@ -96,7 +98,7 @@ To investigate why she might examine those records that are incorrectly predicte
 
 It is common for analysts to use the preliminary analysis on dirty data as a guide to help identify potential errors and design repairs~\cite{kandel2012}.
 For example, our analyst may discover that there are numerous examples where two records are nearly identical, but one is predicted correctly, and one is incorrect, and their only difference is the \texttt{corporation} attribute: Pfizer and Pfizer Incorporated.
-Upon discovering such inconsistencies, she will merge those two attribute values, re-train the model, and repeat this process (Figure \ref{cartoon}).
+Upon discovering such inconsistencies, she will merge those two attribute values, re-train the model, and repeat this process.
 
 We define iterative data cleaning to be the process of cleaning subsets of data, evaluating preliminary results, and then cleaning more data as necessary.
 \sys explores two key questions about this iterative process: (1) \emph{Correctness.} Will this clean-retrain loop converge to the intended result and (2) \emph{Efficiency.} How can we best make use of the existing data and analyst effort.

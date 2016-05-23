@@ -60,10 +60,6 @@ Repeated entry---line 1606 of file ref.bib
  : @inproceedings{DBLP:conf/recsys/KrishnanPFG14
  :                                              ,
 I'm skipping whatever remains of this entry
-Repeated entry---line 1624 of file ref.bib
- : @article{krishnan2015svc
- :                         ,
-I'm skipping whatever remains of this entry
 Repeated entry---line 1649 of file ref.bib
  : @inproceedings{DBLP:conf/pervasive/JefferyAFHW06
  :                                                 ,
@@ -89,45 +85,45 @@ Warning--to sort, need author or key in or
 Warning--to sort, need author or key in keystone
 Warning--empty publisher in bottou2012stochastic
 Warning--empty publisher in DBLP:series/synthesis/2012Fan
-You've used 49 entries,
+You've used 48 entries,
             2118 wiz_defined-function locations,
-            709 strings with 11462 characters,
-and the built_in function-call counts, 15171 in all, are:
-= -- 1276
-> -- 946
+            706 strings with 11287 characters,
+and the built_in function-call counts, 14806 in all, are:
+= -- 1247
+> -- 918
 < -- 0
-+ -- 383
-- -- 328
-* -- 982
-:= -- 2527
-add.period$ -- 143
-call.type$ -- 49
-change.case$ -- 309
++ -- 372
+- -- 318
+* -- 956
+:= -- 2464
+add.period$ -- 140
+call.type$ -- 48
+change.case$ -- 301
 chr.to.int$ -- 0
-cite$ -- 59
-duplicate$ -- 615
-empty$ -- 1311
-format.name$ -- 328
-if$ -- 3168
+cite$ -- 58
+duplicate$ -- 601
+empty$ -- 1283
+format.name$ -- 318
+if$ -- 3094
 int.to.chr$ -- 0
-int.to.str$ -- 49
-missing$ -- 43
-newline$ -- 240
-num.names$ -- 82
-pop$ -- 489
+int.to.str$ -- 48
+missing$ -- 42
+newline$ -- 235
+num.names$ -- 80
+pop$ -- 477
 preamble$ -- 1
-purify$ -- 262
+purify$ -- 255
 quote$ -- 0
-skip$ -- 350
+skip$ -- 343
 stack$ -- 0
-substring$ -- 332
-swap$ -- 83
+substring$ -- 327
+swap$ -- 81
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 192
+type$ -- 188
 warning$ -- 10
-while$ -- 89
-width$ -- 51
-write$ -- 474
-(There were 19 error messages)
+while$ -- 87
+width$ -- 50
+write$ -- 464
+(There were 18 error messages)
