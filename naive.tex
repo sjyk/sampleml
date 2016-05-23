@@ -30,7 +30,7 @@ Consider the problem in one dimension (i.e., the parameter $\theta$ is a scalar 
 The consequence of dirty data is that the wrong loss function is optimized.
 Figure \ref{update-arch2}A illustrates the consequence of the optimization.
 The red dotted line shows the loss function on the dirty data.
-Optimizing the loss function finds $\theta^{(d)}$ that at the minimum point (red star).
+Optimizing the loss function finds $\theta^{(d)}$ at the minimum point (red star).
 However, the true loss function (w.r.t to the clean data) is in blue, thus
 the optimal value on the dirty data is in fact a suboptimal point on clean curve (red circle).
 
@@ -40,7 +40,7 @@ the optimal value on the dirty data is in fact a suboptimal point on clean curve
  \caption{(A) A model trained on dirty data can be thought of as a sub-optimal point w.r.t to the clean data. (B) The gradient gives us the direction to move the suboptimal model to approach the true optimum. \label{update-arch2}}\vspace{-1em}
 \end{figure}
 
-The optimal clean model $\theta^{(c)}$ is visualized as a yellow star.
+In the figure, the optimal clean model $\theta^{(c)}$ is visualized as a yellow star.
 The first question is which direction to update $\theta^{(d)}$ (i.e., left or right).
 For this class of models, given a suboptimal point, the direction to 
 the global optimum is the gradient of the loss function.
@@ -69,7 +69,7 @@ $g_C$ can be calculated by applying the gradient to all of the already cleaned r
 g_C(\theta) = \frac{1}{\mid R_{clean}\mid}\sum_{i \in R_{clean}}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
 \] 
 $g_S$ can be estimated from a sample by taking the gradient w.r.t each record, and re-weighting the average by their respective sampling probabilities.
-Before taking the gradient the cleaning function $C(\cdot)$ is applied to each sampled record.
+Before taking the gradient, the cleaning function $C(\cdot)$ is applied to each sampled record.
 Therefore, let $S$ be a sample of data, where each $i \in S$ is drawn with probability $p(i)$:
 \[
 g_{S}(\theta) = \frac{1}{\mid S \mid} \sum_{i \in S}\frac{1}{p(i)}\nabla\phi(x_i^{(c)},y_i^{(c)},\theta)
@@ -80,10 +80,10 @@ Then, at each iteration $t$, the update becomes:
 \]
 
 \subsection{Model Update Algorithm}\label{update-alg}
-We present pseudocode for one iteration of the update algorithm.
+We present an outline for one iteration of the update algorithm.
 To summarize, the algorithm is initialized with $\theta^{(0)} = \theta^{(d)}$ which is the dirty model.
-There are three user set parameters the budget $k$, batch size $b$, and the step size $\gamma$.
-In the following section, we will provide references from the convex optimization literature that allow the user to appropriately select these values.
+There are three user set parameters: the budget $k$, batch size $b$, and the step size $\gamma$.
+In the following section, we provide references from the convex optimization literature that allow the user to appropriately select these values.
 At each iteration $t=\{1,...,T\}$, the cleaning is applied to a batch of data $b$ selected from the set of candidate dirty records $R_{dirty}$.
 Then, an average gradient is estimated from the cleaned batch and the model is updated.
 Iterations continue until $k = T \cdot b$ records are cleaned.
@@ -100,22 +100,22 @@ Iterations continue until $k = T \cdot b$ records are cleaned.
 \end{enumerate} 
 
 This basic algorithm will serve as the scaffolding for the optimizations in the subsequent sections.
-For example, if we know a record is likely to be clean, we can move it from $R_{dirty}$ to $R_{clean}$ without having to sample it.
+For example, if we know that a record is likely to be clean, we can move it from $R_{dirty}$ to $R_{clean}$ without having to sample it.
 Similarly, we can set the sampling probabilities $p(\cdot)$ to favor records that are likely to affect the model.
 
 \subsection{Analysis with Stochastic Gradient Descent}\label{sgd}
-The update algorithm can be formalized as a class of very well studied algorithms called Mini-batch Stochastic Gradient Descent (SGD).
+The update algorithm can be formalized as a class of very well studied algorithms called Stochastic Gradient Descent (SGD; more precisely the mini-batch variant of SGD).
 In SGD, random subsets of data are selected at each iteration and the average gradient is computed for every batch.
 The basic condition for convergence is that the gradient steps need to be on average correct.
 We provided the intuition that this is the case in Equation \ref{unbia}, and this can be more rigorously formalized as an unbiased estimate of the true gradient~(see T.R \cite{activecleanarxiv}).
 Then model is guaranteed to converge essentially with a rate proportional to the inaccuracy of the sample-based estimate.
 
-One key difference with the SGD models applied in model training frameworks is that \sys applies a \emph{full} gradient step on the already clean data and averages it with a stochastic gradient step (i.e., calculated from a sample) on the dirty data. 
-This is because that data is already clean and we assume that the time-consuming step in the data cleaning and not the numerical operations.
+One key difference with the tpyical application of SGD is that \sys takes a \emph{full} gradient step on the already clean data (i.e., not sampled) and averages it with a stochastic gradient step on the dirty data (i.e., sampled). 
+This is because that data is already clean and we assume that the time-consuming step is the data cleaning and not the numerical operations.
 The update algorithm can be thought of as a variant of SGD that lazily materializes the clean value.
 As data is sampled at each iteration, data is cleaned when needed.
-It is well known that even for an arbitrary initialization SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
-However, the dirty model can be much more accurate than an arbitrary initialization.
+It is well-known that even for an arbitrary initialization, SGD makes significant progress in less than one epoch (a pass through the entire dataset) \cite{bottou2012stochastic}.
+However, the dirty model can be much more accurate than an arbitrary initialization leading to even faster convergence.
 
 \vspace{0.25em}
 
@@ -146,13 +146,12 @@ $\sigma^2$ is the variance in the estimate of the gradient at each iteration:
 where $g^*$ is the gradient computed over the full data if it were fully cleaned.
 This property of SGD allows us to bound the model error with a monotonically decreasing function of the number of records cleaned, thus satisfying the reliability condition in the problem statement.
 
-Gradient descent techniques still apply to non-convex losses as they are widely applied in graphical model inference and deep learning. Instead of converging to a global optimum,
-they converge to a locally optimal value. However, there is a dependence on the initialization.
+Gradient descent techniques also can be applied to non-convex losses and they are widely used in graphical model inference and deep learning. In this case, however, instead of converging to a global optimum, they converge to a locally optimal value that dependends on the initialization.
 In the non-convex setting, ActiveClean will converge to the closest locally optimal value to
-the dirty model (which is how we initialize). Because of this, it is harder to reason about
+the dirty model which is how we initialize \sys. Because of this, it is harder to reason about
 the objective quality of the results and to define accuracy.
  Different initializations may lead to different local
-optima, and thus, introduces a complex dependence on the
+optima, and thus, introduce a complex dependence on the
 initialization with the dirty model.
 
 \begin{example}\label{upex}
