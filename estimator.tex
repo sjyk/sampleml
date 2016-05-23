@@ -1,15 +1,11 @@
 \subsection{The Estimator}\label{sampling}
-The goal of the estimator is to estimate the gradient of a record w.r.t to the clean data $\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})$.
-\sys leverages previously cleaned data as well as the detector to compute this estimate.
-There are a number of different approaches, such as regression, that could be used to estimate the cleaned value given the dirty values.
-However, there is a problem of scarcity, where errors may affect a small number of records.
-As a result, the regression approach would have to learn a multivariate function with only a few examples.
-Consequently, high-dimensional regression is ill-suited for the estimator.
-Instead, the estimator uses a linearization of the gradient and average feature-by-feature changes.
-
+We call this component, the estimator, which connects the detector and the sampler.
+The goal of the estimator is to estimate $\nabla\phi(x^{(c)}_i,y^{(c)}_i,\theta^{(t)})$ (the clean gradient) using $\nabla\phi(x^{(d)}_i,y^{(d)}_i,\theta^{(t)})$ (the dirty gradient) and $D(r)$ (the detection results).
+As a strawman approach, one could use all of the previously cleaned data (tuples of dirty and clean records), and use another learning algorithm to relate the two.
+The main challenges with this approach are: (1) the problem of scarcity where errors may affect a small number of records and a small number of attributes and (2) the problem of modeling where if we have an accurate parametric model relating clean to dirty data then why clean the data in the first place. 
+To address these challenges, we propose a light-weight estimator uses a linear approximation of the gradient and only relies on the average change in each feature value.
+Empirically, we find that this estimator provides more accurate early estimates and is easier to tune than the strawman approach until a large amount of data are cleaned (Section \ref{est}).  
 \subsection{Estimation Algorithm}
-If most of the features are correct, it would seem like the gradient is only
-incorrect in one or two of its components.
 The problem is that the gradient $\nabla\phi(\cdot)$ can be a very non-linear function of the features that couple features together.
 For example, the gradient for linear regression is:
 \[
